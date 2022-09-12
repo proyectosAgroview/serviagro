@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatTransProdNivel4" table="dat_trans_prod_nivel4" >
+        <id name="datTransProdNivel4Id" type="java.lang.Long">
+            <column name="dat_trans_prod_nivel4_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_id" />
+        </many-to-one>
+        <many-to-one name="nivel2" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="nivel2_id" />
+        </many-to-one>
+        <many-to-one name="modalidadCosId" class="co.com.arcosoft.modelo.ModalidadCosecha" fetch="select">
+            <column name="modalidad_cos_id" />
+        </many-to-one>
+        <many-to-one name="datTransProd" class="co.com.arcosoft.modelo.DatTransProd" fetch="select">
+            <column name="dat_trans_prod_id" />
+        </many-to-one>
+        <property name="nivel1Id" type="java.lang.Long">
+            <column name="nivel1_id" />
+        </property>
+        <property name="nivel3Id" type="java.lang.Long">
+            <column name="nivel3_id" />
+        </property>
+        <property name="edadNivel4" type="java.lang.Double">
+            <column name="edad_nivel4" precision="12" scale="4" />
+        </property>
+        <many-to-one name="variedNivel4" class="co.com.arcosoft.modelo.Variedad" fetch="select">
+            <column name="varied_nivel4" />
+        </many-to-one>
+        <many-to-one name="etapaNivel4" class="co.com.arcosoft.modelo.Etapa" fetch="select">
+            <column name="etapa_nivel4" />
+        </many-to-one>
+        
+        <many-to-one name="clienteId" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="cliente_id" />
+        </many-to-one>
+        
+        <many-to-one name="ciudadId" class="co.com.arcosoft.modelo.Ciudad" fetch="select">
+            <column name="ciudad_id" />
+        </many-to-one>
+        
+        <many-to-one name="vagonId" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="vagon_id" />
+        </many-to-one>
+        
+        <property name="ciclo" type="java.lang.Long">
+            <column name="ciclo" precision="1" scale="0" />
+        </property>
+        <property name="areaCosechada" type="java.lang.Double">
+            <column name="area_cosechada" precision="12" scale="4" />
+        </property>
+        <property name="finCosecha" type="java.lang.String">
+            <column name="fin_cosecha" length="2" />
+        </property>
+        <property name="cantidadRacimos" type="java.lang.Double">
+            <column name="cantidad_racimos" precision="12" scale="4" />
+        </property>
+        <property name="pesoPromedio" type="java.lang.Double">
+            <column name="peso_promedio" precision="12" scale="4" />
+        </property>
+        <property name="indicadorDistribuccion" type="java.lang.String">
+            <column name="indicador_distribuccion" length="2" />
+        </property>
+        <property name="fechaInicioCosecha" type="java.util.Date">
+            <column name="fecha_inicio_cosecha" length="19" />
+        </property>
+        <property name="fechaFinCosecha" type="java.util.Date">
+            <column name="fecha_fin_cosecha" length="19" />
+        </property>
+        <many-to-one name="producto" class="co.com.arcosoft.modelo.Producto" fetch="select">
+            <column name="producto_id" />
+        </many-to-one>
+        <property name="cantidadCosechada" type="java.lang.Double">
+            <column name="cantidad_cosechada" precision="12" scale="4" />
+        </property>
+        <property name="porcMateriaExtrana" type="java.lang.Double">
+            <column name="porc_materia_extrana" precision="12" scale="4" />
+        </property>
+        <property name="porcSacarosa" type="java.lang.Double">
+            <column name="porc_sacarosa" precision="12" scale="4" />
+        </property>
+        <property name="kilosPorTonelada" type="java.lang.Double">
+            <column name="kilos_por_tonelada" precision="12" scale="4" />
+        </property>
+        <property name="porcRendimiento" type="java.lang.Double">
+            <column name="porc_rendimiento" precision="12" scale="4" />
+        </property>
+        <property name="cantidadCosechadaHa" type="java.lang.Double">
+            <column name="cantidad_cosechada_ha" precision="12" scale="4" />
+        </property>
+        <property name="numeroViajes" type="java.lang.Double">
+            <column name="numero_viajes" precision="12" scale="4" />
+        </property>
+         <property name="cantidadCosechadaHaMes" type="java.lang.Double">
+            <column name="cantidad_cosechada_ha_mes" precision="12" scale="4" />
+        </property>
+         <property name="tonAzucarHaMes" type="java.lang.Double">
+            <column name="ton_azucar_ha_mes" precision="12" scale="4" />
+        </property>
+        <property name="destinoProduccion" type="java.lang.String">
+            <column name="destino_produccion" length="100" />
+        </property>                
+        <property name="valorUnitario" type="java.lang.Double">
+            <column name="valor_unitario" precision="12" scale="4" />
+        </property>
+        <property name="ingresoBruto" type="java.lang.Double">
+            <column name="ingreso_bruto" precision="16" scale="4" />
+        </property>        
+        <property name="valorKilogramosAzucar" type="java.lang.Double">
+            <column name="valor_kilogramos_azucar" precision="12" scale="4" />
+        </property>
+        <property name="kilogramosAzucarTonelada" type="java.lang.Double">
+            <column name="kilogramos_azucar_tonelada" precision="12" scale="4" />
+        </property>        
+        <property name="ajusteLiquidacion" type="java.lang.Double">
+            <column name="ajuste_liquidacion" precision="12" scale="4" />
+        </property>
+        <property name="bonificacion" type="java.lang.Double">
+            <column name="bonificacion" precision="12" scale="4" />
+        </property>        
+        <property name="otrosIngresos" type="java.lang.Double">
+            <column name="otros_ingresos" precision="12" scale="4" />
+        </property>
+        <property name="retenciones" type="java.lang.Double">
+            <column name="retenciones" precision="12" scale="4" />
+        </property>
+        <property name="descuentos" type="java.lang.Double">
+            <column name="descuentos" precision="12" scale="4" />
+        </property>
+        
+        <property name="fondoAgroIndustriaPorcentaje" type="java.lang.Double">
+			<column name="fondo_agroindustria_porcentaje" precision="12" scale="4" />
+		</property>
+		<property name="descuentoAdicional1Porcentaje" type="java.lang.Double">
+			<column name="descuento_adicional1_porcentaje" precision="12" scale="4" />
+		</property>
+		<property name="descuentoAdicional2Porcentaje" type="java.lang.Double">
+			<column name="descuento_adicional2_porcentaje" precision="12" scale="4" />
+		</property>
+		 <property name="estadoRegistro" type="java.lang.String">
+            <column name="estado_registro" length="2" />
+        </property>
+        
+    </class>
+</hibernate-mapping>

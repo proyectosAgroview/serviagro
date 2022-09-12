@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Variable" table="variable" >
+        <id name="variableId" type="java.lang.Long">
+            <column name="variable_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="anaSanVeg" class="co.com.arcosoft.modelo.AnaSanVeg" fetch="select">
+            <column name="ana_san_veg_id" />
+        </many-to-one>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="tipoDato" type="java.lang.String">
+            <column name="tipo_dato" length="20" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="orden" type="java.lang.Long">
+            <column name="orden" />
+        </property>
+        <property name="numeroDecimales" type="java.lang.Long">
+            <column name="numero_decimales" />
+        </property>
+        <property name="valorMinimo" type="java.lang.Double">
+            <column name="valor_minimo" precision="10" scale="4" />
+        </property>
+        <property name="valorMaximo" type="java.lang.Double">
+            <column name="valor_maximo" precision="10" scale="4" />
+        </property>
+        <property name="tiempoDigitacion" type="java.lang.Long">
+            <column name="tiempo_digitacion" />
+        </property>
+        
+         <property name="tipoVariable" type="java.lang.String">
+            <column name="tipo_variable" length="20" />
+        </property>
+        
+         <property name="formula" type="java.lang.String">
+            <column name="formula" length="3900" />
+        </property>
+        
+        
+        <set name="listValors" table="list_valor" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="variable_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.ListValor" />
+        </set>
+        <set name="rangoValors" table="rango_valor" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="variable_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.RangoValor" />
+        </set>
+        <set name="valorVars" table="valor_var" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="variable_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.ValorVar" />
+        </set>
+    </class>
+</hibernate-mapping>

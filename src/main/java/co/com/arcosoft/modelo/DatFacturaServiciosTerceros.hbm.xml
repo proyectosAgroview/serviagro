@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 10/08/2021 12:07:31 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatFacturaServiciosTerceros" table="dat_factura_servicios_terceros" >
+        <id name="datFacturaServiciosTercerosId" type="java.lang.Long">
+            <column name="dat_factura_servicios_terceros_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="persEmprByClienteId" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="cliente_id" />
+        </many-to-one>
+        <many-to-one name="persEmprByPersEmprId" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="pers_empr_id" />
+        </many-to-one>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="centCostId" type="java.lang.Long">
+            <column name="cent_cost_id" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="19" />
+        </property>
+        <property name="fechaVencimiento" type="java.util.Date">
+            <column name="fecha_vencimiento" length="19" />
+        </property>
+        <property name="formaPago" type="java.lang.String">
+            <column name="forma_pago" length="60" />
+        </property>
+        <property name="plazo" type="java.lang.Long">
+            <column name="plazo" />
+        </property>
+        <property name="valorFactura" type="java.lang.Double">
+            <column name="valor_factura" precision="16" scale="4" />
+        </property>
+        <property name="retencion" type="java.lang.Double">
+            <column name="retencion" precision="16" scale="4" />
+        </property>
+        <property name="valorIva" type="java.lang.Double">
+            <column name="valor_iva" precision="16" scale="4" />
+        </property>
+        <property name="valorBaseIva" type="java.lang.Double">
+            <column name="valor_base_iva" precision="16" scale="4" />
+        </property>
+        <property name="valorReteIva" type="java.lang.Double">
+            <column name="valor_rete_iva" precision="16" scale="4" />
+        </property>
+        <property name="valorReteIca" type="java.lang.Double">
+            <column name="valor_rete_ica" precision="16" scale="4" />
+        </property>
+        <property name="valorDescuento" type="java.lang.Double">
+            <column name="valor_descuento" precision="16" scale="4" />
+        </property>
+        <property name="valorDescuentoCenicana" type="java.lang.Double">
+            <column name="valor_descuento_cenicana" precision="16" scale="4" />
+        </property>
+        <property name="valorDescuentoTimbre" type="java.lang.Double">
+            <column name="valor_descuento_timbre" precision="16" scale="4" />
+        </property>
+        <property name="valorRetencionContrato" type="java.lang.Double">
+            <column name="valor_retencion_contrato" precision="16" scale="4" />
+        </property>
+        <property name="detalleFactura" type="java.lang.String">
+            <column name="detalle_factura" length="3900" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="3900" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="prefijo" type="java.lang.String">
+            <column name="prefijo" length="30" />
+        </property>
+            <property name="tipoOperacion" type="java.lang.String">
+            <column name="tipo_operacion" length="30" />
+        </property>
+    </class>
+</hibernate-mapping>

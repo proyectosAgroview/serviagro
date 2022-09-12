@@ -1,0 +1,662 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatSanVeg"
+						header="Análisis de sanidad vegental (Enfermedades)">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datSanVegEnfermedadesPalmaView.data}"
+							var="datSanVeg" paginator="true" lazy="true" rows="5"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Análisis de sanidad vegental" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datSanVeg.estado}"
+								sortBy="#{datSanVeg.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datSanVeg.consecutivo}"
+								sortBy="#{datSanVeg.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.consecutivo}" />
+							</p:column>
+		
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Tipo Análisis" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.nombreAnalisis}" />
+							</p:column>
+							
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Finca" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.nombreHacienda}" />
+							</p:column>
+							
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Lote" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.nombreLote}" />
+							</p:column>
+							
+							
+							<p:column filterBy="#{datSanVeg.variable5}"
+								sortBy="#{datSanVeg.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Linea" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.variable5}" />
+							</p:column>
+							
+							<p:column filterBy="#{datSanVeg.variable6}"
+								sortBy="#{datSanVeg.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Planta" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.variable6}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatSanVeg" disabled="#{datSanVeg.estadoTrue}"
+										actionListener="#{datSanVegEnfermedadesPalmaView.action_edit}">
+										<f:attribute name="selectedDatSanVeg" value="#{datSanVeg}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"
+										disabled="#{datSanVeg.estadoTrue}" title="Anular Registro"
+										actionListener="#{datSanVegEnfermedadesPalmaView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatSanVeg" value="#{datSanVeg}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datSanVegEnfermedadesPalmaView.action_new()}" update=":dialogDatSanVeg" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatSanVeg" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{datSanVegEnfermedadesPalmaView.showDialog}"
+					resizable="false" modal="true" width="1100" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatSanVeg" header="Análisis de sanidad vegetal(Enfermedades)">
+
+							<p:tabView id="tabMapa" activeIndex="#{datSanVegEnfermedadesPalmaView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="5" id="panelGrid1">
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{datSanVegEnfermedadesPalmaView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel value="# Consecutivo: " />
+										<p:inputText id="txtConsecutivo" disabled="false"
+											binding="#{datSanVegEnfermedadesPalmaView.txtConsecutivo}"
+											placeholder="Buscar o crear registro" size="23">
+										</p:inputText>
+										<p:outputLabel />
+										<p:outputLabel />
+										<p:outputLabel />
+
+									
+										<p:outputLabel for="txtAnaSanVegId_AnaSanVeg"
+											value="Tipo de análisis: " />
+										<p:selectOneMenu id="txtAnaSanVegId_AnaSanVeg" effect="fade"
+											filter="true" filterMatchMode="contains" style="width: 100%;"
+											binding="#{datSanVegEnfermedadesPalmaView.txtAnaSanVegId_AnaSanVeg}"
+											required="true" requiredMessage="Seleccione un análisis">
+											<f:selectItem itemLabel="ANALISIS DE ENFERMEDADES" itemValue="3" />
+										</p:selectOneMenu>
+										<p:message for="txtAnaSanVegId_AnaSanVeg" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtTrabId_Trabajador" value="Analista: " />
+										<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+											filter="true" filterMatchMode="contains" style="width: 100%;"
+											binding="#{datSanVegEnfermedadesPalmaView.txtTrabId_Trabajador}"
+											required="false" requiredMessage="Seleccione un analista">
+											<f:selectItem itemLabel="Seleccione un analista" itemValue="" />
+											<f:selectItems value="#{datSanVegEnfermedadesPalmaView.selectTrabajador}" />
+
+										</p:selectOneMenu>
+										<p:message for="txtTrabId_Trabajador" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel1Id" value="Zona: " />
+										<p:selectOneMenu id="txtNivel1Id" effect="fade" filter="true"
+											filterMatchMode="contains"
+											binding="#{datSanVegEnfermedadesPalmaView.txtNivel1Id}" required="true"
+											style="width: 100%;" requiredMessage="Seleccione una zona">
+											<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+											<f:selectItems value="#{datSanVegEnfermedadesPalmaView.selectNivel1}" />
+											<p:ajax update="txtNivel2Id_Nivel2" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel1Id" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel2Id_Nivel2" value="Hacienda: " />
+										<p:selectOneMenu id="txtNivel2Id_Nivel2" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{datSanVegEnfermedadesPalmaView.txtNivel2Id_Nivel2}"
+											style="width: 100%;" required="true"
+											requiredMessage="Seleccione una hacienda">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems value="#{datSanVegEnfermedadesPalmaView.selectNivel2}" />
+											<p:ajax update="txtNivel3Id" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel2Id_Nivel2" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel3Id" value="Bloque: " />
+										<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+											filterMatchMode="contains" style="width: 100%;"
+											binding="#{datSanVegEnfermedadesPalmaView.txtNivel3Id}" required="true"
+											requiredMessage="Seleccione un bloque del cultivo">
+											<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+											<f:selectItems value="#{datSanVegEnfermedadesPalmaView.selectNivel3}" />
+											<p:ajax update="txtNivel4Id_Nivel4" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel3Id" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: " />
+										<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+											filter="true" filterMatchMode="contains" style="width: 100%;"
+											binding="#{datSanVegEnfermedadesPalmaView.txtNivel4Id_Nivel4}" required="true"
+											requiredMessage="Seleccione un lote">
+											<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+											<f:selectItems value="#{datSanVegEnfermedadesPalmaView.selectNivel4}" />
+
+										</p:selectOneMenu>
+										<p:message for="txtNivel4Id_Nivel4" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtObservacion" value="Observación:" />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{datSanVegEnfermedadesPalmaView.txtObservacion}" rows="3" cols="30"
+											counter="display" maxlength="1000"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtDatSanVegId"
+											binding="#{datSanVegEnfermedadesPalmaView.txtDatSanVegId}">
+										</p:inputText>
+
+
+									</h:panelGrid>
+								</p:tab>
+
+								<p:tab title="Variables digitadas">
+									<h:panelGrid columns="2" id="panelGrid2">
+
+									
+										<p:outputLabel for="txtVariable5" value="Linea: " />
+										<p:spinner disabled="true" id="txtVariable5"
+											binding="#{datSanVegEnfermedadesPalmaView.txtVariable5}" required="false"
+											requiredMessage="Indique la linea" value="1" size="10">
+										</p:spinner>
+									
+
+										<p:outputLabel for="txtVariable6" value="Planta: " />
+										<p:spinner disabled="true" id="txtVariable6"
+											binding="#{datSanVegEnfermedadesPalmaView.txtVariable6}" required="false"
+											requiredMessage="Indique una planta" value="1" size="10">
+										</p:spinner>
+									
+
+										<p:outputLabel for="txtVariableText3" value="Ubicación: " />
+										<p:selectOneMenu id="txtVariableText3"
+											binding="#{datSanVegEnfermedadesPalmaView.txtVariableText3}" required="false"
+											requiredMessage="Seleccione una ubicación">
+											<f:selectItem itemLabel="Seleccione una ubicación"
+												itemValue="" />
+											<f:selectItem itemLabel="NS" itemValue="NS" />
+											<f:selectItem itemLabel="SN" itemValue="SN" />
+											<f:selectItem itemLabel="OR-OC" itemValue="OR-OC" />
+											<f:selectItem itemLabel="OC-OR" itemValue="OC-OR" />
+										</p:selectOneMenu>
+
+
+										<p:outputLabel for="txtFitosanidad" value="Fitosanidad: " />
+										<p:selectOneMenu id="txtFitosanidad" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{datSanVegEnfermedadesPalmaView.txtFitosanidad}" required="false"
+											requiredMessage="Seleccione una fitosanidad">
+											<f:selectItem itemLabel="Seleccione un tipo" itemValue="" />
+											<f:selectItems value="#{datSanVegEnfermedadesPalmaView.selectFitosanidad}" />
+											<p:ajax
+												listener="#{datSanVegEnfermedadesPalmaView.listener_ConsultaFitosanidad}"
+												update="txtNombreFitosanidad" />
+										</p:selectOneMenu>
+									
+										<p:inputText style="visibility:hidden" id="txtNombreFitosanidad"
+											binding="#{datSanVegEnfermedadesPalmaView.txtNombreFitosanidad}">
+										</p:inputText>
+										
+									</h:panelGrid>
+
+									<p:panelGrid id="gridVariables">
+									 <p:row>
+											<p:column>
+												<h:panelGrid columns="1">
+
+
+													<p:outputLabel for="txtVariableDate1"
+														style="font-size: 0.8em;" value="Fecha revisión " />
+													<p:calendar id="txtVariableDate1" showOn="button"
+														navigator="false" locale="es" style="font-size: 0.8em;"
+														binding="#{datSanVegEnfermedadesPalmaView.txtVariableDate1}"
+														pattern="dd/MM/yyyy" mask="true" required="false"
+														requiredMessage="La Fecha  es obligatoria">
+													</p:calendar>
+												
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel for="txtVariable2" value="Número de censo: "
+														style="font-size: 0.8em;" />
+													<p:spinner disabled="true" id="txtVariable2"
+														style="font-size: 0.8em;"
+														binding="#{datSanVegEnfermedadesPalmaView.txtVariable2}"
+														required="false" requiredMessage="Indique un número"
+														value="1" size="10">
+													</p:spinner>
+
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+													
+													<p:outputLabel for="txtVariableText4" value="Procedimiento realizado: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtVariableText4"
+														style="font-size: 0.8em;"
+														binding="#{datSanVegEnfermedadesPalmaView.txtVariableText4}"
+														required="false"
+														requiredMessage="Seleccione una opción">
+														<f:selectItem itemLabel="Seleccione una opción"
+															itemValue="" />
+														<f:selectItem itemLabel="CIRUGIA" itemValue="CIRUGIA" />
+														<f:selectItem itemLabel="FUMIGACION"
+															itemValue="FUMIGACION" />
+														<f:selectItem itemLabel="NINGUNO" itemValue="NINGUNO" />
+														
+													</p:selectOneMenu>
+
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+													
+													<p:outputLabel for="txtVariableText2" value="Evolución: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtVariableText2"
+														style="font-size: 0.8em;"
+														binding="#{datSanVegEnfermedadesPalmaView.txtVariableText2}"
+														required="false"
+														requiredMessage="Seleccione una evolución">
+														<f:selectItem itemLabel="Seleccione una evolución"
+															itemValue="" />
+														<f:selectItem itemLabel="Enferma" itemValue="Enferma" />
+														<f:selectItem itemLabel="En recuperación"
+															itemValue="En recuperación" />
+														<f:selectItem itemLabel="Erradicar" itemValue="Erradicar" />
+														<f:selectItem itemLabel="Reincidente"
+															itemValue="Reincidente" />
+														<f:selectItem itemLabel="Sana" itemValue="Sana" />
+													</p:selectOneMenu>
+													
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel for="txtVariable1"
+														value="Grado de severidad: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtVariable1"
+														binding="#{datSanVegEnfermedadesPalmaView.txtVariable1}"
+														required="false" style="font-size: 0.8em;"
+														requiredMessage="Seleccione un grado">
+														<f:selectItem itemLabel="Seleccione un grado" itemValue="" />
+														<f:selectItem itemLabel="1" itemValue="1" />
+														<f:selectItem itemLabel="2" itemValue="2" />
+														<f:selectItem itemLabel="3" itemValue="3" />
+														<f:selectItem itemLabel="4" itemValue="4" />
+														<f:selectItem itemLabel="5" itemValue="5" />
+													</p:selectOneMenu>
+
+													</h:panelGrid>
+											</p:column>
+
+										</p:row>
+									</p:panelGrid>
+									
+					
+									<h:panelGrid columns="2" id="PanelGrid6" style="margin:10px"
+										cellpadding="5">
+
+										<f:facet name="header">
+
+											<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+												binding="#{datSanVegEnfermedadesPalmaView.btnAgregar}" value="Agregar"
+												action="#{datSanVegEnfermedadesPalmaView.action_agregarValores()}"
+												update="tablaValores :dialogDatSanVeg" />
+
+											<p:commandButton id="btnlimpiar1" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="gridVariables" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+
+									</h:panelGrid>
+
+									<p:outputPanel>
+
+										<p:dataTable id="tablaValores"
+											value="#{datSanVegEnfermedadesPalmaView.dataValor}"
+											var="listaValor" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+											editable="true">
+
+											<p:ajax event="rowEdit" update="@this " process="@this"
+												 />
+
+											<p:column headerText="Enfermedad">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaValor.nombreFitosanidad}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaValor.nombreFitosanidad}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="F. Revisión">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaValor.variableDate1}" >
+														<f:convertDateTime pattern="dd-MM-yyyy" />
+													</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaValor.variableDate1}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="#Censo">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaValor.variable2}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaValor.variable2}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Procedimiento">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaValor.variableText4}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaValor.variableText4}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											
+											<p:column headerText="Evolución">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaValor.variableText2}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaValor.variableText2}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="G. Severidad">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaValor.variable1}"  >
+									   <f:convertNumber pattern="#0" />
+							  		 </h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaValor.variable1}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datSanVegEnfermedadesPalmaView.actionDeleteValorVar}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaValores :dialogDatSanVeg">
+														<f:attribute name="selectedValor"
+															value="#{listaValor}" />
+													</p:commandButton>
+
+												</div>
+											</p:column>
+
+										</p:dataTable>
+									</p:outputPanel>
+					
+
+								</p:tab>
+								<p:tab title="Evidencia del análisis">
+									<h:panelGrid columns="5" id="panelGrid3">
+										<p:outputLabel value="Foto: " />
+										<h:panelGroup>
+											<p:fileUpload value="#{datSanVegEnfermedadesPalmaView.file}" mode="simple"
+												auto="true"
+												fileUploadListener="#{datSanVegEnfermedadesPalmaView.subirImagen}"
+												update="image" cancelLabel="Cancelar" sizeLimit="100000"
+												skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+												invalidFileMessage="Tipo de imagem inválido"
+												invalidSizeMessage="Ups!! El tamaño de la imagen es muy grande"
+												uploadLabel="Subir imagen" label="Elegir">
+											</p:fileUpload>
+											<p:lightBox styleClass="imagebox" id="lighbox1">
+												<h:outputLink
+													value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{datSanVegEnfermedadesPalmaView.imagenSanVeg}">
+													<h:graphicImage
+														value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{datSanVegEnfermedadesPalmaView.imagenSanVeg}"
+														id="image" style="height: 160px; width: 160px" />
+												</h:outputLink>
+											</p:lightBox>
+										</h:panelGroup>
+									</h:panelGrid>
+								</p:tab>
+								<p:tab title="Ubicación(Maps)" id="panelGrid4">
+									<h:panelGrid columns="5" cellpadding="5">
+										<p:outputLabel for="txtLatitud" value="Latitud: " />
+										<p:inputText id="txtLatitud" disabled="true"
+											binding="#{datSanVegEnfermedadesPalmaView.txtLatitud}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtLatitud" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtLongitud" value="Longitud: " />
+										<p:inputText id="txtLongitud" disabled="true"
+											binding="#{datSanVegEnfermedadesPalmaView.txtLongitud}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtLongitud" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtPrecision" value="Precision: " />
+										<p:inputText id="txtPrecision" disabled="true"
+											binding="#{datSanVegEnfermedadesPalmaView.txtPrecision}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtPrecision" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+									</h:panelGrid>
+
+								</p:tab>
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datSanVegEnfermedadesPalmaView.btnSave}" value="Grabar"
+									action="#{datSanVegEnfermedadesPalmaView.action_save()}"
+									update=":dialogDatSanVeg :frm:panelDataTableDatSanVeg" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datSanVegEnfermedadesPalmaView.action_clear()}"
+									process="@this" update=":dialogDatSanVeg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="false"
+					visible="#{datSanVegEnfermedadesPalmaView.showDialog}" modal="true" width="500">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datSanVegEnfermedadesPalmaView.txtObservacionAnularReg}" rows="5"
+									cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtDatSanVegId2"
+											binding="#{datSanVegEnfermedadesPalmaView.txtDatSanVegId}">
+										</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datSanVegEnfermedadesPalmaView.btnDelete}"
+									value="Grabar" action="#{datSanVegEnfermedadesPalmaView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatSanVeg" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datSanVegEnfermedadesPalmaView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

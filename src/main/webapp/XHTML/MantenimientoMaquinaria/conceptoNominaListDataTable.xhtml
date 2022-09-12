@@ -1,0 +1,380 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableConceptoNomina"
+						header="Concepto de nómina">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{conceptoNominaView.data}"
+							var="conceptoNomina" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="conceptoNomina" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{conceptoNomina.estado}"
+								sortBy="#{conceptoNomina.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{conceptoNomina.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{conceptoNomina.codigo}"
+								sortBy="#{conceptoNomina.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{conceptoNomina.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{conceptoNomina.nombre}"
+								sortBy="#{conceptoNomina.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{conceptoNomina.nombre}" />
+							</p:column>
+
+							<p:column filterBy="#{conceptoNomina.tipoConcepto}"
+								sortBy="#{conceptoNomina.tipoConcepto}">
+								<f:facet name="header">
+									<h:outputText value="Tipo concepto" />
+								</f:facet>
+								<h:outputText value="#{conceptoNomina.tipoConcepto}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar"
+										icon="ui-icon-pencil" update=":dialogConceptoNomina"
+										actionListener="#{conceptoNominaView.action_edit}">
+										<f:attribute name="selectedConceptoNomina"
+											value="#{conceptoNomina}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{conceptoNominaView.action_new()}"
+								update=":dialogConceptoNomina" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogConceptoNomina" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{conceptoNominaView.showDialog}" resizable="false"
+					modal="true" width="800" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:tabView style="margin:1px;" id="tabMapa"
+							activeIndex="#{laborView.activeTapIndex}">
+
+							<p:tab title="General">
+
+								<p:panel>
+
+
+									<h:panelGrid columns="2" id="panelGrid">
+
+										<p:outputLabel for="txtEstado" value="Estado: "
+											style="font-size: 0.9em;" />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											style="font-size: 0.9em;"
+											binding="#{conceptoNominaView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+
+										<p:outputLabel value="Código: " style="font-size: 0.9em;" />
+										<p:inputText id="txtCodigo" disabled="false"
+											style="font-size: 0.9em;"
+											binding="#{conceptoNominaView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax update="formDialog,formDialog:msg"
+												listener="#{conceptoNominaView.listener_txtCodigo}" />
+										</p:inputText>
+
+										<p:outputLabel for="txtNombre" value="Nombre: "
+											style="font-size: 0.9em;" />
+										<p:inputText id="txtNombre" disabled="true" size="50"
+											style="font-size: 0.9em;"
+											binding="#{conceptoNominaView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+
+
+										<p:outputLabel for="txtFactorPrestacional"
+											value="Factor prestacional: " style="font-size: 0.9em;" />
+										<p:inputText id="txtFactorPrestacional" disabled="true"
+											style="font-size: 0.9em;"
+											binding="#{conceptoNominaView.txtFactorPrestacional}"
+											required="false" requiredMessage="El factor es Obligatorio" />
+
+										<p:outputLabel for="txtTipoConcepto" style="font-size: 0.9em;"
+											value="Tipo de concepto: " />
+										<p:selectOneMenu id="txtTipoConcepto" effect="fade"
+											style="font-size: 0.9em;" filter="true"
+											filterMatchMode="contains"
+											binding="#{conceptoNominaView.txtTipoConcepto}"
+											required="false"
+											requiredMessage="Seleccione un tipo de concepto">
+											<f:selectItem itemLabel="Seleccione un tipo de concepto"
+												itemValue="" noSelectionOption="true" />
+											<f:selectItem itemLabel="Otros" itemValue="otro" />
+											<f:selectItem itemLabel="Salario" itemValue="salario" />
+											<f:selectItem itemLabel="Auxilio transporte"
+												itemValue="auxilio_transporte" />
+											<f:selectItem itemLabel="Aporte salud empleado"
+												itemValue="aporte_salud_empleado" />
+											<f:selectItem itemLabel="Aporte pensión empleado"
+												itemValue="aporte_pension_empleado" />
+
+
+											<f:selectItem itemLabel="Aporte salud empleador"
+												itemValue="aporte_salud_empleador" />
+											<f:selectItem itemLabel="Aporte pensión empleador"
+												itemValue="aporte_pension_empleador" />
+											<f:selectItem
+												itemLabel="Aporte caja de compensación empleador"
+												itemValue="aporte_caja_compensacion_empleador" />
+
+											<f:selectItem itemLabel="Aporte ARL empleador"
+												itemValue="aporte_arl_empleador" />
+
+											<f:selectItem itemLabel="Provisión primas"
+												itemValue="provision_primas" />
+											<f:selectItem itemLabel="Provisión vacaciones"
+												itemValue="provision_vacaciones" />
+											<f:selectItem itemLabel="Provision cesantias"
+												itemValue="provision_cesantias" />
+											<f:selectItem itemLabel="Provision intereses"
+												itemValue="provision_intereses" />
+											<f:selectItem itemLabel="Vacaciones" itemValue="vacaciones" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+
+								</p:panel>
+							</p:tab>
+
+
+							<p:tab title="Otras configuraciones">
+								<p:panel>
+
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+
+												<h:panelGrid columns="2">
+
+
+													<p:outputLabel for="txtExcluyeInteface"
+														value="Excluir del envio de novedades por interface?: "
+														style="font-size: 0.9em;" />
+													<p:selectOneRadio id="txtExcluyeInteface" disabled="true"
+														style="font-size: 0.9em;"
+														binding="#{conceptoNominaView.txtExcluyeInteface}"
+														required="false" requiredMessage="Seleccione un estado">
+														<f:selectItem itemLabel="SI" itemValue="S" />
+														<f:selectItem itemLabel="NO" itemValue="N" />
+													</p:selectOneRadio>
+
+													<p:outputLabel for="txtExcluyeDominical"
+														value="Excluir del calculo de dominical: "
+														style="font-size: 0.9em;" />
+													<p:selectOneRadio id="txtExcluyeDominical" disabled="true"
+														binding="#{conceptoNominaView.txtExcluyeDominical}"
+														required="false" style="font-size: 0.9em;"
+														requiredMessage="Seleccione un estado">
+														<f:selectItem itemLabel="SI" itemValue="S" />
+														<f:selectItem itemLabel="NO" itemValue="N" />
+													</p:selectOneRadio>
+
+													<p:outputLabel for="txtExcluyeAuxilio"
+														value="Excluir del calculo del auxilio de transporte?: "
+														style="font-size: 0.9em;" />
+													<p:selectOneRadio id="txtExcluyeAuxilio" disabled="true"
+														style="font-size: 0.9em;"
+														binding="#{conceptoNominaView.txtExcluyeAuxilio}"
+														required="false" requiredMessage="Seleccione un estado">
+														<f:selectItem itemLabel="SI" itemValue="S" />
+														<f:selectItem itemLabel="NO" itemValue="N" />
+													</p:selectOneRadio>
+
+													<p:outputLabel for="txtExcluyeAdmon"
+														value="Excluir del calculo del auxilio de administración? "
+														style="font-size: 0.9em;" />
+													<p:selectOneRadio id="txtExcluyeAdmon" disabled="true"
+														style="font-size: 0.9em;"
+														binding="#{conceptoNominaView.txtExcluyeAdmon}"
+														required="false" requiredMessage="Seleccione un estado">
+														<f:selectItem itemLabel="SI" itemValue="S" />
+														<f:selectItem itemLabel="NO" itemValue="N" />
+													</p:selectOneRadio>
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+
+
+													<p:outputLabel for="txtEsAusentismo"
+														style="font-size: 0.9em;"
+														value="Utilizar para interfaz de ausentismo: " />
+													<p:selectOneMenu id="txtEsAusentismo" effect="fade"
+														style="font-size: 0.9em;" filter="true"
+														filterMatchMode="contains"
+														binding="#{conceptoNominaView.txtEsAusentismo}"
+														required="false"
+														requiredMessage="Seleccione una respuesta">
+														<f:selectItem itemLabel="Seleccione una respuesta"
+															itemValue="" noSelectionOption="true" />
+														<f:selectItem itemLabel="SI" itemValue="SI" />
+														<f:selectItem itemLabel="NO" itemValue="NO" />
+
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtElemCostoId_ElementoCosto"
+														style="font-size: 0.9em;" value="Elemento de costo: " />
+													<p:selectOneMenu id="txtElemCostoId_ElementoCosto"
+														effect="fade" filter="true" filterMatchMode="contains"
+														style="font-size: 0.9em;"
+														binding="#{conceptoNominaView.txtElemCostoId_ElementoCosto}"
+														required="false"
+														requiredMessage="Seleccione un elemento de costo">
+														<f:selectItem itemLabel="Seleccione un elemento de costo"
+															itemValue="" />
+														<f:selectItems
+															value="#{conceptoNominaView.selectElementoCosto}" />
+													</p:selectOneMenu>
+
+
+													<p:outputLabel for="txtCuentaContable"
+														style="font-size: 0.9em;" value="Cuenta contable débito: " />
+													<p:selectOneMenu id="txtCuentaContable" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.9em;"
+														binding="#{conceptoNominaView.txtCuentaContable}"
+														required="false"
+														requiredMessage="Seleccione una cuenta contable">
+														<f:selectItem itemLabel="Seleccione una cuenta contable"
+															itemValue="" />
+														<f:selectItems
+															value="#{conceptoNominaView.selectCuentaContable}" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtCuentaContable2"
+														style="font-size: 0.9em;"
+														value="Cuenta contable crédito: " />
+													<p:selectOneMenu id="txtCuentaContable2" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.9em;"
+														binding="#{conceptoNominaView.txtCuentaContable2}"
+														required="false"
+														requiredMessage="Seleccione una cuenta contable">
+														<f:selectItem itemLabel="Seleccione una cuenta contable"
+															itemValue="" />
+														<f:selectItems
+															value="#{conceptoNominaView.selectCuentaContable2}" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtUdadMedId" style="font-size: 0.9em;"
+														value="Unidad de médida: " />
+													<p:selectOneMenu id="txtUdadMedId" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.9em;"
+														binding="#{conceptoNominaView.txtUdadMedId}"
+														required="false" requiredMessage="Seleccione una unidad">
+														<f:selectItem itemLabel="Seleccione una unidad "
+															itemValue="" />
+														<f:selectItems
+															value="#{conceptoNominaView.selectUdadMedId}" />
+													</p:selectOneMenu>
+
+
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtInfoAdicional"
+											style="font-size: 0.9em;" value="Información Adicional 1:" />
+										<p:inputTextarea id="txtInfoAdicional"
+											style="font-size: 0.9em;"
+											binding="#{conceptoNominaView.txtInfoAdicional}" rows="1"
+											cols="30" maxlength="100" counterTemplate="{0} Caracteres"
+											autoResize="true" />
+
+
+										<p:outputLabel for="txtInfoAdicional2"
+											style="font-size: 0.9em;" value="Información Adicional 2:" />
+										<p:inputTextarea id="txtInfoAdicional2"
+											style="font-size: 0.9em;"
+											binding="#{conceptoNominaView.txtInfoAdicional2}" rows="1"
+											cols="30" maxlength="100" counterTemplate="{0} Caracteres."
+											autoResize="true" />
+
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtCeptoNominaId"
+											binding="#{conceptoNominaView.txtCeptoNominaId}">
+
+										</p:inputText>
+
+									</h:panelGrid>
+								</p:panel>
+							</p:tab>
+						</p:tabView>
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{conceptoNominaView.btnSave}" value="Grabar"
+									action="#{conceptoNominaView.action_save()}"
+									update=":dialogConceptoNomina :frm:panelDataTableConceptoNomina" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{conceptoNominaView.action_clear()}"
+									process="@this" update=":dialogConceptoNomina" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

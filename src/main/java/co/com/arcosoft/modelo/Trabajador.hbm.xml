@@ -1,0 +1,540 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+	<class name="co.com.arcosoft.modelo.Trabajador" table="trabajador">
+	
+		<id name="trabId" type="java.lang.Long">
+			<column name="trab_id" />
+			<generator class="identity" />
+		</id>
+		
+		<many-to-one name="equipoTrabajo" class="co.com.arcosoft.modelo.EquipoTrabajo" fetch="select">
+			<column name="eqp_trab_id" />
+		</many-to-one>
+		<many-to-one name="profesion" class="co.com.arcosoft.modelo.Profesion" fetch="select">
+			<column name="prof_id" />
+		</many-to-one>
+		<many-to-one name="centCost" class="co.com.arcosoft.modelo.CentCost" fetch="select">
+			<column name="cent_cost_id" />
+		</many-to-one>
+		<many-to-one name="contratista" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+			<column name="contratista_id" />
+		</many-to-one>
+		
+		<many-to-one name="subTipoCotizante" class="co.com.arcosoft.modelo.SubTipoCotizante" fetch="select">
+			<column name="sub_tipo_cotizante" />
+		</many-to-one>
+		<many-to-one name="tipoCotizante" class="co.com.arcosoft.modelo.TipoCotizante" fetch="select">
+			<column name="tipo_cotizante" />
+		</many-to-one>
+		<many-to-one name="epsActual" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+			<column name="eps_actual" />
+		</many-to-one>
+		<many-to-one name="epsAnterior" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+			<column name="eps_anterior" />
+		</many-to-one>
+		<many-to-one name="afpActual" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+			<column name="afp_actual" />
+		</many-to-one>
+		<many-to-one name="afpAnterior" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+			<column name="afp_anterior" />
+		</many-to-one>
+		<many-to-one name="cajaCompensacion" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+			<column name="caja_compensacion" />
+		</many-to-one>
+		<many-to-one name="arl" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+			<column name="arl" />
+		</many-to-one>
+		<many-to-one name="fondoCesantias" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+			<column name="fondo_cesantias" />
+		</many-to-one>
+		
+		<!-- Campos normales -->
+		
+		<property name="ciudad" type="java.lang.Long">
+			<column name="ciudad_id" />
+		</property>
+		<property name="codigo" type="java.lang.String">
+			<column name="codigo" length="20" />
+		</property>
+		<property name="primerNombre" type="java.lang.String">
+			<column name="primer_nombre" length="30" />
+		</property>
+		<property name="segundoNombre" type="java.lang.String">
+			<column name="segundo_nombre" length="30" />
+		</property>
+		<property name="primerApellido" type="java.lang.String">
+			<column name="primer_apellido" length="30" />
+		</property>
+		<property name="segundoApellido" type="java.lang.String">
+			<column name="segundo_apellido" length="30" />
+		</property>
+		<property name="genero" type="java.lang.String">
+			<column name="genero" length="12" />
+		</property>
+		<property name="foto" type="java.lang.String">
+			<column name="foto" length="150" />
+		</property>
+		<property name="fechaNacimiento" type="java.util.Date">
+			<column name="fecha_nacimiento" length="19" />
+		</property>
+		<property name="fechaAdmision" type="java.util.Date">
+			<column name="fecha_admision" length="19" />
+		</property>
+		<property name="fechaCreacion" type="java.util.Date">
+			<column name="fecha_creacion" length="19" />
+		</property>
+		<property name="fechaModificacion" type="java.util.Date">
+			<column name="fecha_modificacion" length="19" />
+		</property>
+		<property name="estado" type="java.lang.String">
+			<column name="estado" length="1" />
+		</property>
+		<property name="compania" type="java.lang.Long">
+			<column name="compania" />
+		</property>
+		<property name="infoAdicional" type="java.lang.String">
+			<column name="info_adicional" length="100" />
+		</property>
+		<property name="infoAdicional2" type="java.lang.String">
+			<column name="info_adicional2" length="100" />
+		</property>
+		<property name="nombre" type="java.lang.String">
+			<column name="nombre" length="60" />
+		</property>
+		<property name="telefono" type="java.lang.String">
+			<column name="telefono" length="20" />
+		</property>
+		<property name="email" type="java.lang.String">
+			<column name="email" length="40" />
+		</property>
+		<property name="estadoCivil" type="java.lang.String">
+			<column name="estado_civil" length="30" />
+		</property>
+		<property name="nIdentificacion" type="java.lang.String">
+			<column name="n_identificacion" length="20" />
+		</property>
+		<property name="direccion" type="java.lang.String">
+			<column name="direccion" length="60" />
+		</property>
+		<property name="claseContrato" type="java.lang.String">
+			<column name="clase_contrato" length="30" />
+		</property>
+		<property name="ubicacion" type="java.lang.String">
+			<column name="ubicacion" length="20" />
+		</property>
+		<property name="origenDatos" type="java.lang.String">
+			<column name="origen_datos" length="30" />
+		</property>
+		<property name="barrio" type="java.lang.String">
+			<column name="barrio" length="200" />
+		</property>
+		<property name="tipo_vivienda" type="java.lang.String">
+			<column name="tipo_vivienda" length="60" />
+		</property>
+		<property name="celular" type="java.lang.String">
+			<column name="celular" length="60" />
+		</property>
+		<property name="tipo_licencia_conduccion" type="java.lang.String">
+			<column name="tipo_licencia_conduccion" length="60" />
+		</property>
+		<property name="numero_licencia_conduccion" type="java.lang.String">
+			<column name="numero_licencia_conduccion" length="60" />
+		</property>
+		<property name="num_pasado_judicial" type="java.lang.String">
+			<column name="num_pasado_judicial" length="60" />
+		</property>
+		<property name="num_tarjeta_profesional" type="java.lang.String">
+			<column name="num_tarjeta_profesional" length="60" />
+		</property>
+		<property name="fecha_matricula_profesional" type="java.util.Date">
+			<column name="fecha_matricula_profesional" length="19" />
+		</property>
+		<property name="tipo_sangre" type="java.lang.String">
+			<column name="tipo_sangre" length="20" />
+		</property>
+		<property name="nombre_eps" type="java.lang.String">
+			<column name="nombre_eps" length="100" />
+		</property>
+		<property name="nombre_fondo_pension" type="java.lang.String">
+			<column name="nombre_fondo_pension" length="100" />
+		</property>
+		<property name="nombre_fondo_cesantias" type="java.lang.String">
+			<column name="nombre_fondo_cesantias" length="100" />
+		</property>
+		<property name="nombre_arp" type="java.lang.String">
+			<column name="nombre_arp" length="100" />
+		</property>
+		<property name="nombre_caja_compensacion" type="java.lang.String">
+			<column name="nombre_caja_compensacion" length="100" />
+		</property>
+		<property name="numero_cuenta_bancaria" type="java.lang.String">
+			<column name="numero_cuenta_bancaria" length="60" />
+		</property>
+		<property name="ent_banc_id" type="java.lang.Long">
+			<column name="ent_banc_id" />
+		</property>
+		<property name="tipo_cuenta_bancaria" type="java.lang.String">
+			<column name="tipo_cuenta_bancaria" length="60" />
+		</property>
+		<property name="nombres_conyugue" type="java.lang.String">
+			<column name="nombres_conyugue" length="100" />
+		</property>
+		<property name="numero_hijos" type="java.lang.Long">
+			<column name="numero_hijos" />
+		</property>
+		<property name="contacto_emergencia" type="java.lang.String">
+			<column name="contacto_emergencia" length="300" />
+		</property>
+		<property name="contacto_emergencia_parentesco" type="java.lang.String">
+			<column name="contacto_emergencia_parentesco" length="60" />
+		</property>
+		<property name="estudio_bachillerato" type="java.lang.String">
+			<column name="estudio_bachillerato" length="2" />
+		</property>
+		<property name="estudio_bachillerato_entidad" type="java.lang.String">
+			<column name="estudio_bachillerato_entidad" length="100" />
+		</property>
+		<property name="estudio_tecnico" type="java.lang.String">
+			<column name="estudio_tecnico" length="2" />
+		</property>
+		<property name="estudio_tecnico_titulo" type="java.lang.String">
+			<column name="estudio_tecnico_titulo" length="100" />
+		</property>
+		<property name="estudio_tecnico_entidad" type="java.lang.String">
+			<column name="estudio_tecnico_entidad" length="100" />
+		</property>
+		<property name="estudio_tecnologico" type="java.lang.String">
+			<column name="estudio_tecnologico" length="2" />
+		</property>
+		<property name="estudio_tecnologico_titulo" type="java.lang.String">
+			<column name="estudio_tecnologico_titulo" length="100" />
+		</property>
+		<property name="estudio_tecnologico_entidad" type="java.lang.String">
+			<column name="estudio_tecnologico_entidad" length="100" />
+		</property>
+		<property name="estudio_pregrado" type="java.lang.String">
+			<column name="estudio_pregrado" length="2" />
+		</property>
+		<property name="estudio_pregrado_titulo" type="java.lang.String">
+			<column name="estudio_pregrado_titulo" length="100" />
+		</property>
+		<property name="estudio_pregrado_entidad" type="java.lang.String">
+			<column name="estudio_pregrado_entidad" length="100" />
+		</property>
+		<property name="estudio_potsgrado" type="java.lang.String">
+			<column name="estudio_potsgrado" length="2" />
+		</property>
+		<property name="estudio_potsgrado_titulo" type="java.lang.String">
+			<column name="estudio_potsgrado_titulo" length="100" />
+		</property>
+		<property name="estudio_potsgrado_entidad" type="java.lang.String">
+			<column name="estudio_potsgrado_entidad" length="100" />
+		</property>
+		<property name="estudio_otros" type="java.lang.String">
+			<column name="estudio_otros" length="2" />
+		</property>
+		<property name="estudio_otros_titulo" type="java.lang.String">
+			<column name="estudio_otros_titulo" length="100" />
+		</property>
+		<property name="estudio_otros_entidad" type="java.lang.String">
+			<column name="estudio_otros_entidad" length="100" />
+		</property>
+		<property name="pecargo1_nombre" type="java.lang.String">
+			<column name="pecargo1_nombre" length="100" />
+		</property>
+		<property name="pecargo1_parentesco" type="java.lang.String">
+			<column name="pecargo1_parentesco" length="60" />
+		</property>
+		<property name="pecargo1_fecha_nacimiento" type="java.util.Date">
+			<column name="pecargo1_fecha_nacimiento" length="19" />
+		</property>
+		<property name="pecargo1_edad" type="java.lang.Long">
+			<column name="pecargo1_edad" />
+		</property>
+		<property name="pecargo1_niveleducativo" type="java.lang.String">
+			<column name="pecargo1_niveleducativo" length="60" />
+		</property>
+		<property name="pecargo2_nombre" type="java.lang.String">
+			<column name="pecargo2_nombre" length="100" />
+		</property>
+		<property name="pecargo2_parentesco" type="java.lang.String">
+			<column name="pecargo2_parentesco" length="60" />
+		</property>
+		<property name="pecargo2_fecha_nacimiento" type="java.util.Date">
+			<column name="pecargo2_fecha_nacimiento" length="19" />
+		</property>
+		<property name="pecargo2_edad" type="java.lang.Long">
+			<column name="pecargo2_edad" />
+		</property>
+		<property name="pecargo2_niveleducativo" type="java.lang.String">
+			<column name="pecargo2_niveleducativo" length="60" />
+		</property>
+		<property name="pecargo3_nombre" type="java.lang.String">
+			<column name="pecargo3_nombre" length="100" />
+		</property>
+		<property name="pecargo3_parentesco" type="java.lang.String">
+			<column name="pecargo3_parentesco" length="60" />
+		</property>
+		<property name="pecargo3_fecha_nacimiento" type="java.util.Date">
+			<column name="pecargo3_fecha_nacimiento" length="19" />
+		</property>
+		<property name="pecargo3_edad" type="java.lang.Long">
+			<column name="pecargo3_edad" />
+		</property>
+		<property name="pecargo3_niveleducativo" type="java.lang.String">
+			<column name="pecargo3_niveleducativo" length="60" />
+		</property>
+		<property name="pecargo4_nombre" type="java.lang.String">
+			<column name="pecargo4_nombre" length="100" />
+		</property>
+		<property name="pecargo4_parentesco" type="java.lang.String">
+			<column name="pecargo4_parentesco" length="60" />
+		</property>
+		<property name="pecargo4_fecha_nacimiento" type="java.util.Date">
+			<column name="pecargo4_fecha_nacimiento" length="19" />
+		</property>
+		<property name="pecargo4_edad" type="java.lang.Long">
+			<column name="pecargo4_edad" />
+		</property>
+		<property name="pecargo4_niveleducativo" type="java.lang.String">
+			<column name="pecargo4_niveleducativo" length="60" />
+		</property>
+		<property name="pecargo5_nombre" type="java.lang.String">
+			<column name="pecargo5_nombre" length="100" />
+		</property>
+		<property name="pecargo5_parentesco" type="java.lang.String">
+			<column name="pecargo5_parentesco" length="60" />
+		</property>
+		<property name="pecargo5_fecha_nacimiento" type="java.util.Date">
+			<column name="pecargo5_fecha_nacimiento" length="19" />
+		</property>
+		<property name="pecargo5_edad" type="java.lang.Long">
+			<column name="pecargo5_edad" />
+		</property>
+		<property name="pecargo5_niveleducativo" type="java.lang.String">
+			<column name="pecargo5_niveleducativo" length="60" />
+		</property>
+  		<property name="salario" type="java.lang.Double">
+            <column name="salario" precision="12" scale="4" />
+        </property>
+		<property name="usuario_asociado" type="java.lang.Long">
+			<column name="usuario_asociado" />
+		</property>
+		<property name="tipo_trabajador" type="java.lang.String">
+			<column name="tipo_trabajador" length="60" />
+		</property>		
+		
+		<property name="aportaEps" type="java.lang.String">
+			<column name="aporta_eps" />
+		</property>
+		<property name="empleadorAportaEps" type="java.lang.String">
+			<column name="empleador_aporta_eps" />
+		</property>
+		<property name="fechaInicioEps" type="java.util.Date">
+			<column name="fecha_inicio_eps" />
+		</property>
+		<property name="aportaAfp" type="java.lang.String">
+			<column name="aporta_afp" />
+		</property>
+		<property name="fechaInicioAfp" type="java.util.Date">
+			<column name="fecha_inicio_afp" />
+		</property>
+		<property name="aportaCcf" type="java.lang.String">
+			<column name="aporta_ccf" />
+		</property>
+		<property name="aportaArl" type="java.lang.String">
+			<column name="aporta_arl" />
+		</property>
+		<property name="aportaIcbf" type="java.lang.String">
+			<column name="aporta_icbf" />
+		</property>
+		<property name="aportaSena" type="java.lang.String">
+			<column name="aporta_sena" />
+		</property>
+		<property name="altoRiesgo" type="java.lang.String">
+			<column name="alto_riesgo" />
+		</property>
+  		<property name="tarifaCajaCompensacion" type="java.lang.Double">
+            <column name="tarifa_caja_compensacion" precision="12" scale="4" />
+        </property>
+		<property name="claseTarifaArl" type="java.lang.String">
+			<column name="clase_tarifa_arl" />
+		</property>
+  		<property name="tarifaArl" type="java.lang.Double">
+            <column name="tarifa_arl" precision="12" scale="4" />
+        </property>
+  		<property name="tarifaIcbf" type="java.lang.Double">
+            <column name="tarifa_icbf" precision="12" scale="4" />
+        </property>
+  		<property name="tarifaSena" type="java.lang.Double">
+            <column name="tarifa_sena" precision="12" scale="4" />
+        </property>
+        
+        
+         <property name="tarifasArlId" type="java.lang.Long">
+            <column name="tarifa_arl_id"  />
+        </property>
+		
+		<property name="fechaRetiro" type="java.util.Date">
+			<column name="fecha_retiro" length="19" />
+		</property>
+		
+		<!-- Llaves inversas -->
+		
+		<set name="datTransProdTrabajadoreses" table="dat_trans_prod_trabajadores" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatTransProdTrabajadores" />
+		</set>
+		<set name="datAnaLaboratorios" table="dat_ana_laboratorio" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="responsable" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatAnaLaboratorio" />
+		</set>
+		<set name="nivel1s" table="nivel1" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.Nivel1" />
+		</set>
+		<set name="equipos" table="equipo" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="conductor" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.Equipo" />
+		</set>
+		<set name="datMantenimientoEquipos" table="dat_mantenimiento_equipo" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="solicitante" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatMantenimientoEquipo" />
+		</set>
+		<set name="datAbastCombustibles" table="dat_abast_combustible" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="despachador" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatAbastCombustible" />
+		</set>
+		<set name="tarifaDeduccions" table="tarifa_deduccion" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.TarifaDeduccion" />
+		</set>
+		<set name="datProgramaRiegos" table="dat_programa_riego" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="supervisor_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatProgramaRiego" />
+		</set>
+		<set name="datHerramientas" table="dat_herramienta" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatHerramienta" />
+		</set>
+		<set name="datNominaTrabajadorDets" table="dat_nomina_trabajador_det" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatNominaTrabajadorDet" />
+		</set>
+		<set name="datEstimCosechas" table="dat_estim_cosecha" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="muestreador" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatEstimCosecha" />
+		</set>
+		<set name="datPlanLabors" table="dat_plan_labor" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="supervisor" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatPlanLabor" />
+		</set>
+		<set name="datRiegos" table="dat_riego" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="supervisor" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatRiego" />
+		</set>
+		<set name="nivel3s" table="nivel3" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.Nivel3" />
+		</set>
+		<set name="datAplicProductos" table="dat_aplic_producto" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="supervisor" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatAplicProducto" />
+		</set>
+		<set name="datSanVegs" table="dat_san_veg" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatSanVeg" />
+		</set>
+		<set name="datMantenimientoEquipoProds" table="dat_mantenimiento_equipo_prod" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatMantenimientoEquipoProd" />
+		</set>
+		<set name="datPlanillaNominaDets" table="dat_planilla_nomina_det" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatPlanillaNominaDet" />
+		</set>
+		<set name="datServicios" table="dat_servicio" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="operador" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatServicio" />
+		</set>
+		<set name="tarifaOtrosDevengoses" table="tarifa_otros_devengos" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.TarifaOtrosDevengos" />
+		</set>
+		<set name="nivel2s" table="nivel2" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.Nivel2" />
+		</set>
+		<set name="datMantenimientoEquipoMecs" table="dat_mantenimiento_equipo_mec" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatMantenimientoEquipoMec" />
+		</set>
+		<set name="datPlanillaNominas" table="dat_planilla_nomina" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatPlanillaNomina" />
+		</set>
+		<set name="nivel4s" table="nivel4" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.Nivel4" />
+		</set>
+		<set name="datSolicitudesMttos" table="dat_solicitudes_mtto" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="trab_solicitante_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatSolicitudesMtto" />
+		</set>
+	</class>
+</hibernate-mapping>

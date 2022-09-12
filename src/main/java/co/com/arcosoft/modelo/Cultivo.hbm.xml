@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Cultivo" table="cultivo" >
+        <id name="cultivoId" type="java.lang.Long">
+            <column name="cultivo_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="udadMedByUdadMedId1" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id1" />
+        </many-to-one>
+        <many-to-one name="udadMedByUdadMedId" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="logoCultivo" type="java.lang.String">
+            <column name="logo_cultivo" length="150" />
+        </property>
+        <property name="calcularEdad" type="java.lang.String">
+            <column name="calcular_edad" length="1" />
+        </property>
+        <property name="mostrarEdad" type="java.lang.String">
+            <column name="mostrar_edad" length="10" />
+        </property>
+        <property name="controlPlanta" type="java.lang.String">
+            <column name="control_planta" length="30" />
+        </property>
+        <property name="calcularArea" type="java.lang.String">
+            <column name="calcular_area" length="1" />
+        </property>
+        <property name="aplicaPolinizado" type="java.lang.String">
+            <column name="aplica_polinizado" length="1" />
+        </property>
+        <property name="analisisLaboratorio" type="java.lang.String">
+            <column name="analisis_laboratorio" length="1" />
+        </property>
+        <property name="controlProduccion" type="java.lang.String">
+            <column name="control_produccion" length="1" />
+        </property>
+        <property name="controlSemillero" type="java.lang.String">
+            <column name="control_semillero" length="1" />
+        </property>
+        <property name="modeloPlanificacionCosecha" type="java.lang.String">
+            <column name="modelo_planificacion_cosecha" length="1" />
+        </property>
+        <property name="esPecuaria" type="java.lang.String">
+            <column name="es_pecuaria" length="1" />
+        </property>
+        <property name="esAcuicultura" type="java.lang.String">
+            <column name="es_acuicultura" length="1" />
+        </property>
+        <property name="esMineria" type="java.lang.String">
+            <column name="es_mineria" length="1" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <set name="variedads" table="variedad" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cultivo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Variedad" />
+        </set>
+        <set name="distSiembras" table="dist_siembra" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cultivo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DistSiembra" />
+        </set>
+        <set name="etapas" table="etapa" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cultivo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Etapa" />
+        </set>
+        <set name="anaCultivos" table="ana_cultivo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cultivo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.AnaCultivo" />
+        </set>
+        <set name="faseFenologicas" table="fase_fenologica" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cultivo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.FaseFenologica" />
+        </set>
+        <set name="anaLabCultivos" table="ana_lab_cultivo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cultivo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.AnaLabCultivo" />
+        </set>
+        <set name="cultivoFitosanidads" table="cultivo_fitosanidad" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cultivo_id" not-null="true" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.CultivoFitosanidad" />
+        </set>
+        <set name="maduranteProductos" table="madurante_producto" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cultivo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.MaduranteProducto" />
+        </set>
+    </class>
+</hibernate-mapping>

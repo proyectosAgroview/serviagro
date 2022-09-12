@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19/02/2020 08:47:42 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatMantenimientoEquipoPlanRevision" table="dat_mantenimiento_equipo_plan_revision"  >
+        <id name="datManPlanRevivionId" type="java.lang.Long">
+            <column name="dat_man_plan_revivion_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="datMantenimientoEquipo" class="co.com.arcosoft.modelo.DatMantenimientoEquipo" fetch="select">
+            <column name="dat_mantenimiento_equipo_id" />
+        </many-to-one>
+        <many-to-one name="planRevisionEquipo" class="co.com.arcosoft.modelo.PlanRevisionEquipo" fetch="select">
+            <column name="plan_revision_equipo_id" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 24/10/2019 10:30:25 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatOtrosCostosDetalle" table="dat_otros_costos_detalle">
+        <id name="datOtrosCostosDetId" type="java.lang.Long">
+            <column name="dat_otros_costos_det_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="datOtrosCostos" class="co.com.arcosoft.modelo.DatOtrosCostos" fetch="select">
+            <column name="dat_otros_costos_id" />
+        </many-to-one>
+        <many-to-one name="elementoCosto" class="co.com.arcosoft.modelo.ElementoCosto" fetch="select">
+            <column name="costo_elem_id" />
+        </many-to-one>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" />
+        </many-to-one>
+        <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="pers_empr_id" />
+        </many-to-one>
+        <property name="ccontableId" type="java.lang.Long">
+            <column name="ccontable_id" />
+        </property>
+        <property name="numFactura" type="java.lang.String">
+            <column name="num_factura" length="60" />
+        </property>
+        <property name="serieFactura" type="java.lang.String">
+            <column name="serie_factura" length="60" />
+        </property>
+        <property name="valorTotal" type="java.lang.Double">
+            <column name="valor_total" precision="12" scale="4" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="3900" />
+        </property>
+    </class>
+</hibernate-mapping>

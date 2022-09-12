@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-abr-2018 9:41:11 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatAnaLaboratorioDet" table="dat_ana_laboratorio_det">
+        <id name="datAnaLaboratorioDetId" type="java.lang.Long">
+            <column name="dat_ana_laboratorio_det_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="variableLab" class="co.com.arcosoft.modelo.VariableLab" fetch="select">
+            <column name="variable_lab_id" />
+        </many-to-one>
+        <many-to-one name="datAnaLaboratorio" class="co.com.arcosoft.modelo.DatAnaLaboratorio" fetch="select">
+            <column name="dat_ana_lab_id" />
+        </many-to-one>
+        <property name="valorVariable" type="java.lang.Double">
+            <column name="valor_variable" precision="12" scale="4" />
+        </property>
+        <property name="hora0100" type="java.lang.Double">
+            <column name="hora_01_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora0200" type="java.lang.Double">
+            <column name="hora_02_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora0300" type="java.lang.Double">
+            <column name="hora_03_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora0400" type="java.lang.Double">
+            <column name="hora_04_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora0500" type="java.lang.Double">
+            <column name="hora_05_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora0600" type="java.lang.Double">
+            <column name="hora_06_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora0700" type="java.lang.Double">
+            <column name="hora_07_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora0800" type="java.lang.Double">
+            <column name="hora_08_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora0900" type="java.lang.Double">
+            <column name="hora_09_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora1000" type="java.lang.Double">
+            <column name="hora_10_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora1100" type="java.lang.Double">
+            <column name="hora_11_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora1200" type="java.lang.Double">
+            <column name="hora_12_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora1300" type="java.lang.Double">
+            <column name="hora_13_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora1400" type="java.lang.Double">
+            <column name="hora_14_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora1500" type="java.lang.Double">
+            <column name="hora_15_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora1600" type="java.lang.Double">
+            <column name="hora_16_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora1700" type="java.lang.Double">
+            <column name="hora_17_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora1800" type="java.lang.Double">
+            <column name="hora_18_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora1900" type="java.lang.Double">
+            <column name="hora_19_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora2000" type="java.lang.Double">
+            <column name="hora_20_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora2100" type="java.lang.Double">
+            <column name="hora_21_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora2200" type="java.lang.Double">
+            <column name="hora_22_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora2300" type="java.lang.Double">
+            <column name="hora_23_00" precision="12" scale="4"  />
+        </property>
+        <property name="hora0000" type="java.lang.Double">
+            <column name="hora_00_00" precision="12" scale="4"  />
+        </property>
+    </class>
+</hibernate-mapping>

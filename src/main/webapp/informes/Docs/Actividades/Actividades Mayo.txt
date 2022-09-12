@@ -1,0 +1,83 @@
+1- Manejar los nuevos botones en la parte de afuera seleccionando el registro a modificar 
+y como opciones independientes del menu
+
+3- Transacional de capacitaciones () - Continuara
+	Adjuntar documentos
+
+5- Transaccion de eventos_trabajador ()
+	Adjuntar documentos
+
+7- Transaccion de trabajador_sanciones()
+	Adjuntar documentos
+
+10- Transaccion de trabajador_productos()
+	Adjuntar documentos
+
+13- Transaccion de trabajador_motivo_finalizacion_contrato ()
+	Adjuntar documentos
+
+14- Pantalla igual a novedades de liquidacion pero sin valores de devengo y deduccion 
+y adjuntar archivos al detalle
+
+18- Catalogo de postulantes () 
+	postulante_vacante - Listo
+	relacion documental - Listo
+	datos basicos trabajador - Listo
+	creacion de trabajador
+
+19- Los campos de numero_semanas_cotizadas decimal (12,4), sub_centro_costo_id bigint(20) y
+comunidad_id bigint(20) agregarlos al trabajador y el contrato
+
+23- A todas la transacciones agregar el campo contrato_id, se guarda por debajo
+
+26- Agregar los campos faltantes de docuemntos al contrato (10)
+
+27- Separar en pantallas del las opciones del trabajador
+
+28- Verificar la modificacion de la profesion
+
+29- Eliminar los campos de sub_cent_cost, semanas_cotizadas y comunidad del postulante
+
+30- Tener una pantalla individual para postulante_vacante y se vea la fecha de creacion en la grid
+	Tener dos botones (Contratar, rechazar) para los registros marcados
+
+31- Catalogo de tipo_dia () prioritario
+
+32- Catalogo de calendario () sin año_fiscal, tipo_dia_id - prioritario
+
+33- procedimientos - prioritario
+
+------------------------------------------------- Listos -----------------------------------------------
+
+2- Catalogo de contratos () - Listo
+	Adjuntar documentos - Listo
+	Los campos del contrato actualizan a el trabajador - Listo
+	Si el trabajador tiene un contrato activo avisar al usuario y no crear contrato - Listo
+
+4- Catalogo de eventos () //Ref a eventos de maquinaria - Listo
+
+6- Catalogo tipo_sancion() - Listo
+
+8- Catalogo de tipo_productos () - Listo
+
+9- Catalogo de productos() - Listo - Revisar creacion doble
+
+11- En las profesiones agregar el atributo riesgo (selectOneMenu) varchar 60 - Listo
+
+12- Catalogo de motivo_finalizacion_contrato () - Listo
+
+15- Catalogo de area_trabajo() - Ya existia
+
+16- Sustituir el campo de ubicacion(destino con el area_trabajo) - Listo
+
+17- Catalogo de vacantes () - Listo - Agregar al data la fecha de creacion
+
+20- Transaccion de postulante_vacante () - Listo - que se vea la fecha de creacion en la grid
+
+21- Catalogo diagnostico () - Listo
+
+22- Catalogo de comunidad () - Listo
+
+24- Catalogo sub_cent_cost () - Listo
+
+25- Agregar los campos de documentos al trabajador (10)

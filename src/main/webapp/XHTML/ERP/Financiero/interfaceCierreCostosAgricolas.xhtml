@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Interface: Cierre de costos agrícolas">
+						<p:growl id="growl" showDetail="true" sticky="true" life="2000" />
+						<p:panelGrid styleClass="ui-panelgrid-blank">
+
+							<p:row>
+								<p:column style="font-weight: bold;">
+
+									<h:panelGrid columns="2" id="panelGrid" width="500">
+									
+										
+										
+										
+										<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: "   />
+										<p:calendar id="msgFechaInicial" showOn="button"  
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{interfaceCierreCostosAgricolasView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha inicial  es obligatoria">
+										</p:calendar>
+										
+
+										<p:outputLabel for="msgFechaFinal" value="Fecha Final: " />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{interfaceCierreCostosAgricolasView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha  final es obligatoria">
+										</p:calendar>
+										
+										
+									
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+
+							<p:commandButton id="btnConsultar" value="Generar interfaz"
+								icon="ui-icon-newwin"
+								action="#{interfaceCierreCostosAgricolasView.cierreCostosAgricolas}" update="growl, frm" />
+
+							
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" resetValues="true" />
+							</p:commandButton>
+
+						</div>
+					</p:panel>
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

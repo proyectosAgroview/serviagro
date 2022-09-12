@@ -1,0 +1,180 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Consulta de caja menor por documento">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel value="Documento:" />
+										<p:inputText id="txtDocumento"
+											binding="#{informeSRConsultaCajaMenorView.txtDocumento}"
+											disable="true">
+										</p:inputText>
+
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:commandButton id="btnConsultar" value="Generar reporte"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{informeSRConsultaCajaMenorView.consultaCajaMenorEditable}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+										
+										
+										<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+											value="Limpiar">
+											<p:ajax update="frm" process="@all" partialSubmit="true" resetValues="true" />
+										</p:commandButton>
+							
+									</h:panelGrid>
+								</p:column>
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+
+					<!-- <p:growl id="men"/>	 -->
+					<p:dataTable id="tbl"
+						value="#{informeSRConsultaCajaMenorView.data}" scrollable="true"
+						scrollWidth="99%" scrollHeight="150" var="caja"
+						resizableColumns="true" style="margin-bottom:20px" lazy="true"
+						reflow="true">
+						<f:facet name="header">
+							<div align="right">
+
+								<h:commandLink id="excel" style=" margin-right:15px;">
+									<p:graphicImage
+										value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+										width="30" />
+									<p:dataExporter type="xls" target="tbl" fileName="caja" />
+								</h:commandLink>
+								<p:tooltip id="toolTipFade" for="excel"
+									value="Exportar todos los datos a Excel" />
+							</div>
+						</f:facet>
+
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Fecha" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{caja.fecha_registro}"
+								style="font-size: 0.8em;">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Caja" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{caja.nom_caja_menor}" style="font-size: 0.8em;" />
+						</p:column>
+						
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Documento" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{caja.consecutivo}" style="font-size: 0.8em;" />
+						</p:column>
+						
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Valor" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{caja.valor}"
+								style="font-size: 0.8em;">
+								<f:convertNumber />
+							</h:outputText>
+						</p:column>
+						
+						
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Máquina" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{caja.cod_equipo}" style="font-size: 0.8em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Concepto" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{caja.nomLabor}" style="font-size: 0.8em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Detalle" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{caja.detalle_nota}" style="font-size: 0.8em;" />
+						</p:column>
+
+
+						
+					</p:dataTable>
+
+
+					
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtValorTotal" value="VR. TOTAL: "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtValorTotal" style="font-size: 0.9em;"
+										size="12"
+										decimalSeparator="." thousandSeparator=","  decimalPlaces="2"
+										binding="#{informeSRConsultaCajaMenorView.txtValorTotal}"
+										required="false">
+									</p:inputNumber>
+								</h:panelGrid>
+				
+
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

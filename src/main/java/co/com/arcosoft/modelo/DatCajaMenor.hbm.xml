@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19/12/2018 09:55:23 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatCajaMenor" table="dat_caja_menor" >
+        <id name="datCajaMenorId" type="java.lang.Long">
+            <column name="dat_caja_menor_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="cajaMenor" class="co.com.arcosoft.modelo.CajaMenor" fetch="select">
+            <column name="caja_menor_id" />
+        </many-to-one>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="19" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="3900" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+       <property name="centCostId" type="java.lang.Long">
+            <column name="cent_cost_id" />
+        </property>
+        <set name="datCajaMenorDets" table="dat_caja_menor_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="dat_caja_menor_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatCajaMenorDet" />
+        </set>
+    </class>
+</hibernate-mapping>

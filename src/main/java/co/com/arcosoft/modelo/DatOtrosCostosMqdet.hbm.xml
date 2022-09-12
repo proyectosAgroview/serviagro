@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 06-ago-2017 12:13:30 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+	<class name="co.com.arcosoft.modelo.DatOtrosCostosMqdet"
+		table="dat_otros_costos_mqdet">
+		<id name="datOtrosCostosMqdetId" type="java.lang.Long">
+			<column name="dat_otros_costos_mqdet_id" />
+			<generator class="identity" />
+		</id>
+		<many-to-one name="equipo"
+			class="co.com.arcosoft.modelo.Equipo" fetch="select">
+			<column name="equipo_id" />
+		</many-to-one>
+		<many-to-one name="persEmpr"
+			class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+			<column name="pers_empr_id" />
+		</many-to-one>
+		<many-to-one name="datOtrosCostosMq"
+			class="co.com.arcosoft.modelo.DatOtrosCostosMq" fetch="select">
+			<column name="dat_otros_costos_mq_id" />
+		</many-to-one>
+		<many-to-one name="tag" class="co.com.arcosoft.modelo.Tag"
+			fetch="select">
+			<column name="tag_id" />
+		</many-to-one>
+		<property name="porcentaje" type="java.lang.Double">
+			<column name="porcentaje" precision="12" scale="4" />
+		</property>
+		<many-to-one name="producto"
+			class="co.com.arcosoft.modelo.Producto" fetch="select">
+			<column name="producto_id" />
+		</many-to-one>
+
+		<many-to-one name="udadMed"
+			class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+			<column name="udad_med_id" />
+		</many-to-one>
+
+		<property name="nroFactura" type="java.lang.String">
+			<column name="nro_factura" length="20" />
+		</property>
+
+		<property name="cantidad" type="java.lang.Double">
+			<column name="cantidad" precision="12" scale="4" />
+		</property>
+
+		<property name="valorUnitario" type="java.lang.Double">
+			<column name="valor_unitario" precision="16" scale="4" />
+		</property>
+
+		<property name="costoTotal" type="java.lang.Double">
+			<column name="costo_total" precision="16" scale="4" />
+		</property>
+
+		<property name="horometroServicio" type="java.lang.Double">
+			<column name="horometro_servicio" precision="12" scale="4" />
+		</property>
+
+		<property name="descripcion" type="java.lang.String">
+			<column name="descripcion" length="3900" />
+		</property>
+		<many-to-one name="labor"
+			class="co.com.arcosoft.modelo.Labor" fetch="select">
+			<column name="labor_id" />
+		</many-to-one>
+		<many-to-one name="ccontable"
+			class="co.com.arcosoft.modelo.CuentaContable" fetch="select">
+			<column name="ccontable_id" />
+		</many-to-one>
+		<many-to-one name="centCost"
+			class="co.com.arcosoft.modelo.CentCost" fetch="select">
+			<column name="cent_cost_id" />
+		</many-to-one>
+		<many-to-one name="implementoId"
+			class="co.com.arcosoft.modelo.Equipo" fetch="select">
+			<column name="implemento_id" />
+		</many-to-one>
+
+	</class>
+</hibernate-mapping>

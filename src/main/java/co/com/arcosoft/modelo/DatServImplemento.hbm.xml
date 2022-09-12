@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatServImplemento" table="dat_serv_implemento" >
+        <id name="datServImpleId" type="java.lang.Long">
+            <column name="dat_serv_imple_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="servicio" class="co.com.arcosoft.modelo.Servicio" fetch="select">
+            <column name="servicio_id" />
+        </many-to-one>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="implemento" />
+        </many-to-one>
+        <many-to-one name="datServicio" class="co.com.arcosoft.modelo.DatServicio" fetch="select">
+            <column name="dat_servicio_id" />
+        </many-to-one>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="tarifaImplemento" type="java.lang.Double">
+            <column name="tarifa_implemento" precision="12" scale="4" />
+        </property>
+        <property name="costoTotalImplemento" type="java.lang.Double">
+            <column name="costo_total_implemento" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-abr-2018 9:41:11 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.AnaLaboratorioVariable" table="ana_laboratorio_variable" >
+        <id name="anaLaboratorioVariableId" type="java.lang.Long">
+            <column name="ana_laboratorio_variable_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="anaLaboratorio" class="co.com.arcosoft.modelo.AnaLaboratorio" fetch="select">
+            <column name="ana_lab_id" />
+        </many-to-one>
+        <many-to-one name="variableLab" class="co.com.arcosoft.modelo.VariableLab" fetch="select">
+            <column name="variable_lab_id" />
+        </many-to-one>
+        <property name="ordenDigitacion" type="java.lang.Long">
+            <column name="orden_digitacion" />
+        </property>
+    </class>
+</hibernate-mapping>

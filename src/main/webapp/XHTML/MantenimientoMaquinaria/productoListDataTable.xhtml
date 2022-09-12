@@ -1,0 +1,474 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableProducto" header="Productos">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{productoView.data}" var="producto"
+							paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Productos" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{producto.estado}"
+								sortBy="#{producto.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{producto.estado}" />
+							</p:column>
+							
+							
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Tipo de producto" />
+								</f:facet>
+								<h:outputText value="#{producto.nomTipoProducto}" />
+							</p:column>
+							
+					
+							<p:column filterBy="#{producto.codigo}"
+								sortBy="#{producto.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{producto.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{producto.nombre}"
+								sortBy="#{producto.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{producto.nombre}" />
+							</p:column>
+							
+							<p:column filterBy="#{producto.infoAdicional}"
+								sortBy="#{producto.infoAdicional}">
+								<f:facet name="header">
+									<h:outputText value="Referencia 2" />
+								</f:facet>
+								<h:outputText value="#{producto.infoAdicional}" />
+							</p:column>
+							
+							<p:column filterBy="#{producto.infoAdicional2}"
+								sortBy="#{producto.infoAdicional2}">
+								<f:facet name="header">
+									<h:outputText value="Referencia 3" />
+								</f:facet>
+								<h:outputText value="#{producto.infoAdicional2}" />
+							</p:column>
+							
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogProducto"
+										actionListener="#{productoView.action_edit}">
+										<f:attribute name="selectedProducto" value="#{producto}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{productoView.action_new()}" update=":dialogProducto" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogProducto" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{productoView.showDialog}"
+					resizable="false" modal="true" width="900" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" showDetail="true"/>
+						<p:panel id="panelProducto" header="Productos">
+
+
+							<p:tabView id="tabMapa" activeIndex="#{productoView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="3" id="panelGrid1">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{productoView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{productoView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelProducto,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{productoView.listener_txtCodigo}" />
+										</p:inputText>
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true"
+											binding="#{productoView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+										<p:message for="txtNombre" />
+
+										<p:outputLabel for="txtTipoProdId_TipoProducto"
+											value="Tipo de producto: " />
+										<p:selectOneMenu id="txtTipoProdId_TipoProducto" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{productoView.txtTipoProdId_TipoProducto}"
+											required="true"
+											requiredMessage="Seleccione un tipo de producto">
+											<f:selectItem itemLabel="Seleccione un tipo de producto"
+												itemValue="" />
+											<f:selectItems value="#{productoView.selectTipoProducto}" />
+										</p:selectOneMenu>
+										<p:message for="txtTipoProdId_TipoProducto" />
+										
+										<p:outputLabel for="txtInfoAdicional"
+											value="Referencia 2:" />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{productoView.txtInfoAdicional}" rows="1" cols="30"
+											counter="display" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Referencia 3:" />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{productoView.txtInfoAdicional2}" rows="1"
+											cols="30" counter="display2" maxlength="100"
+											counterTemplate="{0} Caracteres." autoResize="true" />
+										<h:outputText id="display2" />
+
+										<p:outputLabel for="txtUdadMedId_UdadMed_Prod"
+											value="Unidad de medida Principal: " />
+										<p:selectOneMenu id="txtUdadMedId_UdadMed_Prod" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{productoView.txtUdadMedId_UdadMed_Prod}"
+											required="true"
+											requiredMessage="Seleccione una unidad de medida">
+											<f:selectItem itemLabel="Seleccione  una unidad de medida"
+												itemValue="" />
+											<f:selectItems value="#{productoView.selectUdadMed_Prod}" />
+										</p:selectOneMenu>
+										<p:message for="txtUdadMedId_UdadMed_Prod" />
+										
+										
+										<p:outputLabel for="txtAlmacenId_Almacen"
+											value="Almacén principal: " />
+										<p:selectOneMenu id="txtAlmacenId_Almacen" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{productoView.txtAlmacenId_Almacen}"
+											required="true" requiredMessage="Seleccione un almacén">
+											<f:selectItem itemLabel="Seleccione un almacén" itemValue="" />
+											<f:selectItems value="#{productoView.selectAlmacen}" />
+										</p:selectOneMenu>
+										<p:message for="txtAlmacenId_Almacen" />
+										
+										<p:outputLabel for="txtUbAlmacen"
+											value="Ubicación: " />
+										<p:selectOneMenu id="txtUbAlmacen" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{productoView.txtUbAlmacen}"
+											required="false" requiredMessage="Seleccione una ubicación">
+											<f:selectItem itemLabel="Seleccione una ubicación" itemValue="" />
+											<f:selectItems value="#{productoView.selectUbAlmacen}" />
+										</p:selectOneMenu>
+										<p:message for="txtUbAlmacen" />
+
+										
+										<p:outputLabel for="txtSaldoMinimo" value="Saldo  mínimo: " />
+										<p:spinner id="txtSaldoMinimo" 
+											binding="#{productoView.txtSaldoMinimo}" required="false"
+											requiredMessage="El saldo mínimo es Obligatorio" stepFactor="0.25" />
+										<p:message for="txtSaldoMinimo" />
+										
+										<p:outputLabel for="txtSaldoMaximo" value="Saldo máximo: " />
+										<p:spinner id="txtSaldoMaximo" 
+											binding="#{productoView.txtSaldoMaximo}" required="false"
+											requiredMessage="El saldo máximo es Obligatorio" stepFactor="0.25" />
+										<p:message for="txtSaldoMaximo" />
+
+
+										<p:outputLabel for="txtObservacion" value="Observación: " />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{productoView.txtObservacion}" rows="1" cols="30"
+											counter="display" maxlength="300"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display3" />
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtProductoId"
+											binding="#{productoView.txtProductoId}">
+											
+										</p:inputText>
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Otras informaciones">
+
+									<h:panelGrid columns="3" id="panelGrid2">
+									
+										<p:outputLabel for="txtEsFormula" value="¿Es un producto interno?: " />
+										<p:selectOneMenu id="txtEsFormula" 
+											binding="#{productoView.txtEsFormula}" required="true"
+											requiredMessage="Indicar si es a Formula">
+											
+											<f:selectItem itemLabel="NO" itemValue="NO" />
+											<f:selectItem itemLabel="SI" itemValue="SI" />
+										</p:selectOneMenu>
+										<p:message for="txtEsFormula" />
+										
+
+										<p:outputLabel for="txtClaseToxicId_ClaseToxicologica"
+											value="Clase toxicológica: " />
+										<p:selectOneMenu id="txtClaseToxicId_ClaseToxicologica"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{productoView.txtClaseToxicId_ClaseToxicologica}"
+											required="false"
+											requiredMessage="Seleccione una unidad de medida">
+											<f:selectItem itemLabel="Seleccione  una unidad de medida"
+												itemValue="" />
+											<f:selectItems
+												value="#{productoView.selectClaseToxicologica}" />
+										</p:selectOneMenu>
+										<p:message for="txtClaseToxicId_ClaseToxicologica" />
+
+										<p:outputLabel for="txtCentCostId_CentCost" value="CeCos: " />
+										<p:selectOneMenu id="txtCentCostId_CentCost" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{productoView.txtCentCostId_CentCost}"
+											required="false"
+											requiredMessage="Seleccione un centro de costo">
+											<f:selectItem itemLabel="Seleccione un centro de costo"
+												itemValue="" />
+											<f:selectItems value="#{productoView.selectCentCost}" />
+										</p:selectOneMenu>
+										<p:message for="txtCentCostId_CentCost" />
+
+
+										<p:outputLabel for="txtElemCostoId_ElementoCosto"
+											value="Elemento de costo: " />
+										<p:selectOneMenu id="txtElemCostoId_ElementoCosto"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{productoView.txtElemCostoId_ElementoCosto}"
+											required="false"
+											requiredMessage="Seleccione un elemento de costo">
+											<f:selectItem itemLabel="Seleccione un elemento de costo"
+												itemValue="" />
+											<f:selectItems value="#{productoView.selectElementoCosto}" />
+										</p:selectOneMenu>
+										<p:message for="txtElemCostoId_ElementoCosto" />
+										
+
+										<p:outputLabel for="txtFlujoMovimiento"
+											value="Flujo de movimiento: " />
+										<p:selectOneMenu id="txtFlujoMovimiento"
+											binding="#{productoView.txtFlujoMovimiento}" required="false"
+											requiredMessage="Seleccione el flujo de movimiento">
+											<f:selectItem itemLabel="Recibidos" itemValue="Recibidos" />
+											<f:selectItem itemLabel="Materia prima"
+												itemValue="Materia prima" />
+											<f:selectItem itemLabel="Ventas/Salidas"
+												itemValue="Ventas/Salidas" />
+											<f:selectItem itemLabel="Otros" itemValue="Otros" />
+										</p:selectOneMenu>
+										<p:message for="txtFlujoMovimiento" />
+
+										<p:outputLabel for="txtEsGranel" value="¿Es a granel?: " />
+										<p:selectOneRadio id="txtEsGranel" 
+											binding="#{productoView.txtEsGranel}" required="false"
+											requiredMessage="Indicar si es a granel">
+											<f:selectItem itemLabel="Sí" itemValue="S" />
+											<f:selectItem itemLabel="No" itemValue="N" />
+										</p:selectOneRadio>
+										<p:message for="txtEsGranel" />
+
+										
+									</h:panelGrid>
+
+								</p:tab>
+								
+								<p:tab title="Productos relacionados">
+									<p:panelGrid id="gridProdRel" columns="3" style="width:100%">
+										<p:column>
+											<h:panelGrid columns="2">
+												
+												<p:outputLabel for="txtProductoRel" value="Producto " />
+												<p:selectOneMenu id="txtProductoRel" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width:160px" autoWidth="false"
+													binding="#{productoView.txtProductoRel}">
+													<f:selectItem itemLabel="Seleccione" itemValue="" />
+													<f:selectItems value="#{productoView.selectProductoRel}" />
+													<p:ajax listener="#{productoView.consultarUdadMed}" update="txtUdadMedRel" />
+												</p:selectOneMenu>
+											
+											</h:panelGrid>
+										</p:column>
+										<p:column>
+											<h:panelGrid columns="2">
+												
+												<p:outputLabel for="txtUdadMedRel" value="Udad. Med " />
+												<p:selectOneMenu id="txtUdadMedRel" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width:160px" autoWidth="false"
+													binding="#{productoView.txtUdadMedRel}">
+													<f:selectItem itemLabel="Seleccione" itemValue="" />
+													<f:selectItems value="#{productoView.selectUdadMedRel}" />
+												</p:selectOneMenu>
+											
+											</h:panelGrid>
+										</p:column>
+										<p:column>
+											<h:panelGrid columns="2">
+	
+												<p:outputLabel for="txtDosisRel" value="Consumo "/>
+												<p:inputText id="txtDosisRel"
+													binding="#{productoView.txtDosisRel}" size="12">
+													<f:convertNumber pattern="#0.000"> 
+												</f:convertNumber>
+												</p:inputText>
+											
+											</h:panelGrid>
+										</p:column>
+									</p:panelGrid>
+									<p:panel>
+										<div align="center">
+											<h:panelGrid columns="2">
+												<p:commandButton id="btnAgregarRel" icon="ui-icon-plusthick"
+												    process="@this, txtProductoRel, txtUdadMedRel, txtDosisRel"
+													binding="#{productoView.btnAgregarRel}" value="Agregar"
+													action="#{productoView.action_agregarProductosRelacionados}"
+													update="formDialog:msg, tablaRel, txtDosisRel,txtUdadMedRel,txtProductoRel " />
+	
+												<p:commandButton id="btnlimpiarRel" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridProdRel" resetValues="true" />
+												</p:commandButton>
+											</h:panelGrid>
+										</div>
+									</p:panel>
+									
+									<p:scrollPanel mode="native" style="height:220px">
+										<p:outputPanel>									
+											<p:dataTable id="tablaRel" value="#{productoView.dataProdRelacionado}" 
+												var="listaProdRel" scrollable="true" scrollHeight="200"  
+												scrollWidth="800" editable="true" editMode="cell" widgetVar="cellProdRel">															
+												
+												<p:ajax event="cellEdit" listener="#{productoView.onCellEditProdRelacionados}" update="formDialog:msg" />
+													
+												<p:column headerText="Producto">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaProdRel.nomProducto}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																filter="true" filterMatchMode="contains"
+																value="#{listaProdRel.productoAsociadoId}">
+																<f:selectItems value="#{productoView.selectProductoRel}"
+																	var="var1" itemValue="#{var1}">
+																</f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<p:column headerText="U.M">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaProdRel.nomUdadMed}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																filter="true" filterMatchMode="contains"
+																value="#{listaProdRel.udadMedId_UdadMed}">
+																<f:selectItems value="#{productoView.selectUdadMedRel}"
+																	var="var2" itemValue="#{var2}">
+																</f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+													
+											    <p:column headerText="Dosis">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaProdRel.dosis}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaProdRel.dosis}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>		
+																						
+												<f:attribute name="selectedProdRelacionado" value="#{listaProdRel}" />
+				
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDeleteRel" icon="ui-icon-trash"
+															actionListener="#{productoView.actionDeleteProductoRelacionado}"
+															required="false" title="Borrar" update="tablaRel" value="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}">
+															<f:attribute name="selectedProdRelacionado"
+																value="#{listaProdRel}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:scrollPanel>
+								</p:tab>
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{productoView.btnSave}" value="Grabar"
+									action="#{productoView.action_save()}"
+									update=":dialogProducto :frm:panelDataTableProducto" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{productoView.action_clear()}"
+									process="@this" update=":dialogProducto" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

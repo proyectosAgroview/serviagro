@@ -1,0 +1,224 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTable" header="Filtros">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+
+										<p:outputLabel for="msgFechaIni" value="F. Ini: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaIni" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{informeSRMaqProgramacionLaboresView.txtFechaInicial}"
+											required="false" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFin" value="F. Fin: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" style="font-size: 0.9em;"
+											mask="true" size="12"
+											binding="#{informeSRMaqProgramacionLaboresView.txtFechaFinal}"
+											required="false" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+
+
+								<p:column>
+									<h:panelGrid columns="1">
+
+										<p:outputLabel for="txtSupervisorConsulta" value="Supervisor:"
+											style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtSupervisorConsulta" effect="fade"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											binding="#{informeSRMaqProgramacionLaboresView.txtSupervisorConsulta}"
+											style="width: 160px;font-size: 0.9em;" required="false"
+											requiredMessage="Seleccione un trabajador">
+											<f:selectItem itemLabel="Seleccione un trabajador"
+												itemValue="" />
+											<f:selectItems
+												value="#{informeSRMaqProgramacionLaboresView.selectSupervisorConsulta}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtZonaConsulta" value="Zona:"
+											style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtZonaConsulta" effect="fade"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											binding="#{informeSRMaqProgramacionLaboresView.txtZonaConsulta}"
+											style="width: 160px;font-size: 0.9em;" required="false"
+											requiredMessage="Seleccione un zona">
+											<f:selectItem itemLabel="Seleccione un zona" itemValue="" />
+											<f:selectItems
+												value="#{informeSRMaqProgramacionLaboresView.selectZonaConsulta}" />
+										</p:selectOneMenu>
+
+
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+
+										<p:outputLabel for="txtPersEmprConsulta" value="Cliente: "
+											style="font-size: 0.9em; " />
+										<p:selectOneMenu id="txtPersEmprConsulta" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="font-size: 0.9em; width: 180px;"
+											binding="#{informeSRMaqProgramacionLaboresView.txtPersEmprConsulta}"
+											autoWidth="false" required="false"
+											requiredMessage="Seleccione un proveedor">
+											<f:selectItem itemLabel="Seleccione un proveedor"
+												itemValue="" />
+											<f:selectItems
+												value="#{informeSRMaqProgramacionLaboresView.selectContratistaConsulta}" />
+											<p:ajax update="txtNivel2ClientesConsulta" />
+										</p:selectOneMenu>
+
+
+										<p:outputLabel for="txtNivel2ClientesConsulta"
+											value="Hacienda: " style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtNivel2ClientesConsulta" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 180px;font-size: 0.9em;" autoWidth="false"
+											binding="#{informeSRMaqProgramacionLaboresView.txtNivel2ClientesConsulta}"
+											required="false" requiredMessage="Seleccione una Hacienda">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems
+												value="#{informeSRMaqProgramacionLaboresView.selectNivel2ClientesConsulta}" />
+											<p:ajax
+												process="@this, txtPersEmprConsulta, txtNivel2ClientesConsulta" />
+
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+											
+											
+										<p:outputLabel for="grupoLabores" value="Grupos de labor: " />
+										<p:selectCheckboxMenu id="grupoLabores"
+											value="#{informeSRMaqProgramacionLaboresView.selectedGrupoLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un grupo">
+											<f:selectItems
+												value="#{informeSRMaqProgramacionLaboresView.grupoLabores}"
+												var="grupoLabores" itemLabel=" #{grupoLabores.nombre}"
+												itemValue="#{grupoLabores.grpLaborId}" />
+											<p:ajax
+												process="@this"
+												update="labores" />
+										</p:selectCheckboxMenu>
+										
+
+										<p:outputLabel for="labores" value="Labor: " />
+										<p:selectCheckboxMenu id="labores"
+											value="#{informeSRMaqProgramacionLaboresView.selectedLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una labor">
+											<f:selectItems
+												value="#{informeSRMaqProgramacionLaboresView.labores}"
+												var="labores" itemLabel=" #{labores.nombre}"
+												itemValue="#{labores.laborId}" />
+											<p:ajax process="@this,  grupoLabores" />
+										</p:selectCheckboxMenu>
+											
+									</h:panelGrid>
+								</p:column>
+								
+								
+								<p:column>
+									<h:panelGrid columns="1">
+
+										<p:outputLabel value="Consecutivo:" style="font-size: 0.9em;" />
+										<p:inputText id="txtConsecutivoConsulta"
+											binding="#{informeSRMaqProgramacionLaboresView.txtConsecutivoConsulta}">
+											<f:convertNumber />
+										</p:inputText>
+
+										
+									</h:panelGrid>
+								</p:column>
+
+
+							</p:row>
+						</p:panelGrid>
+						
+						
+					</p:panel>
+					
+					<p:panel id="panelBoton">
+						<div align="center">
+
+							<p:commandButton id="btnConsultar" value="Generar reporte"
+								icon="ui-icon-newwin"
+								action="#{informeSRMaqProgramacionLaboresView.programaLaboresMaquinariaPorCliente}" update="growl, frm" process="@all" partialSubmit="true"/>
+
+							<p:commandButton disabled="#{informeSRMaqProgramacionLaboresView.disableButton}"
+								icon="ui-icon-arrowthick-1-s" value="Descargar" ajax="false">
+								<p:fileDownload value="#{informeSRMaqProgramacionLaboresView.file}" />
+							</p:commandButton>
+
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" process="@all" partialSubmit="true" resetValues="true" />
+							</p:commandButton>
+
+						</div>
+					</p:panel>
+				</h:form>
+					
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

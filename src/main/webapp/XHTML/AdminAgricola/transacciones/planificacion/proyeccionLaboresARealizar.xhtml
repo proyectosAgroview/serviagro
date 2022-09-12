@@ -1,0 +1,344 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTable"
+						header="Informe: Proyección de labores a realizar Hacienda/lote">
+
+						<p:panelGrid styleClass="form-inline">
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: "
+											style="font-size: 0.8em;" />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											style="font-size: 0.8em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true"
+											binding="#{proyeccionLaboresARealizarView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFinal" value="Fecha Final: "
+											style="font-size: 0.8em;" />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true" style="font-size: 0.8em;"
+											binding="#{proyeccionLaboresARealizarView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="cronogramasLabores" value="Cronograma: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="cronogramasLabores"
+											style="font-size: 0.8em;"
+											value="#{proyeccionLaboresARealizarView.selectedCronogramaLabores}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un cronograma">
+											<f:selectItems
+												value="#{proyeccionLaboresARealizarView.cronogramasLabores}"
+												var="cronogramasLabores"
+												itemLabel=" #{cronogramasLabores.nombre}"
+												itemValue="#{cronogramasLabores.cronogramaLaboresId}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="cultivos" value="Cultivos: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="cultivos" style="font-size: 0.8em;"
+											value="#{proyeccionLaboresARealizarView.selectCultivo}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un cultivo">
+											<f:selectItems
+												value="#{proyeccionLaboresARealizarView.cultivos}"
+												var="cultivos" itemLabel=" #{cultivos.nombre}"
+												itemValue="#{cultivos.cultivoId}" />
+										</p:selectCheckboxMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="zonas" value="Zonas: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="zonas" style="font-size: 0.8em;"
+											value="#{proyeccionLaboresARealizarView.selectedNivel1}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una zona">
+											<f:selectItems
+												value="#{proyeccionLaboresARealizarView.zonas}" var="zonas"
+												itemLabel=" #{zonas.nombre}" itemValue="#{zonas.nivel1Id}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="fincas" value="Fincas: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="fincas" style="font-size: 0.8em;"
+											value="#{proyeccionLaboresARealizarView.selectedNivel2}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una finca">
+											<f:selectItems
+												value="#{proyeccionLaboresARealizarView.fincas}"
+												var="fincas" itemLabel=" #{fincas.nombre}"
+												itemValue="#{fincas.nivel2Id}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="bloques" value="Bloques: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="bloques" style="font-size: 0.8em;"
+											value="#{proyeccionLaboresARealizarView.selectedNivel3}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un bloque">
+											<f:selectItems
+												value="#{proyeccionLaboresARealizarView.bloques}"
+												var="bloques" itemLabel=" #{bloques.nombre}"
+												itemValue="#{bloques.nivel3Id}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="lotes" value="Lote: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="lotes" style="font-size: 0.8em;"
+											value="#{proyeccionLaboresARealizarView.selectedNivel4}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un lote">
+											<f:selectItems
+												value="#{proyeccionLaboresARealizarView.lotes}" var="lotes"
+												itemLabel=" #{lotes.nombre}" itemValue="#{lotes.nivel4Id}" />
+										</p:selectCheckboxMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+									
+										<p:outputLabel for="grupoLabores" value="Grupos de labor: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="grupoLabores"
+											style="font-size: 0.8em;"
+											value="#{proyeccionLaboresARealizarView.selectedGrupoLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un grupo">
+											<f:selectItems
+												value="#{proyeccionLaboresARealizarView.grupoLabores}"
+												var="grupoLabores" itemLabel=" #{grupoLabores.nombre}"
+												itemValue="#{grupoLabores.grpLaborId}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="labores" value="Labor: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="labores" style="font-size: 0.8em;"
+											value="#{proyeccionLaboresARealizarView.selectedLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una labor">
+											<f:selectItems
+												value="#{proyeccionLaboresARealizarView.labores}"
+												var="labores" itemLabel=" #{labores.nombre}"
+												itemValue="#{labores.laborId}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="unidadesMedida" value="Unidad de medida: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="unidadesMedida"
+											style="font-size: 0.8em;"
+											value="#{proyeccionLaboresARealizarView.selectedUdadMed}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una Udad. de medida">
+											<f:selectItems
+												value="#{proyeccionLaboresARealizarView.unidadesMedida}"
+												var="unidadesMedida" itemLabel=" #{unidadesMedida.nombre}"
+												itemValue="#{unidadesMedida.udadMedId}" />
+										</p:selectCheckboxMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+										<p:commandButton id="btnConsultar" value="Consultar"
+											icon="ui-icon-newwin"
+											action="#{proyeccionLaboresARealizarView.getData}"
+											update=":frm:tbl,panelBoton "
+											process="@all"  />
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:scrollPanel mode="native" style="height:350px">
+						<p:dataTable id="tbl"
+							value="#{proyeccionLaboresARealizarView.data}" var="datPlanLabor"
+							lazy="true" rows="999999999" liveScroll="true"
+							selection="#{proyeccionLaboresARealizarView.selectedDatPlanLabor}"
+							rowKey="#{datPlanLabor.cod_lote}" reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datPlanLabor" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column selectionMode="multiple" style="text-align:center">
+								<f:facet name="header">
+									<h:outputText value="Marcar" />
+								</f:facet>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Compañia" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.nombreCompania}"
+									style="font-size: 0.9em;" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="F. Inicial" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.fechaInicial}"
+									style="font-size: 0.9em;">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="F. Final" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.fechaFinal}"
+									style="font-size: 0.9em;">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Labor" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.nombreLabor}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Unidad méd." style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.nomUdadMed}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Hacieda" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.nom_hacienda}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Lote/Suerte" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.cod_lote}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Lote/Suerte" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.nom_lote}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Área" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.area_neta}"
+									style="font-size: 0.9em;" />
+							</p:column>
+						</p:dataTable>
+				 </p:scrollPanel>
+				
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton process="tbl" update=":r4"
+								disabled="#{proyeccionLaboresARealizarView.disableNivel1}"
+								icon="ui-icon-search" value="Generar  OT's"
+								oncomplete="PF('multiCarDialog').show()" />
+						</div>
+					</p:panel>
+				</h:form>
+
+
+				<p:dialog id="r4" header="Generar ordenes de servicio (O'Ts)"
+					appendTo="@(body)" widgetVar="multiCarDialog" draggable="true"
+					closable="true" styleClass="dialogFix"
+					visible="#{proyeccionLaboresARealizarView.showDialog}" modal="true"
+					showEffect="fade" hideEffect="fade" resizable="false" width="350" responsive="true">
+					
+					<p:messages id="msg1" showDetail="true" closable="true">
+					</p:messages>
+					
+					<p:outputPanel id="multiCarDetail" style="text-align:center;">
+						<ui:repeat
+							value="#{proyeccionLaboresARealizarView.selectedDatPlanLabor}"
+							var="datPlanLabor">
+						</ui:repeat>
+
+						<p:panelGrid columns="2">
+							<h:outputText
+								value="¿Esta seguro de aprobar las OT's seleccionadas?"
+								style="font-size: 1em;" />
+
+							<p:commandButton id="btnNew2" value="Confirmar"
+								disabled="#{proyeccionLaboresARealizarView.disableButton}"
+								icon="ui-icon-newwin"
+								action="#{proyeccionLaboresARealizarView.action_valoresSeleccionados}"
+								process="@all" update=":r4, msg1">
+								<f:attribute name="selectedDatPlanLabor" value="#{datPlanLabor}" />
+							</p:commandButton>
+
+						</p:panelGrid>
+					</p:outputPanel>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

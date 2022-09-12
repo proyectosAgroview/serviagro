@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.ElementoCosto" table="elemento_costo" >
+        <id name="elemCostoId" type="java.lang.Long">
+            <column name="elem_costo_id" />
+            <generator class="identity" />
+        </id>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <set name="costoRecursos" table="costo_recurso" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="elem_costo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.CostoRecurso" />
+        </set>
+        <set name="productos" table="producto" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="elem_costo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Producto" />
+        </set>
+        <set name="profesions" table="profesion" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="elem_costo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Profesion" />
+        </set>
+        <set name="eventoses" table="eventos" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="elem_costo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Eventos" />
+        </set>
+        <set name="conceptoNominas" table="concepto_nomina" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="elem_costo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.ConceptoNomina" />
+        </set>
+        <set name="tipoRecursosProfesions" table="tipo_recursos_profesion" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="elem_costo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TipoRecursosProfesion" />
+        </set>
+        <set name="tipoRecursosInsumoses" table="tipo_recursos_insumos" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="elem_costo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TipoRecursosInsumos" />
+        </set>
+        <set name="datOtrosCostoses" table="dat_otros_costos" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="costo_elem_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatOtrosCostos" />
+        </set>
+        <set name="servicios" table="servicio" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="elem_costo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Servicio" />
+        </set>
+        <set name="tipoRecursosEquiposes" table="tipo_recursos_equipos" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="elem_costo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TipoRecursosEquipos" />
+        </set>
+        <set name="tipoRecursosOtroses" table="tipo_recursos_otros" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="elem_costo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TipoRecursosOtros" />
+        </set>
+        <set name="equipos" table="equipo" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="elem_costo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Equipo" />
+        </set>
+
+        <set name="datServRealizadosEquipos" table="dat_serv_realizados_equipo" inverse="true" lazy="true" fetch="join">
+            <key>
+                <column name="equipo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServRealizadosEquipo" />
+        </set>
+        
+    </class>
+</hibernate-mapping>

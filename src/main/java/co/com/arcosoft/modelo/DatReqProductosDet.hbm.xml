@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19/12/2018 09:55:23 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatReqProductosDet" table="dat_req_productos_det" >
+        <id name="datReqProductosDetId" type="java.lang.Long">
+            <column name="dat_req_productos_det_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="datReqProductos" class="co.com.arcosoft.modelo.DatReqProductos" fetch="select">
+            <column name="dat_req_productos_id" />
+        </many-to-one>
+        <many-to-one name="producto" class="co.com.arcosoft.modelo.Producto" fetch="select">
+            <column name="producto_id" />
+        </many-to-one>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <property name="saldo" type="java.lang.Double">
+            <column name="saldo"  precision="12" scale="4" />
+        </property>
+        <property name="cantidadUrgente" type="java.lang.Double">
+            <column name="cantidad_urgente" precision="12" scale="4" />
+        </property>
+        <property name="cantidadNormal" type="java.lang.Double">
+            <column name="cantidad_normal" precision="12" scale="4" />
+        </property>
+        <property name="cantidadFaltante" type="java.lang.Double">
+            <column name="cantidad_faltante" precision="12" scale="4" />
+        </property>
+        <property name="detalleNota" type="java.lang.String">
+            <column name="detalle_nota" length="3900" />
+        </property>
+    </class>
+</hibernate-mapping>

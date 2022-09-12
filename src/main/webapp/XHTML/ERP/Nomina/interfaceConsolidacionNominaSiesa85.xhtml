@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+			    <h:form id="frm">
+				
+				<!--  <p:growl id="men" autoUpdate="true" sticky="true"/>-->
+
+					<p:panel id="panelDataTable"
+						header="Interface: Importar nómina  consolidada siesa 8.5">
+
+						<p:panelGrid styleClass="ui-panelgrid-blank">
+
+							<p:row>
+								<p:column style="font-weight: bold;">
+
+									<h:panelGrid columns="2" id="panelGrid" width="350">
+
+
+										<p:outputLabel for="txtAnio" value="Año: " />
+										<p:spinner id="txtAnio" disabled="false"
+											binding="#{interfaceImportarNominaConsolidadaSiesa85View.txtAnio}" required="true"
+											requiredMessage="El año es Obligatorio" />
+										
+										<p:outputLabel for="txtMes" value="Mes" />
+										<p:selectOneMenu id="txtMes"
+											binding="#{interfaceImportarNominaConsolidadaSiesa85View.txtMes}"
+											required="true" requiredMessage="Seleccione un mes">
+											<f:selectItem itemLabel="Enero"	itemValue="Enero" />
+											<f:selectItem itemLabel="Febrero"	itemValue="Febrero" />
+											<f:selectItem itemLabel="Marzo"	itemValue="Marzo" />
+											<f:selectItem itemLabel="Abril"	itemValue="Abril" />
+											<f:selectItem itemLabel="Mayo"	itemValue="Mayo" />
+											<f:selectItem itemLabel="Junio"	itemValue="Junio" />
+											<f:selectItem itemLabel="Julio"	itemValue="Julio" />
+											<f:selectItem itemLabel="Agosto"	itemValue="Agosto" />
+											<f:selectItem itemLabel="Septiembre"	itemValue="Septiembre" />
+											<f:selectItem itemLabel="Octubre"	itemValue="Octubre" />
+											<f:selectItem itemLabel="Noviembre"	itemValue="Noviembre" />
+											<f:selectItem itemLabel="Diciembre"	itemValue="Diciembre" />
+										</p:selectOneMenu>
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+
+								</p:column>
+
+							</p:row>
+
+						</p:panelGrid>
+
+					</p:panel>
+
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnConsultar" value="Importar"
+								icon="ui-icon-newwin"
+								action="#{interfaceImportarNominaConsolidadaSiesa85View.cargarNominaErp()}"
+								 />
+						</div>
+					</p:panel>
+
+
+				</h:form>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

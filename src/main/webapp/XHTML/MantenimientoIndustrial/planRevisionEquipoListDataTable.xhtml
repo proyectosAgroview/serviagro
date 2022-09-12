@@ -1,0 +1,1031 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+				
+				    <p:panel id="panelDataTable" header="Filtros">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2" id="panelGrid">
+									
+										<p:outputLabel for="plan" value="Plan de Revisión: " />
+										<p:selectCheckboxMenu id="plan"
+											value="#{planRevisionEquipoView.selectedPlanRevision}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false" label="Seleccione un Plan"
+											requiredMessage="Seleccione al menos un tipo de plan de revisión">
+											<f:selectItems
+												value="#{planRevisionEquipoView.planRevision}"
+												var="planRevision" itemLabel=" #{planRevision.nombre}"
+												itemValue="#{planRevision.planRevisionEquipoId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="plan" />
+								
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:commandButton id="btnConsultar" value="Consultar"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{planRevisionEquipoView.listarPlanRevision}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+									
+									</h:panelGrid>
+								</p:column>
+								
+								<p:column>
+									<h:panelGrid columns="2">
+								   
+									    <p:commandButton id="btnConsultar1" value="Exportar a Excel"
+											icon="ui-icon-newwin" ajax="false"
+											action="#{planRevisionEquipoView.exportarPlanRevision}"
+											update=" frm" process="@all" />
+									
+									</h:panelGrid>
+								</p:column>
+
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:panel id="panelDataTablePlanRevisionEquipo"
+						header="Plan de revisión">
+						<!--  <p:growl id="men"/> -->
+						<p:dataTable id="tbl" value="#{planRevisionEquipoView.data}"
+							var="planRevisionEquipo" paginator="true" lazy="true" rows="5"
+							reflow="true">
+
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{planRevisionEquipo.estado}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{planRevisionEquipo.codigo}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{planRevisionEquipo.nombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogPlanRevisionEquipo"
+										actionListener="#{planRevisionEquipoView.action_edit}">
+										<f:attribute name="selectedPlanRevisionEquipo"
+											value="#{planRevisionEquipo}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{planRevisionEquipoView.action_new()}"
+								update=":dialogPlanRevisionEquipo" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogPlanRevisionEquipo" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{planRevisionEquipoView.showDialog}" resizable="false"
+					modal="true" width="1000" showEffect="fade" styleClass="dialogFix"
+					responsive="true" fitViewport="true">
+
+					<!-- <p:ajax event="close" oncomplete="location.reload(false)" /> -->
+
+					<h:form id="formDialog" acceptcharset="ISO-8859-1">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelPlanRevisionEquipo" header="Plan de revisión">
+
+							<p:tabView style="margin:1px;">
+
+								<p:tab title="Plan de revisión">
+
+									<h:panelGrid columns="3" id="panelGrid1">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{planRevisionEquipoView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{planRevisionEquipoView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelPlanRevisionEquipo,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{planRevisionEquipoView.listener_txtCodigo}" />
+										</p:inputText>
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true" size="40"
+											binding="#{planRevisionEquipoView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+										<p:message for="txtNombre" />
+
+										<p:outputLabel for="txtTipoPlan" value="Tipo plan: " />
+										<p:selectOneMenu id="txtTipoPlan"
+											binding="#{planRevisionEquipoView.txtTipoPlan}"
+											required="true" requiredMessage="Seleccione un plan">
+											<f:selectItem itemLabel="Seleccione plan" itemValue="" />
+											<f:selectItem itemLabel="Preventivo" itemValue="Preventivo" />
+											<f:selectItem itemLabel="Correctivo" itemValue="Correctivo" />
+										</p:selectOneMenu>
+										<p:message for="txtTipoPlan" />
+
+										<p:outputLabel for="txtTipoProcedimiento"
+											value="Tipo procedimiento: " />
+										<p:selectOneMenu id="txtTipoProcedimiento"
+											binding="#{planRevisionEquipoView.txtTipoProcedimiento}"
+											required="false"
+											requiredMessage="Seleccione un tipo de procedimiento">
+											<f:selectItem itemLabel="Seleccione un tipo de procedimiento"
+												itemValue="" />
+											<f:selectItem itemLabel="Rutinas" itemValue="Rutinas" />
+											<f:selectItem itemLabel="Check-list" itemValue="Check-list" />
+											<f:selectItem itemLabel="Otro" itemValue="Otro" />
+										</p:selectOneMenu>
+										<p:message for="txtTipoProcedimiento" />
+
+										<p:outputLabel for="txtObservacion" value="Observación: " />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{planRevisionEquipoView.txtObservacion}" rows="5"
+											cols="40" counter="display" maxlength="1000"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+
+
+										<p:inputText id="txtPlanRevisionEquipoId"
+											style="visibility:hidden"
+											binding="#{planRevisionEquipoView.txtPlanRevisionEquipoId}">
+
+										</p:inputText>
+
+									</h:panelGrid>
+								</p:tab>
+
+								<p:tab title="Actividades del plan">
+									<p:panel id="toggleable1" toggleable="true" widgetVar="panel">
+
+										<p:messages id="msg2" closable="true" showDetail="true" />
+
+										<h:panelGrid id="gridPlanRevisionEquipoAct" columns="3">
+
+
+
+											<p:outputLabel for="txtPlanLabor" value="Tarea: " />
+											<p:selectOneMenu id="txtPlanLabor" effect="fade"
+												autoWidth="false" filter="true" filterMatchMode="startsWith"
+												binding="#{planRevisionEquipoView.txtPlanLabor}">
+												<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+												<f:selectItems
+													value="#{planRevisionEquipoView.selectPlanLaborId}" />
+											</p:selectOneMenu>
+											<p:message for="txtTipoPlan" />
+
+
+
+											<p:outputLabel for="txtSecuenciaAct" value="Secuencia: " />
+											<p:spinner id="txtSecuenciaAct" disabled="true"
+												binding="#{planRevisionEquipoView.txtSecuenciaAct}"
+												required="false" requiredMessage="El valor es obligatorio" />
+											<p:message for="txtSecuenciaAct" />
+
+											<p:outputLabel for="msgDuracionAct" value="Duración: " />
+											<p:calendar id="msgDuracionAct" showOn="button"
+												timeOnly="true" navigator="false" locale="es"
+												binding="#{planRevisionEquipoView.txtDuracionAct}"
+												pattern="HH:mm" mask="true" required="false"
+												requiredMessage="La duración   es obligatoria">
+											</p:calendar>
+											<p:message for="msgDuracionAct" />
+
+										</h:panelGrid>
+
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregar2" icon="ui-icon-plusthick"
+													binding="#{planRevisionEquipoView.btnAgregarAct}"
+													value="Agregar"
+													action="#{planRevisionEquipoView.action_agregarActividad}"
+													update="tablaPlanRevisionEquipoAct :dialogPlanRevisionEquipo" />
+
+												<p:commandButton id="btnlimpiar2" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridPlanRevisionEquipoAct"
+														resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+
+										<p:outputPanel>
+											<p:dataTable id="tablaPlanRevisionEquipoAct"
+												value="#{planRevisionEquipoView.dataDetActividad}"
+												var="listaPlanRevisionEquipoAct" paginator="true" rows="5"
+												rowsPerPageTemplate="5,10,15" editable="true" reflow="true"
+												editMode="cell" widgetVar="cellAct">
+
+												<p:ajax event="cellEdit"
+													listener="#{planRevisionEquipoView.onCellEditActividad}" />
+
+												<p:column headerText="Tarea">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaPlanRevisionEquipoAct.laborId.codigo}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaPlanRevisionEquipoAct.laborId.laborId}">
+																<f:selectItems
+																	value="#{planRevisionEquipoView.selectPlanLaborId}"
+																	var="var1" itemValue="#{var1}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Secuencia">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaPlanRevisionEquipoAct.secuencia}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaPlanRevisionEquipoAct.secuencia}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Duración">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaPlanRevisionEquipoAct.duracion}">
+																<f:convertDateTime type="time" pattern="HH:mm" />
+															</h:outputText>
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaPlanRevisionEquipoAct.duracion}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<f:attribute name="selectedPlanRevisionAct"
+													value="#{listaPlanRevisionEquipoAct}" />
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{planRevisionEquipoView.actionDeleteDatPlanRevisionAct}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaPlanRevisionEquipoAct :dialogPlanRevisionEquipo">
+															<f:attribute name="selectedPlanRevisionAct"
+																value="#{listaPlanRevisionEquipoAct}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+
+									</p:panel>
+								</p:tab>
+
+								<p:tab title="Equipos/Maquinaria">
+									<p:panel id="toggleable" toggleable="true" widgetVar="panel">
+
+										<p:messages id="msg1" closable="true" showDetail="true" />
+
+										<h:panelGrid id="gridPlanRevisionEquipoDet" columns="6"
+											cellpadding="5" layout="grid">
+
+
+											<p:outputLabel for="txtMedidor" value="Medidor: " />
+											<p:selectOneMenu id="txtMedidor"
+												binding="#{planRevisionEquipoView.txtMedidor}"
+												required="true" requiredMessage="Seleccione un medidor">
+												<f:selectItems
+													value="#{planRevisionEquipoView.selectMedidor}" />
+												<p:ajax
+													listener="#{planRevisionEquipoView.listener_ConsultaMedidor}"
+													process="@all"
+													update="txtPeriocidadDias,txtPeriocidadHora, txtPeriocidadKm" />
+											</p:selectOneMenu>
+											<p:message for="txtMedidor" />
+
+											<p:outputLabel for="txtEquipo" value="Equipo/Maquinaria" />
+											<p:selectOneMenu id="txtEquipo" effect="fade" filter="true"
+												filterMatchMode="contains"
+												binding="#{planRevisionEquipoView.txtEquipo}"
+												autoWidth="false" required="false"
+												requiredMessage="Seleccione un equipo">
+												<f:selectItem itemLabel="Seleccione un equipo" itemValue="" />
+												<f:selectItems
+													value="#{planRevisionEquipoView.selectEquipo}" />
+
+											</p:selectOneMenu>
+											<p:outputLabel />
+
+
+											<p:outputLabel for="txtSistemasEquipoId_SistemasEquipo"
+												value="Sistema: " />
+											<p:selectOneMenu id="txtSistemasEquipoId_SistemasEquipo"
+												effect="fade" filter="true" filterMatchMode="contains"
+												autoWidth="false"
+												binding="#{planRevisionEquipoView.txtSistemasEquipoId_SistemasEquipo}"
+												style="width: 100%;" required="false"
+												requiredMessage="Seleccione un sistema">
+												<f:selectItem itemLabel="Seleccione un sistema" itemValue="" />
+												<f:selectItems
+													value="#{planRevisionEquipoView.selectSistemasEquipo}" />
+
+											</p:selectOneMenu>
+											<p:outputLabel />
+
+											<p:outputLabel
+												for="txtCompartimientosEquipoId_CompartimientosEquipo"
+												value="Compartimiento: " />
+											<p:selectOneMenu
+												id="txtCompartimientosEquipoId_CompartimientosEquipo"
+												effect="fade" filter="true" filterMatchMode="contains"
+												autoWidth="false"
+												binding="#{planRevisionEquipoView.txtCompartimientosEquipoId_CompartimientosEquipo}"
+												style="width: 100%;" required="false"
+												requiredMessage="Seleccione un compartimiento">
+												<f:selectItem itemLabel="Seleccione un compartimiento"
+													itemValue="" />
+												<f:selectItems
+													value="#{planRevisionEquipoView.selectCompartimientosEquipo}" />
+											</p:selectOneMenu>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtPeriocidadDias"
+												value="Periocidad (Días): " />
+											<p:inputText id="txtPeriocidadDias" disabled="true"
+												binding="#{planRevisionEquipoView.txtPeriocidadDias}"
+												required="false" requiredMessage="El valor es obligatorio" />
+											<p:message for="txtPeriocidadDias" />
+
+											<p:outputLabel for="txtPeriocidadHora"
+												value="Periocidad (Horas): " />
+											<p:inputText id="txtPeriocidadHora" disabled="true"
+												binding="#{planRevisionEquipoView.txtPeriocidadHora}"
+												required="false" requiredMessage="El valor es Obligatorio" />
+											<p:message for="txtPeriocidadHora" />
+
+											<p:outputLabel for="txtPeriocidadKm"
+												value="Periocidad (Km): " />
+											<p:inputText id="txtPeriocidadKm" disabled="true"
+												binding="#{planRevisionEquipoView.txtPeriocidadKm}"
+												required="false" requiredMessage="El valor es obligatorio" />
+											<p:message for="txtPeriocidadKm" />
+
+											<p:outputLabel for="txtAlertaMin"
+												value="Alertar Mmto a partir de? : " />
+											<p:inputText id="txtAlertaMin" disabled="true"
+												binding="#{planRevisionEquipoView.txtAlertaMin}"
+												required="false"
+												requiredMessage="Digite el minimo valor para alertar mantenimiento" />
+											<p:outputLabel />
+											
+											<p:outputLabel for="txtFechaUltimoServicio"
+												value="Fecha Ult. Servicio: " />
+											<p:calendar id="txtFechaUltimoServicio" showOn="button"
+												navigator="false" locale="es"
+												binding="#{planRevisionEquipoView.txtFechaUltimoServicio}"
+												pattern="dd/MM/yyyy" mask="true">
+											</p:calendar>
+											<p:message for="txtFechaUltimoServicio" />
+
+
+											<p:outputLabel for="txtHorasUltimoServicio"
+												value="Horas último servicio: " />
+											<p:inputText id="txtHorasUltimoServicio" 
+												binding="#{planRevisionEquipoView.txtHorasUltimoServicio}"
+												required="false" requiredMessage="Indique un valor">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											<p:outputLabel />
+											
+											<p:outputLabel for="txtKmUltimoServicio"
+												value="Km último servicio: " />
+											<p:inputText id="txtKmUltimoServicio" 
+												binding="#{planRevisionEquipoView.txtKmUltimoServicio}"
+												required="false" requiredMessage="Indique un valor">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											<p:outputLabel />
+
+
+										</h:panelGrid>
+
+
+
+
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+													binding="#{planRevisionEquipoView.btnAgregarEquipo}"
+													value="Agregar"
+													action="#{planRevisionEquipoView.action_agregarEquiposDet}"
+													update="tablaPlanRevisionEquipoDet :dialogPlanRevisionEquipo" />
+
+												<p:commandButton id="btnlimpiar" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridPlanRevisionEquipoDet"
+														resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+
+										<p:outputPanel>
+											<p:dataTable id="tablaPlanRevisionEquipoDet"
+												value="#{planRevisionEquipoView.dataDetEquipo}"
+												var="listaPlanRevisionEquipoDet" paginator="true" rows="5"
+												rowsPerPageTemplate="5,10,15" editable="true" reflow="true"
+												editMode="cell" widgetVar="cellEquipo">
+
+												<p:ajax event="cellEdit"
+													listener="#{planRevisionEquipoView.onCellEditEquipos}" />
+
+												<p:column headerText="Equipo">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaPlanRevisionEquipoDet.nombreEquipo}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaPlanRevisionEquipoDet.equipo.equipoId}">
+																<f:selectItems
+																	value="#{planRevisionEquipoView.selectEquipo}"
+																	var="var2" itemValue="#{var2}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Sistema">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaPlanRevisionEquipoDet.nombreSistema}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaPlanRevisionEquipoDet.sistemasEquipo.sistemasEquipoId}">
+																<f:selectItems
+																	value="#{planRevisionEquipoView.selectSistemasEquipo}"
+																	var="var3" itemValue="#{var3}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Compartimiento">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaPlanRevisionEquipoDet.nombreCompartimiento}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaPlanRevisionEquipoDet.compartimientosEquipo.compartimientosEquipoId}">
+																<f:selectItems
+																	value="#{planRevisionEquipoView.selectCompartimientosEquipo}"
+																	var="var4" itemValue="#{var4}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="P. (Días)">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaPlanRevisionEquipoDet.periocidadDias}" />
+
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaPlanRevisionEquipoDet.periocidadDias}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="P. (Horas)">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaPlanRevisionEquipoDet.periocidadHora}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaPlanRevisionEquipoDet.periocidadHora}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="P. (Km)">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaPlanRevisionEquipoDet.periocidadKm}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaPlanRevisionEquipoDet.periocidadKm}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+												<p:column headerText="Alertar Mmto">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaPlanRevisionEquipoDet.alertaMin}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaPlanRevisionEquipoDet.alertaMin}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+								
+												<p:column headerText="Fecha Ult. Serv.">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaPlanRevisionEquipoDet.fechaUltimoServicio}">
+																<f:convertDateTime pattern="dd-MM-yyyy" />
+															</h:outputText>
+														</f:facet>
+														<f:facet name="input">
+															<p:calendar navigator="false" locale="es"
+																value="#{listaPlanRevisionEquipoDet.fechaUltimoServicio}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<p:column headerText="Hrs Ult. Serv.">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaPlanRevisionEquipoDet.horasUltimoServicio}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaPlanRevisionEquipoDet.horasUltimoServicio}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<p:column headerText="Kms Ult. Serv.">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaPlanRevisionEquipoDet.kmUltimoServicio}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaPlanRevisionEquipoDet.kmUltimoServicio}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<f:attribute name="selectedPlanRevisionEquipoDet"
+													value="#{listaPlanRevisionEquipoDet}" />
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{planRevisionEquipoView.actionDeleteDatPlanRevisionEquipoDet}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaPlanRevisionEquipoDet :dialogPlanRevisionEquipo">
+															<f:attribute name="selectedPlanRevisionEquipoDet"
+																value="#{listaPlanRevisionEquipoDet}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+
+									</p:panel>
+								</p:tab>
+
+								<p:tab title="Productos">
+									<p:panelGrid id="R2" columns="3">
+										<p:column>
+											<h:panelGrid columns="1">
+
+												<p:outputLabel for="txtProducto" value="Producto: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtProducto"
+													binding="#{planRevisionEquipoView.txtProducto}"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													filter="true" filterMatchMode="contains" disabled="true">
+													<f:selectItem itemLabel="Seleccione un producto"
+														itemValue="" />
+													<f:selectItems
+														value="#{planRevisionEquipoView.selectProducto}" />
+												<p:ajax
+														listener="#{planRevisionEquipoView.listener_ConsultaUmProducto}"
+														update="txtUdadMed"
+														process="@this" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1">
+
+												<p:outputLabel for="txtUdadMed" value="Unidad de medida "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtUdadMed"
+													binding="#{planRevisionEquipoView.txtUdadMed}"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													filter="true" filterMatchMode="contains" disabled="true">
+													<f:selectItem itemLabel="Seleccione una unidad de medida"
+														itemValue="" />
+													<f:selectItems
+														value="#{planRevisionEquipoView.selectUdadMed}" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1">
+
+												<p:outputLabel for="txtCantidad" value="Cantidad "
+													style="font-size: 0.8em;" />
+												<p:inputNumber id="txtCantidad" disabled="true"
+													binding="#{planRevisionEquipoView.txtCantidad}"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;" />
+
+											</h:panelGrid>
+										</p:column>
+									</p:panelGrid>
+
+
+									<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregarProducto"
+												icon="ui-icon-plusthick" value="Agregar"
+												binding="#{planRevisionEquipoView.btnAgregarProducto}"
+												action="#{planRevisionEquipoView.action_agregarProducto}"
+												update="tablaLaborProductos :dialogPlanRevisionEquipo" />
+
+											<p:commandButton id="btnlimpiar4" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="R2" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+									</h:panelGrid>
+
+									<p:scrollPanel mode="native" style="width:870px;height:250px">
+										<p:outputPanel>
+											<p:dataTable id="tablaLaborProductos"
+												value="#{planRevisionEquipoView.dataPlanRevisionProd}"
+												var="listaLaborProducto" paginator="true" rows="5"
+												rowsPerPageTemplate="5,10,15" editable="true" reflow="true"
+												editMode="cell" widgetVar="cellProd">
+
+												<p:ajax event="cellEdit"
+													listener="#{planRevisionEquipoView.onCellEditProd}" />
+
+												<p:column headerText="Producto">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaLaborProducto.nombreProducto}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaLaborProducto.nombreProducto}">
+																<f:selectItems
+																	value="#{planRevisionEquipoView.selectProducto}"
+																	var="var10" itemValue="#{var10}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Unidad de medida">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaLaborProducto.nombreUdadMed}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaLaborProducto.nombreUdadMed}">
+																<f:selectItems
+																	value="#{planRevisionEquipoView.selectUdadMed}"
+																	var="var11" itemValue="#{var11}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Cantidad">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaLaborProducto.cantidad}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:inputText style="font-size: 0.8em;"
+																value="#{listaLaborProducto.cantidad}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<f:attribute name="selectedPlanRevisionProd"
+													value="#{listaLaborProducto}" />
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete2" icon="ui-icon-trash"
+															actionListener="#{planRevisionEquipoView.actionDeleteLaborProducto}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaLaborProductos :dialogPlanRevisionEquipo">
+															<f:attribute name="selectedPlanRevisionProd"
+																value="#{listaLaborProducto}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:scrollPanel>
+								</p:tab>
+
+								<p:tab title="Asignación de recursos para el presupuesto"
+									disabled="true">
+									<p:panelGrid id="R1">
+										<p:column>
+											<h:panelGrid columns="1">
+
+												<p:outputLabel for="txtTpRecursoId_TipoRecurso"
+													value="Tipo de recurso: " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtTpRecursoId_TipoRecurso"
+													binding="#{planRevisionEquipoView.txtTpRecursoId_TipoRecurso}"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													filter="true" filterMatchMode="contains" disabled="true">
+													<f:selectItem itemLabel="Seleccione un tipo de recurso"
+														itemValue="" />
+													<f:selectItems
+														value="#{planRevisionEquipoView.selectTpRecursoId}" />
+													<p:ajax
+														listener="#{planRevisionEquipoView.listener_ConsultaCodTipoRecurso}"
+														update="txtNombreTipoRecurso,txtRecursoId, txtNombreRecurso"
+														process="@this, txtRecursoId,txtTpRecursoId_TipoRecurso" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtRecursoId" value="Tipo de recurso: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtRecursoId"
+													binding="#{planRevisionEquipoView.txtRecursoId}"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													filter="true" filterMatchMode="contains" disabled="true">
+													<f:selectItem itemLabel="Seleccione un tipo de recurso"
+														itemValue="" />
+													<f:selectItems
+														value="#{planRevisionEquipoView.selectRecurso}" />
+													<p:ajax
+														listener="#{planRevisionEquipoView.listener_ConsultaCodRecurso}"
+														update="txtNombreRecurso"
+														process="@this,txtRecursoId,txtTpRecursoId_TipoRecurso" />
+												</p:selectOneMenu>
+
+												<!-- id auto incrementable -->
+												<p:inputText style="visibility:hidden"
+													id="txtLaborRecursosId"
+													binding="#{planRevisionEquipoView.txtLaborRecursosId}" />
+
+												<p:inputText style="visibility:hidden"
+													id="txtNombreTipoRecurso"
+													binding="#{planRevisionEquipoView.txtNombreTipoRecurso}" />
+
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1">
+												<p:outputLabel for="txtUdadMedIdRecurso"
+													value="Unidad de medida: " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtUdadMedIdRecurso" effect="fade"
+													filter="true" filterMatchMode="contains" autoWidth="false"
+													style="width: 100%;font-size: 0.8em;"
+													binding="#{planRevisionEquipoView.txtUdadMedIdRecurso}"
+													required="false"
+													requiredMessage="Seleccione una unidad de medida">
+													<f:selectItem itemLabel="Seleccione  una unidad de medida"
+														itemValue="" />
+													<f:selectItems
+														value="#{planRevisionEquipoView.selectUdadMedIdRecurso}" />
+													<p:ajax
+														listener="#{planRevisionEquipoView.listener_ConsultaCodUdadMedRecurso}"
+														update="txtNombreUmRecurso" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtRendimientoRecurso"
+													value="Cantidad: " style="font-size: 0.8em;" />
+												<p:inputText id="txtRendimientoRecurso" disabled="true"
+													style="font-size: 0.8em;"
+													binding="#{planRevisionEquipoView.txtRendimientoRecurso}"
+													required="false" requiredMessage="Indique el rendimiento">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+
+												<p:inputText style="visibility:hidden" id="txtNombreRecurso"
+													binding="#{planRevisionEquipoView.txtNombreRecurso}" />
+
+												<p:inputText style="visibility:hidden"
+													id="txtNombreUmRecurso"
+													binding="#{planRevisionEquipoView.txtNombreUmRecurso}" />
+
+
+
+
+											</h:panelGrid>
+										</p:column>
+
+
+									</p:panelGrid>
+
+
+									<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregarRecurso"
+												icon="ui-icon-plusthick"
+												binding="#{planRevisionEquipoView.btnAgregarRecurso}"
+												value="Agregar"
+												action="#{planRevisionEquipoView.action_agregarRecurso}"
+												update="tablaLaborRecursos :dialogPlanRevisionEquipo" />
+
+											<p:commandButton id="btnlimpiar3" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="R1" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+									</h:panelGrid>
+
+									<p:scrollPanel mode="native" style="width:870px;height:250px">
+										<p:outputPanel>
+											<p:dataTable id="tablaLaborRecursos"
+												value="#{planRevisionEquipoView.dataPlanRevisionEquipoRecursos}"
+												var="listaLaborRecursos" paginator="true" rows="5"
+												rowsPerPageTemplate="5,10,15" editable="true" reflow="true"
+												editMode="cell" widgetVar="cellPresupuesto">
+
+												<p:ajax event="cellEdit"
+													listener="#{planRevisionEquipoView.onCellEditPresupuesto}" />
+
+												<p:column headerText="Tipo Recurso">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaLaborRecursos.nombreTipoRecurso}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaPlanRevisionEquipoAct.tpRecursoId.tpRecursoId}">
+																<f:selectItems
+																	value="#{planRevisionEquipoView.selectTpRecursoId}"
+																	var="var5" itemValue="#{var5}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Recurso">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaLaborRecursos.nombreRecurso}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaLaborRecursos.nombreRecurso}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="UM">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaLaborRecursos.nombreUm}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaPlanRevisionEquipoAct.udadMedId.udadMedId}">
+																<f:selectItems
+																	value="#{planRevisionEquipoView.selectUdadMedIdRecurso}"
+																	var="var6" itemValue="#{var6}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+												<p:column headerText="Cantidad">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaLaborRecursos.rendimientoRecurso}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaLaborRecursos.rendimientoRecurso}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<f:attribute name="selectedLaborRecursos"
+													value="#{listaLaborRecursos}" />
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{planRevisionEquipoView.actionDeleteLaborRecursos}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaLaborRecursos :dialogPlanRevisionEquipo">
+															<f:attribute name="selectedLaborRecursos"
+																value="#{listaLaborRecursos}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:scrollPanel>
+								</p:tab>
+
+
+
+							</p:tabView>
+
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{planRevisionEquipoView.btnSave}" value="Grabar"
+									 action="#{planRevisionEquipoView.action_save()}"
+									update=":dialogPlanRevisionEquipo :frm:panelDataTablePlanRevisionEquipo" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{planRevisionEquipoView.action_clear()}"
+									process="@this" update=":dialogPlanRevisionEquipo" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

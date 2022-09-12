@@ -1,0 +1,140 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableLimiteCeptoNomina"
+						header="Labores relacionadas">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{limiteCeptoNominaView.data}"
+							var="limiteCeptoNomina" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="limiteCeptoNomina" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+							<p:column filterBy="#{limiteCeptoNomina.ceptoNominaId}"
+								sortBy="#{limiteCeptoNomina.ceptoNominaId}">
+								<f:facet name="header">
+									<h:outputText value="Concepto de nómina" />
+								</f:facet>
+								<h:outputText value="#{limiteCeptoNomina.ceptoNominaId}" />
+							</p:column>
+
+							<p:column filterBy="#{limiteCeptoNomina.udadMedId}"
+								sortBy="#{limiteCeptoNomina.udadMedId}">
+								<f:facet name="header">
+									<h:outputText value="Unidad de medida" />
+								</f:facet>
+								<h:outputText value="#{limiteCeptoNomina.udadMedId}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogLimiteCeptoNomina"
+										actionListener="#{limiteCeptoNominaView.action_edit}">
+										<f:attribute name="selectedLimiteCeptoNomina"
+											value="#{limiteCeptoNomina}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{limiteCeptoNominaView.action_new()}"
+								update=":dialogLimiteCeptoNomina" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogLimiteCeptoNomina" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{limiteCeptoNominaView.showDialog}" resizable="false"
+					modal="true" width="600" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelLimiteCeptoNomina" header="Labores relacionadas">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtCeptoNominaId"
+									value="Concepto de nómina: " />
+								<p:selectOneMenu id="txtCeptoNominaId" effect="fade"
+									filter="true" filterMatchMode="startsWith"
+									binding="#{limiteCeptoNominaView.txtCeptoNominaId}"
+									required="true" requiredMessage="Seleccione un concepto">
+									<f:selectItem itemLabel="Seleccione un concepto" itemValue="" />
+									<f:selectItems
+										value="#{limiteCeptoNominaView.selectCeptoNominaId}" />
+									<p:ajax update="panelLimiteCeptoNomina,msg,panelBotones"
+										listener="#{limiteCeptoNominaView.listener_txtId}" />
+								</p:selectOneMenu>
+								<p:message for="txtCeptoNominaId" />
+
+
+								<p:outputLabel for="txtUdadMedId" value="Unidad de medida: " />
+								<p:selectOneMenu id="txtUdadMedId" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									binding="#{limiteCeptoNominaView.txtUdadMedId}" required="true"
+									requiredMessage="Seleccione una unidad de medida">
+									<f:selectItem itemLabel="Seleccione una unidad de medida"
+										itemValue="" />
+									<f:selectItems value="#{limiteCeptoNominaView.selectUdadMedId}" />
+								</p:selectOneMenu>
+								<p:message for="txtUdadMedId" />
+
+								<p:outputLabel for="txtCantidadPermitida"
+									value="Cantidad permitida: " />
+								<p:inputText id="txtCantidadPermitida" disabled="true"
+									binding="#{limiteCeptoNominaView.txtCantidadPermitida}"
+									required="true" requiredMessage="La cantidad es obligatorio" />
+								<p:message for="txtCantidadPermitida" />
+
+
+
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{limiteCeptoNominaView.btnSave}" value="Grabar"
+									action="#{limiteCeptoNominaView.action_save()}"
+									update=":dialogLimiteCeptoNomina :frm:panelDataTableLimiteCeptoNomina" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{limiteCeptoNominaView.action_clear()}"
+									process="@this" update=":dialogLimiteCeptoNomina" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

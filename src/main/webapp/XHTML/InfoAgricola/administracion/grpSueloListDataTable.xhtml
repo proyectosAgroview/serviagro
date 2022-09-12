@@ -1,0 +1,184 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+					<p:panel id="panelDataTableGrpSuelo" header="Grupos de Suelos">
+
+						<p:dataTable value="#{grpSueloView.data}" var="grpSuelo"
+							paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="gruposSuelos" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{grpSuelo.codigo}"
+								sortBy="#{grpSuelo.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{grpSuelo.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{grpSuelo.estado}"
+								sortBy="#{grpSuelo.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{grpSuelo.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{grpSuelo.nombre}"
+								sortBy="#{grpSuelo.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{grpSuelo.nombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogGrpSuelo"
+										actionListener="#{grpSueloView.action_edit}">
+										<f:attribute name="selectedGrpSuelo" value="#{grpSuelo}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{grpSueloView.action_new()}" update=":dialogGrpSuelo" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogGrpSuelo" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{grpSueloView.showDialog}"
+					resizable="false" modal="true" width="650" responsive="true"
+					styleClass="dialogFix">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelGrpSuelo" header="Grupos de Suelos">
+							<h:panelGrid columns="2" id="panelGrid">
+
+								<p:tabView id="tabView1">
+									<p:tab title="General">
+										<h:panelGrid columns="4" id="panelGrid1">
+
+											<p:outputLabel for="txtEstado" value="Estado: " />
+											<p:selectOneRadio id="txtEstado" disabled="true"
+												binding="#{grpSueloView.txtEstado}" required="true"
+												requiredMessage="Seleccione un estado">
+												<f:selectItem itemLabel="Activo" itemValue="A" />
+												<f:selectItem itemLabel="Inactivo" itemValue="I" />
+											</p:selectOneRadio>
+											<p:message for="txtEstado" />
+											<p:outputLabel />
+
+											<p:outputLabel value="Código: " />
+											<p:inputText id="txtCodigo" disabled="false"
+												binding="#{grpSueloView.txtCodigo}"
+												placeholder="Buscar o crear registro" size="23">
+												<p:ajax
+													update=":formDialog:panelGrpSuelo,:formDialog:msg,:formDialog:panelBotones"
+													listener="#{grpSueloView.listener_txtCodigo}" />
+											</p:inputText>
+											<p:outputLabel />
+											<p:outputLabel />
+
+									
+
+											<p:outputLabel for="txtNombre" value="Nombre: " />
+											<p:inputText id="txtNombre" disabled="true"
+												binding="#{grpSueloView.txtNombre}" required="true"
+												requiredMessage="El Nombre es Obligatorio" />
+											<p:message for="txtNombre" />
+											<p:outputLabel />
+
+											<p:outputLabel for="txtNumeroDiasCierreRiego"
+												value="Días cierre riego: " />
+											<p:spinner disabled="true" id="txtNumeroDiasCierreRiego"
+												binding="#{grpSueloView.txtNumeroDiasCierreRiego}" value="0"
+												size="3">
+												<f:converter converterId="javax.faces.Long" />
+											</p:spinner>
+											<p:outputLabel />
+											<p:outputLabel />
+
+											<p:outputLabel for="txtInfoAdicional"
+												value="Información Adicional 1:" />
+											<p:inputTextarea id="txtInfoAdicional"
+												binding="#{grpSueloView.txtInfoAdicional}" rows="5"
+												cols="30" counter="display" maxlength="100"
+												counterTemplate="{0} Caracteres" autoResize="true" />
+											<h:outputText id="display" />
+											<p:outputLabel />
+
+											<p:outputLabel for="txtInfoAdicional2"
+												value="Información Adicional 2:" />
+											<p:inputTextarea id="txtInfoAdicional2"
+												binding="#{grpSueloView.txtInfoAdicional2}" rows="5"
+												cols="30" counter="display2" maxlength="100"
+												counterTemplate="{0} Caracteres." autoResize="true" />
+											<h:outputText id="display2" />
+											<p:outputLabel />
+
+											<p:inputText style="visibility:hidden" id="txtGrupoSuelo"
+												binding="#{grpSueloView.txtGrupoSuelo}">
+											</p:inputText>
+											<p:outputLabel />
+											<p:outputLabel />
+
+
+										</h:panelGrid>
+
+									</p:tab>
+
+									</p:tabView>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{grpSueloView.btnSave}" value="Grabar"
+									action="#{grpSueloView.action_save()}"
+									update=":dialogGrpSuelo :frm:panelDataTableGrpSuelo" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{grpSueloView.action_clear()}">
+									<p:ajax update=":dialogGrpSuelo" resetValues="true" />
+								</p:commandButton>
+
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

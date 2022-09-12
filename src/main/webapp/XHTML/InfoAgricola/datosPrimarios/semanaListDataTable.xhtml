@@ -1,0 +1,170 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+					<p:panel id="panelDataTableSemana" header="Periodos de pago">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{semanaView.data}"
+							var="semana" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="semana" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{semana.estado}"
+								sortBy="#{semana.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{semana.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{semana.codigo}"
+								sortBy="#{semana.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{semana.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{semana.fechaInicial}" sortBy="#{semana.fechaInicial}">
+								<f:facet name="header">
+									<h:outputText value="Fecha inicial" />
+								</f:facet>
+								<h:outputText value="#{semana.fechaInicial}"  >
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+
+							<p:column filterBy="#{semana.fechaFinal}" sortBy="#{semana.fechaFinal}">
+								<f:facet name="header">
+									<h:outputText value="Fecha final" />
+								</f:facet>
+								<h:outputText value="#{semana.fechaFinal}"  >
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogSemana"
+										actionListener="#{semanaView.action_edit}">
+										<f:attribute name="selectedSemana" value="#{semana}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{semanaView.action_new()}"
+								update=":dialogSemana" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogSemana" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{semanaView.showDialog}"
+					resizable="false" modal="true" width="600" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelSemana" header="Periodos de pago">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" 
+									binding="#{semanaView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+
+								<p:outputLabel for="txtAnioFiscalId_AnioFiscal"
+									value="Año Fiscal" />
+								<p:selectOneMenu id="txtAnioFiscalId_AnioFiscal"
+									binding="#{semanaView.txtAnioFiscalId_AnioFiscal}"
+									required="true" requiredMessage="Seleccione un Año">
+									<f:selectItem itemLabel="Seleccione un Año" itemValue="" />
+									<f:selectItems value="#{semanaView.selectAnioFiscal}" />
+								</p:selectOneMenu>
+								<p:message for="txtAnioFiscalId_AnioFiscal" />
+
+
+								<p:outputLabel value="Código: " />
+								<p:inputText id="txtCodigo" disabled="false"
+									binding="#{semanaView.txtCodigo}"
+									placeholder="Buscar o crear registro" size="23">
+									<p:ajax update="panelSemana,msg,panelBotones"
+										listener="#{semanaView.listener_txtCodigo}" />
+								</p:inputText>
+								<p:outputLabel />
+
+								<p:outputLabel for="txtFechaInicial" value="Fecha inicial" />
+								<p:calendar id="txtFechaInicial" showOn="button" navigator="false"
+									locale="es" binding="#{semanaView.txtFechaInicial}"
+									pattern="dd/MM/yyyy" required="true" Mask = "true"
+									requiredMessage="La Fecha es Obligatoria">
+								</p:calendar>
+								<p:message for="txtFechaInicial" />
+
+								<p:outputLabel for="txtFechaFinal" value="Fecha final" />
+								<p:calendar id="txtFechaFinal" showOn="button" navigator="false"
+									locale="es" binding="#{semanaView.txtFechaFinal}"
+									pattern="dd/MM/yyyy" required="true"  Mask = "true"
+									requiredMessage="La Fecha es Obligatoria">
+								</p:calendar>
+								<p:message for="txtFechaFinal" />
+
+								
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden" id="txtSemanaId"
+									binding="#{semanaView.txtSemanaId}">
+									
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{semanaView.btnSave}" value="Grabar"
+									action="#{semanaView.action_save()}"
+									update=":dialogSemana :frm:panelDataTableSemana" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{semanaView.action_clear()}"
+									process="@this" update=":dialogSemana" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

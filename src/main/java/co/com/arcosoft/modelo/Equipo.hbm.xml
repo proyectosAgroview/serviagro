@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+	<class name="co.com.arcosoft.modelo.Equipo" table="equipo">
+		<id name="equipoId" type="java.lang.Long">
+			<column name="equipo_id" />
+			<generator class="identity" />
+		</id>
+		<property name="servicio" type="java.lang.Long">
+			<column name="servicio_id" />
+		</property>
+		<property name="medidor" type="java.lang.Long">
+			<column name="medidor_id" />
+		</property>
+		<property name="numeroEje" type="java.lang.Long">
+			<column name="num_eje_id" />
+		</property>
+		<property name="productoId" type="java.lang.Long">
+			<column name="producto_id" />
+		</property>
+		<property name="elementoCosto" type="java.lang.Long">
+			<column name="elem_costo_id" />
+		</property>
+		<property name="trabajador" type="java.lang.Long">
+			<column name="conductor" />
+		</property>
+		<property name="centCost" type="java.lang.Long">
+			<column name="cent_cost_id" />
+		</property>
+		<property name="labor" type="java.lang.Long">
+			<column name="labor_id" />
+		</property>
+		<property name="modeloEquipo" type="java.lang.Long">
+			<column name="modelo_equipo_id" />
+		</property>
+		<many-to-one name="categoriaEquipo"
+			class="co.com.arcosoft.modelo.CategoriaEquipo" fetch="select">
+			<column name="categ_equip_id" />
+		</many-to-one>
+		<many-to-one name="contratista"
+			class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+			<column name="contratista_id" />
+		</many-to-one>
+		<property name="flotaTransporte" type="java.lang.Long">
+			<column name="flota_transp_id" />
+		</property>
+		<property name="codigo" type="java.lang.String">
+			<column name="codigo" length="20" />
+		</property>
+		<property name="nombre" type="java.lang.String">
+			<column name="nombre" length="60" />
+		</property>
+		<property name="compania" type="java.lang.Long">
+			<column name="compania" />
+		</property>
+		<property name="placa" type="java.lang.String">
+			<column name="placa" length="30" />
+		</property>
+		<property name="anioFabricacion" type="java.lang.Long">
+			<column name="anio_fabricacion" />
+		</property>
+		<property name="funcion" type="java.lang.String">
+			<column name="funcion" length="30" />
+		</property>
+		<property name="taraEstandar" type="java.lang.Double">
+			<column name="tara_estandar" precision="12" scale="4" />
+		</property>
+		<property name="color" type="java.lang.String">
+			<column name="color" length="30" />
+		</property>
+		<property name="foto" type="java.lang.String">
+			<column name="foto" length="150" />
+		</property>
+		<property name="infoAdicional" type="java.lang.String">
+			<column name="info_adicional" length="100" />
+		</property>
+		<property name="infoAdicional2" type="java.lang.String">
+			<column name="info_adicional2" length="100" />
+		</property>
+		<property name="fechaCreacion" type="java.util.Date">
+			<column name="fecha_creacion" length="19" />
+		</property>
+		<property name="fechaModificacion" type="java.util.Date">
+			<column name="fecha_modificacion" length="19" />
+		</property>
+		<property name="estado" type="java.lang.String">
+			<column name="estado" length="1" />
+		</property>
+		<property name="tipoPropiedad" type="java.lang.String">
+			<column name="tipo_propiedad" length="30" />
+		</property>
+		<property name="consumoKmGl" type="java.lang.Double">
+			<column name="consumo_km_gl" precision="12" scale="4" />
+		</property>
+		<property name="consumoGlHora" type="java.lang.Double">
+			<column name="consumo_gl_hora" precision="12" scale="4" />
+		</property>
+		<property name="odometroActual" type="java.lang.Double">
+			<column name="odometro_actual" precision="12" scale="4" />
+		</property>
+		<property name="horometroActual" type="java.lang.Double">
+			<column name="horometro_actual" precision="12" scale="4" />
+		</property>
+		<property name="fechaUltimoServicios" type="java.util.Date">
+			<column name="fecha_ultimo_servicio" length="19" />
+		</property>
+		<property name="fechaUltimoAbastecimiento"
+			type="java.util.Date">
+			<column name="fecha_ultimo_abastecimiento" length="19" />
+		</property>
+		<property name="transportadora" type="java.lang.Long">
+			<column name="transportador_id" />
+		</property>
+		<property name="tagId" type="java.lang.Long">
+			<column name="tag_id" />
+		</property>
+		<property name="origenDatos" type="java.lang.String">
+			<column name="origen_datos" length="30" />
+		</property>
+		<property name="especieEquipo" type="java.lang.String">
+			<column name="especie_equipo" length="60" />
+		</property>
+		<property name="horasDiaEstandar" type="java.lang.Double">
+			<column name="horas_dia_estandar" precision="12" scale="4" />
+		</property>
+		<property name="kmDiaEstandar" type="java.lang.Double">
+			<column name="km_dia_estandar" precision="12" scale="4" />
+		</property>
+
+		<property name="altura" type="java.lang.String">
+			<column name="altura" length="80" />
+		</property>
+		<property name="diametro" type="java.lang.String">
+			<column name="diametro" length="80" />
+		</property>
+		<property name="tamano" type="java.lang.String">
+			<column name="tamano" length="80" />
+		</property>
+		<property name="presion" type="java.lang.String">
+			<column name="presion" length="80" />
+		</property>
+		<property name="caudal" type="java.lang.String">
+			<column name="caudal" length="80" />
+		</property>
+		<property name="serial" type="java.lang.String">
+			<column name="serial" length="80" />
+		</property>
+		<property name="revoluciones" type="java.lang.String">
+			<column name="revoluciones" length="80" />
+		</property>
+		<property name="potencia" type="java.lang.String">
+			<column name="potencia" length="80" />
+		</property>
+		<property name="voltaje" type="java.lang.String">
+			<column name="voltaje" length="80" />
+		</property>
+		<property name="corriente" type="java.lang.String">
+			<column name="corriente" length="80" />
+		</property>
+		<property name="generico" type="java.lang.String">
+			<column name="generico" length="30" />
+		</property>
+		<property name="excluirDistribucciones"
+			type="java.lang.String">
+			<column name="excluir_distribucciones" length="30" />
+		</property>
+		<property name="valorCompra" type="java.lang.Double">
+			<column name="valor_compra" precision="12" scale="4" />
+		</property>
+		<property name="indicador_vuelta_medidor"
+			type="java.lang.Long">
+			<column name="indicador_vuelta_medidor" />
+		</property>
+		
+		     <property name="tipoDistribuccionCostos" type="java.lang.String">
+			<column name="tipo_distribuccion_costos" length="20" />
+		</property>
+
+		<property name="hor_odo_abastecimiento_inicial"
+			type="java.lang.Double">
+			<column name="hor_odo_abastecimiento_inicial" />
+		</property>
+
+		<property name="capacidadTanque" type="java.lang.Double">
+			<column name="capacidad_tanque" precision="12" scale="4" />
+		</property>
+
+ 
+		<set name="datMantenimientoEquipos"
+			table="dat_mantenimiento_equipo" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="equipo_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatMantenimientoEquipo" />
+		</set>
+		<set name="tarifaEquipoPropio" table="tarifa_equip_prop"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="equipo_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.TarifaEquipProp" />
+		</set>
+		<set name="datAbastCombustibles" table="dat_abast_combustible"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="equipo_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatAbastCombustible" />
+		</set>
+		<set name="datServicioDets" table="dat_servicio_det"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="equipo_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatServicioDet" />
+		</set>
+		<set name="planRevisionEquipoDets"
+			table="plan_revision_equipo_det" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="equipo" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.PlanRevisionEquipoDet" />
+		</set>
+		<set name="datServImplementos" table="dat_serv_implemento"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="implemento" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatServImplemento" />
+		</set>
+		<set name="datServicios" table="dat_servicio" inverse="true"
+			lazy="true" fetch="select">
+			<key>
+				<column name="equipo_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatServicio" />
+		</set>
+		<set name="equipoEventos" table="equipo_evento" inverse="true"
+			lazy="true" fetch="select">
+			<key>
+				<column name="equipo_id" not-null="true" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.EquipoEvento" />
+		</set>
+		<set name="datServRealizadosEquipos"
+			table="dat_serv_realizados_equipo" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="equipo_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatServRealizadosEquipo" />
+		</set>
+		<set name="datHorasTrabajoEquipos"
+			table="dat_horas_trabajo_equipo" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="equipo_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatHorasTrabajoEquipo" />
+		</set>
+	</class>
+</hibernate-mapping>

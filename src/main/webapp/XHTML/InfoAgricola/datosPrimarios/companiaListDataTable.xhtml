@@ -1,0 +1,526 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+			<h:form id="frm">
+					<p:panel id="panelDataTableCompania" header="Compañia">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{companiaView.data}" var="compania"
+							paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Compañia" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{compania.estado}"
+								sortBy="#{compania.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{compania.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{compania.codigo}"
+								sortBy="#{compania.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{compania.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{compania.nombre}"
+								sortBy="#{compania.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{compania.nombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogCompania" value="Editar"
+										actionListener="#{companiaView.action_edit}">
+										<f:attribute name="selectedCompania" value="#{compania}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{companiaView.action_new()}" update=":dialogCompania" />
+						</div>
+					</p:panel>
+
+				</h:form>
+				<p:dialog id="dialogCompania" widgetVar="dlg" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{companiaView.showDialog}" resizable="true" modal="true"
+					width="900" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelCompania" header="Compañia">
+
+							<p:tabView id="tabMapa" activeIndex="#{companiaView.activeTapIndex}">
+								<p:tab id="general" title="General">
+									<h:panelGrid columns="2" cellpadding="5">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="false"
+											binding="#{companiaView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{companiaView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelCompania,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{companiaView.listener_txtCodigo}" />
+										</p:inputText>
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="false"
+											binding="#{companiaView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+
+										<p:outputLabel for="txtRut" value="Rut/Nit: " />
+										<p:inputText id="txtRut" disabled="false"
+											binding="#{companiaView.txtRut}" />
+
+										<p:outputLabel for="txtEntBancId_EntBanc" value="Banco titular" />
+										<p:selectOneMenu id="txtEntBancId_EntBanc" filter="true"
+											filterMatchMode="contains"
+											binding="#{companiaView.txtEntBancId_EntBanc}"
+											required="false" requiredMessage="Seleccione un banco">
+											<f:selectItem itemLabel="Seleccione un banco" itemValue="" />
+											<f:selectItems value="#{companiaView.selectEntBanc}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtCiudadId_Ciudad" value="Ciudad" />
+										<p:selectOneMenu id="txtCiudadId_Ciudad" filter="true"
+											filterMatchMode="contains"
+											binding="#{companiaView.txtCiudadId_Ciudad}" required="false"
+											requiredMessage="Seleccione una ciudad">
+											<f:selectItem itemLabel="Seleccione una ciudad" itemValue="" />
+											<f:selectItems value="#{companiaView.selectCiudad}" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+
+									<p:panelGrid style="width:100%">
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+												
+													<p:outputLabel for="txtDireccion" value="Dirección: " />
+													<p:inputText id="txtDireccion" disabled="false"
+														binding="#{companiaView.txtDireccion}" />
+
+													<p:outputLabel for="txtTelefono" value="Teléfono: " />
+													<p:inputText id="txtTelefono" disabled="false"
+														binding="#{companiaView.txtTelefono}" />
+
+													<p:outputLabel for="txtPbx" value="Pbx: " />
+													<p:inputText id="txtPbx" disabled="false"
+														binding="#{companiaView.txtPbx}" />
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+												
+													<h:outputText for="txtEmail" value=" Email:" />
+													<p:inputText id="txtEmail" disabled="false"
+														binding="#{companiaView.txtEmail}"
+														validatorMessage="El Email no es valido">
+														<f:validateRegex
+															pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+													</p:inputText>
+													
+													<p:outputLabel for="txtInfoAdicional" value="Información Adicional 1:" />
+													<p:inputTextarea id="txtInfoAdicional"
+														binding="#{companiaView.txtInfoAdicional}" rows="1"
+														cols="30" maxlength="100" counterTemplate="{0} Caracteres"
+														autoResize="true" />
+
+													<p:outputLabel for="txtInfoAdicional2" value="Información Adicional 2:" />
+													<p:inputTextarea id="txtInfoAdicional2"
+														binding="#{companiaView.txtInfoAdicional2}" rows="1"
+														cols="30" maxlength="100"
+														counterTemplate="{0} Caracteres." autoResize="true" />
+
+													<!-- id auto incrementable -->
+													<p:inputText style="display:none" id="txtCompaniaId"
+														binding="#{companiaView.txtCompaniaId}">
+													</p:inputText>
+
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</p:tab>
+
+								<p:tab id="parametros" title="Parametros">
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+													
+														<h:outputText for="txtKardexEntradaEstandar" value=" Concepto de kardex (Entrada)" />
+														<p:selectOneMenu id="txtKardexEntradaEstandar" disabled="false"
+															binding="#{companiaView.txtKardexEntradaEstandar}"
+															style="width:200px" autoWidth="false">
+															<f:selectItem itemLabel="Seleccione un concepto de kardex" itemValue="" />
+															<f:selectItems value="#{companiaView.selectKardexEntrada}"/>
+														</p:selectOneMenu>
+
+												</h:panelGrid>
+											</p:column>
+											
+											<p:column>
+												<h:panelGrid columns="2">
+														
+														<h:outputText for="txtKardexSalidaEstandar" value=" Concepto de kardex (Salida)" />
+														<p:selectOneMenu id="txtKardexSalidaEstandar" disabled="false"
+															binding="#{companiaView.txtKardexSalidaEstandar}"
+															style="width:200px" autoWidth="false">
+															<f:selectItem itemLabel="Seleccione un concepto de kardex" itemValue="" />
+															<f:selectItems value="#{companiaView.selectKardexSalida}"/>
+														</p:selectOneMenu>
+
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</p:tab>
+
+								<p:tab id="Facturacion" title="Facturación">
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="1">
+												
+													<h:outputText for="txtConsecutivoFacturaCali" value="Consec. Facturación" /> 
+													<p:inputText id="txtConsecutivoFacturaCali" disabled="false" size="8"
+														binding="#{companiaView.txtConsecutivoFacturaCali}" />
+														
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<h:outputText for="txtPrefijo" value="Prefijo:" />
+													<p:inputText id="txtPrefijo" disabled="false" size="8"
+														binding="#{companiaView.txtPrefijo}" />
+
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>									
+									
+									<h:panelGrid columns="2" cellpadding="5">
+										
+										<h:outputText for="txtResolucion" value="Resolución:" />
+										<p:inputText id="txtResolucion" disabled="false" size="50"
+											binding="#{companiaView.txtResolucion}" />
+
+										<h:outputText for="txtDesFiscal" value="Dec. Fiscal" />
+										<p:inputText id="txtDesFiscal" disabled="false" size="50"
+											binding="#{companiaView.txtDesFiscal}" />
+
+										<h:outputText for="txtSubtitulo" value=" Subtitulo" />
+										<p:inputText id="txtSubtitulo" disabled="false" size="50"
+											binding="#{companiaView.txtSubtitulo}" />
+										
+										<h:outputText for="txtConsecutivoPrefactura"
+												value="Cons. Pre-Factura" />
+										<p:inputText id="txtConsecutivoPrefactura" disabled="false" size="8"
+											binding="#{companiaView.txtConsecutivoPrefactura}" />
+
+										<h:outputText for="txtImprimeFactura" value="Imprime factura:" />
+										<p:selectOneMenu id="txtImprimeFactura" disabled="false"
+											binding="#{companiaView.txtImprimeFactura}"
+											required="true" requiredMessage="Seleccione una opción">
+											<f:selectItem itemLabel="NO" itemValue="NO" />
+											<f:selectItem itemLabel="SI" itemValue="SI" />
+										</p:selectOneMenu>
+										
+									</h:panelGrid>								
+								</p:tab>
+								
+								<p:tab title="Nómina">
+									<p:scrollPanel mode="native" style="width:100%; height:500px">
+										<p:panelGrid columns="2">
+											<p:column>
+												<h:panelGrid columns="2" style="width:355px">
+												
+													<h:outputText for="txtDevengoMinimoDiario" value="Devengo  mínimo diario (Destajo):" />
+													<p:inputNumber id="txtDevengoMinimoDiario" disabled="false" size="10"
+														binding="#{companiaView.txtDevengoMinimoDiario}" />
+												
+													
+													<h:outputText for="txtValorUvt" value="Valor UVT" />
+													<p:inputNumber id="txtValorUvt" disabled="false" size="10"
+														binding="#{companiaView.txtValorUvt}" />
+													
+													<h:outputText for="txtSalarioMinimoLegal" value="Salario mínimo  legal" />
+													<p:inputNumber id="txtSalarioMinimoLegal" disabled="false" size="10"
+														binding="#{companiaView.txtSalarioMinimoLegal}" />
+													
+													<h:outputText for="txtTopeSmlAuxTransporte" value="Tope de SML para auxilio de transporte" />
+													<p:inputNumber id="txtTopeSmlAuxTransporte" disabled="false" size="10"
+														binding="#{companiaView.txtTopeSmlAuxTransporte}" />
+													
+													<h:outputText for="txtRentasExentasUvt" value="Rentas exentas en UVT" />
+													<p:inputNumber id="txtRentasExentasUvt" disabled="false" size="10"
+														binding="#{companiaView.txtRentasExentasUvt}" />
+													
+													<h:outputText for="txtPorcMinContribucion" value="% Minimo de contribución" />
+													<p:inputNumber id="txtPorcMinContribucion" disabled="false" size="10"
+														binding="#{companiaView.txtPorcMinContribucion}" />
+													
+												</h:panelGrid>
+											</p:column>
+											
+											<p:column>
+												<h:panelGrid columns="2" style="width:355px">
+													
+													<h:outputText for="txtIpc" value="IPC" />
+													<p:inputNumber id="txtIpc" disabled="false" size="10"
+														binding="#{companiaView.txtIpc}" />
+													
+													<h:outputText for="txtAuxilioTransporte" value="Auxilio de transporte" />
+													<p:inputNumber id="txtAuxilioTransporte" disabled="false" size="10"
+														binding="#{companiaView.txtAuxilioTransporte}" />
+													
+													<h:outputText for="txtPorcRentasExternas" value="% Rentas externas" />
+													<p:inputNumber id="txtPorcRentasExternas" disabled="false" size="10"
+														binding="#{companiaView.txtPorcRentasExternas}" />
+													
+													<h:outputText for="txtPorcLey1927" value="% Base ley 1527" />
+													<p:inputNumber id="txtPorcLey1927" disabled="false" size="10"
+														binding="#{companiaView.txtPorcLey1927}" />
+													
+													<h:outputText for="txtTarifaIvaRetenido" value="Tarifa IVA retenido" />
+													<p:inputNumber id="txtTarifaIvaRetenido" disabled="false" size="10"
+														binding="#{companiaView.txtTarifaIvaRetenido}" />
+												
+												</h:panelGrid>
+											</p:column>
+										</p:panelGrid>										
+										
+										<p:panelGrid columns="2">
+										
+											<f:facet name="header">
+										        <p:row>
+										            <p:column colspan="2">Provisiones</p:column>
+										        </p:row>										 
+										    </f:facet>
+																					
+											<p:column>
+												<h:panelGrid columns="2" style="width:355px">
+													
+													<h:outputText for="txtPorcProvisionCesantias" value="% Provisión cesantias" />
+													<p:inputNumber id="txtPorcProvisionCesantias" disabled="false" size="10"
+														binding="#{companiaView.txtPorcProvisionCesantias}" />
+													
+													<h:outputText for="txtPorcProvisionPrimas" value="% Provisión primas" />
+													<p:inputNumber id="txtPorcProvisionPrimas" disabled="false" size="10"
+														binding="#{companiaView.txtPorcProvisionPrimas}" />
+													
+												</h:panelGrid>
+											</p:column>
+											
+											<p:column>
+												<h:panelGrid columns="2" style="width:355px">
+													
+													<h:outputText for="txtPorcProvisionVacaciones" value="% Provisión vacaciones" />
+													<p:inputNumber id="txtPorcProvisionVacaciones" disabled="false" size="10"
+														binding="#{companiaView.txtPorcProvisionVacaciones}" />
+													
+													<h:outputText for="txtPorcProvisionInteresesCesantias" value="% Provisión intereses de cesantias" />
+													<p:inputNumber id="txtPorcProvisionInteresesCesantias" disabled="false" size="10"
+														binding="#{companiaView.txtPorcProvisionInteresesCesantias}" />
+												
+												</h:panelGrid>
+											</p:column>
+										</p:panelGrid>										
+										
+										<p:panelGrid columns="2">
+										
+											<f:facet name="header">
+										        <p:row>
+										            <p:column colspan="2">Empleador</p:column>
+										        </p:row>										 
+										    </f:facet>
+																					
+											<p:column>
+												<h:panelGrid columns="2" style="width:355px">
+													
+													<h:outputText for="txtPorcAporteEpsEmpleador" value="% Aporte EPS - Empleador" />
+													<p:inputNumber id="txtPorcAporteEpsEmpleador" disabled="false" size="10"
+														binding="#{companiaView.txtPorcAporteEpsEmpleador}" />
+													
+													<h:outputText for="txtPorcAporteAfpAltoRiesgoEmpleador" value="% Aporte AFP alto riego - Empleador" />
+													<p:inputNumber id="txtPorcAporteAfpAltoRiesgoEmpleador" disabled="false" size="10"
+														binding="#{companiaView.txtPorcAporteAfpAltoRiesgoEmpleador}" />
+													
+													<h:outputText for="txtPorcAporteIcbfEmpleador" value="% Aporte ICBF - Empleador" />
+													<p:inputNumber id="txtPorcAporteIcbfEmpleador" disabled="false" size="10"
+														binding="#{companiaView.txtPorcAporteIcbfEmpleador}" />
+													
+													<h:outputText for="txtMinimoSmlAporteSenaIcbf" value="Minimo SML aportar a SENA e ICBF" />
+													<p:inputNumber id="txtMinimoSmlAporteSenaIcbf" disabled="false" size="10"
+														binding="#{companiaView.txtMinimoSmlAporteSenaIcbf}" />
+													
+												</h:panelGrid>
+											</p:column>
+											
+											<p:column>
+												<h:panelGrid columns="2" style="width:355px">
+													
+													<h:outputText for="txtPorcAporteAfpEmpleador" value="% Aporte AFP - Empleador" />
+													<p:inputNumber id="txtPorcAporteAfpEmpleador" disabled="false" size="10"
+														binding="#{companiaView.txtPorcAporteAfpEmpleador}" />
+													
+													<h:outputText for="txtPorcAporteCcfEmpleador" value="% Aporte CCF - Empleador" />
+													<p:inputNumber id="txtPorcAporteCcfEmpleador" disabled="false" size="10"
+														binding="#{companiaView.txtPorcAporteCcfEmpleador}" />
+													
+													<h:outputText for="txtPorcAporteSenaEmpleador" value="% Aporte SENA - Empleador" />
+													<p:inputNumber id="txtPorcAporteSenaEmpleador" disabled="false" size="10"
+														binding="#{companiaView.txtPorcAporteSenaEmpleador}" />
+												
+												</h:panelGrid>
+											</p:column>
+										</p:panelGrid>										
+										
+										<p:panelGrid columns="2">
+										
+											<f:facet name="header">
+										        <p:row>
+										            <p:column colspan="2">Trabajador</p:column>
+										        </p:row>										 
+										    </f:facet>
+																					
+											<p:column>
+												<h:panelGrid columns="2" style="width:355px">
+													
+													<h:outputText for="txtAportesNominaLiquidan" value="Aportes de nomina se liquidan" />
+													<p:selectOneMenu id="txtAportesNominaLiquidan" disabled="false"
+														binding="#{companiaView.txtAportesNominaLiquidan}"
+														style="width:150px" autoWidth="false">
+														<f:selectItem itemValue="" itemLabel="Seleccione" />
+														<f:selectItem itemValue="En cada periodo" itemLabel="En cada periodo"/>
+														<f:selectItem itemValue="Quincenal" itemLabel="Quincenal" />
+														<f:selectItem itemValue="Mensual" itemLabel="Mensual" />
+													</p:selectOneMenu>
+													
+													<h:outputText for="txtTopeSmlCotizarEps" value="Tope SML cotizar a EPS" />
+													<p:inputNumber id="txtTopeSmlCotizarEps" disabled="false" size="10"
+														binding="#{companiaView.txtTopeSmlCotizarEps}" />
+													
+													<h:outputText for="txtTopeSmlCotizarAfp" value="Tope SML cotizar a AFP" />
+													<p:inputNumber id="txtTopeSmlCotizarAfp" disabled="false" size="10"
+														binding="#{companiaView.txtTopeSmlCotizarAfp}" />
+													
+													<h:outputText for="txtTopeSmlCotizarArl" value="Tope SML cotizar a ARL" />
+													<p:inputNumber id="txtTopeSmlCotizarArl" disabled="false" size="10"
+														binding="#{companiaView.txtTopeSmlCotizarArl}" />
+													
+													<h:outputText for="txtMinimoSmlAportaFsp" value="Minimo SML aportar a FSP" />
+													<p:inputNumber id="txtMinimoSmlAportaFsp" disabled="false" size="10"
+														binding="#{companiaView.txtMinimoSmlAportaFsp}" />
+													
+												</h:panelGrid>
+											</p:column>
+											
+											<p:column>
+												<h:panelGrid columns="2" style="width:355px">
+													
+													<h:outputText for="txtAuxilioTransporteLiquidan" value="Auxilio de transporte se liquidan" />
+													<p:selectOneMenu id="txtAuxilioTransporteLiquidan" disabled="false"
+														binding="#{companiaView.txtAuxilioTransporteLiquidan}"
+														style="width:150px" autoWidth="false">
+														<f:selectItem itemValue="" itemLabel="Seleccione" />
+														<f:selectItem itemValue="En cada periodo" itemLabel="En cada periodo"/>
+														<f:selectItem itemValue="Quincenal" itemLabel="Quincenal" />
+														<f:selectItem itemValue="Mensual" itemLabel="Mensual" />
+													</p:selectOneMenu>
+													
+													<h:outputText for="txtPorcAporteEpsTrabajador" value="% Aporte EPS - Trabajador" />
+													<p:inputNumber id="txtPorcAporteEpsTrabajador" disabled="false" size="10"
+														binding="#{companiaView.txtPorcAporteEpsTrabajador}" />
+													
+													<h:outputText for="txtPorcAporteAfpTrabajador" value="% Aporte AFP - Trabjador" />
+													<p:inputNumber id="txtPorcAporteAfpTrabajador" disabled="false" size="10"
+														binding="#{companiaView.txtPorcAporteAfpTrabajador}" />
+													
+													<h:outputText for="txtPorcAporteFspTrabajador" value="% Aporte FSP - Trabjador" />
+													<p:inputNumber id="txtPorcAporteFspTrabajador" disabled="false" size="10"
+														binding="#{companiaView.txtPorcAporteFspTrabajador}" />
+												
+													
+													<h:outputText for="txtTopeSmlCotizarArl" value="Tope SML Cotizar ARL" />
+													<p:inputNumber id="txtTopeSmlCotizarArl"  size="10"
+														binding="#{companiaView.txtTopeSmlCotizarArl}" />
+														
+														
+												</h:panelGrid>
+											</p:column>
+										</p:panelGrid>
+									</p:scrollPanel>
+								</p:tab>
+							</p:tabView>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{companiaView.btnSave}" value="Grabar"
+									action="#{companiaView.action_save()}"
+									update=":dialogCompania :frm:panelDataTableCompania" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{companiaView.action_clear()}"
+									process="@this" update=":dialogCompania" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

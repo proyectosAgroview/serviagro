@@ -1,0 +1,570 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatOtrosCostos"
+						header="Gastos generales por lote/suerte">
+						<!-- <p:growl id="men"/>	 -->
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtFechaIni" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaIni" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{datOtrosCostosView.txtFechaIni}"
+											required="false"
+											requiredMessage="La Fecha inicial es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="txtFechaFin" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{datOtrosCostosView.txtFechaFin}"
+											required="false"
+											requiredMessage="La Fecha  final  es obligatoria">
+										</p:calendar>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtPlanilla" value="n° Planilla "
+											style="font-size: 0.9em;" />
+										<p:inputNumber id="txtPlanilla" style="font-size: 0.9em;"
+											binding="#{datOtrosCostosView.txtPlanilla}"
+											maxlength="1000" autoResize="true" size="15" />
+											
+											<p:outputLabel for="txtTipoDistri" value="Tipo de distribucción:" style="font-size: 0.9em; " />
+													<p:selectOneMenu id="txtTipoDistri" autoWidth="false"
+														binding="#{datOtrosCostosView.txtTipoDistri}"
+														required="true" style="font-size: 0.9em; width:200px"
+														requiredMessage="Seleccione una transacción">
+														<f:selectItem itemLabel="Todos" itemValue="0" />
+														<f:selectItem itemLabel="Distribuir en todos los lotes de una HDA(según áreas)" itemValue="distri_todos_lotes_hacienda" />
+														<f:selectItem itemLabel="Distribuir en lotes informados" itemValue="distri_lotes_informados" />
+														<f:selectItem itemLabel="Distribuir en todos los lotes" itemValue="distri_todos_lotes" />
+													</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+
+										<p:commandButton id="btnCargarDatos" value="Consultar"
+											icon="ui-icon-newwin" style="font-size: 1em;"
+											action="#{datOtrosCostosView.listarOtrosCostos}"
+											update=":frm:tbl " process="@all" />
+
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+						<p:dataTable id="tbl" value="#{datOtrosCostosView.data}"
+							var="datOtrosCostos" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Productos" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datOtrosCostos.estado}"
+								sortBy="#{datOtrosCostos.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datOtrosCostos.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datOtrosCostos.consecutivo}"
+								sortBy="#{datOtrosCostos.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="#Planilla" />
+								</f:facet>
+								<h:outputText value="#{datOtrosCostos.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datOtrosCostos.fechaInicial}"
+								sortBy="#{datOtrosCostos.fechaInicial}">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datOtrosCostos.fechaInicial}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column filterBy="#{datOtrosCostos.fechaRegistro}"
+								sortBy="#{datOtrosCostos.fechaRegistro}">
+								<f:facet name="header">
+									<h:outputText value="Fecha final" />
+								</f:facet>
+								<h:outputText value="#{datOtrosCostos.fechaRegistro}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+										update=":dialogDatOtrosCostos"
+										actionListener="#{datOtrosCostosView.action_edit}">
+										<f:attribute name="selectedDatOtrosCostos"
+											value="#{datOtrosCostos}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datOtrosCostosView.action_new()}"
+								update=":dialogDatOtrosCostos" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatOtrosCostos" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datOtrosCostosView.showDialog}" resizable="false"
+					modal="true" width="900" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatOtrosCostos"
+							header="Gastos generales por lote/suerte">
+
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{datOtrosCostosView.activeTapIndex}">
+
+								<p:tab title="General">
+									<p:panel>
+										<h:panelGrid columns="2" id="panelGrid1">																				
+											<p:column>
+												<h:panelGrid columns="2" style="width:350px">
+													<p:outputLabel value="#Planilla:" style="font-size: 0.9em;" />
+													<p:inputText id="txtConsecutivo" disabled="false"
+														style="font-size: 0.9em;"
+														binding="#{datOtrosCostosView.txtConsecutivo}"
+														placeholder="Buscar o crear registro" size="12">
+													</p:inputText>
+		
+		
+													<p:outputLabel for="msgFechaRegistro" value="Fecha: "
+														style="font-size: 0.9em" />
+													<p:calendar id="msgFechaRegistro" showOn="button"
+														navigator="false" locale="es" pattern="dd/MM/yyyy"
+														style="font-size: 0.9em;"
+														binding="#{datOtrosCostosView.txtFechaRegistro}" mask="true"
+														required="true" size="15"
+														requiredMessage="La Fecha  final  es obligatoria">
+													</p:calendar>	
+													
+													<p:outputLabel for="txtTipoTransaccion" value="Tipo de distribucción:" style="font-size: 0.9em; " />
+													<p:selectOneMenu id="txtTipoTransaccion" autoWidth="false"
+														binding="#{datOtrosCostosView.txtTipoTransaccion}"
+														required="true" style="font-size: 0.9em; width:200px"
+														requiredMessage="Seleccione una transacción">
+														<f:selectItem itemLabel="Indique una opción" itemValue="" noSelectionOption="true" />
+														<f:selectItem itemLabel="Distribuir en todos los lotes de una HDA(según áreas)" itemValue="distri_todos_lotes_hacienda" />
+														<f:selectItem itemLabel="Distribuir en lotes informados" itemValue="distri_lotes_informados" />
+														<f:selectItem itemLabel="Distribuir en todos los lotes" itemValue="distri_todos_lotes" />
+														<p:ajax process="@this, txtTipoTransaccion"
+															listener="#{datOtrosCostosView.listener_VerificarTipoTransaccion}"
+															update="  btnAgregar, txtNivel2Id_Nivel2,txtNivel2IdIndicador,
+															txtNivel3Id ,txtNivel4Id_Nivel4 , txtNivel1Id" />
+													</p:selectOneMenu>
+													
+												</h:panelGrid>										
+											</p:column>
+											
+											<p:column>
+												<h:panelGrid columns="2" style="width:350px">
+													
+													
+													
+													<p:outputLabel for="txtNivel2IdIndicador"
+														value="Hacienda destino: " style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtNivel2IdIndicador" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.9em; width: 200px;"
+														binding="#{datOtrosCostosView.txtNivel2IdIndicador}"
+														autoWidth="false" required="false"
+														requiredMessage="Seleccione una hacienda">
+														<f:selectItem itemLabel="Seleccione una hacienda" itemValue="" />
+														<f:selectItems value="#{datOtrosCostosView.selectNivel2Indicador}" />
+													</p:selectOneMenu>
+													
+													
+																						
+												</h:panelGrid>									
+											</p:column>
+										</h:panelGrid>
+									</p:panel>
+									
+									<p:panel>
+										<h:panelGrid columns="2" id="panelGrid10">
+											<p:column>
+												<h:panelGrid columns="2" style="width:350px">		
+																					
+													<h:outputLabel for="txtPersEmprId_PersEmpr" value="Proveedor: " style="font-size: 0.9em; " />
+													<p:selectOneMenu id="txtPersEmprId_PersEmpr" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.9em; width: 150px;"
+														binding="#{datOtrosCostosView.txtPersEmprId_PersEmpr}"
+														required="false" requiredMessage="Seleccione un proveedor">
+														<f:selectItem itemLabel="Seleccione un proveedor" itemValue="" />
+														<f:selectItems value="#{datPlanLaborView.selectContratista}" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtLaborId_Labor" value="Gasto: "
+														style="font-size: 0.9em; " />
+													<p:selectOneMenu id="txtLaborId_Labor" autoWidth="false"
+														effect="fade" filter="true" filterMatchMode="contains"
+														binding="#{datOtrosCostosView.txtLaborId_Labor}"
+														style="font-size: 0.9em; width: 150px;" required="false"
+														requiredMessage="Seleccione una labor">
+														<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+														<f:selectItems value="#{datOtrosCostosView.selectLaborId}" />
+													</p:selectOneMenu>
+		
+												
+		
+													<p:outputLabel for="txtCuentaContable" style="font-size: 0.9em; " 
+														value="Cuenta contable: " />
+													<p:selectOneMenu id="txtCuentaContable" autoWidth="false" 
+														effect="fade" filter="true" filterMatchMode="contains"
+														binding="#{datOtrosCostosView.txtCuentaContable}"
+														required="false" style="font-size: 0.9em; width: 150px;"
+														requiredMessage="Seleccione una cuenta contable">
+														<f:selectItem itemLabel="Seleccione una cuenta contable" itemValue="" />
+														<f:selectItems value="#{datOtrosCostosView.selectCuentaContable}" />
+													</p:selectOneMenu>
+												</h:panelGrid>
+											</p:column>
+											
+											<p:column>
+												<h:panelGrid columns="2" style="width:350px">
+													<p:outputLabel value="Factura No.: " style="font-size: 0.9em;" />
+													<p:inputText id="txtNumFactura" disabled="false"
+														style="font-size: 0.9em; "
+														binding="#{datOtrosCostosView.txtNumFactura}" size="23">
+													</p:inputText>
+		
+													<p:outputLabel for="txtValorTotal" value="Valor total($): "
+														style="font-size: 0.9em; " />
+													<p:spinner id="txtValorTotal" size="17" stepFactor="0.25"
+														prefix="$" style="font-size: 0.9em;" required="false"
+														binding="#{datOtrosCostosView.txtValorTotal}"
+														requiredMessage="El valor es Obligatorio" />
+		
+													<p:outputLabel for="txtObservacion" value="Observación: " />
+													<p:inputTextarea id="txtObservacion"
+														style="font-size: 0.9em;"
+														binding="#{datOtrosCostosView.txtObservacion}" rows="2"
+														cols="40" maxlength="3900" autoResize="true" />
+												</h:panelGrid>
+											</p:column>
+										</h:panelGrid>
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregarD" icon="ui-icon-plusthick"
+													process="@this, txtPersEmprId_PersEmpr, txtLaborId_Labor, 
+															 txtCuentaContable, txtNumFactura, txtValorTotal, txtObservacion"
+													binding="#{datOtrosCostosView.btnAgregarDetalle}"
+													value="Agregar" update="tablaDetalle" 
+													action="#{datOtrosCostosView.action_agregarDatOtrosCostosDetalle}"/>
+
+												<p:commandButton id="btnlimpiar" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="panelGrid10" resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+										
+										<p:outputPanel>
+											<p:dataTable id="tablaDetalle" value="#{datOtrosCostosView.dataDetalle}"
+												var="otrosCostosDet" paginator="true" rows="3"
+												reflow="true" scrollable="true" scrollWidth="100%"
+												style="margin-bottom:20px" editable="true" editMode="cell"
+												widgetVar="cellOtrosCostosDet">
+
+												<p:ajax event="cellEdit" listener="#{datOtrosCostosView.onCellEditOtrosCostosDet}" />
+
+												<p:column headerText="Factura">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{otrosCostosDet.numFactura}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:inputText value="#{otrosCostosDet.numFactura}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<p:column headerText="Gasto">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{otrosCostosDet.nombreLabor}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu value="#{otrosCostosDet.laborId_Labor.laborId}">
+																<f:selectItems value="#{datOtrosCostosView.selectLaborId}"
+																	var="var1" itemValue="#{var1}">
+																</f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												
+
+												<p:column headerText="Valor">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{otrosCostosDet.valorTotal}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:inputText value="#{otrosCostosDet.valorTotal}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Observación">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{otrosCostosDet.observacion}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:inputText value="#{otrosCostosDet.observacion}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<f:attribute name="selectedDatOtrosCostosDet"
+													value="#{otrosCostosDet}" />
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{datOtrosCostosView.actionDeleteOtrosCostosDet}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaDetalle">
+															<f:attribute name="selectedDatOtrosCostosDet"
+																value="#{otrosCostosDet}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:panel>
+								</p:tab>
+								
+								<p:tab title="Asignación de Lotes">
+									<p:panel>
+
+										<p:messages id="msg2" autoUpdate="true" closable="true"
+											showDetail="true" />
+
+										<h:panelGrid id="gridDatOtrosCostosNivel4" columns="2">
+		
+											<p:inputText style="visibility:hidden"
+												id="txtDatOtrosCostosId"
+												binding="#{datOtrosCostosView.txtDatOtrosCostosId}">
+											</p:inputText>		
+											<br/>
+
+											<p:outputLabel for="txtNivel1Id" value="Zona: "
+												style="font-size: 0.9em; " />
+											<p:selectOneMenu id="txtNivel1Id" effect="fade" filter="true"
+												autoWidth="false" filterMatchMode="contains"
+												style="font-size: 0.9em; width: 150%;"
+												binding="#{datOtrosCostosView.txtNivel1Id}" required="false"
+												requiredMessage="Seleccione una zona">
+												<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+												<f:selectItems value="#{datOtrosCostosView.selectNivel1}" />
+												<p:ajax update="txtNivel2Id_Nivel2" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtNivel2Id_Nivel2" value="Hacienda: "
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtNivel2Id_Nivel2" effect="fade"
+												filter="true" filterMatchMode="contains"
+												style="font-size: 0.9em; width: 150%;"
+												binding="#{datOtrosCostosView.txtNivel2Id_Nivel2}"
+												autoWidth="false" required="false"
+												requiredMessage="Seleccione una hacienda">
+												<f:selectItem itemLabel="Seleccione una hacienda"
+													itemValue="" />
+												<f:selectItems value="#{datOtrosCostosView.selectNivel2}" />
+												<p:ajax update="txtNivel3Id" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtNivel3Id" value="Bloque: "
+												style="font-size: 0.9em; " />
+											<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+												autoWidth="false" filterMatchMode="contains"
+												style="font-size: 0.9em; width: 150%;"
+												binding="#{datOtrosCostosView.txtNivel3Id}" required="false"
+												requiredMessage="Seleccione un bloque del cultivo">
+												<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+												<f:selectItems value="#{datOtrosCostosView.selectNivel3}" />
+												<p:ajax update="txtNivel4Id_Nivel4" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: "
+												style="font-size: 0.9em; " />
+											<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												binding="#{datOtrosCostosView.txtNivel4Id_Nivel4}"
+												style="font-size: 0.9em; width: 150%;" required="false"
+												requiredMessage="Seleccione un lote">
+												<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+												<f:selectItems value="#{datOtrosCostosView.selectNivel4}" />
+												<p:ajax
+													listener="#{datOtrosCostosView.listener_ConsultaNivel4}"
+													update=" txtNivel4Nombre, txtNivel2Nombre " />
+											</p:selectOneMenu>
+
+											<p:inputText style="visibility:hidden" id="txtNivel4Nombre"
+												binding="#{datOtrosCostosView.txtNivel4Nombre}" />
+
+											<p:inputText style="visibility:hidden" id="txtNivel2Nombre"
+												binding="#{datOtrosCostosView.txtNivel2Nombre}" />
+
+
+										</h:panelGrid>
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+													process="@this,txtNivel4Id_Nivel4, txtNivel2Id_Nivel2, txtNivel4Nombre, txtNivel2Nombre"
+													binding="#{datOtrosCostosView.btnAgregar}" value="Agregar"
+													action="#{datOtrosCostosView.action_agregarDatOtrosCostosNivel4}"
+													update="tablaNilvel4,msg2" />
+
+												<p:commandButton id="btnlimpiar1" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridDatOtrosCostosNivel4"
+														resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+
+										<p:outputPanel>
+											<p:dataTable id="tablaNilvel4"
+												value="#{datOtrosCostosView.dataNivel4}"
+												var="listaDatOtrosCostosNivel4" paginator="true" rows="3"
+												reflow="true" scrollable="true" scrollWidth="100%"
+												style="margin-bottom:20px" editable="true" editMode="cell"
+												widgetVar="cellOtrosCostos">
+
+												<p:ajax event="cellEdit"
+													listener="#{datOtrosCostosView.onCellEditOtrosCostos}" />
+
+												<p:column headerText="Hacienda">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaDatOtrosCostosNivel4.nombreNivel2}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaDatOtrosCostosNivel4.nivel2Id_Nivel2.nivel2Id}">
+																<f:selectItems
+																	value="#{datOtrosCostosView.selectNivel2Edit}"
+																	var="var3" itemValue="#{var3}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Lote">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaDatOtrosCostosNivel4.nombreNivel4}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaDatOtrosCostosNivel4.nivel4Id_Nivel4.nivel4Id}">
+																<f:selectItems
+																	value="#{datOtrosCostosView.selectNivel4Edit}"
+																	var="var4" itemValue="#{var4}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<f:attribute name="selectedDatOtrosCostosNivel4"
+													value="#{listaDatOtrosCostosNivel4}" />
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{datOtrosCostosView.actionDeleteOtrosCostosNivel4}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaNilvel4">
+															<f:attribute name="selectedDatOtrosCostosNivel4"
+																value="#{listaDatOtrosCostosNivel4}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:panel>
+								</p:tab>
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datOtrosCostosView.btnSave}" value="Grabar"
+									action="#{datOtrosCostosView.action_save()}"
+									update=":dialogDatOtrosCostos :frm:panelDataTableDatOtrosCostos" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datOtrosCostosView.action_clear()}"
+									process="@this" update=":dialogDatOtrosCostos" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

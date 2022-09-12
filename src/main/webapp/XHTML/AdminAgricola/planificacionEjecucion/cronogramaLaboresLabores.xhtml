@@ -1,0 +1,527 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableCronogramaLabores"
+						header="Cronograma de labores">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{cronogramaLaboresView.data}"
+							var="producto" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Productos" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{producto.estado}"
+								sortBy="#{producto.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{producto.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{producto.codigo}"
+								sortBy="#{producto.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{producto.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{producto.nombre}"
+								sortBy="#{producto.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{producto.nombre}" />
+							</p:column>
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogCronogramaLabores"
+										actionListener="#{cronogramaLaboresView.action_edit}">
+										<f:attribute name="selectedCronogramaLabores"
+											value="#{producto}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{cronogramaLaboresView.action_new()}"
+								update=":dialogCronogramaLabores" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogCronogramaLabores" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{cronogramaLaboresView.showDialog}" resizable="false"
+					modal="true" width="1100" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelCronogramaLabores"
+							header="Cronograma de labores">
+
+
+							<p:tabView id="tabMapa" activeIndex="#{cronogramaLaboresView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="3" id="panelGrid1">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{cronogramaLaboresView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{cronogramaLaboresView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelCronogramaLabores,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{cronogramaLaboresView.listener_txtCodigo}" />
+										</p:inputText>
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true"
+											binding="#{cronogramaLaboresView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+										<p:message for="txtNombre" />
+
+
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Info. Adicional: " />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{cronogramaLaboresView.txtInfoAdicional}" rows="5"
+											cols="30" counter="display" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Info. Adicional2: " />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{cronogramaLaboresView.txtInfoAdicional2}" rows="5"
+											cols="30" counter="display2" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display2" />
+
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden"
+											id="txtCronogramaLaboresId"
+											binding="#{cronogramaLaboresView.txtCronogramaLaboresId}">
+										</p:inputText>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Secuencia de labores">
+									<p:panel>
+
+										<p:messages id="msg1" autoUpdate="true" closable="true"
+											showDetail="true" />
+
+										<h:panelGrid id="gridCronogramaLaboresLabores" columns="3">
+
+
+											<h:outputText for="txtLaborId_Labor" value="Labor: "
+												style="font-size: 0.8em;" />
+											<p:selectOneMenu id="txtLaborId_Labor" effect="fade"
+												filter="true" filterMatchMode="contains"
+												style="width: 10%; font-size: 0.8em;"
+												binding="#{cronogramaLaboresView.txtLaborId_Labor}"
+												required="false" requiredMessage="Seleccione una labor">
+												<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+												<f:selectItems
+													value="#{cronogramaLaboresView.selectLaborId}" />
+												<p:ajax
+													listener="#{cronogramaLaboresView.listener_ConsultaNombreLabor}"
+													update="txtNombreLabor" />
+											</p:selectOneMenu>
+											<p:message for="txtLaborId_Labor" />
+
+											<p:outputLabel for="txtNumeroDiasInicial"
+												value="# día inicial: " style="font-size: 0.8em;" />
+											<p:spinner id="txtNumeroDiasInicial" stepFactor="0.25"
+												size="12"
+												binding="#{cronogramaLaboresView.txtNumeroDiasInicial}"
+												required="false" requiredMessage="Indique el #día">
+											</p:spinner>
+											<p:message for="txtNumeroDiasInicial" />
+
+											<p:outputLabel for="txtNumeroDiasFin" value="# día final: "
+												style="font-size: 0.8em;" />
+											<p:spinner id="txtNumeroDiasFin" stepFactor="0.25"
+												binding="#{cronogramaLaboresView.txtNumeroDiasFin}"
+												size="12" required="false"
+												requiredMessage="Indique el # día">
+
+											</p:spinner>
+											<p:message for="txtNumeroDiasFin" />
+
+
+
+											<p:inputText style="visibility:hidden" id="txtNombreLabor"
+												binding="#{cronogramaLaboresView.txtNombreLabor}" />
+
+										</h:panelGrid>
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregar1" icon="ui-icon-plusthick"
+													process="@this, txtNombreLabor, txtLaborId_Labor,  txtNumeroDiasFin, txtNumeroDiasInicial"
+													binding="#{cronogramaLaboresView.btnAgregarCronogramaLaboresLabores}"
+													value="Agregar"
+													action="#{cronogramaLaboresView.action_agregarCronogramaLaboresLabores}"
+													update="tablaLabores,msg1" />
+
+												<p:commandButton id="btnlimpiar" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridCronogramaLaboresLabores"
+														resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+										<p:scrollPanel mode="native" style="width:750px;height:250px">
+											<p:outputPanel>
+												<p:dataTable id="tablaLabores"
+													value="#{cronogramaLaboresView.dataCronogramaLaboresLabores}"
+													var="listaCronogramaLaboresLabores" paginator="true"
+													rows="3" reflow="true" scrollable="true" scrollWidth="100%"
+													style="margin-bottom:20px" editable="true" editMode="cell" widgetVar="cellLabor">
+													
+													<p:ajax event="cellEdit" listener="#{cronogramaLaboresView.onCellEditLabor}" />
+
+													<p:column headerText="Labor">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresLabores.nombreLabor}">
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																	value="#{listaCronogramaLaboresLabores.laborId_Labor.laborId}">
+																	<f:selectItems value="#{cronogramaLaboresView.selectLaborId}"
+																		var="var1" itemValue="#{var1}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="#Días inicial">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresLabores.numeroDiasInicio}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaCronogramaLaboresLabores.numeroDiasInicio}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="#Días final">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresLabores.numeroDiasFin}">
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaCronogramaLaboresLabores.numeroDiasFin}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													<f:attribute name="selectedCronogramaLaboresLabores"
+																	value="#{listaCronogramaLaboresLabores}" />
+
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{cronogramaLaboresView.actionDeleteCronogramaLaboresLabores}"
+																required="false" title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaLabores">
+																<f:attribute name="selectedCronogramaLaboresLabores"
+																	value="#{listaCronogramaLaboresLabores}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:scrollPanel>
+									</p:panel>
+
+								</p:tab>
+								<p:tab title="Asignación de Lotes">
+									<p:panel>
+
+										<p:messages id="msg2" autoUpdate="true" closable="true"
+											showDetail="true" />
+
+										<p:panelGrid id="gridCronogramaLaboresNivel4">
+											<p:row>
+												<p:column>
+													<h:panelGrid columns="2">
+
+														<p:outputLabel for="txtNivel1Id" value="Zona: "
+															style="font-size: 0.8em;" />
+														<p:selectOneMenu id="txtNivel1Id" effect="fade"
+															filter="true" filterMatchMode="contains"
+															style="width: 100%; font-size: 0.8em;" autoWidth="false"
+															binding="#{cronogramaLaboresView.txtNivel1Id}"
+															required="false" requiredMessage="Seleccione una zona">
+															<f:selectItem itemLabel="Seleccione una zona"
+																itemValue="" />
+															<f:selectItems
+																value="#{cronogramaLaboresView.selectNivel1}" />
+															<p:ajax update="txtNivel2Id" />
+														</p:selectOneMenu>
+
+														<p:outputLabel for="txtNivel2Id" value="Hacienda: "
+															style="font-size: 0.8em;" />
+														<p:selectOneMenu id="txtNivel2Id" effect="fade"
+															filter="true" filterMatchMode="contains"
+															style="width: 100%; font-size: 0.8em;" autoWidth="false"
+															binding="#{cronogramaLaboresView.txtNivel2Id}"
+															required="false"
+															requiredMessage="Seleccione una hacienda">
+															<f:selectItem itemLabel="Seleccione una hacienda"
+																itemValue="" />
+															<f:selectItems
+																value="#{cronogramaLaboresView.selectNivel2}" />
+															<p:ajax update="txtNivel3Id" />
+														</p:selectOneMenu>
+
+														<p:outputLabel for="txtNivel3Id" value="Bloque: "
+															style="font-size: 0.8em;" />
+														<p:selectOneMenu id="txtNivel3Id" effect="fade"
+															filter="true" filterMatchMode="contains"
+															style="width: 100%; font-size: 0.8em;" autoWidth="false"
+															binding="#{cronogramaLaboresView.txtNivel3Id}"
+															required="false"
+															requiredMessage="Seleccione un bloque del cultivo">
+															<f:selectItem itemLabel="Seleccione un bloque"
+																itemValue="" />
+															<f:selectItems
+																value="#{cronogramaLaboresView.selectNivel3}" />
+															<p:ajax update="txtNivel4Id_Nivel4" />
+														</p:selectOneMenu>
+
+
+														<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: "
+															style="font-size: 0.8em;" />
+														<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+															filter="true" filterMatchMode="contains"
+															binding="#{cronogramaLaboresView.txtNivel4Id_Nivel4}"
+															style="width: 100%; font-size: 0.8em;" autoWidth="false" required="false"
+															requiredMessage="Seleccione un lote">
+															<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+															<f:selectItems
+																value="#{cronogramaLaboresView.selectNivel4}" />
+															<p:ajax
+																listener="#{cronogramaLaboresView.listener_ConsultaNombreNivel4}"
+																update="txtNombreNivel4,txtNombreNivel2 , txtAreaNeta, txtNumeroPlantas" />
+														</p:selectOneMenu>
+														
+													</h:panelGrid>
+												</p:column>
+
+												<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel for="txtAreaNeta" value="Área(HA): "
+															style="font-size: 0.8em;" />
+														<p:inputText id="txtAreaNeta"
+															binding="#{cronogramaLaboresView.txtAreaNeta}" size="12"
+															required="false" requiredMessage="Indique el área">
+														</p:inputText>
+														
+														<p:outputLabel for="txtNumeroPlantas"
+															value="No. Plantas: " style="font-size: 0.8em;" />
+														<p:inputText id="txtNumeroPlantas"
+															binding="#{cronogramaLaboresView.txtNumeroPlantas}"
+															size="12" required="false"
+															requiredMessage="Indique el número">
+														</p:inputText>
+														
+														<p:inputText style="visibility:hidden"
+															id="txtNombreNivel4"
+															binding="#{cronogramaLaboresView.txtNombreNivel4}" />
+
+														<p:inputText style="visibility:hidden"
+															id="txtNombreNivel2"
+															binding="#{cronogramaLaboresView.txtNombreNivel2}" />
+													</h:panelGrid>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+													process="@this,txtNivel4Id_Nivel4, txtNivel2Id, txtNombreNivel4, txtNombreNivel4, txtAreaNeta, txtNumeroPlantas"
+													binding="#{cronogramaLaboresView.btnAgregarCronogramaLaboresNivel4}"
+													value="Agregar"
+													action="#{cronogramaLaboresView.action_agregarCronogramaLaboresNivel4}"
+													update="tablaNilvel4,msg2" />
+
+												<p:commandButton id="btnlimpiar1" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridCronogramaLaboresNivel4"
+														resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+
+										<p:scrollPanel mode="native" style="width:750px;height:250px">
+
+											<p:outputPanel>
+												<p:dataTable id="tablaNilvel4"
+													value="#{cronogramaLaboresView.dataCronogramaLaboresNivel4}"
+													var="listaCronogramaLaboresNivel4" paginator="true"
+													rows="3" reflow="true" scrollable="true" scrollWidth="100%"
+													style="margin-bottom:20px" editable="true" editMode="cell"
+													widgetVar="cellLote">
+
+													<p:ajax event="cellEdit" listener="#{cronogramaLaboresView.onCellEditLote}" />
+
+													<p:column headerText="Hacienda">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresNivel4.nombreNivel2}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaCronogramaLaboresNivel4.nivel2Id.nivel2Id}">
+																	<f:selectItems value="#{cronogramaLaboresView.selectNivel2Edit}"
+																	var="var2" itemValue="#{var2}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Lote">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresNivel4.nombreNivel4}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaCronogramaLaboresNivel4.nivel4Id_Nivel4.nivel4Id}">
+																	<f:selectItems value="#{cronogramaLaboresView.selectNivel4Edit}"
+																	var="var1" itemValue="#{var1}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Área(Ha)">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresNivel4.areaNeta}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaCronogramaLaboresNivel4.areaNeta}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Plantas">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresNivel4.numeroPlantas}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaCronogramaLaboresNivel4.numeroPlantas}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													<f:attribute name="selectedCronogramaLaboresNivel4"
+																	value="#{listaCronogramaLaboresNivel4}" />
+
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{cronogramaLaboresView.actionDeleteCronogramaLaboresNivel4}"
+																required="false" title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaNilvel4">
+																<f:attribute name="selectedCronogramaLaboresNivel4"
+																	value="#{listaCronogramaLaboresNivel4}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:scrollPanel>
+
+									</p:panel>
+								</p:tab>
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{cronogramaLaboresView.btnSave}" value="Grabar"
+									action="#{cronogramaLaboresView.action_save()}"
+									update=":dialogCronogramaLabores :frm:panelDataTableCronogramaLabores" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{cronogramaLaboresView.action_clear()}"
+									process="@this" update=":dialogCronogramaLabores" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

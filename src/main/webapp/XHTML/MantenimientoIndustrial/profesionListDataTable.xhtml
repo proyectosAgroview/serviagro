@@ -1,0 +1,202 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableProfesion" header="Profesiones">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{profesionView.data}"
+							var="profesion" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Profesión" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{profesion.estado}"
+								sortBy="#{profesion.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{profesion.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{profesion.codigo}"
+								sortBy="#{profesion.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{profesion.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{profesion.nombre}"
+								sortBy="#{profesion.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{profesion.nombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogProfesion"
+										actionListener="#{profesionView.action_edit}">
+										<f:attribute name="selectedProfesion" value="#{profesion}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{profesionView.action_new()}" update=":dialogProfesion" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogProfesion" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{profesionView.showDialog}"
+					resizable="false" modal="true" width="620" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelProfesion" header="Profesiones">
+
+							<p:tabView>
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="3" cellpadding="5">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{profesionView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{profesionView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelProfesion,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{profesionView.listener_txtCodigo}" />
+
+										</p:inputText>
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true"
+											binding="#{profesionView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+										<p:message for="txtNombre" />
+
+										<p:outputLabel for="txtFunciones" value="Rol:" />
+										<p:selectOneMenu id="txtFunciones"
+											binding="#{profesionView.txtFunciones}" required="true"
+											requiredMessage="Seleccione un Rol">
+											<f:selectItem itemLabel="Seleccione un Rol" itemValue="" />
+											<f:selectItem itemLabel="Obrero Agrícola"
+												itemValue="Obrero Agrícola" />
+											<f:selectItem itemLabel="Cortero" itemValue="Cortero" />
+											<f:selectItem itemLabel="Operador equipos cosecha"
+												itemValue="Operador equipos cosecha" />
+											<f:selectItem itemLabel="Conductor" itemValue="Conductor" />
+											<f:selectItem itemLabel="Supervisor" itemValue="Supervisor" />
+											<f:selectItem itemLabel="Asistente técnico"
+												itemValue="Asistente técnico" />
+											<f:selectItem itemLabel="Administrativo"
+												itemValue="Administrativo" />
+											<f:selectItem itemLabel="Otros" itemValue="Otros" />
+										</p:selectOneMenu>
+										<p:message for="txtFunciones" />
+
+
+										<p:outputLabel for="txtElemCostoId_ElementoCosto"
+											value="Elemento de costo: " />
+										<p:selectOneMenu id="txtElemCostoId_ElementoCosto"
+											effect="fade" filter="true" filterMatchMode="startsWith"
+											binding="#{profesionView.txtElemCostoId_ElementoCosto}"
+											required="false"
+											requiredMessage="Seleccione un elemento de costo">
+											<f:selectItem itemLabel="Seleccione un elemento de costo"
+												itemValue="" />
+											<f:selectItems value="#{profesionView.selectElementoCosto}" />
+										</p:selectOneMenu>
+										<p:message for="txtElemCostoId_ElementoCosto" />
+
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1:" />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{profesionView.txtInfoAdicional}" rows="5"
+											cols="30" counter="display" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2:" />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{profesionView.txtInfoAdicional2}" rows="5"
+											cols="30" counter="display2" maxlength="100"
+											counterTemplate="{0} Caracteres." autoResize="true" />
+										<h:outputText id="display2" />
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtProfId"
+											binding="#{profesionView.txtProfId}">
+											<p:ajax update=":dialogProfesion"
+												listener="#{profesionView.listener_txtId}" />
+										</p:inputText>
+
+									</h:panelGrid>
+								</p:tab>
+
+
+							</p:tabView>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{profesionView.btnSave}" value="Grabar"
+									action="#{profesionView.action_save()}"
+									update=":dialogProfesion :frm:panelDataTableProfesion" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{profesionView.action_clear()}"
+									process="@this" update=":dialogProfesion" />
+							</div>
+						</p:panel>
+					</h:form>
+
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

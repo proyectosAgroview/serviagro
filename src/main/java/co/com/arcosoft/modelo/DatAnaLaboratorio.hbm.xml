@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-abr-2018 9:41:11 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatAnaLaboratorio" table="dat_ana_laboratorio" >
+        <id name="datAnaLabId" type="java.lang.Long">
+            <column name="dat_ana_lab_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="anaLaboratorio" class="co.com.arcosoft.modelo.AnaLaboratorio" fetch="select">
+            <column name="ana_lab_id" />
+        </many-to-one>
+        
+        <many-to-one name="nivel4Id" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_id" />
+        </many-to-one>
+        <many-to-one name="nivel2Id" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="nivel2_id" />
+        </many-to-one>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        
+        
+        <property name="nroTicket" type="java.lang.Long">
+            <column name="nro_ticket" />
+        </property>
+        
+        <property name="nivel3Id" type="java.lang.Long">
+            <column name="nivel3_id" />
+        </property>
+        
+        <property name="nivel1Id" type="java.lang.Long">
+            <column name="nivel1_id" />
+        </property>
+        
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="fechaAnalisis" type="java.util.Date">
+            <column name="fecha_analisis" length="19" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="1000" />
+        </property>
+        <property name="mobileId" type="java.lang.String">
+            <column name="mobile_id" length="23" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        
+        <property name="horaDigitacion" type="java.lang.String">
+            <column name="hora_digitacion" length="5"  />
+        </property>
+        <set name="datAnaLaboratorioDets" table="dat_ana_laboratorio_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="dat_ana_lab_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatAnaLaboratorioDet" />
+        </set>
+    </class>
+</hibernate-mapping>

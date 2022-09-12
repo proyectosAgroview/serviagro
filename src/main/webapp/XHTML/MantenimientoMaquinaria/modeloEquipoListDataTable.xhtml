@@ -1,0 +1,195 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableModeloEquipo" header="Modelos de equipo">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{modeloEquipoView.data}"
+							var="modeloEquipo" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="modeloEquipo" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{modeloEquipo.estado}"
+								sortBy="#{modeloEquipo.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{modeloEquipo.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{modeloEquipo.codigo}"
+								sortBy="#{modeloEquipo.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{modeloEquipo.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{modeloEquipo.nombre}"
+								sortBy="#{modeloEquipo.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{modeloEquipo.nombre}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogModeloEquipo"
+										actionListener="#{modeloEquipoView.action_edit}">
+										<f:attribute name="selectedModeloEquipo"
+											value="#{modeloEquipo}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{modeloEquipoView.action_new()}"
+								update=":dialogModeloEquipo" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogModeloEquipo" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{modeloEquipoView.showDialog}" resizable="false"
+					modal="true" width="600" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelModeloEquipo" header="Modelos de equipo">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{modeloEquipoView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+
+								<p:outputLabel value="Código: " />
+								<p:inputText id="txtCodigo" disabled="false"
+									binding="#{modeloEquipoView.txtCodigo}"
+									placeholder="Buscar o crear registro" size="23">
+									<p:ajax update="panelModeloEquipo,msg,panelBotones"
+										listener="#{modeloEquipoView.listener_txtCodigo}" />
+								</p:inputText>
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNombre" value="Nombre: " />
+								<p:inputText id="txtNombre" disabled="true"
+									binding="#{modeloEquipoView.txtNombre}" required="true"
+									requiredMessage="El Nombre es Obligatorio" />
+								<p:message for="txtNombre" />
+
+								<p:outputLabel for="txtFabricEquipId_FabricanteEquipo"
+									value="Fabricante: " />
+								<p:selectOneMenu id="txtFabricEquipId_FabricanteEquipo"
+									effect="fade" filter="true" filterMatchMode="startsWith"
+									binding="#{modeloEquipoView.txtFabricEquipId_FabricanteEquipo}"
+									required="false" requiredMessage="Seleccione un fabricante">
+									<f:selectItem itemLabel="Seleccione un fabricante" itemValue="" />
+									<f:selectItems
+										value="#{modeloEquipoView.selectFabricanteEquipo}" />
+								</p:selectOneMenu>
+								<p:message for="txtFabricEquipId_FabricanteEquipo" />
+
+								<p:outputLabel for="txtCategEquipId_CategoriaEquipo"
+									value="Categoría: " />
+								<p:selectOneMenu id="txtCategEquipId_CategoriaEquipo"
+									effect="fade" filter="true" filterMatchMode="startsWith"
+									binding="#{modeloEquipoView.txtCategEquipId_CategoriaEquipo}"
+									required="true" requiredMessage="Seleccione una categoría">
+									<f:selectItem itemLabel="Seleccione una categoría" itemValue="" />
+									<f:selectItems
+										value="#{modeloEquipoView.selectCategoriaEquipo}" />
+								</p:selectOneMenu>
+								<p:message for="txtCategEquipId_CategoriaEquipo" />
+
+
+
+								<p:outputLabel for="txtVelocidadPromedio"
+									value="Vel. Promedio (Km/H): " />
+								<p:inputText id="txtVelocidadPromedio" disabled="true"
+									binding="#{modeloEquipoView.txtVelocidadPromedio}"
+									required="false"
+									requiredMessage="La Vel. Promedio (Km/H) es obligatoria" />
+								<p:message for="txtVelocidadPromedio" />
+
+
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional"
+									binding="#{modeloEquipoView.txtInfoAdicional}" rows="5"
+									cols="30" counter="display" maxlength="100"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText id="display" />
+
+								<p:outputLabel for="txtInfoAdicional2"
+									value="Información Adicional 2:" />
+								<p:inputTextarea id="txtInfoAdicional2"
+									binding="#{modeloEquipoView.txtInfoAdicional2}" rows="5"
+									cols="30" counter="display2" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+								<h:outputText id="display2" />
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden" id="txtModeloEquipoId"
+									binding="#{modeloEquipoView.txtModeloEquipoId}">
+									<p:ajax update=":dialogModeloEquipo"
+										listener="#{modeloEquipoView.listener_txtId}" />
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{modeloEquipoView.btnSave}" value="Grabar"
+									action="#{modeloEquipoView.action_save()}"
+									update=":dialogModeloEquipo :frm:panelDataTableModeloEquipo" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{modeloEquipoView.action_clear()}"
+									process="@this" update=":dialogModeloEquipo" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

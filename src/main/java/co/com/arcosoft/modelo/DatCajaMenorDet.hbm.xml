@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19/12/2018 09:55:23 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatCajaMenorDet" table="dat_caja_menor_det" >
+        <id name="datCajaMenordetId" type="java.lang.Long">
+            <column name="dat_caja_menordet_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        <many-to-one name="datCajaMenor" class="co.com.arcosoft.modelo.DatCajaMenor" fetch="select">
+            <column name="dat_caja_menor_id" />
+        </many-to-one>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" />
+        </many-to-one>
+        <property name="valor" type="java.lang.Double">
+            <column name="valor" precision="12" scale="4" />
+        </property>
+        <property name="detalleNota" type="java.lang.String">
+            <column name="detalle_nota" length="3900" />
+        </property>
+        <property name="numFactura" type="java.lang.String">
+            <column name="num_factura" length="20" />
+        </property>
+             <many-to-one name="implementoId" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="implemento_id" />
+        </many-to-one>
+               <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr"
+			fetch="select">
+			<column name="pers_empr_id" />
+		</many-to-one>
+		        <many-to-one name="centCost" class="co.com.arcosoft.modelo.CentCost" fetch="select">
+            <column name="cent_cost_id" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,270 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 20000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatHorasTrabajoEquipo" header="Horas/Km laborados">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datHorasTrabajoEquipoView.data}"
+							var="datHorasTrabajoEquipo" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datHorasTrabajoEquipo" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datHorasTrabajoEquipo.estado}"
+								sortBy="#{datHorasTrabajoEquipo.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datHorasTrabajoEquipo.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datHorasTrabajoEquipo.consecutivo}"
+								sortBy="#{datHorasTrabajoEquipo.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="#Planilla" />
+								</f:facet>
+								<h:outputText value="#{datHorasTrabajoEquipo.consecutivo}" />
+							</p:column>
+
+							
+							<p:column filterBy="#{datHorasTrabajoEquipo.fechaRegistro}"
+								sortBy="#{datHorasTrabajoEquipo.fechaRegistro}">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datHorasTrabajoEquipo.fechaRegistro}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+							
+									
+							<p:column filterBy="#{datHorasTrabajoEquipo.nombreEquipo}"
+								sortBy="#{datHorasTrabajoEquipo.nombreEquipo}">
+								<f:facet name="header">
+									<h:outputText value="Equipo" />
+								</f:facet>
+								<h:outputText value="#{datHorasTrabajoEquipo.nombreEquipo}" />
+							</p:column>
+							
+									
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogDatHorasTrabajoEquipo"
+										actionListener="#{datHorasTrabajoEquipoView.action_edit}">
+										<f:attribute name="selectedDatHorasTrabajoEquipo" value="#{datHorasTrabajoEquipo}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datHorasTrabajoEquipoView.action_new()}"
+								update=":dialogDatHorasTrabajoEquipo" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatHorasTrabajoEquipo" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datHorasTrabajoEquipoView.showDialog}" resizable="false"
+					modal="true" width="900" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" showDetail="true" />
+						<p:panel id="panelDatHorasTrabajoEquipo" header="Horas/Km laborados">
+
+							<p:tabView  >
+
+								<p:tab title="General">
+								<p:panel>
+
+									<h:panelGrid columns="2" >
+
+										<p:outputLabel value="#Planilla:"   style="font-size: 0.9em;" />
+										<p:inputText id="txtConsecutivo" disabled="false"
+											style="font-size: 0.9em;"
+											binding="#{datHorasTrabajoEquipoView.txtConsecutivo}"
+											placeholder="Buscar o crear registro" size="12">
+										</p:inputText>
+
+										
+										<p:outputLabel for="msgFechaRegistro" value="Fecha: " 	style="font-size: 0.9em" />
+										<p:calendar id="msgFechaRegistro" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy HH:mm"
+												style="font-size: 0.9em;"
+											binding="#{datHorasTrabajoEquipoView.txtFechaRegistro}"
+											mask="true" required="true" size="16"
+											requiredMessage="La Fecha  final  es obligatoria">
+										</p:calendar>
+										
+												<p:outputLabel for="txtEquipoId_Equipo" value="Equipo: "
+											style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtEquipoId_Equipo" effect="fade"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											binding="#{datHorasTrabajoEquipoView.txtEquipoId_Equipo}"
+											style="width: 100%;font-size: 0.9em;" required="false"
+											requiredMessage="Seleccione un equipo">
+											<f:selectItem itemLabel="Seleccione un equipo" itemValue="" />
+											<f:selectItems
+												value="#{datHorasTrabajoEquipoView.selectEquipo}" />
+											<p:ajax  process="@all"	update="txtMedidor,txtKmActual, txtHorasActual,txtUltimoMedidorHoras,
+												txtUltimoMedidorKm" listener="#{datHorasTrabajoEquipoView.action_selectMedidorEquipo}"											           />
+										</p:selectOneMenu>
+
+
+										<p:outputLabel for="txtMedidor" value="Medidor: "
+											style="font-size: 0.9em" />
+										<p:selectOneMenu id="txtMedidor" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{datHorasTrabajoEquipoView.txtMedidor}" required="false"
+											requiredMessage="Seleccione un medidor">
+											<f:selectItem itemLabel="Seleccione un medidor" itemValue="" />
+											<f:selectItems value="#{datHorasTrabajoEquipoView.selectMedidor}" />
+										</p:selectOneMenu>
+									
+									</h:panelGrid>
+										<p:panelGrid>
+											<p:row>
+												<p:column >
+													<h:panelGrid  columns="2">
+														<p:outputLabel for="txtUltimoMedidorHoras" value="Horas/Hórometro anterior: " 	
+															style="font-size: 0.9em; "/>
+														<p:inputText id="txtUltimoMedidorHoras"  size="12" 
+															style="font-size: 0.9em;" 
+															binding="#{datHorasTrabajoEquipoView.txtUltimoMedidorHoras}" 
+															requiredMessage="El valor es Obligatorio" >
+																<f:converter converterId="javax.faces.Double" />
+														</p:inputText>
+														
+														<p:outputLabel for="txtUltimoMedidorKm" value="KM anterior: " 	
+															style="font-size: 0.9em; "/>
+														<p:inputText id="txtUltimoMedidorKm"  size="12" 
+															style="font-size: 0.9em;" 
+															binding="#{datHorasTrabajoEquipoView.txtUltimoMedidorKm}" 
+															requiredMessage="El valor es Obligatorio" >
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputText>
+												
+														
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="2">
+														
+														<p:outputLabel for="txtHorasActual" value="Horas actual: " 	
+															style="font-size: 0.9em; "/>
+														<p:inputText id="txtHorasActual"  size="12" 
+															style="font-size: 0.9em;" 
+															binding="#{datHorasTrabajoEquipoView.txtHorasActual}" 
+															requiredMessage="El valor es Obligatorio" >
+																<f:converter converterId="javax.faces.Double" />
+														</p:inputText>
+														
+														<p:outputLabel for="txtKmActual" value="KM actual: " 	
+															style="font-size: 0.9em; "/>
+														<p:inputText id="txtKmActual"  size="12" 
+															style="font-size: 0.9em;" 
+															binding="#{datHorasTrabajoEquipoView.txtKmActual}" 
+															requiredMessage="El valor es Obligatorio" >
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputText>
+												
+														
+													</h:panelGrid>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+										
+									<h:panelGrid columns="2" >
+										<p:outputLabel for="txtObservacion" value="Observación: "
+											style="font-size: 0.9em" />
+										<p:inputTextarea id="txtObservacion" style="font-size: 0.9em;"
+											binding="#{datHorasTrabajoEquipoView.txtObservacion}" rows="2"
+											cols="50" maxlength="3900" autoResize="true" />
+
+
+										<p:outputLabel for="txtOrigenDatos" value="Origen de datos: " 
+										style="font-size: 0.9em"	/>
+										<p:selectOneMenu id="txtOrigenDatos"
+											binding="#{datHorasTrabajoEquipoView.txtOrigenDatos}"
+											required="true" requiredMessage="Seleccione una opción">
+											<f:selectItem itemLabel="Modulo_TallerAgricola" itemValue="Modulo_TallerAgricola" />
+										</p:selectOneMenu>
+										
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden"
+											id="txtDatHorasTrabajoEquipoId"
+											binding="#{datHorasTrabajoEquipoView.txtDatHorasTrabajoEquipoId}">
+										</p:inputText>
+
+									</h:panelGrid>
+									</p:panel>
+								</p:tab>
+
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datHorasTrabajoEquipoView.btnSave}" value="Grabar"
+									action="#{datHorasTrabajoEquipoView.action_save()}"
+									update=":dialogDatHorasTrabajoEquipo :frm:panelDataTableDatHorasTrabajoEquipo" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datHorasTrabajoEquipoView.action_clear()}"
+									process="@this" update=":dialogDatHorasTrabajoEquipo" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

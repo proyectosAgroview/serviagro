@@ -1,0 +1,190 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:mp="http://primefaces.org/ui/material"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/tmp_modulo.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableItemsMenu" header="Contenidos del Menu">
+						<p:dataTable value="#{itemsMenuView.data}" var="itemsMenu"
+							reflow="true" paginator="true" rows="3" >
+
+							<p:column filterBy="#{itemsMenu.estado}"
+								sortBy="#{itemsMenu.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{itemsMenu.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{itemsMenu.nombreModulo}"
+								sortBy="#{itemsMenu.nombreModulo}">
+								<f:facet name="header">
+									<h:outputText value="Modulo" />
+								</f:facet>
+								<h:outputText value="#{itemsMenu.nombreModulo}" />
+							</p:column>
+
+							<p:column filterBy="#{itemsMenu.nombreTabla}"
+								sortBy="#{itemsMenu.nombreTabla}">
+								<f:facet name="header">
+									<h:outputText value="Tabla" />
+								</f:facet>
+								<h:outputText value="#{itemsMenu.nombreTabla}" />
+							</p:column>
+
+							<p:column filterMatchMode="contains"  filterBy="#{itemsMenu.nombreItem}"
+								sortBy="#{itemsMenu.nombreItem}">
+								<f:facet name="header">
+									<h:outputText value="Item" />
+								</f:facet>
+								<h:outputText value="#{itemsMenu.nombreItem}" />
+							</p:column>
+
+							<p:column width="250">
+								<f:facet name="header" >
+									<h:outputText value="Descripción" />
+								</f:facet>
+								 <h:outputText escape="false" 
+								     value="#{itemsMenu.descripcion}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogItemsMenu"
+										actionListener="#{itemsMenuView.action_edit}">
+										<f:attribute name="selectedItemsMenu" value="#{itemsMenu}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete" title="Delete"
+										actionListener="#{itemsMenuView.action_delete_datatable}"
+										onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+										icon="ui-icon-trash" update="@form">
+										<f:attribute name="selectedItemsMenu" value="#{itemsMenu}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{itemsMenuView.action_new()}" update=":dialogItemsMenu" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogItemsMenu" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{itemsMenuView.showDialog}"
+					resizable="false" modal="true" width="650" responsive="true"
+					closeOnEscape="true" styleClass="dialogFix">
+					
+					<h:form id="formDialog" >
+						
+						<p:messages id="msg" autoUpdate="true" closable="true"/>
+
+						<p:panel id="panelItemsMenu" header="Contenidos del menu">
+                           
+                           <h:panelGrid columns="3" class="form-inline">
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{itemsMenuView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+								
+								<p:outputLabel for="txtNombreModulo" value="Modulo: " />
+							        <p:selectOneMenu id="txtNombreModulo"  binding="#{itemsMenuView.txtNombreModulo}" required="true"
+										requiredMessage="El modulo es Obligatorio" >
+							            <f:selectItem itemLabel="Seleccione" itemValue="" />
+							            <f:selectItem itemLabel="Información agrícola" itemValue="info_agricola" />
+							            <f:selectItem itemLabel="Administración agrícola" itemValue="admin_agricola" />
+							            <f:selectItem itemLabel="Tecnología agrícola" itemValue="tecno_agricola" />
+							            <f:selectItem itemLabel="Producción agrícola" itemValue="prod_agricola" />
+							            <f:selectItem itemLabel="AgroAnalytics" itemValue="report_agricola" />
+							            <f:selectItem itemLabel="Mantenimiento de maquinaria" itemValue="mto_maquinaria" />
+							            <f:selectItem itemLabel="Impacto social" itemValue="impacto_social" /> 
+							            <f:selectItem itemLabel="Integraciones" itemValue="integraciones" />  
+							        </p:selectOneMenu>
+								<p:message for="txtNombreModulo" />
+
+								<p:outputLabel for="txtNombreTabla" value="Tabla relacionada: " />
+								<p:inputText id="txtNombreTabla" disabled="true"
+									binding="#{itemsMenuView.txtNombreTabla}" />
+								<p:outputLabel></p:outputLabel>
+
+								<p:outputLabel for="txtNombreItem" value="Item: " />
+								<p:inputText id="txtNombreItem" disabled="true"
+									binding="#{itemsMenuView.txtNombreItem}" required="true"
+									requiredMessage="El item es obligatorio" />
+								<p:message for="txtNombreItem" />
+
+								<p:outputLabel for="txtDescripcion" value="Descripción" />
+								<p:editor id="txtDescripcion" 
+									value="#{itemsMenuView.text}" width="400" />
+								<p:outputLabel></p:outputLabel>
+
+								<p:outputLabel for="txtUrl" value="URL relacionada: " />
+								<p:inputText id="txtUrl" disabled="true" size="40"
+									binding="#{itemsMenuView.txtUrl}" />
+								<p:outputLabel></p:outputLabel>
+
+
+								<p:inputText id="txtId" style="visibility:hidden"
+									binding="#{itemsMenuView.txtId}">
+									<p:ajax update=":dialogItemsMenu"
+										listener="#{itemsMenuView.listener_txtId}" />
+								</p:inputText>
+                            </h:panelGrid>
+							
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{itemsMenuView.btnSave}" value="Grabar"
+									action="#{itemsMenuView.action_save()}"
+									update=":dialogItemsMenu :frm:panelDataTableItemsMenu" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" process="@this"
+									action="#{itemsMenuView.action_clear()}"
+									update=":dialogItemsMenu" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

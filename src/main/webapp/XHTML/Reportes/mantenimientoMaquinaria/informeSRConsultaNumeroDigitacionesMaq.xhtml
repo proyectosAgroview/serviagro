@@ -1,0 +1,235 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Consulta número de digitaciones por usuario">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2" id="panelGrid">
+
+
+										<p:outputLabel for="msgFechaInicial" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{informeNumeroDigitacionesMaqView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFinal" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											style="font-size: 0.9em;" mask="true" size="12"
+											binding="#{informeNumeroDigitacionesMaqView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+
+
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtUsuarioId" value="Usuarios: "
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtUsuarioId" effect="fade"
+														filter="true" filterMatchMode="contains" autoWidth="false"
+														binding="#{informeNumeroDigitacionesMaqView.txtUsuarioId}"
+														style="width: 100px;font-size: 0.9em;" required="true"
+														requiredMessage="Seleccione un usuario">
+															<f:selectItem itemLabel="TODOS"
+															itemValue="0" />
+														<f:selectItems
+															value="#{informeNumeroDigitacionesMaqView.selectUsuarios}" />
+													</p:selectOneMenu>
+													
+													<p:outputLabel for="txtTipoRegistro" value="Tipo registro: "
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtTipoRegistro" effect="fade"
+														filter="true" filterMatchMode="contains" autoWidth="false"
+														binding="#{informeNumeroDigitacionesMaqView.txtTipoRegistro}"
+														style="width: 100px;font-size: 0.9em;" required="true"
+														requiredMessage="Seleccione un tipo de registro">
+															<f:selectItem itemLabel="TODOS"
+															itemValue="0" />
+															<f:selectItem itemLabel="SERVICIOS PRESTADOS"
+															itemValue="SERVICIOS PRESTADOS" />
+															<f:selectItem itemLabel="PRE-FACTURAS"
+															itemValue="PRE-FACTURAS" />
+															<f:selectItem itemLabel="FACTURAS"
+															itemValue="FACTURAS" />
+															<f:selectItem itemLabel="COMPRAS"
+															itemValue="COMPRAS" />
+															<f:selectItem itemLabel="SALIDAS PROD MAQUINA"
+															itemValue="SALIDAS PROD MAQUINA" />
+															<f:selectItem itemLabel="GASTOS"
+															itemValue="GASTOS" />
+															<f:selectItem itemLabel="CAJA MENOR"
+															itemValue="CAJA MENOR" />
+														
+													</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+
+										<p:commandButton id="btnConsultar" value="Generar reporte"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{informeNumeroDigitacionesMaqView.consultaNumeroDigitaciones}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+
+									</h:panelGrid>
+								</p:column>
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+
+					<!-- <p:growl id="men"/>	 -->
+					<p:dataTable id="tbl"
+						value="#{informeNumeroDigitacionesMaqView.data}"
+						scrollable="true" scrollWidth="99%" scrollHeight="300"
+						var="datServRealizadosEquipo" resizableColumns="true"
+						style="margin-bottom:20px" lazy="true" reflow="true">
+						<f:facet name="header">
+							<div align="right">
+
+								<h:commandLink id="excel" style=" margin-right:15px;">
+									<p:graphicImage
+										value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+										width="30" />
+									<p:dataExporter type="xls" target="tbl"
+										fileName="datServRealizadosEquipo" />
+								</h:commandLink>
+								<p:tooltip id="toolTipFade" for="excel"
+									value="Exportar todos los datos a Excel" />
+							</div>
+						</f:facet>
+
+
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="AÑO-MES" style="font-size: 1em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.anio_mes}"
+								style="font-size: 1em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="USUARIO" style="font-size: 1em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.login}"
+								style="font-size: 1em;" />
+						</p:column>
+
+
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="TIPO REGISTRO" style="font-size: 1em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.origen_datos}"
+								style="font-size: 1em;">
+								 <f:convertNumber />
+							</h:outputText>
+						</p:column>
+						
+						
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="CANTIDAD REGISTROS" style="font-size: 1em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.cantidadRegistros}"
+								style="font-size: 1em;" >
+								<f:convertNumber pattern="0"> </f:convertNumber>
+								</h:outputText>
+						</p:column>
+						
+
+					</p:dataTable>
+
+
+					<p:panelGrid>
+
+
+						<p:row>
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel value="TOTALES:  " style="font-size: 1em;" />
+								</h:panelGrid>
+							</p:column>
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtCantidadRegistros" value="Cantidad de pines: "
+										style="font-size: 0.9em;" />
+									<p:inputText id="txtCantidadRegistros" style="font-size: 0.9em;" size="12"
+										binding="#{informeNumeroDigitacionesMaqView.txtCantidadRegistros}"
+										required="false">
+										<f:convertNumber pattern="0"> </f:convertNumber>
+										
+									</p:inputText>
+								</h:panelGrid>
+							</p:column>
+
+						</p:row>
+					</p:panelGrid>
+
+
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

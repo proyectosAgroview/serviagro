@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.LimiteCeptoNomina" table="limite_cepto_nomina" >
+        <composite-id name="id" class="co.com.arcosoft.modelo.LimiteCeptoNominaId">
+            <key-property name="ceptoNominaId" type="java.lang.Long">
+                <column name="cepto_nomina_id" />
+            </key-property>
+            <key-property name="udadMedId" type="java.lang.Long">
+                <column name="udad_med_id" />
+            </key-property>
+            <key-property name="compania" type="java.lang.Long">
+                <column name="compania" />
+            </key-property>
+            <key-property name="cantidadPermitida" type="java.lang.Double">
+                <column name="cantidad_permitida" precision="12" scale="4" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="conceptoNomina" class="co.com.arcosoft.modelo.ConceptoNomina" update="false" insert="false" fetch="select">
+            <column name="cepto_nomina_id" />
+        </many-to-one>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" update="false" insert="false" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

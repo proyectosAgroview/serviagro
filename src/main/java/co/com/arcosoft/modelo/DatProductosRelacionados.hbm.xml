@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 22/07/2020 02:56:56 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatProductosRelacionados" table="dat_productos_relacionados" >
+        <id name="datProductosAgregadosId" type="java.lang.Long">
+            <column name="dat_productos_agregados_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="producto" class="co.com.arcosoft.modelo.Producto" fetch="select">
+            <column name="producto_id" />
+        </many-to-one>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <property name="productoAsociadoId" type="java.lang.Long">
+            <column name="producto_asociado_id" />
+        </property>
+        <property name="porcentaje" type="java.lang.Double">
+            <column name="porcentaje" precision="12" scale="4" />
+        </property>
+         <property name="dosis" type="java.lang.Double">
+            <column name="dosis" precision="12" scale="4" />
+        </property>
+         <property name="cantidad" type="java.lang.Double">
+            <column name="cantidad" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

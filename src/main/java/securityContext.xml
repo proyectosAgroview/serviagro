@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">          
+    
+    <http security="none" pattern="/login.xhtml" />
+	<http auto-config="true" access-denied-page="/XHTML/accesoDenegado.xhtml" use-expressions="true" >
+	     <intercept-url pattern="/XHTML/accesoDenegado.xhtml" access="isAuthenticated()"/>
+         <intercept-url pattern="/XHTML/tmp_inicio.xhtml" access="isAuthenticated()"/>
+	     <intercept-url pattern="/XHTML/tmp_modulo.xhtml" access="isAuthenticated()"/>
+	     <intercept-url pattern="/XHTML/AdminAgricola/transacciones/planificacion/**" access="hasAnyRole('Administrador','Supervisor','Digitador','Consultas','Soporte')"/>
+	     <intercept-url pattern="/XHTML/Reportes/infoAgricola/**" access="hasAnyRole('Usuario','Administrador','Soporte','demo')"/>
+	     <intercept-url pattern="/XHTML/sgu/Configuraciones/**" access="hasRole('Soporte')"/>
+	     <intercept-url pattern="/XHTML/infoAgricola/**" access="hasAnyRole('Administrador','Supervisor','Digitador','Consultas','Soporte')"/>
+	     <intercept-url pattern="/XHTML/AdminAgricola/**" access="hasAnyRole('Administrador','Supervisor','Digitador','Consultas','Soporte')"/>
+	     <intercept-url pattern="/XHTML/TecnoAgricola/**" access="hasAnyRole('Administrador','Supervisor','Digitador','Consultas','Soporte')"/>
+	     <intercept-url pattern="/XHTML/ProdAgricola/**" access="hasAnyRole('Administrador','Supervisor','Digitador','Consultas','Soporte')"/>
+	     <intercept-url pattern="/XHTML/Reportes/**" access="hasAnyRole('Administrador','Supervisor','Digitador','Consultas','Soporte')"/>
+	     <intercept-url pattern="/XHTML/sgu/**" access="hasAnyRole('Administrador','Soporte')"/>
+		 <form-login login-page="/login.xhtml" default-target-url="/XHTML/tmp_inicio.xhtml" always-use-default-target="false" authentication-failure-url="/login.xhtml?authfailed=true" />
+		 <logout invalidate-session="true" logout-success-url="/login.xhtml?loggedout=true" logout-url="/j_spring_security_logout" delete-cookies="JSESSIONID" />
+	</http>
+	
+    <authentication-manager alias="authenticationManager">
+		<authentication-provider ref="zathuraCodeAuthenticationProvider" />
+	</authentication-manager>
+
+</beans:beans>

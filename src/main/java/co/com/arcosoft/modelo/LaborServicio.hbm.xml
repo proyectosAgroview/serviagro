@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.LaborServicio" table="labor_servicio" >
+        <composite-id name="id" class="co.com.arcosoft.modelo.LaborServicioId">
+            <key-property name="laborId" type="java.lang.Long">
+                <column name="labor_id" />
+            </key-property>
+            <key-property name="servicioId" type="java.lang.Long">
+                <column name="servicio_id" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="servicio" class="co.com.arcosoft.modelo.Servicio" update="false" insert="false" fetch="select">
+            <column name="servicio_id" />
+        </many-to-one>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" update="false" insert="false" fetch="select">
+            <column name="labor_id" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

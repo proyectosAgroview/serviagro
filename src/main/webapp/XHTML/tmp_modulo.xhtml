@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:mp="http://primefaces.org/ui/material"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:gis="http://gisfaces.com">
+
+
+<f:metadata>
+	<f:viewParam name="modulo" value="#{treeEventsView.modulo}" />
+</f:metadata>
+
+<h:head>
+
+    <f:facet name="first">
+		<title>AgroView</title>
+		<meta name="content-type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+		
+		<link REL="SHORTCUT ICON"
+			href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/favicon.ico" />
+	</f:facet>
+	
+	<f:facet name="middle"> 
+
+	<link rel="stylesheet" type="text/css"
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/bootstrap-4.0.0/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css"
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/style.css" />
+	<link rel="stylesheet" type="text/css"
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/hover-min.css" />
+	
+	</f:facet>
+	
+	<f:facet name="last">
+	
+	<script type="text/javascript"
+		src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/Calendar_es.js"></script>
+	<script type="text/javascript"
+		src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/printChart.js"></script>
+	<script type="text/javascript"
+		src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/customNavBar.js"></script>
+   
+    </f:facet> 
+
+</h:head>
+
+<h:body onload="nobackbutton()">
+
+	<div class="container-fluid">
+	<div id="contenido">
+
+		<div class="fondo">
+
+			<!-- Header -->
+			<ui:insert name="header">
+				<ui:include src="/WEB-INF/facelets/header.jspx" />
+			</ui:insert>
+			<!-- Header -->
+
+			<!-- Inicio layout -->
+			<f:view>
+				<p:layout styleClass="layoutStyle">
+
+					<p:layoutUnit position="west" resizable="true"
+						header="#{treeEventsView.tituloModulo}" collapsible="true">
+
+						<h:form id="form">
+
+							<p:growl id="messages" showDetail="true"/>
+							
+							<p:toolbar style="padding:9px; margin:4px;" class="form-inline">
+
+								<f:facet name="left"  >
+									<p:commandButton id="fade" binding="#{navegacion.btnAtras}"
+										action="#{navegacion.action_atras}"
+										icon="ui-icon-arrowreturnthick-1-w" styleClass="hvr-buzz-out" />
+									<p:tooltip id="toolTipFade" for="fade"
+										value="Haz Clic para volver a Atrás" />
+									<p:commandLink  id="fadeSalir" actionListener="#{navegacion.cerrarSession}" styleClass="hvr-buzz-out"  onclick="window.location='#{facesContext.externalContext.requestContextPath}/j_spring_security_logout'">
+								        <p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/session_logout.png"
+											width="32" />
+								    </p:commandLink>	
+									<p:tooltip id="toolTipFade2" for="fadeSalir"
+										value="Salir de AgroView" />
+										
+									<p:autoComplete  id="event" value="#{treeEventsView.txt8}"
+										completeMethod="#{treeEventsView.completeText}"
+										placeholder="Buscar en menu" > 
+										<p:ajax event="itemSelect"
+											listener="#{treeEventsView.onItemSelect}" />
+									</p:autoComplete>
+
+								</f:facet>
+
+							</p:toolbar>
+
+							<p:tree value="#{treeEventsView.root}" var="doc" 
+								selectionMode="single" cache="flase"
+								selection="#{treeEventsView.selectedNode}"
+								styleClass="fontTransparent">
+								<p:ajax event="select" listener="#{treeEventsView.onNodeSelect}" />
+								<p:treeNode expandedIcon="ui-icon-folder-open"
+									collapsedIcon="ui-icon-folder-collapsed">
+									<h:outputText value="#{doc.name}" />
+								</p:treeNode>
+								<p:treeNode type="document" icon="ui-icon-document">
+									<h:outputText value="#{doc.name}" />
+								</p:treeNode>
+							</p:tree>
+
+				    </h:form>
+
+					</p:layoutUnit>
+
+					<p:layoutUnit position="center" styleClass="fontTransparent">
+
+						<ui:insert name="body" />
+
+					</p:layoutUnit>
+
+				</p:layout>
+			</f:view>
+
+			<!-- Fin -->
+
+			<!-- Footer -->
+			<ui:insert name="footer">
+				<p:outputPanel deferred="true">
+					<ui:include src="/WEB-INF/facelets/footer.jspx" />
+				</p:outputPanel>
+			</ui:insert>
+			<!-- Footer -->
+
+		</div>
+	</div>
+	<!-- Contenido -->
+	</div>
+
+	<script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/bootstrap-4.0.0/js/bootstrap.min.js"></script>
+	<script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/bootstrap-4.0.0/js/popper.min.js"></script>
+
+
+	<script type="text/javascript">
+	$(document).ready(function() {
+	    $("form").keypress(function(e) {
+	        if (e.which == 13) {
+	            return false;
+	        }
+	    });
+	});
+	</script>
+
+</h:body>
+</html>

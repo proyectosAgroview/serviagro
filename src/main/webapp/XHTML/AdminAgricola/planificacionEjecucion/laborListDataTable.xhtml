@@ -1,0 +1,884 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableLabor"
+						header="Labores /Gastos de operación ">
+						<!--  <p:growl id="men"/> -->
+						<p:dataTable id="tbl" value="#{laborView.data}" var="labor"
+							sortBy="#{labor.grupoLabor}" sortOrder="ascending"
+							paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+							reflow="true">
+
+
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="labor" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{labor.estado}" sortBy="#{labor.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{labor.estado}" />
+							</p:column>
+
+
+							<p:column filterBy="#{labor.grupoLabor}"
+								sortBy="#{labor.grupoLabor}">
+								<f:facet name="header">
+									<h:outputText value="Grupo de labores" />
+								</f:facet>
+								<h:outputText value="#{labor.grupoLabor}" />
+							</p:column>
+
+							<p:column filterBy="#{labor.codigo}" sortBy="#{labor.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{labor.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{labor.nombre}" sortBy="#{labor.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{labor.nombre}" />
+							</p:column>
+							
+							<p:column filterBy="#{labor.tipoLabor}" sortBy="#{labor.tipoLabor}">
+								<f:facet name="header">
+									<h:outputText value="Tipo labor" />
+								</f:facet>
+								<h:outputText value="#{labor.tipoLabor}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+										update=":dialogLabor"
+										actionListener="#{laborView.action_edit}">
+										<f:attribute name="selectedLabor" value="#{labor}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{laborView.action_new()}" update=":dialogLabor" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogLabor" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{laborView.showDialog}" resizable="false"
+					modal="true" width="1000" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelLabor" header="Labores /Gastos de operación ">
+
+
+							<p:tabView style="margin:1px;" id="tabMapa"
+								activeIndex="#{laborView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="3" id="panelGrid1">
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{laborView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{laborView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelLabor,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{laborView.listener_txtCodigo}" />
+										</p:inputText>
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="false" size="40"
+											binding="#{laborView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+										<p:message for="txtNombre" />
+
+										<p:outputLabel for="txtGrpLaborId_GrpLabor"
+											value="Grupo de labor: " />
+										<p:selectOneMenu id="txtGrpLaborId_GrpLabor" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{laborView.txtGrpLaborId_GrpLabor}"
+											required="false"
+											requiredMessage="Seleccione un grupo de labor">
+											<f:selectItem itemLabel="Seleccione un grupo de labor"
+												itemValue="" />
+											<f:selectItems value="#{laborView.selectGrpLabor}" />
+										</p:selectOneMenu>
+										<p:message for="txtGrpLaborId_GrpLabor" />
+
+									</h:panelGrid>
+
+
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel for="txtTarifaEstandar"
+														value="Tarifa estandar" />
+													<p:inputNumber id="txtTarifaEstandar" disabled="false"
+														size="10" binding="#{laborView.txtTarifaEstandar}"
+														required="false" decimalSeparator="."
+														thousandSeparator="," decimalPlaces="2"
+														requiredMessage="El valor es Obligatorio" />
+
+
+													<p:outputLabel for="txtPagoPorArea" value="Pago/Ha " />
+													<p:inputNumber id="txtPagoPorArea" disabled="false"
+														size="10" binding="#{laborView.txtPagoPorArea}"
+														required="false" decimalSeparator="."
+														thousandSeparator="," decimalPlaces="2"
+														requiredMessage="El valor es Obligatorio" />
+
+													<p:outputLabel for="txtCuentaContable"
+														value="Cuenta contable: " />
+													<p:selectOneMenu id="txtCuentaContable" effect="fade"
+														filter="true" filterMatchMode="contains"
+														binding="#{laborView.txtCuentaContable}" autoWidth="false"
+														style="width: 160px" required="false"
+														requiredMessage="Seleccione una cuenta contable">
+														<f:selectItem itemLabel="Seleccione una cuenta contable"
+															itemValue="" />
+														<f:selectItems value="#{laborView.selectCuentaContable}" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtTipoLabor" value="Tipo de labor: " />
+													<p:selectOneMenu id="txtTipoLabor" autoWidth="false"
+														style="width: 160" binding="#{laborView.txtTipoLabor}"
+														required="true" requiredMessage="Seleccione un tipo">
+														<f:selectItem itemLabel="Seleccione un tipo" itemValue="" />
+														<f:selectItem itemLabel="Gastos de opreciones agricolas" itemValue="gastos_agricolas" />
+														<f:selectItem itemLabel="Servicio agrícola" itemValue="servicio_agricola" />
+														<f:selectItem itemLabel="Mtto_Maquinaria" itemValue="Mtto_Maquinaria" />
+														<f:selectItem itemLabel="Mtto_Maquinaria_goperacion" itemValue="Mtto_Maquinaria_goperacion" />
+														<f:selectItem itemLabel="Mtto_Industial" itemValue="Mtto_Industial" />
+														<f:selectItem itemLabel="Otros" itemValue="Otros" />
+													</p:selectOneMenu>
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel for="txtClaseLabor" value="Clase de labor: " />
+													<p:selectOneMenu id="txtClaseLabor" autoWidth="false"
+														style="width: 160" binding="#{laborView.txtClaseLabor}"
+														required="true"
+														requiredMessage="Seleccione una clase de labor">
+														<f:selectItem itemLabel="Seleccione una clase de labor"
+															itemValue="" />
+														<f:selectItem itemLabel="Establecimiento"
+															itemValue="Establecimiento" />
+														<f:selectItem itemLabel="Sostenimiento"
+															itemValue="Sostenimiento" />
+														<f:selectItem itemLabel="Administrativa"
+															itemValue="Admministrativa" />
+														<f:selectItem itemLabel="Otros" itemValue="Otros" />
+														<f:selectItem itemLabel="Transporte" itemValue="Transporte" />
+													</p:selectOneMenu>
+
+
+													<p:outputLabel for="txtTipoParada" value="Tipo de parada: " />
+													<p:selectOneMenu id="txtTipoParada" autoWidth="false"
+														style="width: 160" binding="#{laborView.txtTipoParada}"
+														required="false" requiredMessage="Seleccione un tipo">
+														<f:selectItem itemLabel="Seleccione un tipo" itemValue="" />
+														<f:selectItem itemLabel="Parado en taller"
+															itemValue="Parado en taller" />
+														<f:selectItem itemLabel="Parado en Mtto"
+															itemValue="Parado en Mtto" />
+														<f:selectItem itemLabel="Parado dia sin Labor"
+															itemValue="Parado dia sin Labor" />
+														<f:selectItem itemLabel="Parado por lluvia"
+															itemValue="Parado por lluvia" />
+														<f:selectItem itemLabel="Parado por humedad"
+															itemValue="Parado por humedad" />
+														<f:selectItem itemLabel="Bombeo parado"
+															itemValue="Bombeo parado" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtUdadMedId_UdadMed_Plan"
+														value="Unidad (Planificación): " />
+													<p:selectOneMenu id="txtUdadMedId_UdadMed_Plan"
+														effect="fade" autoWidth="false" style="width: 160"
+														filter="true" filterMatchMode="contains"
+														binding="#{laborView.txtUdadMedId_UdadMed_Plan}"
+														required="false" requiredMessage="Seleccione una unidad">
+														<f:selectItem itemLabel="Seleccione una unidad"
+															itemValue="" />
+														<f:selectItems value="#{laborView.selectUdadMed_Plan}" />
+													</p:selectOneMenu>
+
+
+													<p:outputLabel for="txtUdadMedId_UdadMed_Pago"
+														value="Unidad (Pago) : " />
+													<p:selectOneMenu id="txtUdadMedId_UdadMed_Pago"
+														effect="fade" autoWidth="false" style="width: 160"
+														filter="true" filterMatchMode="contains"
+														binding="#{laborView.txtUdadMedId_UdadMed_Pago}"
+														required="true" requiredMessage="Seleccione una unidad">
+														<f:selectItem itemLabel="Seleccione una unidad"
+															itemValue="" />
+														<f:selectItems value="#{laborView.selectUdadMed_Pago}" />
+													</p:selectOneMenu>
+
+
+													<p:outputLabel for="txtUdadMedId_UdadMed_Prod"
+														value="Unidad (Producción): " />
+													<p:selectOneMenu id="txtUdadMedId_UdadMed_Prod"
+														effect="fade" autoWidth="false" style="width: 160"
+														filter="true" filterMatchMode="contains"
+														binding="#{laborView.txtUdadMedId_UdadMed_Prod}"
+														required="false" requiredMessage="Seleccione una unidad">
+														<f:selectItem itemLabel="Seleccione una unidad"
+															itemValue="" />
+														<f:selectItems value="#{laborView.selectUdadMed_Prod}" />
+													</p:selectOneMenu>
+
+												</h:panelGrid>
+											</p:column>
+
+										</p:row>
+									</p:panelGrid>
+								</p:tab>
+
+								<p:tab title="Validaciones">
+
+									<h:panelGrid columns="3" id="panelGrid2">
+
+										<p:outputLabel for="txtColor" value="Color: " />
+										<p:colorPicker id="txtColor" disabled="true"
+											binding="#{laborView.txtColor}" required="false"
+											requiredMessage="El color es obligatoria" />
+										<p:message for="txtColor" />
+
+
+										<p:outputLabel for="txtTrabajarConAreaPlantas"
+											value="Presupuestar con base a: " />
+										<p:selectOneMenu id="txtTrabajarConAreaPlantas"
+											binding="#{laborView.txtTrabajarConAreaPlantas}"
+											required="false" requiredMessage="Seleccione una clase">
+											<f:selectItem itemLabel="Seleccione un tipo" itemValue="" />
+											<f:selectItem itemLabel="Área" itemValue="Area" />
+											<f:selectItem itemLabel="Plantas" itemValue="Plantas" />
+										</p:selectOneMenu>
+										<p:message for="txtTrabajarConAreaPlantas" />
+
+
+										<p:outputLabel for="txtRendimientoMo"
+											value="Rendimiento (HA/Hora o Jornal) " />
+										<p:inputText id="txtRendimientoMo" disabled="false" size="15"
+											binding="#{laborView.txtRendimientoMo}" required="false"
+											requiredMessage="El rendimiento es Obligatorio" />
+										<p:message for="txtRendimientoMo" />
+
+										<p:outputLabel for="txtRendimientoMq"
+											value="Rendimiento(HA/HM) " />
+										<p:inputText id="txtRendimientoMq" disabled="false" size="15"
+											binding="#{laborView.txtRendimientoMq}" required="false"
+											requiredMessage="El rendimiento es Obligatorio" />
+										<p:message for="txtRendimientoMq" />
+
+										<p:outputLabel for="txtRestriCicloCosecha"
+											value="# de planificaciones por cliclo: " />
+										<p:inputText id="txtRestriCicloCosecha" disabled="true"
+											binding="#{laborView.txtRestriCicloCosecha}" required="false"
+											requiredMessage="Este campo es obligatorio" />
+										<p:message for="txtRestriCicloCosecha" />
+
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1: " />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{laborView.txtInfoAdicional}" rows="5" cols="30"
+											counter="display" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2: " />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{laborView.txtInfoAdicional2}" rows="5" cols="30"
+											counter="display2" maxlength="100"
+											counterTemplate="{0} Caracteres." autoResize="true" />
+										<h:outputText id="display2" />
+
+										<p:inputText id="txtLaborId" style="visibility:hidden"
+											binding="#{laborView.txtLaborId}">
+
+										</p:inputText>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Rendimiento Mano de obra">
+
+									<p:panel id="toggleable" toggleable="true" widgetVar="panel">
+
+										<p:messages id="msg1" closable="true" showDetail="true" />
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:panelGrid id="gridTarifaRendimiento" columns="2">
+
+														<p:outputLabel for="msgFechaInicial"
+															value="Fecha Inicial: " />
+														<p:calendar id="msgFechaInicial" showOn="button"
+															navigator="false" locale="es"
+															binding="#{laborView.txtFechaInicial}"
+															pattern="dd/MM/yyyy" mask="true" required="false"
+															requiredMessage="La Fecha   es obligatoria">
+														</p:calendar>
+
+														<p:outputLabel for="msgFechaFinal" value="Fecha final: " />
+														<p:calendar id="msgFechaFinal" showOn="button"
+															navigator="false" locale="es"
+															binding="#{laborView.txtFechaFinal}" pattern="dd/MM/yyyy"
+															mask="true" required="false"
+															requiredMessage="La Fecha   es obligatoria">
+														</p:calendar>
+
+														<p:outputLabel></p:outputLabel>
+
+													</h:panelGrid>
+												</p:column>
+
+												<p:column>
+													<h:panelGrid columns="2">
+
+														<p:outputLabel for="txtUdadMedId_UdadMed_Tarifa"
+															value="Unidad de medida: " />
+														<p:selectOneMenu id="txtUdadMedId_UdadMed_Tarifa"
+															effect="fade" filter="true" filterMatchMode="contains"
+															binding="#{laborView.txtUdadMedId_UdadMed_Tarifa}"
+															required="false"
+															requiredMessage="Seleccione una unidad de medida">
+															<f:selectItem
+																itemLabel="Seleccione  una unidad de medida"
+																itemValue="" />
+															<f:selectItems value="#{laborView.selectUdadMedTarifa}" />
+														</p:selectOneMenu>
+
+														<p:outputLabel for="txtRendimiento" value="Cant. Mínima " />
+														<p:inputText id="txtRendimiento" disabled="true"
+															binding="#{laborView.txtRendimiento}" required="false"
+															requiredMessage="Indique un valor">
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputText>
+
+														<p:outputLabel for="txtRendimientoMax"
+															value="Cant. Máxima " />
+														<p:inputText id="txtRendimientoMax" disabled="true"
+															binding="#{laborView.txtRendimientoMax}" required="false"
+															requiredMessage="Indique un valor">
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputText>
+
+
+														<p:outputLabel for="txtTarifa" value="Adicional: " />
+														<p:inputText id="txtTarifa" disabled="true"
+															binding="#{laborView.txtTarifa}" required="false"
+															requiredMessage="Indique la tarifa">
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputText>
+
+													</h:panelGrid>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+													binding="#{laborView.btnAgregar}" value="Agregar"
+													process="@all"
+													action="#{laborView.action_agregarTarifaRendimiento}"
+													update="tablaTarifaRendimiento :dialogLabor" />
+
+												<p:commandButton id="btnlimpiar" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridTarifaRendimiento" resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+
+										<p:scrollPanel mode="native" style="width:850px;height:250px">
+
+											<p:outputPanel>
+												<p:dataTable id="tablaTarifaRendimiento"
+													value="#{laborView.dataTarifaRendimiento}"
+													var="listaTarifaRendimiento" paginator="true" rows="5"
+													editable="true" reflow="true" editMode="cell"
+													widgetVar="cellEventos">
+
+													<p:ajax event="cellEdit"
+														listener="#{laborView.onCellEditLabor}" />
+
+
+													<p:column headerText="Fecha inicial">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaTarifaRendimiento.fechaInicial}">
+																	<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaTarifaRendimiento.fechaInicial}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Fecha final">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaTarifaRendimiento.fechaFinal}">
+																	<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaTarifaRendimiento.fechaFinal}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Cant. Min">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaTarifaRendimiento.rendimiento}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaTarifaRendimiento.rendimiento}">
+																	<f:convertNumber></f:convertNumber>
+																</p:inputText>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Cant. Max">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaTarifaRendimiento.rendimientoMax}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaTarifaRendimiento.rendimientoMax}">
+																	<f:convertNumber></f:convertNumber>
+																</p:inputText>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Unidad de medida">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaTarifaRendimiento.codUdadMed}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaTarifaRendimiento.codUdadMed}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Adicional">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText value="#{listaTarifaRendimiento.tarifa}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaTarifaRendimiento.tarifa}">
+																	<f:convertNumber></f:convertNumber>
+																</p:inputText>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+
+													<f:attribute name="selectedTarifaRendimiento"
+														value="#{listaTarifaRendimiento}" />
+
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{laborView.actionDeleteTarifaRendimiento}"
+																required="false" title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaTarifaRendimiento :dialogLabor">
+																<f:attribute name="selectedTarifaRendimiento"
+																	value="#{listaTarifaRendimiento}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:scrollPanel>
+									</p:panel>
+
+								</p:tab>
+
+
+								<p:tab title="Asignación de recursos para el presupuesto">
+									<p:panelGrid id="R1">
+										<p:column>
+											<h:panelGrid columns="1">
+
+												<p:outputLabel for="txtTpRecursoId_TipoRecurso"
+													value="Tipo de recurso: " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtTpRecursoId_TipoRecurso"
+													binding="#{laborView.txtTpRecursoId_TipoRecurso}"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													filter="true" filterMatchMode="contains" disabled="true">
+													<f:selectItem itemLabel="Seleccione un tipo de recurso"
+														itemValue="" />
+													<f:selectItems value="#{laborView.selectTpRecursoId}" />
+													<p:ajax
+														listener="#{laborView.listener_ConsultaCodTipoRecurso}"
+														update="txtNombreTipoRecurso,txtRecursoId, txtNombreRecurso"
+														process="@this, txtRecursoId,txtTpRecursoId_TipoRecurso" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtRecursoId" value="Tipo de recurso: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtRecursoId"
+													binding="#{laborView.txtRecursoId}" autoWidth="false"
+													style="width: 100%;font-size: 0.8em;" filter="true"
+													filterMatchMode="contains" disabled="true">
+													<f:selectItem itemLabel="Seleccione un tipo de recurso"
+														itemValue="" />
+													<f:selectItems value="#{laborView.selectRecurso}" />
+													<p:ajax listener="#{laborView.listener_ConsultaCodRecurso}"
+														update="txtNombreRecurso"
+														process="@this,txtRecursoId,txtTpRecursoId_TipoRecurso" />
+												</p:selectOneMenu>
+
+												<!-- id auto incrementable -->
+												<p:inputText style="visibility:hidden"
+													id="txtLaborRecursosId"
+													binding="#{laborView.txtLaborRecursosId}" />
+
+												<p:inputText style="visibility:hidden"
+													id="txtNombreTipoRecurso"
+													binding="#{laborView.txtNombreTipoRecurso}" />
+
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1">
+												<p:outputLabel for="txtUdadMedIdRecurso"
+													value="Unidad de medida: " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtUdadMedIdRecurso" effect="fade"
+													filter="true" filterMatchMode="contains" autoWidth="false"
+													style="width: 100%;font-size: 0.8em;"
+													binding="#{laborView.txtUdadMedIdRecurso}" required="false"
+													requiredMessage="Seleccione una unidad de medida">
+													<f:selectItem itemLabel="Seleccione  una unidad de medida"
+														itemValue="" />
+													<f:selectItems value="#{laborView.selectUdadMedIdRecurso}" />
+													<p:ajax
+														listener="#{laborView.listener_ConsultaCodUdadMedRecurso}"
+														update="txtNombreUmRecurso" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtRendimientoRecurso"
+													value="Rdto(Por Ha o Plantas): " style="font-size: 0.8em;" />
+												<p:inputText id="txtRendimientoRecurso" disabled="true"
+													style="font-size: 0.8em;"
+													binding="#{laborView.txtRendimientoRecurso}"
+													required="false" requiredMessage="Indique el rendimiento">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+
+												<p:inputText style="visibility:hidden" id="txtNombreRecurso"
+													binding="#{laborView.txtNombreRecurso}" />
+
+												<p:inputText style="visibility:hidden"
+													id="txtNombreUmRecurso"
+													binding="#{laborView.txtNombreUmRecurso}" />
+
+
+
+
+											</h:panelGrid>
+										</p:column>
+
+
+									</p:panelGrid>
+
+
+									<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregarRecurso"
+												icon="ui-icon-plusthick"
+												binding="#{laborView.btnAgregarRecurso}" value="Agregar"
+												action="#{laborView.action_agregarLaborRecurso}"
+												update="tablaLaborRecursos :dialogLabor" />
+
+											<p:commandButton id="btnlimpiar3" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="R1" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+									</h:panelGrid>
+
+									<p:scrollPanel mode="native" style="width:870px;height:250px">
+										<p:outputPanel>
+											<p:dataTable id="tablaLaborRecursos"
+												value="#{laborView.dataLaborRecursos}"
+												var="listaLaborRecursos" paginator="true" rows="5"
+												rowsPerPageTemplate="5,10,15" editable="true" reflow="true">
+
+
+
+												<p:column headerText="Tipo Recurso">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaLaborRecursos.nombreTipoRecurso}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaLaborRecursos.nombreTipoRecurso}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Recurso">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaLaborRecursos.nombreRecurso}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaLaborRecursos.nombreRecurso}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+												<p:column headerText="UM">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaLaborRecursos.nombreUm}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaLaborRecursos.nombreUm}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+												<p:column headerText="Rdto">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaLaborRecursos.rendimientoRecurso}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaLaborRecursos.rendimientoRecurso}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{laborView.actionDeleteLaborRecursos}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaLaborRecursos :dialogLabor">
+															<f:attribute name="selectedLaborRecursos"
+																value="#{listaLaborRecursos}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:scrollPanel>
+
+
+								</p:tab>
+
+
+								<p:tab title="Relación de cuentas contables">
+									<p:panelGrid id="RCuentas">
+										<p:column>
+											<h:panelGrid columns="1">
+
+												<p:outputLabel for="txtCuentaContable2"
+													value="Cuenta Contable2: " />
+												<p:selectOneMenu id="txtCuentaContable2" effect="fade"
+													filter="true" filterMatchMode="contains"
+													binding="#{laborView.txtCuentaContable2}" autoWidth="false"
+													style="width: 160px" required="false"
+													requiredMessage="Seleccione una cuenta Contable2">
+													<f:selectItem itemLabel="Seleccione una cuenta Contable2"
+														itemValue="" />
+													<f:selectItems value="#{laborView.selectCuentaContable2}" />
+												</p:selectOneMenu>
+
+
+
+											</h:panelGrid>
+										</p:column>
+
+
+
+									</p:panelGrid>
+
+
+									<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregarLaborCcontable"
+												icon="ui-icon-plusthick"
+												binding="#{laborView.btnAgregarLaborCcontable}" value="Agregar"
+												action="#{laborView.action_agregarLaborCcontable}"
+												update="tablaLaborCcontable :dialogLabor" />
+
+											<p:commandButton id="btnlimpiar4" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="RCuentas" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+									</h:panelGrid>
+
+								
+										<p:outputPanel>
+											<p:dataTable id="tablaLaborCcontable"
+												value="#{laborView.dataLaborCcontable}"
+												var="listaLaborCcontable" paginator="true" rows="5"
+												rowsPerPageTemplate="5,10,15" editable="true" reflow="true">
+
+
+											<p:column headerText="Ccontable">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="labDataC"
+															value="#{listaLaborCcontable.ccontableId.codigo}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															value="#{listaLaborCcontable.ccontableId.nombre}">
+															<f:selectItems
+																value="#{laborView.selectCuentaContable2}"
+																var="var4" itemValue="#{var4}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{laborView.actionDeleteCcontable}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaLaborCcontable :dialogLabor">
+														<f:attribute name="selectedLaborCcontable"
+															value="#{listaLaborCcontable}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								
+
+								</p:tab>
+
+							</p:tabView>
+
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{laborView.btnSave}" value="Grabar"
+									action="#{laborView.action_save()}"
+									update=":dialogLabor :frm:panelDataTableLabor" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{laborView.action_clear()}"
+									process="@this" update=":dialogLabor" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

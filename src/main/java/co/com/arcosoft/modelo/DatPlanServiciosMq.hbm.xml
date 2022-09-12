@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 27/12/2018 09:43:17 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatPlanServiciosMq" table="dat_plan_servicios_mq" >
+        <id name="datPlanServiciosMqId" type="java.lang.Long">
+            <column name="dat_plan_servicios_mq_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="trabajador" class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="supervisor" />
+        </many-to-one>
+        <many-to-one name="zonaGeografica" class="co.com.arcosoft.modelo.ZonaGeografica" fetch="select">
+            <column name="zona_geografica_id" />
+        </many-to-one>
+         <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="pers_empr_id" />
+        </many-to-one>
+           <many-to-one name="nivel2Clientesmq" class="co.com.arcosoft.modelo.Nivel2Clientesmq" fetch="select">
+            <column name="nivel2_clientesmq_id" />
+        </many-to-one>
+       
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="anio" type="java.lang.Integer">
+            <column name="anio" />
+        </property>
+        <property name="periodoInicial" type="java.util.Date">
+            <column name="periodo_inicial" length="19" />
+        </property>
+        <property name="periodoFinal" type="java.util.Date">
+            <column name="periodo_final" length="19" />
+        </property>
+        <property name="NPases" type="java.lang.Integer">
+            <column name="n_pases" />
+        </property>
+        <property name="costoTotalEstimado" type="java.lang.Double">
+            <column name="costo_total_estimado" precision="12" scale="4" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="1000" />
+        </property>
+        <property name="cierreOt" type="java.lang.String">
+            <column name="cierre_ot" length="1" />
+        </property>
+        <property name="idMobile" type="java.lang.String">
+            <column name="id_mobile" length="30" />
+        </property>
+        <property name="latitud" type="java.lang.Double">
+            <column name="latitud" precision="22" scale="0" />
+        </property>
+        <property name="longitud" type="java.lang.Double">
+            <column name="longitud" precision="22" scale="0" />
+        </property>
+        <property name="precision1" type="java.lang.Double">
+            <column name="precision1" precision="22" scale="0" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="fechaCierreOt" type="java.util.Date">
+            <column name="fecha_cierre_ot" length="19" />
+        </property>
+        <property name="fechaReaperturaOt" type="java.util.Date">
+            <column name="fecha_reapertura_ot" length="19" />
+        </property>
+        <property name="nivelAutorizacion1" type="java.lang.String">
+            <column name="nivel_autorizacion1" length="20" />
+        </property>
+        <property name="nivelAutorizacion2" type="java.lang.String">
+            <column name="nivel_autorizacion2" length="20" />
+        </property>
+           <property name="tipoProyecto" type="java.lang.String">
+            <column name="tipo_proyecto"  length="100" />
+        </property>
+        
+        <set name="datPlanServiciosMqdets" table="dat_plan_servicios_mqdet" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="dat_plan_servicios_mq_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanServiciosMqdet" />
+        </set>
+    </class>
+</hibernate-mapping>

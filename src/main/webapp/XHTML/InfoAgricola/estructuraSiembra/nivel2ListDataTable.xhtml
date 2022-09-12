@@ -1,0 +1,491 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<script src="http://maps.google.com/maps/api/js?sensor=false"
+		type="text/javascript"></script>
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableNivel2" header="Hacienda">
+						<!--  <p:growl id="men"/> -->
+
+						<p:dataTable id="tbl" value="#{nivel2View.data}" var="nivel2"
+							paginator="true" rows="5" lazy="true" reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Hacienda" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{nivel2.estado}" sortBy="#{nivel2.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{nivel2.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{nivel2.nombreNivel1}">
+								<f:facet name="header">
+									<h:outputText value="Zona" />
+								</f:facet>
+								<h:outputText value="#{nivel2.nombreNivel1}" />
+							</p:column>
+
+							<p:column filterBy="#{nivel2.codigo}" sortBy="#{nivel2.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{nivel2.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{nivel2.nombre}" sortBy="#{nivel2.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{nivel2.nombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogNivel2"
+										actionListener="#{nivel2View.action_edit}">
+										<f:attribute name="selectedNivel2" value="#{nivel2}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{nivel2View.action_new()}" update=":dialogNivel2" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogNivel2" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{nivel2View.showDialog}"
+					resizable="false" modal="true" width="750" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					
+					<h:form id="formDialog" enctype="multipart/form-data" acceptcharset="ISO-8859-1" >
+					
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelNivel2" header="Hacienda">
+
+						<p:tabView id="tabMapa" activeIndex="#{nivel2View.activeTapIndex}">
+
+								<p:tab title="General">
+									
+									<h:panelGrid columns="3" id="panelGrid1">
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{nivel2View.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+
+
+										<p:outputLabel for="txtNivel1Id_Nivel1" value="Zona" />
+										<p:selectOneMenu id="txtNivel1Id_Nivel1" effect="fade"
+											filter="true" filterMatchMode="contains"
+											
+											binding="#{nivel2View.txtNivel1Id_Nivel1}" required="true"
+											requiredMessage="Seleccione una zona">
+											<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+											<f:selectItems value="#{nivel2View.selectNivel1}" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel1Id_Nivel1" />
+
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{nivel2View.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelNivel2,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{nivel2View.listener_txtCodigo}" />
+										</p:inputText>
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true"
+											binding="#{nivel2View.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+										<p:message for="txtNombre" />
+
+										<p:outputLabel for="txtCodigoAlternativo" value="Código en ERP: " />
+										<p:inputText id="txtCodigoAlternativo" disabled="true"
+											binding="#{nivel2View.txtCodigoAlternativo}" required="false"
+											requiredMessage="El código es Obligatorio" />
+										<p:message for="txtCodigoAlternativo" />
+
+										<p:outputLabel for="txtTipoPropiedad"
+											value="Tipo de propietario" />
+										<p:selectOneMenu id="txtTipoPropiedad"
+											binding="#{nivel2View.txtTipoPropiedad}" required="true"
+											
+											requiredMessage="Seleccione un tipo de propietario">
+											<f:selectItem itemLabel="Seleccione un tipo de propietario"
+												itemValue="" />
+											<f:selectItem itemLabel="Propio" itemValue="Propio" />
+											<f:selectItem itemLabel="Tercero" itemValue="Tercero" />
+											<f:selectItem itemLabel="Participación"
+												itemValue="Participacion" />
+											<f:selectItem itemLabel="Sociedad" itemValue="Sociedad" />
+											<f:selectItem itemLabel="Arrendatario"
+												itemValue="Arrendatario" />
+											<f:selectItem itemLabel="Otros" itemValue="Otros" />
+										</p:selectOneMenu>
+										<p:message for="txtTipoPropiedad" />
+
+										<p:outputLabel for="txtProveId_Proveedor" value="Propietario" />
+										<p:selectOneMenu id="txtProveId_Proveedor" effect="fade"
+											filter="true" filterMatchMode="contains"
+											
+											style="width: 100%;" autoWidth="false"
+											binding="#{nivel2View.txtProveId_Proveedor}" required="true"
+											requiredMessage="Seleccione un propietario">
+											<f:selectItem itemLabel="Seleccione un propietario"
+												itemValue="" />
+											<f:selectItems value="#{nivel2View.selectProveedor}" />
+										</p:selectOneMenu>
+										<p:message for="txtProveId_Proveedor" />
+
+										<p:outputLabel for="txtCentCostId_CentCost" value="CeCos" />
+										<p:selectOneMenu id="txtCentCostId_CentCost" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;" autoWidth="false"
+											binding="#{nivel2View.txtCentCostId_CentCost}"
+											required="false"
+											requiredMessage="Seleccione un centro de Costo">
+											<f:selectItem itemLabel="Seleccione un centro de Costo"
+												itemValue="" />
+											<f:selectItems value="#{nivel2View.selectCentCost}" />
+										</p:selectOneMenu>
+										<p:message for="txtCentCostId_CentCost" />
+
+									
+										<p:outputLabel for="txtTrabId_Trabajador" value="Supervisor: " />
+										<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+											filter="true" filterMatchMode="contains"
+											
+											style="width: 100%;" autoWidth="false"
+											binding="#{nivel2View.txtTrabId_Trabajador}" required="false"
+											requiredMessage="Seleccione un supervisor">
+											<f:selectItem itemLabel="Seleccione un supervisor"
+												itemValue="" />
+											<f:selectItems value="#{nivel2View.selectTrabajador}" />
+										</p:selectOneMenu>
+										<p:message for="txtTrabId_Trabajador" />
+
+										<p:outputLabel for="txtObservacion" value="Observación:" />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{nivel2View.txtObservacion}" rows="2" cols="30"
+											counter="display" maxlength="150"
+											counterTemplate="{0} Caract
+												eres"
+											autoResize="true" />
+										<h:outputText id="display3" />
+									</h:panelGrid>
+									
+								</p:tab>
+								
+								<p:tab title="% Participación" disabled="false">
+								
+								 <h:panelGrid id="panelParticipacion" columns="3">
+								 
+									 <p:outputLabel for="txtPersEmprId" value="Proveedor: " />
+									 <p:selectOneMenu id="txtPersEmprId" effect="fade" autoWidth="false" 
+									 				style="width: 100%;"
+													filter="true" filterMatchMode="contains"
+													binding="#{nivel2View.txtPersEmprId}">
+													<f:selectItem itemLabel="Seleccione" itemValue="" />
+													<f:selectItems value="#{nivel2View.selectPersEmpr}" />
+									 </p:selectOneMenu>
+									 <p:message for="txtPersEmprId" />
+									 
+									 <p:outputLabel for="txtPorcentajeParticipacion"
+												value="% Participación: " />
+									<p:inputText id="txtPorcentajeParticipacion" disabled="true"
+												binding="#{nivel2View.txtPorcentajeParticipacion}">
+												<f:converter converterId="javax.faces.Double" />
+									</p:inputText>
+									<p:message for="txtPorcentajeParticipacion" />
+									<p:outputLabel/>
+									 
+									 
+								</h:panelGrid>
+								
+								    <h:panelGrid columns="2" style="margin:10px;">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+											    process="@this,txtPersEmprId,txtPorcentajeParticipacion"
+												binding="#{nivel2View.btnAgregar}" value="Agregar"
+												action="#{nivel2View.action_agregarParticipacion}"
+												update="tablaParticipacion :dialogNivel2" />
+
+											<p:commandButton id="btnlimpiar" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="panelParticipacion" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+									</h:panelGrid>
+
+									<p:outputPanel>
+										<p:dataTable id="tablaParticipacion"  
+											value="#{nivel2View.dataNivel2PersEmpr}"
+											var="lista" paginator="true" rows="4"
+											reflow="true" editable="true" editMode="cell" widgetVar="cell"  >
+											
+											<p:ajax event="cellEdit" listener="#{nivel2View.onCellEdit}" />
+
+
+											<p:column headerText="Proveedor">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText 
+															value="#{lista.proveedorParticipacionId}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu id="test" value="#{lista.proveedorParticipacionId}" >
+															<f:selectItems value="#{nivel2View.selectPersEmpr}" var="var1"  itemValue="#{var1}"> </f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="% Participación">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{lista.procentajeParticipacion}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{lista.procentajeParticipacion}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<f:attribute name="selectedNivel2Id"
+															value="#{lista}" />
+
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{nivel2View.actionDeleteNivel2PersEmpr}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaParticipacion :dialogNivel2">
+														<f:attribute name="selectedNivel2Id"
+															value="#{lista}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+										
+										<p:contextMenu for="tablaParticipacion" widgetVar="cMenu">   
+									       <p:menuitem value="Editar" icon="ui-icon-search" onclick="PF('cell').showCellEditor();return false;"/>  
+									       <p:menuitem value="Cancelar" icon="ui-icon-close" onclick="PF('cMenu').hide()"/>  
+									   </p:contextMenu> 
+																			
+									</p:outputPanel>
+								
+								
+								</p:tab>
+
+								<p:tab title="Ubicación">
+
+									<h:panelGrid columns="3" id="panelGrid2">
+
+										<p:outputLabel for="txtZonaGeograficaId_ZonaGeografica"
+											value="Zona Geográfica: " />
+										<p:selectOneMenu id="txtZonaGeograficaId_ZonaGeografica"
+											style="width: 100%;" autoWidth="false"
+											binding="#{nivel2View.txtZonaGeograficaId_ZonaGeografica}"
+											required="false"
+											requiredMessage="Seleccione una zona geográfica">
+											<f:selectItem itemLabel="Seleccione una zona geográfica"
+												itemValue="" />
+											<f:selectItems value="#{nivel2View.selectZonaGeografica}" />
+										</p:selectOneMenu>
+										<p:message for="txtZonaGeograficaId_ZonaGeografica" />
+
+										<p:outputLabel for="txtCiudadId_Ciudad" value="Ciudad:" />
+										<p:selectOneMenu id="txtCiudadId_Ciudad" effect="fade"
+											style="width: 100%;" autoWidth="false"
+											filter="true" filterMatchMode="contains"
+											binding="#{nivel2View.txtCiudadId_Ciudad}" required="false"
+											requiredMessage="Seleccione una ciudad">
+											<f:selectItem itemLabel="Seleccione una ciudad" itemValue="" />
+											<f:selectItems value="#{nivel2View.selectCiudad}" />
+										</p:selectOneMenu>
+										<p:message for="txtCiudadId_Ciudad" />
+										
+										<p:outputLabel for="txtVereda" value="Vereda:" />
+										<p:selectOneMenu id="txtVereda" effect="fade"
+											style="width: 100%;" autoWidth="false"
+											filter="true" filterMatchMode="contains"
+											binding="#{nivel2View.txtVereda}" required="false"
+											requiredMessage="Seleccione una vereda">
+											<f:selectItem itemLabel="Seleccione una vereda" itemValue="" />
+											<f:selectItems value="#{nivel2View.selectVereda}" />
+										</p:selectOneMenu>
+										<p:message for="txtVereda" />
+
+										<p:outputLabel for="txtDireccion" value="Dirección: " />
+										<p:inputText id="txtDireccion" disabled="true"
+											binding="#{nivel2View.txtDireccion}" />
+										<p:message for="txtDireccion" />
+
+										<p:outputLabel for="txtBarrio" value="Barrio: " />
+										<p:inputText id="txtBarrio" disabled="true"
+											binding="#{nivel2View.txtBarrio}" />
+										<p:message for="txtBarrio" />
+
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Ubicación(Maps)">
+									<h:panelGrid columns="3" cellpadding="5">
+									<p:outputLabel for="txtLatitud" value="Latitud: " />
+									<p:inputText id="txtLatitud" disabled="true"
+										binding="#{nivel2View.txtLatitud}">
+										<f:converter converterId="javax.faces.Float" />
+									</p:inputText>
+									<p:message for="txtLatitud" />
+
+									<p:outputLabel for="txtLongitud" value="Longitud: " />
+									<p:inputText id="txtLongitud" disabled="true"
+										binding="#{nivel2View.txtLongitud}">
+										<f:converter converterId="javax.faces.Float" />
+									</p:inputText>
+									<p:message for="txtLongitud" />
+
+									<p:outputLabel for="txtPrecision" value="Precision: " />
+									<p:inputText id="txtPrecision" disabled="true"
+										binding="#{nivel2View.txtPrecision}">
+										<f:converter converterId="javax.faces.Float" />
+									</p:inputText>
+									<p:message for="txtPrecision" />
+								</h:panelGrid>
+								</p:tab>
+
+								<p:tab title="Información Adicional">
+
+									<h:panelGrid columns="3" id="panelGrid3">
+									
+										<p:outputLabel for="txtPesoPromedio"
+											value="Peso promedio siembra: " />
+										<p:inputText id="txtPesoPromedio" disabled="true"
+											binding="#{nivel2View.txtPesoPromedio}" />
+										<p:message for="txtPesoPromedio" />
+									
+											
+										<p:outputLabel for="txtEstPluvioId_EstPluvio"
+											value=" Estación pluviométrica" />
+										<p:selectOneMenu id="txtEstPluvioId_EstPluvio"
+											binding="#{nivel2View.txtEstPluvioId_EstPluvio}"
+											required="false" requiredMessage="Seleccione una estación"
+											filter="true" filterMatchMode="contains">
+											<f:selectItem itemLabel="Seleccione una estación" itemValue="" />
+											<f:selectItems value="#{nivel2View.selectEstPluvio}" />
+										</p:selectOneMenu>
+										<p:message for="txtEstPluvioId_EstPluvio" />
+										
+										<p:outputLabel for="txtDistanciaPlanta"
+											value="Distancia a la fábrica(Km): " />
+										<p:inputText id="txtDistanciaPlanta" disabled="true"
+											binding="#{nivel2View.txtDistanciaPlanta}" />
+										<p:message for="txtDistanciaPlanta" />
+
+										<p:outputLabel for="txtDistanciaOficina"
+											value="Distancia a la Oficina(Km): " />
+										<p:inputText id="txtDistanciaOficina" disabled="true"
+											binding="#{nivel2View.txtDistanciaOficina}" />
+										<p:message for="txtDistanciaOficina" />
+
+										<p:outputLabel for="txtTelefono" value="Teléfono: " />
+										<p:inputText id="txtTelefono" disabled="true"
+											binding="#{nivel2View.txtTelefono}" />
+										<p:message for="txtTelefono" />
+
+										<p:outputLabel for="txtPbx" value="Pbx: " />
+										<p:inputText id="txtPbx" disabled="true"
+											binding="#{nivel2View.txtPbx}" />
+										<p:message for="txtPbx" />
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1:" />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{nivel2View.txtInfoAdicional}" rows="2" cols="30"
+											counter="display" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2:" />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{nivel2View.txtInfoAdicional2}" rows="2" cols="30"
+											counter="display2" maxlength="100"
+											counterTemplate="{0} Caracteres." autoResize="true" />
+										<h:outputText id="display2" />
+
+										<p:inputText id="txtNivel2Id" style="visibility:hidden"
+											binding="#{nivel2View.txtNivel2Id}">
+											<p:ajax update=":dialogNivel2"
+												listener="#{nivel2View.listener_txtId}" />
+										</p:inputText>
+									</h:panelGrid>
+
+								</p:tab>
+
+							</p:tabView>
+
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{nivel2View.btnSave}" value="Grabar"
+									action="#{nivel2View.action_save()}"
+									update=":dialogNivel2 :frm:panelDataTableNivel2" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{nivel2View.action_clear()}"
+									process="@this" update=":dialogNivel2" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
+

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-oct-2017 19:44:09 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.SistemasEquipo" table="sistemas_equipo" >
+        <id name="sistemasEquipoId" type="java.lang.Long">
+            <column name="sistemas_equipo_id" />
+            <generator class="identity" />
+        </id>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="100" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional1" type="java.lang.String">
+            <column name="info_adicional1" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="origenDatos" type="java.lang.String">
+            <column name="origen_datos" length="30" />
+        </property>
+        <set name="datCheckListEquipos" table="dat_check_list_equipo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sistemas_equipo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatCheckListEquipo" />
+        </set>
+        <set name="planRevisionEquipoDets" table="plan_revision_equipo_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="sistemas_equipo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.PlanRevisionEquipoDet" />
+        </set>
+    </class>
+</hibernate-mapping>

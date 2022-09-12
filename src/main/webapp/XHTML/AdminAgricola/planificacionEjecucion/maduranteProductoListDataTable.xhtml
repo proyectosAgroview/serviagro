@@ -1,0 +1,149 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableMaduranteProducto"
+						header="Producto - madurantes">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{maduranteProductoView.data}"
+							var="maduranteProducto" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="maduranteProducto" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{maduranteProducto.productoId}"
+								sortBy="#{maduranteProducto.productoId}">
+								<f:facet name="header">
+									<h:outputText value="Producto" />
+								</f:facet>
+								<h:outputText value="#{maduranteProducto.productoId}" />
+							</p:column>
+
+							<p:column filterBy="#{maduranteProducto.cultivoId}"
+								sortBy="#{maduranteProducto.cultivoId}">
+								<f:facet name="header">
+									<h:outputText value="Cultivo" />
+								</f:facet>
+								<h:outputText value="#{maduranteProducto.cultivoId}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogMaduranteProducto"
+										actionListener="#{maduranteProductoView.action_edit}">
+										<f:attribute name="selectedMaduranteProducto"
+											value="#{maduranteProducto}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{maduranteProductoView.action_new()}"
+								update=":dialogMaduranteProducto" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogMaduranteProducto" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{maduranteProductoView.showDialog}" resizable="false"
+					modal="true" width="600" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelMaduranteProducto"
+							header="Producto - madurantes">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtProductoId" value="Producto: " />
+								<p:selectOneMenu id="txtProductoId" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									binding="#{maduranteProductoView.txtProductoId}"
+									required="true" requiredMessage="Seleccione un producto">
+									<f:selectItem itemLabel="Seleccione un producto" itemValue="" />
+									<f:selectItems
+										value="#{maduranteProductoView.selectProductoId}" />
+									<p:ajax update="panelMaduranteProducto,msg,panelBotones"
+										listener="#{maduranteProductoView.listener_txtId}" />
+								</p:selectOneMenu>
+								<p:message for="txtProductoId" />
+
+
+								<p:outputLabel for="txtCultivoId" value="Cultivo: " />
+								<p:selectOneMenu id="txtCultivoId" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									binding="#{maduranteProductoView.txtCultivoId}" required="true"
+									requiredMessage="Seleccione un cultivo">
+									<f:selectItem itemLabel="Seleccione un cultivo" itemValue="" />
+									<f:selectItems value="#{maduranteProductoView.selectCultivo}" />
+								</p:selectOneMenu>
+								<p:message for="txtCultivoId" />
+
+								<p:outputLabel for="txtNdiasEfecto"
+									value="# Días para surtir efecto: " />
+								<p:inputText id="txtNdiasEfecto" disabled="true"
+									binding="#{maduranteProductoView.txtNdiasEfecto}"
+									required="true" requiredMessage="El # días  es obligatorio" />
+								<p:message for="txtNdiasEfecto" />
+
+								<p:outputLabel for="txtNdiasReaplic"
+									value="# Días para re-aplicación: " />
+								<p:inputText id="txtNdiasReaplic" disabled="true"
+									binding="#{maduranteProductoView.txtNdiasReaplic}"
+									required="false" requiredMessage="El # días es obligatorio" />
+								<p:message for="txtNdiasReaplic" />
+
+
+
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{maduranteProductoView.btnSave}" value="Grabar"
+									action="#{maduranteProductoView.action_save()}"
+									update=":dialogMaduranteProducto :frm:panelDataTableMaduranteProducto" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{maduranteProductoView.action_clear()}"
+									process="@this" update=":dialogMaduranteProducto" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

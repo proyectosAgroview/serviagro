@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-oct-2018 9:33:37 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatDiferidos" table="dat_diferidos" >
+        <id name="datDiferidosId" type="java.lang.Long">
+            <column name="dat_diferidos_id" />
+            <generator class="identity" />
+        </id>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+  
+         <many-to-one name="laborId" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" />
+        </many-to-one>
+        
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="19" />
+        </property>
+        <property name="valorInicial" type="java.lang.Double">
+            <column name="valor_inicial" precision="12" scale="4" />
+        </property>
+        <property name="valorCuota" type="java.lang.Double">
+            <column name="valor_cuota" precision="12" scale="4" />
+        </property>
+        <property name="valorSaldo" type="java.lang.Double">
+            <column name="valor_saldo" precision="12" scale="4" />
+        </property>
+        <property name="periodos" type="java.lang.Long">
+            <column name="periodos" />
+        </property>
+        <property name="npReset" type="java.lang.Long">
+            <column name="np_reset" />
+        </property>
+        <property name="detalleNota" type="java.lang.String">
+            <column name="detalle_nota" length="3900" />
+        </property>
+        <property name="anioAplicacion" type="java.lang.Long">
+            <column name="anio_aplicacion" />
+        </property>
+        <property name="mesAplicacion" type="java.lang.Long">
+            <column name="mes_aplicacion" />
+        </property>
+        <property name="detalleAplicacion" type="java.lang.String">
+            <column name="detalle_aplicacion" length="3900" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="3900" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="numeroFactura" type="java.lang.String">
+            <column name="numero_factura" length="20" />
+        </property>
+           <property name="tipoTransaccion" type="java.lang.String">
+            <column name="tipo_transaccion" length="100" />
+        </property>
+         <property name="categEquipId" type="java.lang.Long">
+            <column name="categ_equip_id" />
+        </property>
+        
+         <property name="centCostId" type="java.lang.Long">
+            <column name="cent_cost_id" />
+        </property>
+        
+        <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr"
+			fetch="select">
+			<column name="pers_empr_id" />
+		</many-to-one>
+        <set name="datDiferidosDets" table="dat_diferidos_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="dat_diferidos_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatDiferidosDet" />
+        </set>
+    </class>
+</hibernate-mapping>

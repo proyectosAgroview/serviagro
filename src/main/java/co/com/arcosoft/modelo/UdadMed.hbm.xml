@@ -1,0 +1,290 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.UdadMed" table="udad_med" >
+        <id name="udadMedId" type="java.lang.Long">
+            <column name="udad_med_id" />
+            <generator class="identity" />
+        </id>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="sigla" type="java.lang.String">
+            <column name="sigla" length="10" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="nroDecimales" type="java.lang.Long">
+            <column name="nro_decimales" />
+        </property>
+        <property name="clasificacionUm" type="java.lang.String">
+            <column name="clasificacion_um" length="30" />
+        </property>
+        
+        <set name="tarifaProfesions" table="tarifa_profesion" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TarifaProfesion" />
+        </set>
+        
+        <set  name="datPlanillaNominaDetsForUdadMedProd" table="dat_planilla_nomina_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_prod" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanillaNominaDet" />
+        </set>
+        
+        <set name="tipoRecursosInsumoses" table="tipo_recursos_insumos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TipoRecursosInsumos" />
+        </set>
+        
+        <set name="costoRecursos" table="costo_recurso" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.CostoRecurso" />
+        </set>
+        
+        <set name="tarifaEquipProps" table="tarifa_equip_prop" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TarifaEquipProp" />
+        </set>
+        
+        <set name="cultivosForUdadMedId1" table="cultivo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id1" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Cultivo" />
+        </set>
+        
+        <set name="datTransProdDets" table="dat_trans_prod_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatTransProdDet" />
+        </set>
+        
+        <set name="limiteCeptoNominas" table="limite_cepto_nomina" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.LimiteCeptoNomina" />
+        </set>
+        
+        <set name="tipoRecursosOtroses" table="tipo_recursos_otros" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TipoRecursosOtros" />
+        </set>
+        
+        <set name="datHerramientas" table="dat_herramienta" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatHerramienta" />
+        </set>
+        
+        <set name="factorConversionsForUndadMedDestId" table="factor_conversion" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="undad_med_dest_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.FactorConversion" />
+        </set>
+        
+        <set name="datTransProdTrabajadoreses" table="dat_trans_prod_trabajadores" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_pago" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatTransProdTrabajadores" />
+        </set>
+        
+        <set name="tipoRecursosEquiposes" table="tipo_recursos_equipos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TipoRecursosEquipos" />
+        </set>
+        
+        <set name="cultivosForUdadMedId" table="cultivo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Cultivo" />
+        </set>
+        
+        <set name="datServicios" table="dat_servicio" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_pago" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServicio" />
+        </set>
+        
+        <set name="basculas" table="bascula" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Bascula" />
+        </set>
+        
+        <set name="productosForUdadMedCosecha" table="producto" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_cosecha" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Producto" />
+        </set>
+        
+        <set name="datPlanLabors" table="dat_plan_labor" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_plan" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanLabor" />
+        </set>
+        
+        <set name="productosForUdadMedProd" table="producto" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_prod" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Producto" />
+        </set>
+        
+        <set name="datAbastCombustibles" table="dat_abast_combustible" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatAbastCombustible" />
+        </set>
+        
+        <set name="datAplicProdDets" table="dat_aplic_prod_det" inverse="true" lazy="true" fetch="select">
+             <key>
+                <column name="udad_med_aplic" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatAplicProdDet" />
+        </set>
+        
+        <set name="datServicioDetsForUdadMedProd" table="dat_servicio_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_prod" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServicioDet" />
+        </set>
+        
+        <set name="tarifaContratistas" table="tarifa_contratista" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TarifaContratista" />
+        </set>
+        
+        <set name="factorConversionsForUnadMedOrigenId" table="factor_conversion" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="unad_med_origen_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.FactorConversion" />
+        </set>
+        
+        <set name="datPlanillaNominaDetsForUdadMedPago" table="dat_planilla_nomina_det" inverse="true" lazy="true" fetch="select">
+             <key>
+                <column name="udad_med_pago" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanillaNominaDet" />
+        </set>
+        
+        <set name="laborsForUdadMedPago" table="labor" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_pago" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Labor" />
+        </set>
+        
+        <set name="laborsForUdadMedPlan" table="labor" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_plan" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Labor" />
+        </set>
+        
+        <set name="datServicioDetsForUdadMedPago" table="dat_servicio_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_pago" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServicioDet" />
+        </set>
+        
+        <set name="datMantenimientoEquipoMecs" table="dat_mantenimiento_equipo_mec" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatMantenimientoEquipoMec" />
+        </set>
+        
+        <set name="datMantenimientoEquipoProds" table="dat_mantenimiento_equipo_prod" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatMantenimientoEquipoProd" />
+        </set>
+        
+        <set name="datPlanillaNominas" table="dat_planilla_nomina" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_prod" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanillaNomina" />
+        </set>
+        
+        <set name="planAsignarRecursos" table="plan_asignar_recurso" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_recurso" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.PlanAsignarRecurso" />
+        </set>
+        
+        <set name="tipoRecursosProfesions" table="tipo_recursos_profesion" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TipoRecursosProfesion" />
+        </set>
+        <set name="laborsForUdadMedProd" table="labor" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="udad_med_prod" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Labor" />
+        </set>
+        
+        <set name="datServRealizadosEquipos" table="dat_serv_realizados_equipo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="equipo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServRealizadosEquipo" />
+        </set>
+        
+    </class>
+</hibernate-mapping>

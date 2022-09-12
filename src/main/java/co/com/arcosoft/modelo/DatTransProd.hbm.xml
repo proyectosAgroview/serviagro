@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatTransProd" table="dat_trans_prod" >
+        <id name="datTransProdId" type="java.lang.Long">
+            <column name="dat_trans_prod_id" />
+            <generator class="identity" />
+        </id>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="19" />
+        </property>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="consecutivoPesoNeto" type="java.lang.Long">
+            <column name="consecutivo_peso_neto" />
+        </property>
+        <property name="tipoTransaccion" type="java.lang.String">
+            <column name="tipo_transaccion" length="30" />
+        </property>
+        <property name="destinoProduccion" type="java.lang.String">
+            <column name="destino_produccion" length="30" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="vehiculoId" type="java.lang.Long">
+            <column name="vehiculo_id" />
+        </property>
+        <property name="transportadora" type="java.lang.Long">
+            <column name="transp_id" />
+        </property>
+        <property name="conductor" type="java.lang.Long">
+            <column name="conductor_id" />
+        </property>
+        <property name="proveedor" type="java.lang.Long">
+            <column name="prove_id" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="1000" />
+        </property>
+        <property name="mobileId" type="java.lang.String">
+            <column name="mobile_id" length="23" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="vagon1" type="java.lang.String">
+            <column name="vagon1" length="60" />
+        </property>
+        <property name="vagon2" type="java.lang.String">
+            <column name="vagon2" length="60" />
+        </property>
+        <property name="vagon3" type="java.lang.String">
+            <column name="vagon3" length="60" />
+        </property>
+        <property name="fechaEntrada" type="java.util.Date">
+            <column name="fecha_entrada" length="19" />
+        </property>
+        <property name="fechaSalida" type="java.util.Date">
+            <column name="fecha_salida" length="19" />
+        </property>
+        <property name="fechaPesoBruto" type="java.util.Date">
+            <column name="fecha_peso_bruto" length="19" />
+        </property>
+        <property name="fechaTara" type="java.util.Date">
+            <column name="fecha_tara" length="19" />
+        </property>
+        <property name="fechaPesoNeto" type="java.util.Date">
+            <column name="fecha_peso_neto" length="19" />
+        </property>
+        <property name="numeroSellos" type="java.lang.String">
+            <column name="numero_sellos" length="300" />
+        </property>
+        <property name="basculaTara" type="java.lang.Long">
+            <column name="bascula_tara" />
+        </property>
+        <property name="basculaPesoBruto" type="java.lang.Long">
+            <column name="bascula_peso_bruto" />
+        </property>
+        <property name="usuarioPesoTara" type="java.lang.Long">
+            <column name="usuario_peso_tara" />
+        </property>
+        <property name="usuarioPesoBruto" type="java.lang.Long">
+            <column name="usuario_peso_bruto" />
+        </property>
+        <property name="pesoBruto" type="java.lang.Double">
+            <column name="peso_bruto" precision="12" scale="4" />
+        </property>
+        <property name="pesoTara" type="java.lang.Double">
+            <column name="peso_tara" precision="12" scale="4" />
+        </property>
+        <property name="pesoNeto" type="java.lang.Double">
+            <column name="peso_neto" precision="12" scale="4" />
+        </property>
+        <property name="variable1" type="java.lang.Double">
+            <column name="variable1" precision="12" scale="4" />
+        </property>
+        <property name="variable2" type="java.lang.Double">
+            <column name="variable2" precision="12" scale="4" />
+        </property>
+        <property name="variable3" type="java.lang.Double">
+            <column name="variable3" precision="12" scale="4" />
+        </property>
+        <property name="variable4" type="java.lang.Double">
+            <column name="variable4" precision="12" scale="4" />
+        </property>
+        <property name="variable5" type="java.lang.Double">
+            <column name="variable5" precision="12" scale="4" />
+        </property>
+        <property name="variable6" type="java.lang.Double">
+            <column name="variable6" precision="12" scale="4" />
+        </property>
+        <property name="variable7" type="java.lang.Double">
+            <column name="variable7" precision="12" scale="4" />
+        </property>
+        <property name="variable8" type="java.lang.Double">
+            <column name="variable8" precision="12" scale="4" />
+        </property>
+        <property name="variable9" type="java.lang.Double">
+            <column name="variable9" precision="12" scale="4" />
+        </property>
+        <property name="variable10" type="java.lang.Double">
+            <column name="variable10" precision="12" scale="4" />
+        </property>
+        <property name="observacionAnalisis" type="java.lang.String">
+            <column name="observacion_analisis" length="3900" />
+        </property>
+        <property name="observacion2" type="java.lang.String">
+            <column name="observacion2" length="3000" />
+        </property>
+        <property name="observacion3" type="java.lang.String">
+            <column name="observacion3" length="3000" />
+        </property>
+        <property name="fechaInicial" type="java.util.Date">
+            <column name="fecha_inicial" length="19" />
+        </property>
+        <property name="fechaEstadoVehiculo" type="java.util.Date">
+            <column name="fecha_vehiculo_porteria" length="19" />
+        </property>
+        <property name="valorUnitario" type="java.lang.Double">
+            <column name="valor_unitario" precision="16" scale="4" />
+        </property>
+        <property name="valorNeto" type="java.lang.Double">
+            <column name="valor_neto" precision="16" scale="4" />
+        </property>
+        <property name="valorDeduccion" type="java.lang.Double">
+            <column name="valor_deduccion" precision="16" scale="4" />
+        </property>
+        <property name="valorTotal" type="java.lang.Double">
+            <column name="valor_total" precision="16" scale="4" />
+        </property>
+        <property name="empresaCompradora" type="java.lang.Long">
+            <column name="empresa_compradora" />
+        </property>
+        <property name="cantidadKilosLiq" type="java.lang.Double">
+            <column name="cantidad_kilos_liq" precision="12" scale="4" />
+        </property>
+        <property name="sello1" type="java.lang.String">
+            <column name="sello1" length="80" />
+        </property>
+        <property name="sello2" type="java.lang.String">
+            <column name="sello2" length="80" />
+        </property>
+        <property name="sello3" type="java.lang.String">
+            <column name="sello3" length="80" />
+        </property>
+        <property name="sello4" type="java.lang.String">
+            <column name="sello4" length="80" />
+        </property>
+        <property name="sello5" type="java.lang.String">
+            <column name="sello5" length="80" />
+        </property>
+        <property name="sello6" type="java.lang.String">
+            <column name="sello6" length="80" />
+        </property>
+        <property name="sello7" type="java.lang.String">
+            <column name="sello7" length="80" />
+        </property>
+        <property name="sello8" type="java.lang.String">
+            <column name="sello8" length="80" />
+        </property>
+        <property name="sello9" type="java.lang.String">
+            <column name="sello9" length="80" />
+        </property>
+        <property name="sello10" type="java.lang.String">
+            <column name="sello10" length="80" />
+        </property>
+        
+        <property name="tipoPesajeTara" type="java.lang.String">
+            <column name="tipo_pesaje_tara" length="20" />
+        </property>
+        
+        <property name="tipoPesajeBruto" type="java.lang.String">
+            <column name="tipo_pesaje_bruto" length="20" />
+        </property>
+        <property name="origen" type="java.lang.String">
+            <column name="origen" length="3000" />
+        </property>
+        <property name="noDocumento" type="java.lang.String">
+            <column name="no_documento" length="50" />
+        </property>
+              <property name="variableTexto1"  type="java.lang.String">
+            <column name="variable_texto1"  length="100" />
+        </property>
+        
+        <set name="datAnaTransProds" table="dat_ana_trans_prod" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="dat_trans_prod_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatAnaTransProd" />
+        </set>
+        <set name="datTransProdNivel4s" table="dat_trans_prod_nivel4" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="dat_trans_prod_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatTransProdNivel4" />
+        </set>
+        <set name="datTransProdDets" table="dat_trans_prod_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="dat_trans_prod_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatTransProdDet" />
+        </set>
+    </class>
+</hibernate-mapping>

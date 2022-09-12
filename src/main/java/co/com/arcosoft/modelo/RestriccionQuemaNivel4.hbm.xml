@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.RestriccionQuemaNivel4" table="restriccion_quema_nivel4" >
+        <composite-id name="id" class="co.com.arcosoft.modelo.RestriccionQuemaNivel4Id">
+            <key-property name="restrQuemaRestQuema" type="java.lang.Long">
+                <column name="restr_quema_rest_quema" />
+            </key-property>
+            <key-property name="nivel4Nivel4Id" type="java.lang.Long">
+                <column name="nivel4_nivel4_id" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" update="false" insert="false" fetch="select">
+            <column name="nivel4_nivel4_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="restrQuema" class="co.com.arcosoft.modelo.RestrQuema" update="false" insert="false" fetch="select">
+            <column name="restr_quema_rest_quema" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,184 @@
+<jsp:root jsfc="f:view" xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+   
+   <html>
+		<body>
+			<f:view>
+				<ui:composition>
+					<!-- Beging Menu -->
+				
+							<h:form>
+							
+								<p:megaMenu style="width:989px">  
+									<p:submenu label="Master" icon="ui-icon-pencil">  
+							            <p:column>
+							            
+							            	 								            	 <p:submenu label="Cultivo">  
+								                    <p:menuitem value="Master Cultivo" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/cultivo.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="CultivoFitosanidad">  
+								                    <p:menuitem value="Master CultivoFitosanidad" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/cultivoFitosanidad.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="DatClimat">  
+								                    <p:menuitem value="Master DatClimat" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datClimat.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="DatEvaporimetro">  
+								                    <p:menuitem value="Master DatEvaporimetro" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datEvaporimetro.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="DatPluvio">  
+								                    <p:menuitem value="Master DatPluvio" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datPluvio.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="DatSanVeg">  
+								                    <p:menuitem value="Master DatSanVeg" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datSanVeg.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="EstClimat">  
+								                    <p:menuitem value="Master EstClimat" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/estClimat.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="EstEvaporimetro">  
+								                    <p:menuitem value="Master EstEvaporimetro" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/estEvaporimetro.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="EstPluvio">  
+								                    <p:menuitem value="Master EstPluvio" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/estPluvio.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="Fitosanidad">  
+								                    <p:menuitem value="Master Fitosanidad" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/fitosanidad.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="ListValor">  
+								                    <p:menuitem value="Master ListValor" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/listValor.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="Nivel2">  
+								                    <p:menuitem value="Master Nivel2" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/nivel2.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="Nivel4">  
+								                    <p:menuitem value="Master Nivel4" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/nivel4.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="RangoValor">  
+								                    <p:menuitem value="Master RangoValor" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/rangoValor.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="Variable">  
+								                    <p:menuitem value="Master Variable" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/variable.xhtml" />  
+								               	 </p:submenu>
+											 							            </p:column>
+							        </p:submenu>  
+															
+															
+							  
+							        <p:submenu label="Data Table" icon="ui-icon-document">
+							           <p:column>  
+							                								            	 <p:submenu label="Cultivo">  
+								                    <p:menuitem value="Cultivo" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/cultivoListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="CultivoFitosanidad">  
+								                    <p:menuitem value="CultivoFitosanidad" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/cultivoFitosanidadListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="DatClimat">  
+								                    <p:menuitem value="DatClimat" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datClimatListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="DatEvaporimetro">  
+								                    <p:menuitem value="DatEvaporimetro" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datEvaporimetroListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="DatPluvio">  
+								                    <p:menuitem value="DatPluvio" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datPluvioListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="DatSanVeg">  
+								                    <p:menuitem value="DatSanVeg" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datSanVegListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="EstClimat">  
+								                    <p:menuitem value="EstClimat" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/estClimatListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="EstEvaporimetro">  
+								                    <p:menuitem value="EstEvaporimetro" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/estEvaporimetroListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="EstPluvio">  
+								                    <p:menuitem value="EstPluvio" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/estPluvioListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="Fitosanidad">  
+								                    <p:menuitem value="Fitosanidad" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/fitosanidadListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="ListValor">  
+								                    <p:menuitem value="ListValor" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/listValorListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="Nivel2">  
+								                    <p:menuitem value="Nivel2" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/nivel2ListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="Nivel4">  
+								                    <p:menuitem value="Nivel4" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/nivel4ListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="RangoValor">  
+								                    <p:menuitem value="RangoValor" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/rangoValorListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="Variable">  
+								                    <p:menuitem value="Variable" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/variableListDataTable.xhtml" />  
+								               	 </p:submenu>
+											 							            </p:column>
+							        </p:submenu>  
+							  
+							        
+							  
+							  
+							        <p:submenu label="Edit Data Table" icon="ui-icon-contact">  
+							            <p:column>  
+							                								            	 <p:submenu label="Cultivo">  
+								                    <p:menuitem value="Cultivo" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/cultivoListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="CultivoFitosanidad">  
+								                    <p:menuitem value="CultivoFitosanidad" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/cultivoFitosanidadListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="DatClimat">  
+								                    <p:menuitem value="DatClimat" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datClimatListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="DatEvaporimetro">  
+								                    <p:menuitem value="DatEvaporimetro" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datEvaporimetroListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="DatPluvio">  
+								                    <p:menuitem value="DatPluvio" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datPluvioListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="DatSanVeg">  
+								                    <p:menuitem value="DatSanVeg" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datSanVegListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="EstClimat">  
+								                    <p:menuitem value="EstClimat" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/estClimatListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="EstEvaporimetro">  
+								                    <p:menuitem value="EstEvaporimetro" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/estEvaporimetroListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="EstPluvio">  
+								                    <p:menuitem value="EstPluvio" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/estPluvioListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="Fitosanidad">  
+								                    <p:menuitem value="Fitosanidad" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/fitosanidadListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="ListValor">  
+								                    <p:menuitem value="ListValor" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/listValorListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="Nivel2">  
+								                    <p:menuitem value="Nivel2" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/nivel2ListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="Nivel4">  
+								                    <p:menuitem value="Nivel4" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/nivel4ListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="RangoValor">  
+								                    <p:menuitem value="RangoValor" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/rangoValorListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 								            	 <p:submenu label="Variable">  
+								                    <p:menuitem value="Variable" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/variableListDataTableEditable.xhtml" />  
+								               	 </p:submenu>
+											 							            </p:column>  
+							        </p:submenu>  
+						  
+						        	<p:menuitem value="Quit" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/index.jsp" icon="ui-icon-close" />  
+						    
+						    </p:megaMenu>  
+						</h:form>
+					
+					<!-- end menu -->
+				</ui:composition>
+			</f:view>
+		</body>
+	</html>
+</jsp:root>

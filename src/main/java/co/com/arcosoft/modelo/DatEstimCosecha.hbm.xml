@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatEstimCosecha" table="dat_estim_cosecha" >
+        <id name="datEstimCosechaId" type="java.lang.Long">
+            <column name="dat_estim_cosecha_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="trabajador" class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="muestreador" />
+        </many-to-one>
+        <many-to-one name="nivel4Id" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_id" />
+        </many-to-one>
+        <many-to-one name="motEstim" class="co.com.arcosoft.modelo.MotEstim" fetch="select">
+            <column name="mot_estim_id" />
+        </many-to-one>
+        <property name="fechaMuestra" type="java.util.Date">
+            <column name="fecha_muestra" length="19" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="nivel1Id" type="java.lang.Long">
+            <column name="nivel1_id" />
+        </property>
+        <property name="nivel2Id" type="java.lang.Long">
+            <column name="nivel2_id" />
+        </property>
+        <property name="nivel3Id" type="java.lang.Long">
+            <column name="nivel3_id" />
+        </property>
+        <property name="areaNeta" type="java.lang.Double">
+            <column name="area_neta" precision="12" scale="4" />
+        </property>
+        <property name="thEstimado" type="java.lang.Double">
+            <column name="th_estimado" precision="12" scale="4" />
+        </property>
+        <property name="cantidadTotalEst" type="java.lang.Double">
+            <column name="cantidad_total_est" precision="12" scale="4" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="1000" />
+        </property>
+        <property name="mobileId" type="java.lang.String">
+            <column name="mobile_id" length="23" />
+        </property>
+        <property name="edadNivel4" type="java.lang.Double">
+            <column name="edad_nivel4" precision="12" scale="4" />
+        </property>
+        <property name="variedNivel4" type="java.lang.Long">
+            <column name="varied_nivel4" />
+        </property>
+        <property name="etapaNivel4" type="java.lang.Long">
+            <column name="etapa_nivel4" />
+        </property>
+        <property name="anioFiscalNivel4" type="java.lang.Long">
+            <column name="anio_fiscal_nivel4" />
+        </property>
+        <property name="faseFenoNivel4" type="java.lang.Long">
+            <column name="fase_feno_nivel4" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="longitud" type="java.lang.Double">
+            <column name="longitud" precision="22" scale="0" />
+        </property>
+        <property name="latitud" type="java.lang.Double">
+            <column name="latitud" precision="22" scale="0" />
+        </property>
+        <property name="precision" type="java.lang.Double">
+            <column name="precision1" precision="22" scale="0" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

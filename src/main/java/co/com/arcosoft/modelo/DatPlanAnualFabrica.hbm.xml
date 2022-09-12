@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 24-mar-2018 15:52:14 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatPlanAnualFabrica" table="dat_plan_anual_fabrica" >
+        <id name="datPlanAnualFabricaId" type="java.lang.Long">
+            <column name="dat_plan_anual_fabrica_id" />
+            <generator class="identity" />
+        </id>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="anio" type="java.lang.Long">
+            <column name="anio" />
+        </property>
+        <property name="horasArranque" type="java.lang.Double">
+            <column name="horas_arranque" precision="16" scale="4"  />
+        </property>
+        <property name="produccionEstEnero" type="java.lang.Double">
+            <column name="produccion_est_enero" precision="16" scale="4" />
+        </property>
+        <property name="produccionEstFebrero" type="java.lang.Double">
+            <column name="produccion_est_febrero" precision="16" scale="4" />
+        </property>
+        <property name="produccionEstMarzo" type="java.lang.Double">
+            <column name="produccion_est_marzo" precision="16" scale="4" />
+        </property>
+        <property name="produccionEstAbril" type="java.lang.Double">
+            <column name="produccion_est_abril" precision="16" scale="4" />
+        </property>
+        <property name="produccionEstMayo" type="java.lang.Double">
+            <column name="produccion_est_mayo" precision="16" scale="4" />
+        </property>
+        <property name="produccionEstJunio" type="java.lang.Double">
+            <column name="produccion_est_junio" precision="16" scale="4" />
+        </property>
+        <property name="produccionEstJulio" type="java.lang.Double">
+            <column name="produccion_est_julio" precision="16" scale="4" />
+        </property>
+        <property name="produccionEstAgosto" type="java.lang.Double">
+            <column name="produccion_est_agosto" precision="16" scale="4" />
+        </property>
+        <property name="produccionEstSeptiembre" type="java.lang.Double">
+            <column name="produccion_est_septiembre" precision="16" scale="4" />
+        </property>
+        <property name="produccionEstOctubre" type="java.lang.Double">
+            <column name="produccion_est_octubre" precision="16" scale="4" />
+        </property>
+        <property name="produccionEstNoviembre" type="java.lang.Double">
+            <column name="produccion_est_noviembre" precision="16" scale="4" />
+        </property>
+        <property name="produccionEstDiciembre" type="java.lang.Double">
+            <column name="produccion_est_diciembre" precision="16" scale="4" />
+        </property>
+        <property name="produccionEstTotal" type="java.lang.Double">
+            <column name="produccion_est_total" precision="16" scale="4" />
+        </property>
+        <property name="produccionEnero" type="java.lang.Double">
+            <column name="produccion_enero" precision="16" scale="4" />
+        </property>
+        <property name="produccionFebrero" type="java.lang.Double">
+            <column name="produccion_febrero" precision="16" scale="4" />
+        </property>
+        <property name="produccionMarzo" type="java.lang.Double">
+            <column name="produccion_marzo" precision="16" scale="4" />
+        </property>
+        <property name="produccionAbril" type="java.lang.Double">
+            <column name="produccion_abril" precision="16" scale="4" />
+        </property>
+        <property name="produccionMayo" type="java.lang.Double">
+            <column name="produccion_mayo" precision="16" scale="4" />
+        </property>
+        <property name="produccionJunio" type="java.lang.Double">
+            <column name="produccion_junio" precision="16" scale="4" />
+        </property>
+        <property name="produccionJulio" type="java.lang.Double">
+            <column name="produccion_julio" precision="16" scale="4" />
+        </property>
+        <property name="produccionAgosto" type="java.lang.Double">
+            <column name="produccion_agosto" precision="16" scale="4" />
+        </property>
+        <property name="produccionSeptiembre" type="java.lang.Double">
+            <column name="produccion_septiembre" precision="16" scale="4" />
+        </property>
+        <property name="produccionOctubre" type="java.lang.Double">
+            <column name="produccion_octubre" precision="16" scale="4" />
+        </property>
+        <property name="produccionNoviembre" type="java.lang.Double">
+            <column name="produccion_noviembre" precision="16" scale="4" />
+        </property>
+        <property name="produccionDiciembre" type="java.lang.Double">
+            <column name="produccion_diciembre" precision="16" scale="4" />
+        </property>
+        <property name="produccionTotal" type="java.lang.Double">
+            <column name="produccion_total" precision="16" scale="4" />
+        </property>
+        <property name="velocidadEstandar" type="java.lang.Double">
+            <column name="velocidad_estandar" precision="16" scale="4" />
+        </property>
+        <property name="horasProcesoEst" type="java.lang.Double">
+            <column name="horas_proceso_est" precision="16" scale="4" />
+        </property>
+        <property name="horasProcesoEjec" type="java.lang.Double">
+            <column name="horas_proceso_ejec" precision="16" scale="4" />
+        </property>
+        <property name="horasMttoProgEst" type="java.lang.Double">
+            <column name="horas_mtto_prog_est" precision="16" scale="4" />
+        </property>
+        <property name="horasMttoProgEjec" type="java.lang.Double">
+            <column name="horas_mtto_prog_ejec" precision="16" scale="4" />
+        </property>
+        <property name="horasMttoNoProgEst" type="java.lang.Double">
+            <column name="horas_mtto_no_prog_est" precision="16" scale="4" />
+        </property>
+        <property name="horasMttoNoProgEjec" type="java.lang.Double">
+            <column name="horas_mtto_no_prog_ejec" precision="16" scale="4" />
+        </property>
+        <property name="horasPlantaEst" type="java.lang.Double">
+            <column name="horas_planta_est" precision="16" scale="4" />
+        </property>
+        <property name="horasPlantaEjec" type="java.lang.Double">
+            <column name="horas_planta_ejec" precision="16" scale="4" />
+        </property>
+        <property name="valorPromedioHrDia" type="java.lang.Double">
+            <column name="valor_promedio_hr_dia" precision="16" scale="4" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="3000" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="origenDatos" type="java.lang.String">
+            <column name="origen_datos" length="30" />
+        </property>
+    </class>
+</hibernate-mapping>

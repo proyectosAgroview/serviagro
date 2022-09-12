@@ -1,0 +1,377 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+
+	<p:dialog id="dialogDatTransProd" appendTo="@(body)" draggable="true"
+		closable="true" visible="#{datTransProdBasculaView.showDialog}"
+		resizable="false" modal="true" width="1100" styleClass="dialogFix"
+		header="Registros de pesajes (Producción)" responsive="true" >		
+		
+		<h:form id="formDialog1">
+			<p:messages id="msg" closable="true" />
+			<p:panel id="panelDatTransProd1">
+				<p:tabView>
+					<p:tab title="General">
+
+						<h:panelGrid columns="2">
+							<p:outputLabel value="#Tiquete: " style="font-size: 0.9em;" />
+							<p:inputText id="txtConsecutivo1" disabled="false"
+								binding="#{datTransProdBasculaView.txtConsecutivo}"
+								style="font-size: 0.9em;" placeholder="Buscar o crear registro"
+								size="15">
+							</p:inputText>  
+							
+							<p:outputLabel value="Fecha: " style="font-size: 0.9em;" />
+							<p:calendar id="msgFechaRegistro1" showOn="button"
+								navigator="false" locale="es" style="font-size: 0.9em;"
+								binding="#{datTransProdBasculaView.txtFechaRegistro}"
+								pattern="dd/MM/yyyy HH:mm:ss" mask="true" required="true"
+								requiredMessage="La Fecha   es obligatoria">
+							</p:calendar>  
+							
+							<p:outputLabel value="F. vehiculo porteria: " style="font-size: 0.9em;" />
+							<p:calendar id="msgFechaEstadoVehiculoPro" showOn="button"
+								navigator="false" locale="es" style="font-size: 0.9em;"
+								binding="#{datTransProdBasculaView.txtFechaEstadoVehiculoPro}"
+								pattern="dd/MM/yyyy HH:mm:ss" mask="true" required="false"
+								requiredMessage="La Fecha   es obligatoria">
+							</p:calendar>  
+								
+						</h:panelGrid>
+						
+						<p:panelGrid columns="4" layout="grid">
+							
+							<p:outputLabel style="font-size: 0.9em;" value="Vehiculo(Placa): " />
+       						<p:autoComplete id="txtVehiTranspId_VehiculosTransp1" maxResults="5" 
+       							converter="equipoConverter"
+       							completeMethod="#{datTransProdBasculaView.completarEquipos}"
+       				 			binding="#{datTransProdBasculaView.txtVehiTranspId_VehiculosTransp}"
+       							var="equipo" itemLabel="#{equipo.codigo}" itemValue="#{equipo}">
+       							<p:ajax listener="#{datTransProdBasculaView.action_consultarConductorProd}"
+       									update="txtConductorId_Conductor1" delay="1000"/>
+       						</p:autoComplete>     							
+       						<p:inputText id="txtNuevoVehiculo1" style="visibility:hidden" size="1"
+								binding="#{datTransProdBasculaView.txtNuevoVehiculo}" value="No"/>
+       						
+       						<p:commandButton id="btnNuevoVehiculo"  icon="ui-icon-plus" value="Crear nuevo vehiculo"
+       							binding="#{datTransProdBasculaView.btnNewVehiculoPro}"
+								action="#{datTransProdBasculaView.action_nuevoVehiculo}" 
+								update="txtVehiTranspId_VehiculosTransp1, btnNuevoVehiculo"/>
+							
+							<p:outputLabel style="font-size: 0.9em;" value="Conductor: " />
+							<p:autoComplete id="txtConductorId_Conductor1" maxResults="5" 
+       							converter="trabajadorConverter"
+       							completeMethod="#{datTransProdBasculaView.completarTrabajadores}"
+       							binding="#{datTransProdBasculaView.txtConductorId_Conductor}"
+       							var="trabajador" itemLabel="#{trabajador.nombre}" itemValue="#{trabajador}">
+       							<p:ajax listener="#{datTransProdBasculaView.segundoCampo}" delay="500"
+       								 	update="txtNuevoConductor1, btnNuevoConductor" process="txtConductorId_Conductor1"/>
+       						</p:autoComplete> 
+       													  								
+							<p:inputText id="txtNuevoConductor1" style="visibility:hidden"
+								binding="#{datTransProdBasculaView.txtNuevoConductor}"/>
+								
+							<p:commandButton id="btnNuevoConductor"  icon="ui-icon-plus" 
+								binding="#{datTransProdBasculaView.btnNewConductorPro}"
+								value="Crear nuevo conductor" 
+								update="txtConductorId_Conductor1, txtNuevoConductor1, btnNuevoConductor"
+								action="#{datTransProdBasculaView.action_nuevoConductor}"/>
+								
+						</p:panelGrid>
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2" style="width:310px;">
+										<p:outputLabel value="#Vagón1: " style="font-size: 0.9em;" />
+										<p:inputText id="txtVagon11" disabled="false"
+											style="font-size: 0.9em;"
+											binding="#{datTransProdBasculaView.txtVagon1}"
+											placeholder="Buscar o crear registro" size="15">
+										</p:inputText>
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2" style="width:310px;">
+										<p:outputLabel value="#Vagón2: " style="font-size: 0.9em;" />
+										<p:inputText id="txtVagon21" disabled="false"
+											style="font-size: 0.9em;"
+											binding="#{datTransProdBasculaView.txtVagon2}"
+											placeholder="Buscar o crear registro" size="15">
+										</p:inputText>
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2" style="width:310px;">
+										<p:outputLabel value="#Vagón3: " style="font-size: 0.9em;" />
+										<p:inputText id="txtVagon31" disabled="false"
+											style="font-size: 0.9em;"
+											binding="#{datTransProdBasculaView.txtVagon3}"
+											placeholder="Buscar o crear registro" size="15">
+										</p:inputText>
+									</h:panelGrid>
+								</p:column>
+
+							</p:row>
+						</p:panelGrid>
+						
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel value="Transportadora: " style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtTranspId_Transportadora1" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="font-size: 0.9em; width:170px;" autoWidth="false"
+											binding="#{datTransProdBasculaView.txtTranspId_Transportadora}"
+											requiredMessage="Seleccione una transportadora">
+											<f:selectItem itemLabel="Seleccione una transportadora"	itemValue="" />
+											<f:selectItems value="#{datTransProdBasculaView.selectTransportadora}" />
+										</p:selectOneMenu>
+							
+										<p:outputLabel value="No. documento" style="font-size: 0.9em;"/>
+										<p:inputText id="txtNoDocumento1" style="font-size: 0.9em;"
+											binding="#{datTransProdBasculaView.txtNoDocumento}" />	
+			
+										<p:outputLabel value="No. Registro" style="font-size: 0.9em;"/>
+										<p:inputTextarea id="txtInfoAdicional1" style="font-size: 0.9em;"
+											binding="#{datTransProdBasculaView.txtInfoAdicional}" rows="1"
+											cols="20" maxlength="100" autoResize="false" />	
+											
+										<p:outputLabel value="Observación:"	style="font-size: 0.9em;" />
+										<p:inputTextarea id="txtObservacion1" style="font-size: 0.9em;"
+											binding="#{datTransProdBasculaView.txtObservacion}" rows="1"
+											cols="20" maxlength="1000" autoResize="false" />	
+											
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+									
+										<p:outputLabel value="Producto(MP): " style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtProductoCos1" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="font-size: 0.9em; width:170px;" autoWidth="false"
+											binding="#{datTransProdBasculaView.txtProductoCos}"
+											required="false" requiredMessage="Seleccione un producto">
+											<f:selectItem itemLabel="Seleccione un producto" itemValue="" />
+											<f:selectItems value="#{datTransProdBasculaView.selectProductoCosId}" />
+										</p:selectOneMenu>
+			
+										<p:outputLabel value="Finca: " style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtNivel2Id1" effect="fade"
+											autoWidth="false" filter="true" filterMatchMode="contains"
+											style="width: 170px;font-size: 0.9em;"
+											binding="#{datTransProdBasculaView.txtNivel2Id}"
+											required="false" requiredMessage="Seleccione una finca">
+											<f:selectItem itemLabel="Seleccione una finca" itemValue="" />
+											<f:selectItems value="#{datTransProdBasculaView.selectNivel2}" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+								
+								<p:column>
+									<h:panelGrid columns="1">									
+																
+										<div align="center">
+											<p style="color:#722f37"><b> CAPTURA DE PESAJE BRUTO </b></p>
+										</div>
+																				
+										<h:panelGrid columns="3">
+										
+											<p:outputLabel value="Seleccione bascula: " />
+											<p:selectOneMenu id="txtBasculaBruto"
+												binding="#{datTransProdBasculaView.txtBasculaBruto}"
+												requiredMessage="Seleccione una báscula"
+												style="font-size: 0.9em; width: 170px" effect="fade" filter="true"
+												filterMatchMode="contains" autoWidth="false">
+												<f:selectItem itemLabel="Seleccione bascula" itemValue="" />
+												<f:selectItem itemLabel="BASCULA PRINCIPAL" itemValue="1" />
+												<sec:authorize ifAnyGranted="Administrador, Revisor">
+													<f:selectItem itemLabel="BASCULA CONTINGENCIA" itemValue="2" />
+												</sec:authorize>
+												
+												<p:ajax process="@this, txtBasculaBruto" update="txtPesoBrutoPesaje, msgFechaRegistro1, btnProbar"
+													listener="#{datTransProdBasculaView.listener_basculaActiva()}" />
+											</p:selectOneMenu>		
+											<p:inputText style="visibility:hidden" id="txtDatTransProdId1"
+												binding="#{datTransProdBasculaView.txtDatTransProdId}" size="1"/>
+											
+											<p:inputNumber id="txtPesoBrutoPesaje"
+												style="font-size:1.2em; font-weight: bold; color:#722f37; "
+												binding="#{datTransProdBasculaView.txtPesoBrutoPesaje}"
+												decimalSeparator="." thousandSeparator="," decimalPlaces="1"
+												size="13" placeholder="Indique el valor">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputNumber>
+											
+											<p:commandButton id="btnProbar"  icon="ui-icon-calculator" value="Obtener peso"
+												onclick="rc()" binding="#{datTransProdBasculaView.btnCalcularPro}"/>	
+											<p:inputText id="txtTipoTransaccion1" style="visibility:hidden"
+												binding="#{datTransProdBasculaView.txtTipoTransaccion}"
+												size="2"/>	
+												
+											<p:remoteCommand name="rc" update="txtPesoBrutoPesaje"
+												actionListener="#{datTransProdBasculaView.listener_calcularPesoBruto}" />
+										</h:panelGrid>										
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+						<p:outputPanel>
+
+							<p:dataTable id="tablaDetTransNivel4"
+								value="#{datTransProdBasculaView.dataDetTransNivel4}"
+								var="listaDetTransNivel4" paginator="true" rows="5"
+								editable="true" editMode="cell" widgetVar="cellLvl4"
+								reflow="true">
+
+								<p:ajax event="cellEdit"
+									listener="#{datTransProdBasculaView.onCellEditNivel4}" />
+
+								<p:column headerText="Prod.">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{listaDetTransNivel4.nombreProducto}" />
+										</f:facet>
+										<f:facet name="input">
+											<h:selectOneMenu
+												value="#{listaDetTransNivel4.producto.productoId}">
+												<f:selectItems
+													value="#{datTransProdBasculaView.selectProductoId}"
+													var="var1" itemValue="#{var1}">
+												</f:selectItems>
+											</h:selectOneMenu>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column headerText="Variedad">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{listaDetTransNivel4.nombreVariedad}" />
+										</f:facet>
+										<f:facet name="input">
+											<h:selectOneMenu
+												value="#{listaDetTransNivel4.variedNivel4.variedId}">
+												<f:selectItems
+													value="#{datTransProdBasculaView.selectVariedadNivel4}"
+													var="var2" itemValue="#{var2}">
+												</f:selectItems>
+											</h:selectOneMenu>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column headerText="Tipo cosecha">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{listaDetTransNivel4.nombreModCos}" />
+										</f:facet>
+										<f:facet name="input">
+											<h:selectOneMenu
+												value="#{listaDetTransNivel4.modalidadCosId.modalidadCosId}">
+												<f:selectItems
+													value="#{datTransProdBasculaView.selectModalidadCosecha}"
+													var="var3" itemValue="#{var3}">
+												</f:selectItems>
+											</h:selectOneMenu>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column headerText="Proveedor">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText
+												value="#{listaDetTransNivel4.clienteId.nombre}" />
+										</f:facet>
+										<f:facet name="input">
+											<h:selectOneMenu
+												value="#{listaDetTransNivel4.clienteId.persEmprId}">
+												 <f:selectItems
+													value="#{datTransProdBasculaView.selectProveedor}"
+													var="var4" itemValue="#{var4}">
+												</f:selectItems>
+											</h:selectOneMenu>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column headerText="Finca">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{listaDetTransNivel4.nombreNivel2}" />
+										</f:facet>
+										<f:facet name="input">
+											<h:selectOneMenu
+												value="#{listaDetTransNivel4.nivel2Id_Nivel2.nivel2Id}">
+												<f:selectItems
+													value="#{datTransProdBasculaView.selectNivel2Edit}"
+													var="var5" itemValue="#{var5}">
+												</f:selectItems>
+											</h:selectOneMenu>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+
+								<f:attribute name="selectedDatTransNivel4"
+									value="#{listaDetTransNivel4}" />
+
+								<p:column headerText="Opciones">
+									<div align="left">
+										<p:commandButton id="btnDelete1" icon="ui-icon-trash"
+											actionListener="#{datTransProdBasculaView.actionDeleteDatTransProdNivel4}"
+											required="false" title="Borrar"
+											onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+											update="tablaDetTransNivel4 :dialogDatTransProd">
+											<f:attribute name="selectedDatTransNivel4"
+												value="#{listaDetTransNivel4}" />
+										</p:commandButton>
+
+									</div>
+								</p:column>
+
+							</p:dataTable>
+						</p:outputPanel>
+					</p:tab>
+				</p:tabView>
+			</p:panel>
+			
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="false" fitViewport="true"
+				draggable="false" closable="false" resizable="false" showEffect="explode" hideEffect="bounce" 
+				showHeader="false">
+				<p:graphicImage width="80" height="80"  class="img-fluid"
+					value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/loader-img.gif" />
+			</p:dialog>
+				
+			<p:panel id="panelBotones1">
+				<div align="center">
+					<p:commandButton id="btnSave1" icon="ui-icon-disk"
+						binding="#{datTransProdBasculaView.btnSave}" value="Grabar" style="font-size: 1.4em;"
+						action="#{datTransProdBasculaView.action_save()}"
+						update=":dialogDatTransProd, :frm, msg" process="@all" />
+					<p:commandButton id="btnClear1" icon="ui-icon-trash" value="Limpiar" style="font-size: 1.4em;"
+						action="#{datTransProdBasculaView.action_clear()}" process="@this"
+						update=":dialogDatTransProd " />
+				</div>
+			</p:panel>
+		</h:form>
+	</p:dialog>	
+</ui:composition>

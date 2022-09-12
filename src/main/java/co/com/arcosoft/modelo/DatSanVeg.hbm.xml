@@ -1,0 +1,324 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatSanVeg" table="dat_san_veg" >
+        <id name="datSanVegId" type="java.lang.Long">
+            <column name="dat_san_veg_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_id" />
+        </many-to-one>
+        <property name="trabajador" type="java.lang.Long">
+            <column name="trab_id" />
+        </property>
+        <many-to-one name="nivel2" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="nivel2_id" />
+        </many-to-one>
+        <many-to-one name="anaSanVeg" class="co.com.arcosoft.modelo.AnaSanVeg" fetch="select">
+            <column name="ana_san_veg_id" />
+        </many-to-one>
+        <property name="nivel1Id" type="java.lang.Long">
+            <column name="nivel1_id" />
+        </property>
+        <property name="nivel3Id" type="java.lang.Long">
+            <column name="nivel3_id" />
+        </property>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="fechaAnalisis" type="java.util.Date">
+            <column name="fecha_analisis" length="19" />
+        </property>
+        <property name="areaNeta" type="java.lang.Double">
+            <column name="area_neta" precision="12" scale="4" />
+        </property>
+        <property name="areaBruta" type="java.lang.Double">
+            <column name="area_bruta" precision="12" scale="4" />
+        </property>
+        <property name="numPlantasActuales" type="java.lang.Long">
+            <column name="num_plantas_actuales" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="1000" />
+        </property>
+        <property name="mobileId" type="java.lang.String">
+            <column name="mobile_id" length="23" />
+        </property>
+        <property name="edadNivel4" type="java.lang.Double">
+            <column name="edad_nivel4" precision="12" scale="4" />
+        </property>
+        <property name="variedNivel4" type="java.lang.Long">
+            <column name="varied_nivel4" />
+        </property>
+        <property name="etapaNivel4" type="java.lang.Long">
+            <column name="etapa_nivel4" />
+        </property>
+        <property name="anioFiscalNivel4" type="java.lang.Long">
+            <column name="anio_fiscal_nivel4" />
+        </property>
+        <property name="faseFenoNivel4" type="java.lang.Long">
+            <column name="fase_feno_nivel4" />
+        </property>
+        <property name="numPlantasSembradas" type="java.lang.Long">
+            <column name="num_plantas_sembradas" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="variable1" type="java.lang.Double">
+            <column name="variable1" precision="12" scale="4" />
+        </property>
+        <property name="variable2" type="java.lang.Double">
+            <column name="variable2" precision="12" scale="4" />
+        </property>
+        <property name="variable3" type="java.lang.Double">
+            <column name="variable3" precision="12" scale="4" />
+        </property>
+        <property name="variable4" type="java.lang.Double">
+            <column name="variable4" precision="12" scale="4" />
+        </property>
+        <property name="variable5" type="java.lang.Double">
+            <column name="variable5" precision="12" scale="4" />
+        </property>
+        <property name="variable6" type="java.lang.Double">
+            <column name="variable6" precision="12" scale="4" />
+        </property>
+        <property name="variable7" type="java.lang.Double">
+            <column name="variable7" precision="12" scale="4" />
+        </property>
+        <property name="variable8" type="java.lang.Double">
+            <column name="variable8" precision="12" scale="4" />
+        </property>
+        <property name="variable9" type="java.lang.Double">
+            <column name="variable9" precision="12" scale="4" />
+        </property>
+        <property name="variable10" type="java.lang.Double">
+            <column name="variable10" precision="12" scale="4" />
+        </property>
+        <property name="variable11" type="java.lang.Double">
+            <column name="variable11" precision="12" scale="4" />
+        </property>
+        <property name="variable12" type="java.lang.Double">
+            <column name="variable12" precision="12" scale="4" />
+        </property>
+        <property name="variable13" type="java.lang.Double">
+            <column name="variable13" precision="12" scale="4" />
+        </property>
+        <property name="variable14" type="java.lang.Double">
+            <column name="variable14" precision="12" scale="4" />
+        </property>
+        <property name="variable15" type="java.lang.Double">
+            <column name="variable15" precision="12" scale="4" />
+        </property>
+        <property name="variable16" type="java.lang.Double">
+            <column name="variable16" precision="12" scale="4" />
+        </property>
+        <property name="variable17" type="java.lang.Double">
+            <column name="variable17" precision="12" scale="4" />
+        </property>
+        <property name="variable18" type="java.lang.Double">
+            <column name="variable18" precision="12" scale="4" />
+        </property>
+        <property name="variable19" type="java.lang.Double">
+            <column name="variable19" precision="12" scale="4" />
+        </property>
+        <property name="variable20" type="java.lang.Double">
+            <column name="variable20" precision="12" scale="4" />
+        </property>
+        <property name="variable21" type="java.lang.Double">
+            <column name="variable21" precision="12" scale="4" />
+        </property>
+        <property name="variable22" type="java.lang.Double">
+            <column name="variable22" precision="12" scale="4" />
+        </property>
+        <property name="variable23" type="java.lang.Double">
+            <column name="variable23" precision="12" scale="4" />
+        </property>
+        <property name="variable24" type="java.lang.Double">
+            <column name="variable24" precision="12" scale="4" />
+        </property>
+        <property name="variable25" type="java.lang.Double">
+            <column name="variable25" precision="12" scale="4" />
+        </property>
+        <property name="variable26" type="java.lang.Double">
+            <column name="variable26" precision="12" scale="4" />
+        </property>
+        <property name="variable27" type="java.lang.Double">
+            <column name="variable27" precision="12" scale="4" />
+        </property>
+        <property name="variable28" type="java.lang.Double">
+            <column name="variable28" precision="12" scale="4" />
+        </property>
+        <property name="variable29" type="java.lang.Double">
+            <column name="variable29" precision="12" scale="4" />
+        </property>
+        <property name="variable30" type="java.lang.Double">
+            <column name="variable30" precision="12" scale="4" />
+        </property>
+        <property name="variableText1" type="java.lang.String">
+            <column name="variable_text1" length="50" />
+        </property>
+        <property name="variableText2" type="java.lang.String">
+            <column name="variable_text2" length="50" />
+        </property>
+        <property name="variableText3" type="java.lang.String">
+            <column name="variable_text3" length="50" />
+        </property>
+        <property name="variableText4" type="java.lang.String">
+            <column name="variable_text4" length="50" />
+        </property>
+        <property name="variableText5" type="java.lang.String">
+            <column name="variable_text5" length="50" />
+        </property>
+        <property name="variableText6" type="java.lang.String">
+            <column name="variable_text6" length="50" />
+        </property>
+        <property name="variableText7" type="java.lang.String">
+            <column name="variable_text7" length="50" />
+        </property>
+        <property name="variableText8" type="java.lang.String">
+            <column name="variable_text8" length="50" />
+        </property>
+        <property name="variableText9" type="java.lang.String">
+            <column name="variable_text9" length="50" />
+        </property>
+        <property name="variableText10" type="java.lang.String">
+            <column name="variable_text10" length="50" />
+        </property>
+        <property name="variableText11" type="java.lang.String">
+            <column name="variable_text11" length="50" />
+        </property>
+        <property name="variableText12" type="java.lang.String">
+            <column name="variable_text12" length="50" />
+        </property>
+        <property name="variableText13" type="java.lang.String">
+            <column name="variable_text13" length="50" />
+        </property>
+        <property name="variableText14" type="java.lang.String">
+            <column name="variable_text14" length="50" />
+        </property>
+        <property name="variableText15" type="java.lang.String">
+            <column name="variable_text15" length="50" />
+        </property>
+        <property name="variableText16" type="java.lang.String">
+            <column name="variable_text16" length="50" />
+        </property>
+        <property name="variableText17" type="java.lang.String">
+            <column name="variable_text17" length="50" />
+        </property>
+        <property name="variableText18" type="java.lang.String">
+            <column name="variable_text18" length="50" />
+        </property>
+        <property name="variableText19" type="java.lang.String">
+            <column name="variable_text19" length="50" />
+        </property>
+        <property name="variableText20" type="java.lang.String">
+            <column name="variable_text20" length="50" />
+        </property>
+        <property name="variableText21" type="java.lang.String">
+            <column name="variable_text21" length="50" />
+        </property>
+        <property name="variableText22" type="java.lang.String">
+            <column name="variable_text22" length="50" />
+        </property>
+        <property name="variableText23" type="java.lang.String">
+            <column name="variable_text23" length="50" />
+        </property>
+        <property name="variableText24" type="java.lang.String">
+            <column name="variable_text24" length="50" />
+        </property>
+        <property name="variableText25" type="java.lang.String">
+            <column name="variable_text25" length="50" />
+        </property>
+        <property name="variableText26" type="java.lang.String">
+            <column name="variable_text26" length="50" />
+        </property>
+        <property name="variableText27" type="java.lang.String">
+            <column name="variable_text27" length="50" />
+        </property>
+        <property name="variableText28" type="java.lang.String">
+            <column name="variable_text28" length="50" />
+        </property>
+        <property name="variableText29" type="java.lang.String">
+            <column name="variable_text29" length="50" />
+        </property>
+        <property name="variableText30" type="java.lang.String">
+            <column name="variable_text30" length="50" />
+        </property>
+        <property name="foto" type="java.lang.String">
+            <column name="foto" length="150" />
+        </property>
+        <property name="longitud" type="java.lang.Double">
+            <column name="longitud" precision="22" scale="0" />
+        </property>
+        <property name="latitud" type="java.lang.Double">
+            <column name="latitud" precision="22" scale="0" />
+        </property>
+        <property name="precision1" type="java.lang.Double">
+            <column name="precision1" precision="22" scale="0" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="variableDate1" type="java.util.Date">
+            <column name="variable_date1" length="19" />
+        </property>
+        <property name="variableDate2" type="java.util.Date">
+            <column name="variable_date2" length="19" />
+        </property>
+        <property name="variableDate3" type="java.util.Date">
+            <column name="variable_date3" length="19" />
+        </property>
+        <property name="variableDate4" type="java.util.Date">
+            <column name="variable_date4" length="19" />
+        </property>
+        <property name="variableDate5" type="java.util.Date">
+            <column name="variable_date5" length="19" />
+        </property>
+        <property name="variableDate6" type="java.util.Date">
+            <column name="variable_date6" length="19" />
+        </property>
+        <property name="variableDate7" type="java.util.Date">
+            <column name="variable_date7" length="19" />
+        </property>
+        <property name="variableDate8" type="java.util.Date">
+            <column name="variable_date8" length="19" />
+        </property>
+        <property name="variableDate9" type="java.util.Date">
+            <column name="variable_date9" length="19" />
+        </property>
+        <property name="variableDate10" type="java.util.Date">
+            <column name="variable_date10" length="19" />
+        </property>
+        <set name="valorVars" table="valor_var" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="dat_san_veg_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.ValorVar" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog id="dialogConsultaUbicacionProducto" appendTo="@(body)" draggable="true"
+		closable="true" visible="#{datCompraProductosInternacionalV2View.showDialog}" resizable="false"
+		modal="true" width="500" responsive="true">
+
+		<h:form id="formDialogVSaldo">
+			<p:messages id="msgP" closable="true" />
+			<p:panel id="panelProducto" header="Saldos por ubicación">
+				<p:dataTable id="tablaSaldosUbicacion"
+					value="#{datCompraProductosInternacionalV2View.dataProductoUbicacion}"
+					var="listaProductoUbicacion" scrollable="true" scrollWidth="99%"
+					scrollHeight="100" resizableColumns="true"
+					style="margin-bottom:20px" editable="true" editMode="cell"
+					widgetVar="cellEventos3">
+
+
+					<p:column headerText="Ubicaciones">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{listaProductoUbicacion.nombreUbicacion}"
+									style="font-size: 0.9em;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:outputLabel value="#{listaProductoUbicacion.nombreUbicacion}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column headerText="Saldo actual">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText
+									value="#{listaProductoUbicacion.cantidadDisponible}">
+
+								</h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<div
+									style=" font-size: 1em; background-color:#{listaProductoUbicacion.color2}; padding:12px; ; line-height:1.4;">
+									<p:outputLabel
+										value="#{listaProductoUbicacion.cantidadDisponible}" />
+								</div>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column headerText="Precio">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{listaProductoUbicacion.v_unitario}" />
+							</f:facet>
+							<f:facet name="input">
+								<h:outputText value="#{listaProductoUbicacion.v_unitario}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<f:attribute name="selectedProductoUbicacion"
+						value="#{listaProductoUbicacion}" />
+
+				</p:dataTable>
+
+
+			</p:panel>
+
+
+		</h:form>
+	</p:dialog>
+</ui:composition>
+
+

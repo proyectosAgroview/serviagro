@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatTransProdDet" table="dat_trans_prod_det" >
+        <id name="datTransProdDetId" type="java.lang.Long">
+            <column name="dat_trans_prod_det_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="cliente" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="cliente_id" />
+        </many-to-one>
+        <many-to-one name="empaque" class="co.com.arcosoft.modelo.Empaque" fetch="select">
+            <column name="empaque_id" />
+        </many-to-one>
+        <many-to-one name="producto" class="co.com.arcosoft.modelo.Producto" fetch="select">
+            <column name="producto_id" />
+        </many-to-one>
+        <many-to-one name="ciudad" class="co.com.arcosoft.modelo.Ciudad" fetch="select">
+            <column name="ciudad_id" />
+        </many-to-one>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <many-to-one name="datTransProd" class="co.com.arcosoft.modelo.DatTransProd" fetch="select">
+            <column name="dat_trans_prod_id" />
+        </many-to-one>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="areaCosechada" type="java.lang.Double">
+            <column name="area_cosechada" precision="12" scale="4" />
+        </property>
+        <property name="cantidadReal" type="java.lang.Double">
+            <column name="cantidad_real" precision="12" scale="4" />
+        </property>
+        <property name="cantidadSolicitada" type="java.lang.Double">
+            <column name="cantidad_solicitada" precision="12" scale="4" />
+        </property>
+        <property name="valorUnitario" type="java.lang.Double">
+            <column name="valor_unitario" precision="16" scale="4" />
+        </property>
+        <property name="valorTotal" type="java.lang.Double">
+            <column name="valor_total" precision="16" scale="4" />
+        </property>
+        <property name="documetoErp" type="java.lang.String">
+            <column name="documeto_erp" length="30" />
+        </property>
+        <property name="rendimiento" type="java.lang.Double">
+            <column name="rendimiento" precision="12" scale="4" />
+        </property>
+        <property name="vagon" type="java.lang.Long">
+            <column name="vagon" />
+        </property>
+        <property name="certificacionAceite" type="java.lang.String">
+            <column name="certificacion_aceite" />
+        </property>
+         
+        
+    </class>
+</hibernate-mapping>

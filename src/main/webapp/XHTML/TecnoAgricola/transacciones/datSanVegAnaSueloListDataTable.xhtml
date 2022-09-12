@@ -1,0 +1,725 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatSanVegAnaSuelo"
+						header="Análisis de suelo">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datSanVegAnaSueloView.data}"
+							var="datSanVegAnaSuelo" paginator="true" lazy="true" rows="5" rowsPerPageTemplate="5,10,15"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Análisis de suelo" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datSanVegAnaSuelo.estado}"
+								sortBy="#{datSanVegAnaSuelo.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datSanVegAnaSuelo.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datSanVegAnaSuelo.consecutivo}"
+								sortBy="#{datSanVegAnaSuelo.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datSanVegAnaSuelo.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datSanVegAnaSuelo.fechaAnalisis}"
+								sortBy="#{datSanVegAnaSuelo.fechaAnalisis}">
+								<f:facet name="header">
+									<h:outputText value="Fecha de análisis" />
+								</f:facet>
+								<h:outputText value="#{datSanVegAnaSuelo.fechaAnalisis}" />
+							</p:column>
+
+							<p:column filterBy="#{datSanVegAnaSuelo.anaSanVegId_AnaSanVeg}"
+								sortBy="#{datSanVegAnaSuelo.anaSanVegId_AnaSanVeg}">
+								<f:facet name="header">
+									<h:outputText value="Tipo Análisis" />
+								</f:facet>
+								<h:outputText value="#{datSanVegAnaSuelo.anaSanVegId_AnaSanVeg}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatSanVegAnaSuelo"
+										actionListener="#{datSanVegAnaSueloView.action_edit}">
+										<f:attribute name="selectedDatSanVegAnaSuelo"
+											value="#{datSanVegAnaSuelo}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datSanVegAnaSueloView.action_new()}"
+								update=":dialogDatSanVegAnaSuelo" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatSanVegAnaSuelo" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datSanVegAnaSueloView.showDialog}" resizable="false"
+					modal="true" width="650"  styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatSanVegAnaSuelo" header="Análisis de suelo">
+
+							<p:tabView id="tabMapa" activeIndex="#{datSanVegAnaSueloView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="5" id="panelGrid1">
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{datSanVegAnaSueloView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel value="# Consecutivo: " />
+										<p:inputText id="txtConsecutivo" disabled="false"
+											binding="#{datSanVegAnaSueloView.txtConsecutivo}"
+											placeholder="Buscar o crear registro" size="23">
+										</p:inputText>
+										<p:outputLabel />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="msgfechaAnalisis"
+											value="Fecha del análisis: " />
+										<p:calendar id="msgfechaAnalisis" showOn="button"
+											navigator="false" locale="es"
+											binding="#{datSanVegAnaSueloView.txtFechaAnalisis}"
+											pattern="dd/MM/yyyy" mask="true" required="true"
+											requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgfechaAnalisis" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+
+										<p:outputLabel for="txtAnaSanVegId_AnaSanVeg"
+											value="Tipo de análisis: " />
+										<p:selectOneMenu id="txtAnaSanVegId_AnaSanVeg" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datSanVegAnaSueloView.txtAnaSanVegId_AnaSanVeg}"
+											required="true" requiredMessage="Seleccione un análisis">
+
+											<f:selectItems
+												value="#{datSanVegAnaSueloView.selectTipoAnalisis}" />
+										</p:selectOneMenu>
+										<p:message for="txtAnaSanVegId_AnaSanVeg" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtTrabId_Trabajador" value="Analista: " />
+										<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datSanVegAnaSueloView.txtTrabId_Trabajador}"
+											required="false" requiredMessage="Seleccione un analista">
+											<f:selectItem itemLabel="Seleccione un analista" itemValue="" />
+											<f:selectItems
+												value="#{datSanVegAnaSueloView.selectTrabajador}" />
+
+										</p:selectOneMenu>
+										<p:message for="txtTrabId_Trabajador" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel1Id" value="Zona: " />
+										<p:selectOneMenu id="txtNivel1Id" effect="fade" filter="true"
+											filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datSanVegAnaSueloView.txtNivel1Id}"
+											required="true" requiredMessage="Seleccione una zona">
+											<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+											<f:selectItems value="#{datSanVegAnaSueloView.selectNivel1}" />
+											<p:ajax update="txtNivel2Id_Nivel2" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel1Id" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel2Id_Nivel2" value="Hacienda: " />
+										<p:selectOneMenu id="txtNivel2Id_Nivel2" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datSanVegAnaSueloView.txtNivel2Id_Nivel2}"
+											required="true" requiredMessage="Seleccione una hacienda">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems value="#{datSanVegAnaSueloView.selectNivel2}" />
+											<p:ajax update="txtNivel3Id" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel2Id_Nivel2" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel3Id" value="Bloque: " />
+										<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+											filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datSanVegAnaSueloView.txtNivel3Id}"
+											required="true"
+											requiredMessage="Seleccione un bloque del cultivo">
+											<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+											<f:selectItems value="#{datSanVegAnaSueloView.selectNivel3}" />
+											<p:ajax update="txtNivel4Id_Nivel4" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel3Id" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: " />
+										<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datSanVegAnaSueloView.txtNivel4Id_Nivel4}"
+											required="true" requiredMessage="Seleccione un lote">
+											<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+											<f:selectItems value="#{datSanVegAnaSueloView.selectNivel4}" />
+
+										</p:selectOneMenu>
+										<p:message for="txtNivel4Id_Nivel4" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtObservacion" value="Observación:" />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{datSanVegAnaSueloView.txtObservacion}" rows="3"
+											cols="30" counter="display" maxlength="1000"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden"
+											id="txtDatSanVegAnaSueloId"
+											binding="#{datSanVegAnaSueloView.txtDatSanVegId}">
+											<p:ajax update=":dialogDatSanVegAnaSuelo"
+												listener="#{datSanVegAnaSueloView.listener_txtId}" />
+										</p:inputText>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+
+								<p:tab title="Variables digitadas">
+
+									<h:panelGrid columns="6" id="panelGrid2">
+
+										<p:outputLabel for="txtVariable1" value="pH: " />
+										<p:inputText id="txtVariable1"
+											binding="#{datSanVegAnaSueloView.txtVariable1}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out2" />
+										</p:inputText>
+										<h:outputText id="out2"
+											value="#{datSanVegAnaSueloView.rangoPh() }" />
+										<p:message for="txtVariable1" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable2"
+											value="Materia Orgánica (%): " />
+										<p:inputText id="txtVariable2"
+											binding="#{datSanVegAnaSueloView.txtVariable2}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out3" />
+										</p:inputText>
+										<h:outputText id="out3"
+											value="#{datSanVegAnaSueloView.rangoMateriaOrganica() }" />
+										<p:message for="txtVariable2" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable3"
+											value="Capac. de intercambio catiónico (me/100g): " />
+										<p:inputText id="txtVariable3"
+											binding="#{datSanVegAnaSueloView.txtVariable3}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out4" />
+										</p:inputText>
+										<h:outputText id="out4"
+											value="#{datSanVegAnaSueloView.rangoCCationico() }" />
+										<p:message for="txtVariable3" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable4" value="Fósforo[P] (ppm): " />
+										<p:inputText id="txtVariable4"
+											binding="#{datSanVegAnaSueloView.txtVariable4}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out5" />
+										</p:inputText>
+										<h:outputText id="out5"
+											value="#{datSanVegAnaSueloView.rangoFosforo() }" />
+										<p:message for="txtVariable4" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable5" value="Azufre[S] (ppm): " />
+										<p:inputText id="txtVariable5"
+											binding="#{datSanVegAnaSueloView.txtVariable5}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out6" />
+										</p:inputText>
+										<h:outputText id="out6"
+											value="#{datSanVegAnaSueloView.rangoAzufre() }" />
+										<p:message for="txtVariable5" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable6"
+											value="Calcio[Ca] (me/100g): " />
+										<p:inputText id="txtVariable6"
+											binding="#{datSanVegAnaSueloView.txtVariable6}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out7" />
+										</p:inputText>
+										<h:outputText id="out7"
+											value="#{datSanVegAnaSueloView.rangoCalcio() }" />
+										<p:message for="txtVariable6" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable7"
+											value="Magnesio[Mg] (me/100g): " />
+										<p:inputText id="txtVariable7"
+											binding="#{datSanVegAnaSueloView.txtVariable7}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out8" />
+										</p:inputText>
+										<h:outputText id="out8"
+											value="#{datSanVegAnaSueloView.rangoMagnesio() }" />
+										<p:message for="txtVariable7" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable8"
+											value="Sodio[Na] (me/100g): " />
+										<p:inputText id="txtVariable8"
+											binding="#{datSanVegAnaSueloView.txtVariable8}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out9" />
+										</p:inputText>
+										<h:outputText id="out9"
+											value="#{datSanVegAnaSueloView.rangoSodio() }" />
+										<p:message for="txtVariable8" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable9"
+											value="Potasio[K] (me/100g): " />
+										<p:inputText id="txtVariable9"
+											binding="#{datSanVegAnaSueloView.txtVariable9}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out10" />
+										</p:inputText>
+										<h:outputText id="out10"
+											value="#{datSanVegAnaSueloView.rangoPotasio() }" />
+										<p:message for="txtVariable9" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable10" value="Hierro[Fe] (ppm): " />
+										<p:inputText id="txtVariable10"
+											binding="#{datSanVegAnaSueloView.txtVariable10}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out11" />
+										</p:inputText>
+										<h:outputText id="out11"
+											value="#{datSanVegAnaSueloView.rangoHierro() }" />
+										<p:message for="txtVariable10" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable11"
+											value="Manganeso[Mn] (ppm): " />
+										<p:inputText id="txtVariable11"
+											binding="#{datSanVegAnaSueloView.txtVariable11}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out12" />
+										</p:inputText>
+										<h:outputText id="out12"
+											value="#{datSanVegAnaSueloView.rangoManganeso() }" />
+										<p:message for="txtVariable11" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable12" value="Cobre[Cu] (ppm): " />
+										<p:inputText id="txtVariable12"
+											binding="#{datSanVegAnaSueloView.txtVariable12}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out13" />
+										</p:inputText>
+										<h:outputText id="out13"
+											value="#{datSanVegAnaSueloView.rangoCobre() }" />
+										<p:message for="txtVariable12" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable13" value="Cinc[Zn] (ppm): " />
+										<p:inputText id="txtVariable13"
+											binding="#{datSanVegAnaSueloView.txtVariable13}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out14" />
+										</p:inputText>
+										<h:outputText id="out14"
+											value="#{datSanVegAnaSueloView.rangoCinc() }" />
+										<p:message for="txtVariable13" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable14" value="Boro[B] (ppm): " />
+										<p:inputText id="txtVariable14"
+											binding="#{datSanVegAnaSueloView.txtVariable14}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out15" />
+										</p:inputText>
+										<h:outputText id="out15"
+											value="#{datSanVegAnaSueloView.rangoBoro() }" />
+										<p:message for="txtVariable14" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable15" value="Aluminio[Al] (%): " />
+										<p:inputText id="txtVariable15"
+											binding="#{datSanVegAnaSueloView.txtVariable15}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtVariable15" />
+										<p:outputLabel />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable16"
+											value="Saturación de sodio (%): " />
+										<p:inputText id="txtVariable16"
+											binding="#{datSanVegAnaSueloView.txtVariable16}">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out16" />
+										</p:inputText>
+										<h:outputText id="out16"
+											value="#{datSanVegAnaSueloView.rangoSaturacionSodio() }" />
+										<p:message for="txtVariable16" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+
+										<p:outputLabel for="txtVariable17"
+											value="Conductividad eléctrica (dS/m): " />
+										<p:inputText id="txtVariable17"
+											binding="#{datSanVegAnaSueloView.txtVariable17}">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax event="blur" update="out17" />
+										</p:inputText>
+										<h:outputText id="out17"
+											value="#{datSanVegAnaSueloView.rangoConductividadElectrica() }" />
+										<p:message for="txtVariable17" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Índices iónicos">
+
+									<h:panelGrid columns="6" id="panelGrid3">
+										<p:outputLabel for="txtVariable18" value="Ca/Mg: " />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtVariable18"
+												binding="#{datSanVegAnaSueloView.txtVariable18}">
+												<f:converter converterId="javax.faces.Double" />
+												<p:ajax event="blur" update="out18" />
+											</p:inputText>
+											<p:commandButton id="iconOnly1" icon="ui-icon-calculator"  value="Calcular"
+												ondblclick="true">
+												<p:ajax process="@this,txtVariable6,txtVariable7"
+													update="txtVariable18"
+													listener="#{datSanVegAnaSueloView.listener_calcular_Ca_Mg}" />
+											</p:commandButton>
+
+										</p:panelGrid>
+										<h:outputText id="out18"
+											value="#{datSanVegAnaSueloView.rangoCalcioMagnsio() }" />
+
+										<p:message for="txtVariable18" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+
+										<p:outputLabel for="txtVariable24" value="Mg/K: " />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtVariable24"
+												binding="#{datSanVegAnaSueloView.txtVariable24}">
+												<f:converter converterId="javax.faces.Double" />
+												<p:ajax event="blur" update="out24" />
+											</p:inputText>
+											<p:commandButton id="iconOnly2" icon="ui-icon-calculator"  value="Calcular"
+												ondblclick="true">
+												<p:ajax process="@this,txtVariable7,txtVariable9"
+													update="txtVariable24"
+													listener="#{datSanVegAnaSueloView.listener_calcular_Mg_K}" />
+											</p:commandButton>
+
+										</p:panelGrid>
+										<h:outputText id="out24"
+											value="#{datSanVegAnaSueloView.rangoPotasioMagnsio() }" />
+
+										<p:message for="txtVariable24" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+
+										<p:outputLabel for="txtVariable19" value="Ca/K: " />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtVariable19"
+												binding="#{datSanVegAnaSueloView.txtVariable19}">
+												<f:converter converterId="javax.faces.Double" />
+												<p:ajax event="blur" update="out19" />
+											</p:inputText>
+											<p:commandButton id="iconOnly3" icon="ui-icon-calculator"  value="Calcular"
+												ondblclick="true">
+												<p:ajax process="@this,txtVariable6,txtVariable9"
+													update="txtVariable19"
+													listener="#{datSanVegAnaSueloView.listener_calcular_Ca_K}" />
+											</p:commandButton>
+
+										</p:panelGrid>
+										<h:outputText id="out19"
+											value="#{datSanVegAnaSueloView.rangoPotasioCalcio() }" />
+
+										<p:message for="txtVariable19" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+
+										<p:outputLabel for="txtVariable20" value="Ca + Mg/K: " />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtVariable20"
+												binding="#{datSanVegAnaSueloView.txtVariable20}">
+												<f:converter converterId="javax.faces.Double" />
+												<p:ajax event="blur" update="out20" />
+
+											</p:inputText>
+											<p:commandButton id="iconOnly4" icon="ui-icon-calculator"  value="Calcular"
+												ondblclick="true">
+												<p:ajax
+													process="@this,txtVariable6,txtVariable7,txtVariable9"
+													update="txtVariable20"
+													listener="#{datSanVegAnaSueloView.listener_calcular_Ca_Mg_K}" />
+											</p:commandButton>
+
+										</p:panelGrid>
+										<h:outputText id="out20"
+											value="#{datSanVegAnaSueloView.rangoPotasioCalcioMagnesio() }" />
+
+										<p:message for="txtVariable20" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+
+										<p:outputLabel for="txtVariable21" value="Ca/B: " />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtVariable21"
+												binding="#{datSanVegAnaSueloView.txtVariable21}">
+												<f:converter converterId="javax.faces.Double" />
+												<p:ajax event="blur" update="out21" />
+
+											</p:inputText>
+											<p:commandButton id="iconOnly5" icon="ui-icon-calculator"  value="Calcular"
+												ondblclick="true">
+												<p:ajax process="@this,txtVariable6,txtVariable14"
+													update="txtVariable21"
+													listener="#{datSanVegAnaSueloView.listener_calcular_Ca_B}" />
+											</p:commandButton>
+
+										</p:panelGrid>
+										<h:outputText id="out21"
+											value="#{datSanVegAnaSueloView.rangoBoroCalcio() }" />
+
+										<p:message for="txtVariable21" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+
+										<p:outputLabel for="txtVariable22" value="Fe/Mn: " />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtVariable22"
+												binding="#{datSanVegAnaSueloView.txtVariable22}">
+												<f:converter converterId="javax.faces.Double" />
+												<p:ajax event="blur" update="out22" />
+
+											</p:inputText>
+											<p:commandButton id="iconOnly6" icon="ui-icon-calculator"  value="Calcular"
+												ondblclick="true">
+												<p:ajax process="@this,txtVariable10,txtVariable11"
+													update="txtVariable22"
+													listener="#{datSanVegAnaSueloView.listener_calcular_Fe_Mn}" />
+											</p:commandButton>
+										</p:panelGrid>
+										<h:outputText id="out22"
+											value="#{datSanVegAnaSueloView.rangoManganesoHierro() }" />
+
+
+										<p:message for="txtVariable22" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+
+										<p:outputLabel for="txtVariable23" value="P/Zn: " />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtVariable23"
+												binding="#{datSanVegAnaSueloView.txtVariable23}">
+												<f:converter converterId="javax.faces.Double" />
+												<p:ajax event="blur" update="out23" />
+
+											</p:inputText>
+											<p:commandButton id="iconOnly7" icon="ui-icon-calculator"  value="Calcular"
+												ondblclick="true">
+												<p:ajax process="@this,txtVariable4,txtVariable13"
+													update="txtVariable23"
+													listener="#{datSanVegAnaSueloView.listener_calcular_P_Zn}" />
+											</p:commandButton>
+										</p:panelGrid>
+										<h:outputText id="out23"
+											value="#{datSanVegAnaSueloView.rangoZincFosforo() }" />
+
+
+										<p:message for="txtVariable23" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Evidencia del análisis">
+									<h:panelGrid columns="5" id="panelGrid4">
+										<p:outputLabel value="Foto: " />
+										<h:panelGroup>
+											<p:fileUpload value="#{datSanVegAnaSueloView.file}"
+												mode="simple" auto="true"
+												fileUploadListener="#{datSanVegAnaSueloView.subirImagen}"
+												update="image" cancelLabel="Cancelar" sizeLimit="100000"
+												skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+												invalidFileMessage="Tipo de imagem inválido"
+												invalidSizeMessage="Ups!! El tamaño de la imagen es muy grande"
+												uploadLabel="Subir imagen" label="Elegir">
+											</p:fileUpload>
+											<p:lightBox styleClass="imagebox" id="lighbox1">
+												<h:outputLink
+													value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{datSanVegAnaSueloView.imagenSanVeg}">
+													<h:graphicImage
+														value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{datSanVegAnaSueloView.imagenSanVeg}"
+														id="image" style="height: 160px; width: 160px" />
+												</h:outputLink>
+											</p:lightBox>
+										</h:panelGroup>
+									</h:panelGrid>
+								</p:tab>
+
+						
+								<p:tab title="Ubicación(Maps)">
+									<h:panelGrid columns="3" cellpadding="5">
+										<p:outputLabel for="txtLatitud" value="Latitud: " />
+										<p:inputText id="txtLatitud" disabled="true"
+											binding="#{datSanVegAnaSueloView.txtLatitud}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtLatitud" />
+
+										<p:outputLabel for="txtLongitud" value="Longitud: " />
+										<p:inputText id="txtLongitud" disabled="true"
+											binding="#{datSanVegAnaSueloView.txtLongitud}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtLongitud" />
+
+										<p:outputLabel for="txtPrecision" value="Precision: " />
+										<p:inputText id="txtPrecision" disabled="true"
+											binding="#{datSanVegAnaSueloView.txtPrecision}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtPrecision" />
+									</h:panelGrid>
+									
+									
+								</p:tab>
+								 
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datSanVegAnaSueloView.btnSave}" value="Grabar"
+									action="#{datSanVegAnaSueloView.action_save()}"
+									update=":dialogDatSanVegAnaSuelo :frm:panelDataTableDatSanVegAnaSuelo" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datSanVegAnaSueloView.action_clear()}"
+									process="@this" update=":dialogDatSanVegAnaSuelo" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

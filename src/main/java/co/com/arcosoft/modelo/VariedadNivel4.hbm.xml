@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.VariedadNivel4" table="variedad_nivel4" >
+        <id name="variedadNivel4Id" type="java.lang.Long">
+            <column name="variedad_nivel4_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="variedad" class="co.com.arcosoft.modelo.Variedad" fetch="select">
+            <column name="variedad_varied_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_nivel4_id" not-null="true" />
+        </many-to-one>
+        <property name="porcentajeArea" type="java.lang.Double">
+            <column name="porcentaje_area" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

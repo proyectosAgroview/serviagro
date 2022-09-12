@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Bascula" table="bascula" >
+
+        <id name="basculaId" type="java.lang.Long">
+            <column name="bascula_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="tipoLectura" type="java.lang.String">
+            <column name="tipo_lectura" length="60" />
+        </property>
+        <property name="puertoCom" type="java.lang.String">
+            <column name="puerto_com" length="60" />
+        </property>
+        <property name="bitDatos" type="java.lang.String">
+            <column name="bit_datos" length="60" />
+        </property>
+        <property name="velocidad" type="java.lang.Long">
+            <column name="velocidad" precision="5" scale="0" />
+        </property>
+        <property name="bitParada" type="java.lang.Double">
+            <column name="bit_parada" precision="12" scale="4" />
+        </property>
+        <property name="paridad" type="java.lang.String">
+            <column name="paridad" length="60" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="formatoCadena" type="java.lang.String">
+            <column name="formato_cadena" length="100" />
+        </property>
+        <property name="subcadena" type="java.lang.String">
+            <column name="subcadena" length="100" />
+        </property>
+        
+        <property name="intervaloLectura" type="java.lang.Long">
+            <column name="intervalo_lectura" />
+        </property>
+        
+        <property name="iniciolectura" type="java.lang.Long">
+            <column name="inicio_lectura" />
+        </property>
+        
+        <property name="finlectura" type="java.lang.Long">
+            <column name="fin_lectura" />
+        </property>
+
+        
+    </class>
+</hibernate-mapping>

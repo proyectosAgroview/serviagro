@@ -1,0 +1,311 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableAnaLaboratorio" header="AnaLaboratorios">
+						<p:growl id="men" autoUpdate="true" />
+						<p:dataTable id="tbl" value="#{anaLaboratorioView.data}" var="anaLaboratorio"  sortBy="#{anaLaboratorio.anaLaboratorioId}"  sortOrder="descending"
+							paginator="true"  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                 rowsPerPageTemplate="5,10,15" lazy="true" rows="4" reflow="true" >
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="anaLaboratorio" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{anaLaboratorio.estado}" sortBy="#{anaLaboratorio.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{anaLaboratorio.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{anaLaboratorio.codigo}" sortBy="#{anaLaboratorio.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{anaLaboratorio.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{anaLaboratorio.nombre}" sortBy="#{anaLaboratorio.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{anaLaboratorio.nombre}" />
+							</p:column>
+					
+							<p:column filterBy="#{anaLaboratorio.frecuenciaDigitacion}" sortBy="#{anaLaboratorio.frecuenciaDigitacion}">
+								<f:facet name="header">
+									<h:outputText value="Periocidad" />
+								</f:facet>
+								<h:outputText value="#{anaLaboratorio.frecuenciaDigitacion}" />
+							</p:column>
+					
+					
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogAnaLaboratorio"
+										actionListener="#{anaLaboratorioView.action_edit}">
+										<f:attribute name="selectedAnaLaboratorio" value="#{anaLaboratorio}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{anaLaboratorioView.action_new()}" update=":dialogAnaLaboratorio" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogAnaLaboratorio" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{anaLaboratorioView.showDialog}"
+					resizable="false" modal="true" width="800" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data"
+						acceptcharset="ISO-8859-1">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelAnaLaboratorio" header="AnaLaboratorios">
+
+
+							<p:tabView  style="margin:1px;">
+
+								<p:tab title="Definición de análisis">
+
+									<h:panelGrid columns="2" id="panelGrid1">
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{anaLaboratorioView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{anaLaboratorioView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelAnaLaboratorio,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{anaLaboratorioView.listener_txtCodigo}" />
+										</p:inputText>
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre"  size="40"
+											binding="#{anaLaboratorioView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+											
+											<p:outputLabel for ="txtFrecuenciaDigitacion " 
+												value="Frecuencia de digitación: " />
+											<p:selectOneMenu id="txtFrecuenciaDigitacion" disabled="true"
+												binding="#{anaLaboratorioView.txtFrecuenciaDigitacion}"
+												style="width:125px" required="true"
+												requiredMessage="Seleccione una frecuencia">
+												<f:selectItem itemLabel="Seleccionar" itemValue="" noSelectionOption="true" />
+												<f:selectItem itemLabel="Diaria" itemValue="Diaria" />
+												<f:selectItem itemLabel="Horaria" itemValue="Horaria" />
+											</p:selectOneMenu>
+											
+											<p:outputLabel for="txtHoraInicialDigitacion" value="Hora Inicio: "
+														style="font-size: 0.8em;" />
+													<p:calendar id="txtHoraInicialDigitacion" showOn="button" size="8"
+														navigator="false" locale="es"
+														binding="#{anaLaboratorioView.txtHoraInicialDigitacion}"
+														timeOnly="true" pattern="HH:mm" mask="true" />
+											
+									</h:panelGrid>					
+								</p:tab>
+
+
+								<p:tab title=" Variables" >
+
+									<h:panelGrid id="gridAnaLaboratorio" columns="2">
+
+
+										
+										<p:outputLabel for="txtVariableLabId_VariableLab" value="Variable: " />
+										<p:selectOneMenu id="txtVariableLabId_VariableLab" effect="fade"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											style="width:180px;"
+											binding="#{anaLaboratorioView.txtVariableLabId_VariableLab}">
+											<f:selectItem itemLabel="Seleccione una variable" itemValue="" />
+											<f:selectItems value="#{anaLaboratorioView.selectVariableLab}" />
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtOrden" value=" Orden: " />
+										<h:panelGrid columns="1" style="margin-bottom: 10px">
+											<p:inputText id="txtOrden" disabled="true"
+												binding="#{anaLaboratorioView.txtOrden}" required="true"
+												requiredMessage="El Orden es Obligatorio" />
+											<p:slider for="txtOrden" />
+										</h:panelGrid>
+
+									</h:panelGrid>
+
+									<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+												process="@this,txtVariableLabId_VariableLab, txtOrden, , txtFrecuenciaDigitacion"
+												binding="#{anaLaboratorioView.btnAgregar}" value="Agregar"
+												action="#{anaLaboratorioView.action_agregarVariablesLab}"
+												update="tablaAnaLaboratorio  :formDialog:msg " />
+
+											<p:commandButton id="btnlimpiar" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="gridAnaLaboratorio" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+									</h:panelGrid>
+									<p:scrollPanel mode="native" style="width:700px;height:250px">
+									<p:outputPanel>
+										<p:dataTable id="tablaAnaLaboratorio"
+											value="#{anaLaboratorioView.dataVariablesLab}"
+											var="listaAnaLaboratorio" 
+											 scrollable="true" scrollHeight="300"
+											reflow="true" editable="true" editMode="cell"
+											widgetVar="cell">
+
+											<p:ajax event="cellEdit" listener="#{anaLaboratorioView.onCellEdit}" />
+
+
+											<p:column headerText="Variable" resizable="true">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="variableLabIdData"
+															value="#{listaAnaLaboratorio.codigoVariable}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaAnaLaboratorio.variableLabId_VariableLab.variableLabId}">
+															<f:selectItems value="#{anaLaboratorioView.selectVariableLab}"
+																var="var1" itemValue="#{var1}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Orden">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaAnaLaboratorio.ordenDigitacion}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaAnaLaboratorio.ordenDigitacion}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<f:attribute name="selectedAnaLaboratorioVariable"
+												value="#{listaAnaLaboratorio}" />
+
+
+											<p:column headerText="Opciones">
+												<div align="center">
+
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{anaLaboratorioView.actionDeleteVariableLab}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaAnaLaboratorio ">
+														<f:attribute name="selectedAnaLaboratorioVariable"
+															value="#{listaAnaLaboratorio}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+
+										<p:contextMenu for="tablaAnaLaboratorio" widgetVar="cMenu">
+											<p:menuitem value="Edit Cell" icon="ui-icon-search"
+												onclick="PF('cell').showCellEditor();return false;" />
+											<p:menuitem value="Hide Menu" icon="ui-icon-close"
+												onclick="PF('cMenu').hide()" />
+										</p:contextMenu>
+
+									</p:outputPanel>
+									</p:scrollPanel>
+								</p:tab>
+
+						
+								<p:tab title="Info. Adicional">
+
+									<h:panelGrid columns="2" id="panelGrid2">
+
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1: " />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{anaLaboratorioView.txtInfoAdicional}" rows="5" cols="30"
+											maxlength="100" counterTemplate="{0} Caracteres"
+											autoResize="true" />
+										
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2: " />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{anaLaboratorioView.txtInfoAdicional2}" rows="5" cols="30"
+											maxlength="100" counterTemplate="{0} Caracteres."
+											autoResize="true" />
+										
+										<p:inputText id="txtAnaLabId" style="visibility:hidden"
+											binding="#{anaLaboratorioView.txtAnaLabId}">
+										</p:inputText>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+        
+						
+							</p:tabView>
+
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{anaLaboratorioView.btnSave}" value="Grabar" 
+									action="#{anaLaboratorioView.action_save()}"
+									update=":dialogAnaLaboratorio :frm:panelDataTableAnaLaboratorio" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{anaLaboratorioView.action_clear()}"
+									process="@this" update=":dialogAnaLaboratorio" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+				
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

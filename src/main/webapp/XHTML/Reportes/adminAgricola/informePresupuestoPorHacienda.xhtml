@@ -1,0 +1,172 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Informe: Presupuesto de labores detallado">
+						<p:growl id="growl" showDetail="true" sticky="true" life="2000" />
+						<p:panelGrid styleClass="ui-panelgrid-blank">
+
+							<p:row>
+								<p:column style="font-weight: bold;">
+
+									<h:panelGrid columns="2" id="panelGrid" width="500">
+									
+										<p:outputLabel for="txtCompania" value="Compañía" />
+										<p:selectOneMenu id="txtCompania"
+											binding="#{informePresupuestoLaboresPorHaciendaView.txtCompania}"
+											required="true" requiredMessage="Seleccione una compañía">
+											<f:selectItem itemLabel="Seleccione una compañía"
+												itemValue="" />
+											<f:selectItems
+												value="#{informePresupuestoLaboresPorHaciendaView.selectCompania}" />
+										</p:selectOneMenu>
+
+																			
+										<p:outputLabel for="cronogramasLabores" value="Cronograma: "
+											style="font-size: 1em;" />
+										<p:selectCheckboxMenu id="cronogramasLabores"
+											style="font-size: 1em;"
+											value="#{informeProyeccionLaboresLoteView.selectedCronogramaLabores}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un cronograma">
+											<f:selectItems
+												value="#{informeProyeccionLaboresLoteView.cronogramasLabores}"
+												var="cronogramasLabores"
+												itemLabel=" #{cronogramasLabores.nombre}"
+												itemValue="#{cronogramasLabores.cronogramaLaboresId}" />
+										</p:selectCheckboxMenu>
+
+										
+										<p:outputLabel for="zonas" value="Zonas: " />
+										<p:selectCheckboxMenu id="zonas"
+											value="#{informePresupuestoLaboresPorHaciendaView.selectedNivel1}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una zona">
+											<f:selectItems value="#{informePresupuestoLaboresPorHaciendaView.zonas}"
+												var="zonas" itemLabel=" #{zonas.nombre}"
+												itemValue="#{zonas.nivel1Id}" />
+										</p:selectCheckboxMenu>
+										
+
+										<p:outputLabel for="fincas" value="Fincas: " />
+										<p:selectCheckboxMenu id="fincas"
+											value="#{informePresupuestoLaboresPorHaciendaView.selectedNivel2}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una finca">
+											<f:selectItems value="#{informePresupuestoLaboresPorHaciendaView.fincas}"
+												var="fincas" itemLabel=" #{fincas.nombre}"
+												itemValue="#{fincas.nivel2Id}" />
+										</p:selectCheckboxMenu>
+										
+
+										
+										<p:outputLabel for="grupoLabores" value="Grupos de labor: " />
+										<p:selectCheckboxMenu id="grupoLabores"
+											value="#{informePresupuestoLaboresPorHaciendaView.selectedGrupoLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un grupo">
+											<f:selectItems
+												value="#{informePresupuestoLaboresPorHaciendaView.grupoLabores}"
+												var="grupoLabores" itemLabel=" #{grupoLabores.nombre}"
+												itemValue="#{grupoLabores.grpLaborId}" />
+										</p:selectCheckboxMenu>
+										
+
+										<p:outputLabel for="labores" value="Labor: " />
+										<p:selectCheckboxMenu id="labores"
+											value="#{informePresupuestoLaboresPorHaciendaView.selectedLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una labor">
+											<f:selectItems value="#{informePresupuestoLaboresPorHaciendaView.labores}"
+												var="labores" itemLabel=" #{labores.nombre}"
+												itemValue="#{labores.laborId}" />
+										</p:selectCheckboxMenu>
+										
+
+										<p:outputLabel for="unidadesMedida" value="Unidad de medida: " />
+										<p:selectCheckboxMenu id="unidadesMedida"
+											value="#{informePresupuestoLaboresPorHaciendaView.selectedUdadMed}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una Udad. de medida">
+											<f:selectItems
+												value="#{informePresupuestoLaboresPorHaciendaView.unidadesMedida}"
+												var="unidadesMedida" itemLabel=" #{unidadesMedida.nombre}"
+												itemValue="#{unidadesMedida.udadMedId}" />
+										</p:selectCheckboxMenu>
+										
+
+										
+										
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+
+							<p:commandButton id="btnConsultar" value="Generar reporte"
+								icon="ui-icon-newwin"
+								action="#{informePresupuestoLaboresPorHaciendaView.exportToPyGExcel}" update="growl, frm" />
+
+							<p:commandButton disabled="#{informePresupuestoLaboresPorHaciendaView.disableButton}"
+								icon="ui-icon-arrowthick-1-s" value="Descargar" ajax="false">
+								<p:fileDownload value="#{informePresupuestoLaboresPorHaciendaView.file}" />
+							</p:commandButton>
+
+							
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" resetValues="true" />
+							</p:commandButton>
+
+						</div>
+					</p:panel>
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

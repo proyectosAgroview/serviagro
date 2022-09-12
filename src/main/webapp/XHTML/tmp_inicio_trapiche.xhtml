@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<title>AgroView</title>
+	<meta name="content-type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+	 
+	<link REL="SHORTCUT ICON"
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/favicon.ico" />
+	<link rel="stylesheet" type="text/css"
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/bootstrap-4.0.0/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css"
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/style.css" />
+	<link rel="stylesheet" type="text/css"
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/hover-min.css" />
+	<script type="text/javascript"
+		src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/customNavBar.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</h:head>
+
+<h:body  onload="nobackbutton()">
+  
+  <ui:define name="body">
+	<p:ajaxStatus onstart="PF('statusDialog').show()"
+		onsuccess="PF('statusDialog').hide()" />
+	<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+		draggable="false" closable="false">
+		<p:graphicImage
+			value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+	</p:dialog>
+
+	<!-- Expired session -->
+	<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+		timeout="#{session.maxInactiveInterval * 1000}" />
+	<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+		appendTo="@(body)" header="Expired session" draggable="false"
+		closable="false">
+		<h:outputText value="The session is finished" />
+		<input id="confirmBackToLogin" type="button" value="Sign in"
+			onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+	</p:dialog>
+   </ui:define>
+    
+    <div class="container
+">
+	
+	<div id="contenido">
+		<div class="fondo">
+
+			<!-- Header -->
+			<ui:insert name="header">
+				<ui:include src="/WEB-INF/facelets/header.jspx" />
+			</ui:insert>
+			<!-- Header -->
+
+
+			<h:form id="salir" style="margin-top:-45px; margin-left:20px;">
+				<div align="right">
+					<p:commandLink id="fadeSalir"
+						actionListener="#{navegacion.cerrarSession}"
+						styleClass="hvr-buzz-out"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/j_spring_security_logout'">
+						<p:graphicImage
+							value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/session_logout.png"
+							width="32" />
+					</p:commandLink>
+				</div>
+			</h:form>
+
+			<!-- Inicio Modulos -->
+
+			<div align="center"
+				style="margin:5px;">
+				<div class="row" style="margin:15px;">
+					<div class="col-sm-12">
+
+						<a
+							href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/tmp_modulo.xhtml?modulo=info_agricola"
+							class="hvr-float-shadow"> <img id="imgsapcing"
+							src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_info_agricola.png" />
+						</a> <a
+							href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/tmp_modulo.xhtml?modulo=admin_agricola"
+							class="hvr-float-shadow"> <img id="imgsapcing"
+							src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_admin_agricola.png" />
+						</a> <a
+							href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/tmp_modulo.xhtml?modulo=tecno_agricola"
+							class="hvr-float-shadow"> <img id="imgsapcing"
+							src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_tecno_agricola.png" />
+						</a> 
+
+					</div>
+				</div>
+				<div class="row" style="margin: 25px;">
+					<div class="col-sm-12">
+					     
+					     <a
+							href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/tmp_modulo.xhtml?modulo=prod_agricola"
+							class="hvr-float-shadow"> <img id="imgsapcing"
+							src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_produccion_agricola.png" />
+						</a>
+					     
+					     
+						 <a
+							href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/tmp_modulo.xhtml?modulo=mantenimiento_maquinaria"
+							class="hvr-float-shadow"> <img id="imgsapcing"
+							src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_mantenimiento_maquinaria.png" />
+						</a>
+						
+						
+						 <a
+							href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/tmp_modulo.xhtml?modulo=sgu"
+							class="hvr-float-shadow"> <img id="imgsapcing"
+							src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_guser_agricola.png" />
+						</a>
+					</div>
+				</div>
+
+			</div>
+			<!-- Fin Modulos -->
+
+			<!-- Footer -->
+			<ui:insert name="footer">
+				<ui:include src="/WEB-INF/facelets/footer.jspx" />
+			</ui:insert>
+			<!-- Footer -->
+
+		</div>
+	</div>
+	<!-- Contenido -->
+	</div>
+</h:body>
+</html>

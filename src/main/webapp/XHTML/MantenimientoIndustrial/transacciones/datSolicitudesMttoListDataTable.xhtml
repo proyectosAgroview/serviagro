@@ -1,0 +1,628 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frmConsultaSolicitud">
+
+					<p:panel id="panelDataTable" collapsed="false" toggleable="true"
+						header="Consulta de solicitudes de mantenimientos">
+						<!--  <p:growl id="growl" showDetail="true" sticky="true" />-->
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtOrigenDatosFiltro"
+													value="Origen de datos:" />
+												<p:selectOneMenu id="txtOrigenDatosFiltro"
+													binding="#{datSolicitudesMttoView.txtOrigenDatosFiltro}"
+													disabled="false">
+													<f:selectItem itemLabel="Modulo_MttoIndustrial"
+														itemValue="Modulo_MttoIndustrial" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtCompaniaFiltro" value="Compañía" />
+												<p:selectOneMenu id="txtCompaniaFiltro"
+													binding="#{datSolicitudesMttoView.txtCompaniaFiltro}"
+													required="true" requiredMessage="Seleccione una compañía">
+													<f:selectItem itemLabel="Seleccione una compañía"
+														itemValue="" />
+													<f:selectItems
+														value="#{datSolicitudesMttoView.selectCompaniaFiltro}" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+												<p:calendar id="msgFechaInicial" showOn="button"
+													navigator="false" locale="es" pattern="dd/MM/yyyy"
+													mask="true"
+													binding="#{datSolicitudesMttoView.txtFechaInicial}"
+													required="true" requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+
+												<p:outputLabel for="msgFechaFinal" value="Fecha Final: " />
+												<p:calendar id="msgFechaFinal" showOn="button"
+													navigator="false" locale="es" pattern="dd/MM/yyyy"
+													mask="true"
+													binding="#{datSolicitudesMttoView.txtFechaFinal}"
+													required="true" requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="tipoMtto" value="Tipo de mantenimiento " />
+												<p:selectCheckboxMenu id="tipoMtto"
+													value="#{datSolicitudesMttoView.selectedTipoMtto}"
+													filter="true" filterMatchMode="contains"
+													showCheckbox="true" required="false"
+													requiredMessage="Seleccione al menos un tipo de mtto">
+													<f:selectItems value="#{datSolicitudesMttoView.tipoMtto}"
+														var="tipoMtto" itemLabel=" #{tipoMtto.nombre}"
+														itemValue="#{tipoMtto.tipoMantenimientoId}" />
+												</p:selectCheckboxMenu>
+
+												<p:outputLabel for="equipos" value="Equipo: " />
+												<p:selectCheckboxMenu id="equipos"
+													value="#{datSolicitudesMttoView.selectedEquipo}"
+													filter="true" filterMatchMode="contains"
+													showCheckbox="true" required="false"
+													requiredMessage="Seleccione al menos un equipo">
+													<f:selectItems value="#{datSolicitudesMttoView.equipos}"
+														var="equipos" itemLabel=" #{equipos.nombre}"
+														itemValue="#{equipos.equipoId}" />
+												</p:selectCheckboxMenu>
+
+
+												<p:outputLabel for="solicitante" value="Solicitante: " />
+												<p:selectCheckboxMenu id="solicitante"
+													value="#{datSolicitudesMttoView.selectedSolicitante}"
+													filter="true" filterMatchMode="contains"
+													showCheckbox="true" required="false"
+													requiredMessage="Seleccione al menos un solicitante">
+													<f:selectItems
+														value="#{datSolicitudesMttoView.solicitanteMtto}"
+														var="solicitante" itemLabel=" #{solicitante.nombre}"
+														itemValue="#{solicitante.trabId}" />
+												</p:selectCheckboxMenu>
+
+												<p:outputLabel for="nivelP" value="Nivel Prioridad: " />
+												<p:selectCheckboxMenu id="nivelP"
+													value="#{datSolicitudesMttoView.selectedNivelPrioridad}"
+													filter="true" filterMatchMode="contains"
+													showCheckbox="true" required="false"
+													requiredMessage="Seleccione al menos un nivel de prioridad">
+													<f:selectItems
+														value="#{datSolicitudesMttoView.nivelprioridadMtto}"
+														var="nivel" itemLabel=" #{nivel.nombre}"
+														itemValue="#{nivel.nivelPrioridadId}" />
+												</p:selectCheckboxMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:commandButton id="btnConsultar" value="Consultar"
+													icon="ui-icon-newwin"
+													action="#{datSolicitudesMttoView.action_informe()}"
+													update="frmConsultaSolicitud frm :frm:tbl" process="@all" />
+												<p:outputLabel></p:outputLabel>
+												
+											</h:panelGrid>
+										</p:column>
+										<!--Filtros del reporte  -->
+									</p:row>
+								</p:panelGrid>
+							
+					</p:panel>
+				</h:form>
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatSolicitudesMtto"
+						header="Solicitud de Manetenimiento">
+
+						<p:dataTable id="tbl" value="#{datSolicitudesMttoView.data}"
+							var="datSolicitudesMtto"  lazy="true" 
+							 reflow="true"
+							scrollable="true" scrollHeight="200"
+							>
+
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datSolicitudesMtto" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datSolicitudesMtto.estado}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datSolicitudesMtto.consecutivo}" />
+							</p:column>
+
+							<p:column style="width:45px">
+								<f:facet name="header">
+									<h:outputText value="" />
+								</f:facet>
+								<p:graphicImage
+									value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/#{datSolicitudesMtto.estadoSolicitudVencida}"
+									width="25">
+								</p:graphicImage>
+
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Atrasadas" />
+								</f:facet>
+
+								<h:outputText
+									value=" Hace #{datSolicitudesMtto.diasAtarso} días" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fecha solicitud" />
+								</f:facet>
+								<h:outputText value="#{datSolicitudesMtto.fecha_registro}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Equipo/Maquinaria" />
+								</f:facet>
+								<h:outputText value="#{datSolicitudesMtto.nom_equipo}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Solicitud" />
+								</f:facet>
+								<h:outputText
+									value="#{datSolicitudesMtto.descripcion_solicitud}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Prioridad" />
+								</f:facet>
+								<h:outputText value="#{datSolicitudesMtto.nom_nivel_prioridad}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatSolicitudesMtto"
+										disabled="#{datSolicitudesMtto.estadoTrue2}"
+										actionListener="#{datSolicitudesMttoView.action_edit}">
+										<f:attribute name="selectedDatSolicitudesMtto"
+											value="#{datSolicitudesMtto}" />
+									</p:commandButton>
+									<p:commandButton id="btnAnular" title="Anular Registro"
+										disabled="#{datSolicitudesMtto.estadoTrue2}"
+										actionListener="#{datSolicitudesMttoView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatSolicitudesMtto"
+											value="#{datSolicitudesMtto}" />
+									</p:commandButton>
+
+									<p:commandButton id="btnCerrarOt"
+										title="Cerrar y/o Reabrir solicitud"
+										icon="#{datSolicitudesMtto.iconCierre}"
+										actionListener="#{datSolicitudesMttoView.action_cierreReaperturaOt}"
+										disabled="#{datSolicitudesMtto.estadoTrue}"
+										update=":frm:panelDataTableDatSolicitudesMtto">
+										<p:confirm header="Cierre y/o Reapertura solicitud"
+											message="#{datSolicitudesMtto.tituloCierre}"
+											icon="ui-icon-alert" />
+										<f:attribute name="selectedDatSolicitudesMtto"
+											value="#{datSolicitudesMtto}" />
+									</p:commandButton>
+
+									<p:confirmDialog global="true" hideEffect="fade">
+										<div align="center">
+											<p:commandButton value="Si" type="button"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+											<p:commandButton value="No" type="button"
+												styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+										</div>
+									</p:confirmDialog>
+
+									<p:button outcome="datMantenimientoEquipoBasadoEnSolicitud"
+										value="Generar O.T">
+										<f:param name="solicitudId"
+											value="#{datSolicitudesMtto.dat_solicitudes_mtto_id}" />
+										<f:param name="idSolicitante"
+											value="#{datSolicitudesMtto.trab_solicitante_id}" />
+										<f:param name="nombreSolicitante"
+											value="#{datSolicitudesMtto.nom_trabajador}" />
+										<f:param name="equipo_Id"
+											value="#{datSolicitudesMtto.equipo_id}" />
+										<f:param name="equipoNombre"
+											value="#{datSolicitudesMtto.nom_equipo}" />
+										<f:param name="nombreTipoMtto"
+											value="#{datSolicitudesMtto.nom_tipo_mtto}" />
+										<f:param name="nombreNivelPrioridad"
+											value="#{datSolicitudesMtto.nom_nivel_prioridad}" />
+										
+										<f:param name="nombreTaller"
+											value="#{datSolicitudesMtto.nom_taller_mecanico}" />
+										
+										<f:param name="solicitud"
+											value="#{datSolicitudesMtto.descripcion_solicitud}" />
+										
+										<f:param name="taller_id"
+											value="#{datSolicitudesMtto.taller_id}" />
+										
+										<f:param name="nivel_prioridad_id"
+											value="#{datSolicitudesMtto.nivel_prioridad_id}" />
+										
+										<f:param name="tag_id"
+											value="#{datSolicitudesMtto.tag_id}" />
+										
+										<f:param name="tipo_mantenimiento_id"
+											value="#{datSolicitudesMtto.tipo_mantenimiento_id}" />
+										
+										<f:param name="modulo_activo"
+											value="mantenimiento_maquinaria" />
+											
+									</p:button>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datSolicitudesMttoView.action_new()}"
+								update=":dialogDatSolicitudesMtto" />
+						</div>
+					</p:panel>
+				</h:form>
+
+				<p:dialog id="dialogDatSolicitudesMtto" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datSolicitudesMttoView.showDialog}" resizable="false"
+					modal="true" width="800" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+
+					<h:form id="formDialog">
+
+						<p:messages id="msg2" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+
+						<p:panel id="panelDatSolicitudesMtto"
+							header="Solicitud de Mantenimiento">
+
+							<p:panelGrid>
+								<p:row>
+									<p:column>
+										<h:panelGrid columns="2">
+
+											<p:outputLabel for="txtConsecutivo" value="#Registro:"
+												style="font-size: 0.9em" />
+											<p:inputText id="txtConsecutivo" disabled="false" size="8"
+												required="true" requiredMessage="Indique la cantidad"
+												binding="#{datSolicitudesMttoView.txtConsecutivo}"
+												>
+											</p:inputText>
+
+										</h:panelGrid>
+									</p:column>
+
+									<p:column>
+										<h:panelGrid columns="2">
+											<p:outputLabel for="txtFechaRegistro" value="Fecha:"
+												style="font-size: 0.9em" />
+											<p:calendar id="txtFechaRegistro" showOn="button" size="16"
+												navigator="false" locale="es"
+												binding="#{datSolicitudesMttoView.txtFechaRegistro}"
+												pattern="dd/MM/yyyy HH:mm" required="true" mask="true"
+												requiredMessage="La fecha es obligatoria">
+											</p:calendar>
+										</h:panelGrid>
+									</p:column>
+
+									<p:column>
+										<h:panelGrid columns="2">
+
+											<p:outputLabel for="txtOrigenDatos" value="Origen de datos: "
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtOrigenDatos"
+												style="font-size: 0.9em;"
+												binding="#{datSolicitudesMttoView.txtOrigenDatos}"
+												disabled="false">
+												<f:selectItem itemLabel="Modulo_MttoIndustrial"
+													itemValue="Modulo_MttoIndustrial" />
+											</p:selectOneMenu>
+
+										</h:panelGrid>
+									</p:column>
+
+
+								</p:row>
+							</p:panelGrid>
+
+							<p:panelGrid>
+
+								<p:row>
+									<p:column>
+										<h:panelGrid columns="2">
+										
+											<p:outputLabel for="txtSolicitante" value="Solicitante: "
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtSolicitante" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width:100%;font-size: 0.9em;"
+												binding="#{datSolicitudesMttoView.txtSolicitante}"
+												required="true" requiredMessage="Seleccione un solicitante">
+												<f:selectItem itemLabel="Seleccione un solicitante"
+													itemValue="" />
+												<f:selectItems
+													value="#{datSolicitudesMttoView.selectTrabajadorSolicitante}" />
+											</p:selectOneMenu>
+
+										</h:panelGrid>
+									</p:column>
+
+									<p:column>
+										<h:panelGrid columns="2">
+
+											<p:outputLabel for="txtTipoMantenimientoId_TipoMantenimiento"
+												value="Tipo Mantenimiento: " style="font-size: 0.9em" />
+											<p:selectOneMenu style="width:100%;font-size: 0.9em"
+												id="txtTipoMantenimientoId_TipoMantenimiento" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												binding="#{datSolicitudesMttoView.txtTipoMantenimientoId_TipoMantenimiento}"
+												required="true"	requiredMessage="Seleccione una tipo mantenimiento">
+												<f:selectItem itemLabel="Seleccione tipo mantenimiento"
+													itemValue="" />
+												<f:selectItems
+													value="#{datSolicitudesMttoView.selectTipoMantenimiento}" />
+											</p:selectOneMenu>
+
+
+										</h:panelGrid>
+
+									</p:column>
+
+
+								</p:row>
+							</p:panelGrid>
+
+							<p:outputLabel></p:outputLabel>
+							<p:outputLabel></p:outputLabel>
+
+							<p:panelGrid>
+								<p:row>
+									<p:column>
+										<h:panelGrid columns="2">
+											<p:outputLabel for="txtEquipoId_Equipo"
+												style="font-size: 0.9em" value="Equipo: " />
+											<p:selectOneMenu id="txtEquipoId_Equipo" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width:100%; font-size: 0.9em"
+												binding="#{datSolicitudesMttoView.txtEquipoId_Equipo}"
+												required="true" requiredMessage="Seleccione un Equipo">
+												<f:selectItem itemLabel="Seleccione Equipo" itemValue="" />
+												<f:selectItems
+													value="#{datSolicitudesMttoView.selectEquipo}" />
+												<p:ajax process="@this, txtEquipoId_Equipo"
+															listener="#{datSolicitudesMttoView.listener_ConsultaTag}"
+															update="txtTagId_Tag" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtNivelPrioridadId_NivelPrioridad"
+												style="font-size: 0.9em" value="Nivel de Prioridad: " />
+											<p:selectOneMenu id="txtNivelPrioridadId_NivelPrioridad"
+												effect="fade" filter="true" filterMatchMode="contains"
+												autoWidth="false" style="width:95%; font-size: 0.9em"
+												binding="#{datSolicitudesMttoView.txtNivelPrioridadId_NivelPrioridad}"
+												required="false" requiredMessage="Seleccione un Nivel">
+												<f:selectItem itemLabel="Seleccione un Nivel" itemValue="" />
+												<f:selectItems value="#{datSolicitudesMttoView.selectNivel}" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtRequiereParadaFabrica"
+												value="Requiere Parada:" style="font-size: 0.9em" />
+											<p:selectOneRadio id="txtRequiereParadaFabrica"
+												disabled="true" style="font-size: 0.9em"
+												binding="#{datSolicitudesMttoView.txtRequiereParadaFabrica}">
+												<f:selectItem itemLabel="Si" itemValue="SI" />
+												<f:selectItem itemLabel="No" itemValue="NO" />
+											</p:selectOneRadio>
+
+											<p:outputLabel for="txtDescripcionSolicitud"
+												value="Descripción: " style="font-size: 0.9em" />
+											<p:inputTextarea id="txtDescripcionSolicitud"
+												binding="#{datSolicitudesMttoView.txtDescripcionSolicitud}"
+												rows="2" cols="27" maxlength="100" autoResize="true" />
+
+
+
+										</h:panelGrid>
+									</p:column>
+
+
+
+								</p:row>
+							</p:panelGrid>
+
+							<div align="left">
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2"
+									 	              style="display:#{datSolicitudesMttoView.ocultaMttoMaquinaria}">
+
+												<p:outputLabel for="txtTallerMecanicoId" value="Taller: "
+													style="font-size: 0.9em;" />
+												<p:selectOneMenu id="txtTallerMecanicoId" effect="fade"
+													filter="true" filterMatchMode="contains" autoWidth="false"
+													style="width:100%; font-size: 0.9em"
+													binding="#{datSolicitudesMttoView.txtTallerId}"
+													required="#{datSolicitudesMttoView.compoRequieridoMttoMaquinaria}" requiredMessage="Seleccione un taller">
+													<f:selectItem itemLabel="Seleccione un taller" itemValue="" />
+													<f:selectItems
+														value="#{datSolicitudesMttoView.selectTallerMecanico}" />
+												</p:selectOneMenu>
+
+                                               </h:panelGrid>
+                                               
+                                               <h:panelGrid columns="2"
+										        style="display:#{datSolicitudesMttoView.ocultaMttoIndustrial}">
+                                               
+												<p:outputLabel for="txtZonasFabricaId_ZonasFabrica"
+													value="Zona Fábrica: " style="font-size: 0.9em" />
+												<p:selectOneMenu id="txtZonasFabricaId_ZonasFabrica"
+													effect="fade" filter="true" filterMatchMode="contains"
+													autoWidth="false" style="width:100%; font-size: 0.9em"
+													binding="#{datSolicitudesMttoView.txtZonasFabricaId_ZonasFabrica}"
+													required="#{datSolicitudesMttoView.compoRequieridoMttoIndustrial}" requiredMessage="Seleccione una zona">
+													<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+													<f:selectItems value="#{datSolicitudesMttoView.selectZona}" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtAreaTrabajoId_AreaTrabajo"
+													style="font-size: 0.9em" value="Área de Trabajo: " />
+												<p:selectOneMenu id="txtAreaTrabajoId_AreaTrabajo"
+													effect="fade" filter="true" filterMatchMode="contains"
+													autoWidth="false" style="width:100%; font-size: 0.9em"
+													binding="#{datSolicitudesMttoView.txtAreaTrabajoId_AreaTrabajo}"
+													required="#{datSolicitudesMttoView.compoRequieridoMttoIndustrial}"
+													requiredMessage="Seleccione un área de trabajo">
+													<f:selectItem itemLabel="Seleccione área de trabajo"
+														itemValue="" />
+													<f:selectItems
+														value="#{datSolicitudesMttoView.selectAreaTrabajo}" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtTagId_Tag" style="font-size: 0.9em"
+													value="Tag: " />
+												<p:selectOneMenu id="txtTagId_Tag" effect="fade"
+													style="width:100%; font-size: 0.9em" filter="true"
+													filterMatchMode="contains" autoWidth="false"
+													binding="#{datSolicitudesMttoView.txtTagId_Tag}"
+													required="#{datSolicitudesMttoView.compoRequieridoMttoIndustrial}" requiredMessage="Seleccione un Tag">
+													<f:selectItem itemLabel="Seleccione Tag" itemValue="" />
+													<f:selectItems value="#{datSolicitudesMttoView.selectTag}" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+											
+											<h:panelGrid columns="2">
+											
+												<p:outputLabel for="txtObservaciones"
+														value="Observaciones: " style="font-size: 0.9em" />
+													<p:inputTextarea id="txtObservaciones"
+														binding="#{datSolicitudesMttoView.txtObservaciones}"
+														rows="3" cols="27" maxlength="100" autoResize="true" />
+														
+											</h:panelGrid>
+
+										</p:column>
+
+									</p:row>
+
+									<!-- id auto incrementable -->
+									<p:inputText style="visibility:hidden"
+										id="txtDatSolicitudesMttoId"
+										binding="#{datSolicitudesMttoView.txtDatSolicitudesMttoId}" />
+								</p:panelGrid>
+
+							</div>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datSolicitudesMttoView.btnSave}" value="Grabar"
+									action="#{datSolicitudesMttoView.action_save()}"
+									update=":dialogDatSolicitudesMtto :frm:panelDataTableDatSolicitudesMtto" />
+								<p:commandButton id="btnClear" value="Limpiar"
+									icon="ui-icon-trash"
+									action="#{datSolicitudesMttoView.action_clear()}"
+									process="@this" update=":dialogDatSolicitudesMtto" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datSolicitudesMttoView.showDialog}" modal="true"
+					width="500" showEffect="fade">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msgAnular" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datSolicitudesMttoView.txtObservacionAnularReg}"
+									rows="5" cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotonesAnular">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datSolicitudesMttoView.btnDelete}"
+									value="Grabar"
+									action="#{datSolicitudesMttoView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatSolicitudesMtto" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datSolicitudesMttoView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

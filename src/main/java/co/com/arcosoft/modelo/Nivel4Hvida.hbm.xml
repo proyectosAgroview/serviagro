@@ -1,0 +1,312 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Nivel4Hvida" table="nivel4_hvida" >         
+        <id name="nivel4HvidaId" type="java.lang.Long">
+            <column name="nivel4_hvida_id" />
+            <generator class="identity" />
+        </id>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nivel3Id" type="java.lang.Long">
+            <column name="nivel3_id" />
+        </property>
+        <property name="faseFenoId" type="java.lang.Long">
+            <column name="fase_feno_id" />
+        </property>
+        <property name="anioFiscalId" type="java.lang.Long">
+            <column name="anio_fiscal_id" />
+        </property>
+        <property name="tenenId" type="java.lang.Long">
+            <column name="tenen_id" />
+        </property>
+        <property name="almacenId" type="java.lang.Long">
+            <column name="almacen_id" />
+        </property>
+        <property name="grupoSuelo" type="java.lang.Long">
+            <column name="grupo_suelo" />
+        </property>
+        <property name="etapaId" type="java.lang.Long">
+            <column name="etapa_id" />
+        </property>
+        <property name="organizId" type="java.lang.Long">
+            <column name="organiz_id" />
+        </property>
+        <property name="fliaTextSueloId" type="java.lang.Long">
+            <column name="flia_text_suelo_id" />
+        </property>
+        <property name="claseTextSueloId" type="java.lang.Long">
+            <column name="clase_text_suelo_id" />
+        </property>
+        <property name="ordenSuelo" type="java.lang.Long">
+            <column name="orden_suelo" />
+        </property>
+        <property name="serieSueloId" type="java.lang.Long">
+            <column name="serie_suelo_id" />
+        </property>
+        <property name="zonAgroec" type="java.lang.Long">
+            <column name="zon_agroec" />
+        </property>
+        <property name="n4Mot" type="java.lang.Long">
+            <column name="n4_mot" />
+        </property>
+        <property name="ocupacionId" type="java.lang.Long">
+            <column name="ocupacion_id" />
+        </property>
+        <property name="estClimatId" type="java.lang.Long">
+            <column name="est_climat_id" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="areaBruta" type="java.lang.Double">
+            <column name="area_bruta" precision="12" scale="4" />
+        </property>
+        <property name="areaMecanizada" type="java.lang.Double">
+            <column name="area_mecanizada" precision="12" scale="4" />
+        </property>
+        <property name="areaManual" type="java.lang.Double">
+            <column name="area_manual" precision="12" scale="4" />
+        </property>
+        <property name="areaInutil" type="java.lang.Double">
+            <column name="area_inutil" precision="12" scale="4" />
+        </property>
+        <property name="areaOtrosCultivos" type="java.lang.Double">
+            <column name="area_otros_cultivos" precision="12" scale="4" />
+        </property>
+        <property name="areaReservada" type="java.lang.Double">
+            <column name="area_reservada" precision="12" scale="4" />
+        </property>
+        <property name="areaRestringida" type="java.lang.Double">
+            <column name="area_restringida" precision="12" scale="4" />
+        </property>
+        <property name="areaNeta" type="java.lang.Double">
+            <column name="area_neta" precision="12" scale="4" />
+        </property>
+        <property name="fechaSiembra" type="java.util.Date">
+            <column name="fecha_siembra" length="19" />
+        </property>
+        <property name="fechaPrimerCorte" type="java.util.Date">
+            <column name="fecha_primer_corte" length="19" />
+        </property>
+        <property name="fechaUltimoCorte" type="java.util.Date">
+            <column name="fecha_ultimo_corte" length="19" />
+        </property>
+        <property name="fechaCorteAnterior" type="java.util.Date">
+            <column name="fecha_corte_anterior" length="19" />
+        </property>
+        <property name="fechaAnalisisPostCosecha" type="java.util.Date">
+            <column name="fecha_analisis_post_cosecha" length="19" />
+        </property>
+        <property name="fechaAplicacionMadurante" type="java.util.Date">
+            <column name="fecha_aplicacion_madurante" length="19" />
+        </property>
+        <property name="fechaProximoCorte" type="java.util.Date">
+            <column name="fecha_proximo_corte" length="19" />
+        </property>
+        <property name="fechaUltimoApunteRiego" type="java.util.Date">
+            <column name="fecha_ultimo_apunte_riego" length="19" />
+        </property>
+        <property name="fechaEstimadaUltimoRiego" type="java.util.Date">
+            <column name="fecha_estimada_ultimo_riego" length="19" />
+        </property>
+        <property name="numEstimTonHectPrimVez" type="java.lang.Double">
+            <column name="num_estim_ton_hect_prim_vez" precision="12" scale="4" />
+        </property>
+        <property name="numEstimTonAnioFiscal" type="java.lang.Double">
+            <column name="num_estim_ton_anio_fiscal" precision="12" scale="4" />
+        </property>
+        <property name="numEstimTonMesAnioFiscal" type="java.lang.Double">
+            <column name="num_estim_ton_mes_anio_fiscal" precision="12" scale="4" />
+        </property>
+        <property name="numHectUltCosecha" type="java.lang.Double">
+            <column name="num_hect_ult_cosecha" precision="12" scale="4" />
+        </property>
+        <property name="numTonUltCosecha" type="java.lang.Double">
+            <column name="num_ton_ult_cosecha" precision="12" scale="4" />
+        </property>
+        <property name="numHectCosIndFab" type="java.lang.Double">
+            <column name="num_hect_cos_ind_fab" precision="12" scale="4" />
+        </property>
+        <property name="numTonCosIndFab" type="java.lang.Double">
+            <column name="num_ton_cos_ind_fab" precision="12" scale="4" />
+        </property>
+        <property name="numHectOtroDestino" type="java.lang.Double">
+            <column name="num_hect_otro_destino" precision="12" scale="4" />
+        </property>
+        <property name="edadActual" type="java.lang.Double">
+            <column name="edad_actual" precision="12" scale="4" />
+        </property>
+        <property name="edadUltimaCosecha" type="java.lang.Double">
+            <column name="edad_ultima_cosecha" precision="12" scale="4" />
+        </property>
+        <property name="indiceHelada" type="java.lang.String">
+            <column name="indice_helada" length="1" />
+        </property>
+        <property name="kilmNivel4Fab" type="java.lang.Double">
+            <column name="kilm_nivel4_fab" precision="12" scale="4" />
+        </property>
+        <property name="kilmNivel4FabPav" type="java.lang.Double">
+            <column name="kilm_nivel4_fab_pav" precision="12" scale="4" />
+        </property>
+        <property name="kilmNivel4FabTerraceria" type="java.lang.Double">
+            <column name="kilm_nivel4_fab_terraceria" precision="12" scale="4" />
+        </property>
+        <property name="aplicacionMadurante" type="java.lang.Integer">
+            <column name="aplicacion_madurante" />
+        </property>
+        <property name="ultDosisAplicadaMadurante" type="java.lang.Double">
+            <column name="ult_dosis_aplicada_madurante" precision="12" scale="4" />
+        </property>
+        <property name="longitud" type="java.lang.String">
+            <column name="longitud" length="40" />
+        </property>
+        <property name="latitud" type="java.lang.String">
+            <column name="latitud" length="40" />
+        </property>
+        <property name="precision1" type="java.lang.String">
+            <column name="precision1" length="10" />
+        </property>
+        <property name="numComederosHect" type="java.lang.Long">
+            <column name="num_comederos_hect" />
+        </property>
+        <property name="totalComederos" type="java.lang.Long">
+            <column name="total_comederos" />
+        </property>
+        <property name="numLarvasSembradas" type="java.lang.Long">
+            <column name="num_larvas_sembradas" />
+        </property>
+        <property name="numRacionesCrustaceos" type="java.lang.Double">
+            <column name="num_raciones_crustaceos" precision="12" scale="4" />
+        </property>
+        <property name="renovacion" type="java.lang.String">
+            <column name="renovacion" length="1" />
+        </property>
+        <property name="semillero" type="java.lang.String">
+            <column name="semillero" length="1" />
+        </property>
+        <property name="fechaInactivo" type="java.util.Date">
+            <column name="fecha_inactivo" length="19" />
+        </property>
+        <property name="numPlantasSembradas" type="java.lang.Long">
+            <column name="num_plantas_sembradas" />
+        </property>
+        <property name="numPlantasActuales" type="java.lang.Long">
+            <column name="num_plantas_actuales" />
+        </property>
+        <property name="numDensidadSiembra" type="java.lang.Double">
+            <column name="num_densidad_siembra" precision="12" scale="4" />
+        </property>
+        <property name="alturaPromedioPlantas" type="java.lang.Double">
+            <column name="altura_promedio_plantas" precision="12" scale="4" />
+        </property>
+        <property name="pesoPromedioNivel4" type="java.lang.Double">
+            <column name="peso_promedio_nivel4" precision="12" scale="4" />
+        </property>
+        <property name="cantidadValvulasRiego" type="java.lang.Long">
+            <column name="cantidad_valvulas_riego" />
+        </property>
+        <property name="numLineasSembradas" type="java.lang.Long">
+            <column name="num_lineas_sembradas" />
+        </property>
+        <property name="numPlantasSembradas2" type="java.lang.Long">
+            <column name="num_plantas_sembradas_2" />
+        </property>
+        <property name="espacioLineasSembradas" type="java.lang.Long">
+            <column name="espacio_lineas_sembradas" />
+        </property>
+        <property name="generico" type="java.lang.String">
+            <column name="generico" length="1" />
+        </property>
+        <property name="costosAmortizados" type="java.lang.String">
+            <column name="costos_amortizados" length="1" />
+        </property>
+        <property name="fechaCierreCosecha" type="java.util.Date">
+            <column name="fecha_cierre_cosecha" length="19" />
+        </property>
+        <property name="fechaAperturaCosecha" type="java.util.Date">
+            <column name="fecha_apertura_cosecha" length="19" />
+        </property>
+        <property name="fotoInfraestructura" type="java.lang.String">
+            <column name="foto_infraestructura" length="300" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="ana1" type="java.lang.String">
+            <column name="ana1" length="40" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="estPluvioId" type="java.lang.Long">
+            <column name="est_pluvio_id" />
+        </property>
+        <property name="tipoDrenajeId" type="java.lang.Long">
+            <column name="tipo_drenaje_id" />
+        </property>
+        <property name="topografiaId" type="java.lang.Long">
+            <column name="topografia_id" />
+        </property>
+        <property name="persEmprId" type="java.lang.Long">
+            <column name="pers_empr_id" />
+        </property>
+        <property name="codigoUsuarioApertura" type="java.lang.Long">
+            <column name="codigo_usuario_apertura" />
+        </property>
+        <property name="codigoUsuarioCierre" type="java.lang.Long">
+            <column name="codigo_usuario_cierre" />
+        </property>
+        <property name="trabId" type="java.lang.Long">
+            <column name="trab_id" />
+        </property>
+        <property name="tipoCultivoId" type="java.lang.Long">
+            <column name="tipo_cultivo_id" />
+        </property>
+        <property name="numTonOtroDestino" type="java.lang.Double">
+            <column name="num_ton_otro_destino" precision="12" scale="4" />
+        </property>
+        <property name="numDensidadActual" type="java.lang.Double">
+            <column name="num_densidad_actual" precision="12" scale="4" />
+        </property>
+        <property name="estEvaporimetroId" type="java.lang.Long">
+            <column name="est_evaporimetro_id" />
+        </property>
+        <property name="madurante" type="java.lang.Long">
+            <column name="madurante" />
+        </property>
+        <property name="fechaAnalisisPreCosecha" type="java.util.Date">
+            <column name="fecha_analisis_pre_cosecha" length="19" />
+        </property>
+        <property name="variable1" type="java.lang.Double">
+            <column name="variable1" precision="12" scale="4" />
+        </property>
+        <property name="variable2" type="java.lang.Double">
+            <column name="variable2" precision="12" scale="4" />
+        </property>
+        <property name="variable3" type="java.lang.Double">
+            <column name="variable3" precision="12" scale="4" />
+        </property>
+        <property name="variable4" type="java.lang.Double">
+            <column name="variable4" precision="12" scale="4" />
+        </property>
+        <property name="variable5" type="java.lang.Double">
+            <column name="variable5" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

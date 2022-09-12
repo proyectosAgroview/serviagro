@@ -1,0 +1,2301 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatPlanillaNomina"
+						header="Ejecución de labores">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl"
+							value="#{datEjecucionLaboresNoPlanificaV2View.data}"
+							var="datPlanillaNomina" paginator="true" lazy="true" rows="5"
+							rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datPlanillaNomina" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{datPlanillaNomina.consecutivo}"
+								sortBy="#{datPlanillaNomina.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="# Planilla" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.consecutivo}" />
+							</p:column>
+
+
+							<p:column filterBy="#{datPlanillaNomina.fechaRegistro}"
+								sortBy="#{datPlanillaNomina.fechaRegistro}">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.fechaRegistro}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatPlanillaNomina"
+										disabled="#{datPlanillaNomina.estadoTrue}"
+										actionListener="#{datEjecucionLaboresNoPlanificaV2View.action_edit}">
+										<f:attribute name="selectedDatPlanillaNomina"
+											value="#{datPlanillaNomina}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"
+										disabled="#{datPlanillaNomina.estadoTrue}"
+										title="Anular Registro"
+										actionListener="#{datEjecucionLaboresNoPlanificaV2View.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatPlanillaNomina"
+											value="#{datPlanillaNomina}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datEjecucionLaboresNoPlanificaV2View.action_new()}"
+								update=":dialogDatPlanillaNomina" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatPlanillaNomina" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datEjecucionLaboresNoPlanificaV2View.showDialog}"
+					resizable="false" modal="true" width="1000" styleClass="dialogFix"
+					header="Ejecución de labores" responsive="true">
+					<h:form id="formDialog">
+
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+
+						<h:panelGrid columns="2">
+							<p:outputLabel value="#Planilla: " style="font-size: 0.8em;" />
+							<p:inputText id="txtConsecutivo" disabled="false"
+								binding="#{datEjecucionLaboresNoPlanificaV2View.txtConsecutivo}"
+								placeholder="Buscar o crear registro" size="23">
+							</p:inputText>
+
+							<p:outputLabel for="msgFechaRegistro" value="Fecha: "
+								style="font-size: 0.8em;" />
+							<p:calendar id="msgFechaRegistro" showOn="button"
+								navigator="false" locale="es"
+								binding="#{datEjecucionLaboresNoPlanificaV2View.txtFechaRegistro}"
+								pattern="dd/MM/yyyy" mask="true" required="true"
+								requiredMessage="La    es obligatoria">
+							</p:calendar>
+
+							<p:outputLabel for="txtObservacion" value="Observación:"
+								style="font-size: 0.8em;" />
+							<p:inputTextarea id="txtObservacion"
+								binding="#{datEjecucionLaboresNoPlanificaV2View.txtObservacion}"
+								rows="1" cols="50" maxlength="1000"
+								counterTemplate="{0} Caracteres" autoResize="true" />
+							<h:outputText />
+
+							<p:inputText style="font-size: 0.8em; visibility:hidden"
+								id="txtPlanillaNominaId"
+								binding="#{datEjecucionLaboresNoPlanificaV2View.txtPlanillaNominaId}">
+							</p:inputText>
+
+						</h:panelGrid>
+
+						<p:tabView id="tabMapa"
+							activeIndex="#{datEjecucionLaboresNoPlanificaV2View.activeTapIndex}">
+							<p:tab title="Mano de obra">
+
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtLaborId_Labor" value="Labor: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtLaborId_Labor" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtLaborId_Labor}"
+													required="false" requiredMessage="Seleccione una labor">
+													<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectLaborId}" />
+													<p:ajax
+														listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaNombreLaborMo}"
+														update="txtNombreLabor" />
+
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtNumeroTiquete" value="N° remisión: "
+													style="font-size: 0.8em;" />
+												<p:inputText id="txtNumeroTiquete" disabled="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNumeroTiquete}"
+													required="false" size="12"
+													requiredMessage="Indique el número">
+													<f:converter converterId="javax.faces.Long" />
+												</p:inputText>
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+
+												<p:outputLabel for="txtNivel1Id" value="Zona: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel1Id" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel1Id}"
+													required="false" requiredMessage="Seleccione una zona">
+													<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel1}" />
+													<p:ajax update="txtNivel2Id" />
+
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtNivel2Id" value="Hacienda: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel2Id" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel2Id}"
+													required="false" requiredMessage="Seleccione una hacienda">
+													<f:selectItem itemLabel="Seleccione una hacienda"
+														itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel2}" />
+													<p:ajax update="txtNivel3Id" />
+
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+
+												<p:outputLabel for="txtNivel3Id" value="Bloque: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel3Id" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel3Id}"
+													required="false"
+													requiredMessage="Seleccione un bloque del cultivo">
+													<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel3}" />
+													<p:ajax update="txtNivel4Id_Nivel4" />
+
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel4Id_Nivel4}"
+													required="false" requiredMessage="Seleccione un lote">
+													<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel4}" />
+													<p:ajax
+														listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaNombreNivel2_Nivel4Mo}"
+														update="txtNombreNivel4, txtNombreNivel2"
+														process="@this,txtNivel4Id_Nivel4, txtNivel2Id" />
+
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtPesoPromedio" value="Peso promedio: "
+													style="font-size: 0.8em;" />
+												<p:inputText id="txtPesoPromedio" disabled="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtPesoPromedio}"
+													required="false" size="12"
+													requiredMessage="Indique el peso">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+											</h:panelGrid>
+										</p:column>
+
+
+									</p:row>
+
+
+
+								</p:panelGrid>
+
+
+								<p:scrollPanel mode="native" style="width:950px;height:270px">
+									<p:messages id="msgMO" closable="true" showDetail="true" />
+
+									<p:panelGrid id="gridDatPlanillaNominaDet">
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtTrabId_Trabajador"
+														value="Trabajador: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+														filter="true" filterMatchMode="contains"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtTrabId_Trabajador}"
+														style="width: 100%;font-size: 0.8em;" required="false"
+														requiredMessage="Seleccione un trabajador">
+														<f:selectItem itemLabel="Seleccione un trabajador"
+															itemValue="" />
+														<f:selectItems
+															value="#{datEjecucionLaboresNoPlanificaV2View.selectTrabajador}" />
+														<p:ajax
+															listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaCodTrabajador}"
+															update="txtCodTrabajadorNomina" />
+
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtCeptoNominaId_ConceptoNomina"
+														value="Concepto nómina: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtCeptoNominaId_ConceptoNomina"
+														effect="fade" filter="true" filterMatchMode="contains"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtCeptoNominaId_ConceptoNomina}"
+														style="width: 100%;font-size: 0.8em;" required="false"
+														requiredMessage="Seleccione un concepto">
+														<f:selectItem itemLabel="Seleccione un concepto"
+															itemValue="" />
+														<f:selectItems
+															value="#{datEjecucionLaboresNoPlanificaV2View.selectCeptoNominaId}" />
+														<p:ajax
+															listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaCodConceptoNomina}"
+															update="txtCodConceptoNomina" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtUdadMedPago"
+														value="Unidad de Pago: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtUdadMedPago" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="width: 100%;font-size: 0.8em;"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtUdadMedPago}"
+														required="false"
+														requiredMessage="Seleccione una unidad de pago">
+
+														<f:selectItem itemLabel="Seleccione una  unidad de pago"
+															itemValue="" />
+														<f:selectItems
+															value="#{datEjecucionLaboresNoPlanificaV2View.selectUdadMedPago}" />
+
+														<p:ajax
+															listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaCodUdadMedMo}"
+															update="txtCodUmPagoNomina" />
+
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtEstadoIncidencia"
+														value="Estado de incidencia: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtEstadoIncidencia" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.8em;"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtEstadoIncidencia}"
+														required="false" requiredMessage="Seleccione un estado">
+														<f:selectItem itemLabel="Indique un estado" itemValue="" />
+														<f:selectItem itemLabel="Alto" itemValue="Alto" />
+														<f:selectItem itemLabel="Medio" itemValue="Medio" />
+														<f:selectItem itemLabel="Bajo" itemValue="Bajo" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtAlturaPlanta" value="Altura mata: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtAlturaPlanta" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.8em;"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtAlturaPlanta}"
+														required="false" requiredMessage="Seleccione un estado">
+														<f:selectItem itemLabel="Indique un estado" itemValue="" />
+														<f:selectItem itemLabel="Pequeña" itemValue="Pequeña" />
+														<f:selectItem itemLabel="Grande" itemValue="Grande" />
+													</p:selectOneMenu>
+
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel for="txtHorasTrabajadas"
+														value="Horas trabajadas: " style="font-size: 0.8em;" />
+													<p:spinner id="txtHorasTrabajadas" disabled="false" size="10"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtHorasTrabajadas}"
+														required="false" min="0" max="24" stepFactor="0.25"
+														requiredMessage="Indique el N° de horas trabajadas">
+														
+													</p:spinner>
+													
+													
+													<p:outputLabel for="txtCantidadPago"
+														value="Cantidad (Pago): " style="font-size: 0.8em;" />
+													<p:inputText id="txtCantidadPago" disabled="false" size="10"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtCantidadPago}"
+														required="false"
+														requiredMessage="Indique la cantidad a pagar">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+
+
+													<p:outputLabel for="txtCantidadDescontar"
+														value="Cantidad a descontar: " style="font-size: 0.8em;" />
+													<p:inputText id="txtCantidadDescontar" disabled="false" size="10"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtCantidadDescontar}"
+														required="false"
+														requiredMessage="Indique la cantidad a descontar">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+													
+													
+													
+
+													<p:outputLabel for="txtValorUnitario" value="Tarifa: "
+														style="font-size: 0.8em;" />
+													<p:panelGrid columns="2">
+														<p:inputText id="txtValorUnitario" disabled="false" size="10"
+															binding="#{datEjecucionLaboresNoPlanificaV2View.txtValorUnitario}"
+															required="false"
+															requiredMessage="Indique el valor unitario">
+
+														</p:inputText>
+														<p:commandButton icon="ui-icon-calculator"
+															value="Calcular">
+															<p:ajax process="@all" update="txtValorUnitario"
+																listener="#{datEjecucionLaboresNoPlanificaV2View.ConsultarTarifaPago}" />
+														</p:commandButton>
+
+													</p:panelGrid>
+
+													<p:outputLabel for="txtCostoTotal" value="Costo total: "
+														style="font-size: 0.8em;" />
+													<p:panelGrid columns="2">
+														<p:inputText id="txtCostoTotal" size="10"
+															binding="#{datEjecucionLaboresNoPlanificaV2View.txtCostoTotal}"
+															disable="false">
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputText>
+														<p:commandButton icon="ui-icon-calculator"
+															value="Calcular">
+															<p:ajax process="@all" update="txtCostoTotal"
+																listener="#{datEjecucionLaboresNoPlanificaV2View.listener_calcularCostoTotal}" />
+														</p:commandButton>
+													</p:panelGrid>
+													
+													
+													
+												</h:panelGrid>
+											</p:column>
+
+										</p:row>
+									</p:panelGrid>
+
+									<div class="ui-g" style="width: 0%; font-size: 0.0em;"
+										align="left">
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												id="txtCodConceptoNomina"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtCodConceptoNomina}" />
+										</div>
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												id="txtCodTrabajadorNomina"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtCodTrabajadorNomina}" />
+										</div>
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												id="txtCodUmPagoNomina"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtCodUmPagoNomina}" />
+										</div>
+
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												id="txtNombreLabor"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreLabor}" />
+										</div>
+
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												id="txtNombreNivel2"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreNivel2}" />
+										</div>
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												id="txtNombreNivel4"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreNivel4}" />
+										</div>
+
+									</div>
+
+									<h:panelGrid columns="2" style="margin:10px;">
+										<p:commandButton id="btnAgregarNomina"
+											icon="ui-icon-plusthick"
+											process="@this,txtValorUnitario,txtCantidadPago,txtUdadMedPago,
+															txtCeptoNominaId_ConceptoNomina,txtTrabId_Trabajador,
+															txtCodConceptoNomina,txtCodTrabajadorNomina,txtCodUmPagoNomina,
+															txtCantidadDescontar,txtEstadoIncidencia,txtAlturaPlanta,
+															txtNombreLabor,	txtNombreNivel2,txtNombreNivel4,
+															txtNivel1Id, txtNivel2Id, txtNivel3Id, txtNivel4Id_Nivel4, txtPesoPromedio
+															"
+											binding="#{datEjecucionLaboresNoPlanificaV2View.btnAgregarNomina}"
+											value="Agregar"
+											action="#{datEjecucionLaboresNoPlanificaV2View.action_agregarPlanilla}"
+											ajax="true" update="tablaDetPlanillaDet, msgMO" />
+
+										<p:commandButton id="btnlimpiar1" icon="ui-icon-trash"
+											value="Limpiar">
+											<p:ajax update="gridDatPlanillaNominaDet" resetValues="true" />
+										</p:commandButton>
+
+
+									</h:panelGrid>
+
+									<p:outputPanel id="dataTableNomina">
+										<p:dataTable id="tablaDetPlanillaDet"
+											value="#{datEjecucionLaboresNoPlanificaV2View.dataPlanillaDet}"
+											var="listaDetPlanillaDet" paginator="true" rows="5"
+											rowsPerPageTemplate="5,10,15" reflow="true" editable="true"
+											editMode="cell"	widgetVar="cellManoObra">
+
+											<p:ajax event="cellEdit" listener="#{datEjecucionLaboresNoPlanificaV2View.onCellEditManoObra}" />
+
+											<p:column headerText="Hda" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.nombreNivel2}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.nivel2Id.nivel2Id}">
+															<f:selectItems value="#{datEjecucionLaboresPlanificaV2View.selectNivel2Edit}"
+															var="var1" itemValue="#{var1}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Lote" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.nombreNivel4}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.nivel4.nivel4Id}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel4Edit}"
+															var="var2" itemValue="#{var2}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Labor" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.nombreLabor}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.laborId.laborId}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectLaborId}"
+															var="var3" itemValue="#{var3}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Trabajador" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.codTrabajador}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.trabId_Trabajador.trabId}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectTrabajador}"
+															var="var4" itemValue="#{var4}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Concepto" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPlanillaDet.codConceptoNomina}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.ceptoNominaId_ConceptoNomina.ceptoNominaId}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectCeptoNominaId}"
+															var="var5" itemValue="#{var5}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="U.M(Pago)" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.codUmPago}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.udadMedIdPago.udadMedId}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectUdadMedPago}"
+															var="var6" itemValue="#{var6}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Cantidad" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.cantidadPago}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPlanillaDet.cantidadPago}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Cant. Descontar"
+												style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPlanillaDet.cantidadDescontar}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetPlanillaDet.cantidadDescontar}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Estado" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPlanillaDet.estadoIncidencia}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.estadoIncidencia}">
+																<f:selectItem itemLabel="Alto" itemValue="Alto" />
+																<f:selectItem itemLabel="Medio" itemValue="Medio" />
+																<f:selectItem itemLabel="Bajo" itemValue="Bajo" />
+														</h:selectOneMenu>	
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Altura mata" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.alturaPlanta}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu value="#{listaDetPlanillaDet.alturaPlanta}">
+															<f:selectItem itemLabel="Pequeña" itemValue="Pequeña" />
+															<f:selectItem itemLabel="Grande" itemValue="Grande" />
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											
+											<p:column headerText="No. Remisión" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.numeroTiquete}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPlanillaDet.numeroTiquete}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="P.Promedio" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.pesoPromedio}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPlanillaDet.pesoPromedio}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											<p:column headerText="Tarifa" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.valorUnitario}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPlanillaDet.valorUnitario}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="C. Total" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.costoTotal}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPlanillaDet.costoTotal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<f:attribute name="selectedDatPlanillaDet"
+															value="#{listaDetPlanillaDet}" />
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datEjecucionLaboresNoPlanificaV2View.actionDeleteDatPlanillaNominaDet}"
+														title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaDetPlanillaDet :dialogDatPlanillaNomina">
+														<f:attribute name="selectedDatPlanillaDet"
+															value="#{listaDetPlanillaDet}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								</p:scrollPanel>
+
+							</p:tab>
+
+							<p:tab title="Maquinaria">
+
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtLaborId_LaborMaq" value="Labor: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtLaborId_LaborMaq" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtLaborId_LaborMaq}"
+													required="false" requiredMessage="Seleccione una labor">
+													<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectLaborIdMaq}" />
+													<p:ajax
+														listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaNombreLaborMaq}"
+														update="txtNombreLaborMaq" />
+
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+
+												<p:outputLabel for="txtNivel1IdMaq" value="Zona: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel1IdMaq" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel1IdMaq}"
+													required="false" requiredMessage="Seleccione una zona">
+													<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel1Maq}" />
+													<p:ajax update="txtNivel2IdMaq" />
+
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtNivel2IdMaq" value="Hacienda: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel2IdMaq" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel2IdMaq}"
+													required="false" requiredMessage="Seleccione una hacienda">
+													<f:selectItem itemLabel="Seleccione una hacienda"
+														itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel2Maq}" />
+													<p:ajax update="txtNivel3IdMaq" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+
+												<p:outputLabel for="txtNivel3IdMaq" value="Bloque: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel3IdMaq" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel3IdMaq}"
+													required="false"
+													requiredMessage="Seleccione un bloque del cultivo">
+													<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel3Maq}" />
+													<p:ajax update="txtNivel4Id_Nivel4Maq" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtNivel4Id_Nivel4Maq" value="Lote: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel4Id_Nivel4Maq" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel4Id_Nivel4Maq}"
+													required="false" requiredMessage="Seleccione un lote">
+													<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel4Maq}" />
+													<p:ajax
+														process="@this, txtNivel2IdMaq,txtNivel4Id_Nivel4Maq "
+														listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaNombreNivel2_Nivel4Maq}"
+														update="txtNombreNivel4Maq, txtNombreNivel2Maq" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+
+									</p:row>
+								</p:panelGrid>
+
+
+
+								<p:scrollPanel mode="native" style="width:950px;height:270px">
+
+									<p:messages id="msgMQ" closable="true" showDetail="true" />
+
+									<p:panelGrid id="gridDatMaquinariaDet">
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+
+
+													<p:outputLabel for="txtEquipoId_Equipo" value="Equipo: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtEquipoId_Equipo" effect="fade"
+														filter="true" filterMatchMode="contains" autoWidth="false"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtEquipoId_Equipo}"
+														style="width: 100%;font-size: 0.8em;" required="false"
+														requiredMessage="Seleccione un equipo">
+														<f:selectItem itemLabel="Seleccione un equipo"
+															itemValue="" />
+														<f:selectItems
+															value="#{datEjecucionLaboresNoPlanificaV2View.selectEquipo}" />
+														<p:ajax
+															listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaCodEquipo}"
+															update="txtCodEquipo" />
+
+													</p:selectOneMenu>
+
+
+													<p:outputLabel for="txtHoraInicialMaquinaria"
+														value="Hora inicial: " style="font-size: 0.8em;" />
+													<p:calendar id="txtHoraInicialMaquinaria"
+														timeZone="America/Bogota" disabled="false"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtHoraInicialMaquinaria}"
+														pattern="HH:mm" timeOnly="true" locale="es"
+														required="false" size="10"
+														requiredMessage="Indique la hora inicial">
+
+													</p:calendar>
+
+													<p:outputLabel for="txtHoraFinalMaquinaria"
+														value="Hora Final: " style="font-size: 0.8em;" />
+													<p:calendar id="txtHoraFinalMaquinaria"
+														timeZone="America/Bogota" disabled="false"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtHoraFinalMaquinaria}"
+														pattern="HH:mm" timeOnly="true" locale="es"
+														required="false" size="10"
+														requiredMessage="Indique la hora final">
+													</p:calendar>
+
+													<p:inputText style="visibility:hidden" id="txtCodEquipo"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtCodEquipo}" />
+
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtHorometroInicalMq"
+														value="Horómetro inicial: " style="font-size: 0.8em;" />
+													<p:inputText id="txtHorometroInicalMq" disabled="false"
+														size="10"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtHorometroInicalMq}">
+														<f:converter converterId="javax.faces.Number" />
+
+													</p:inputText>
+
+													<p:outputLabel for="txtHorometroFinalMq"
+														value="Horómetro final: " style="font-size: 0.8em;" />
+													<p:inputText id="txtHorometroFinalMq" disabled="false"
+														size="10"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtHorometroFinalMq}">
+														<f:converter converterId="javax.faces.Number" />
+													</p:inputText>
+
+													<p:outputLabel for="txtUdadMaquinaria"
+														value="Unidad de Pago: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtUdadMaquinaria" effect="fade"
+														filter="true" filterMatchMode="contains" autoWidth="false"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtUdadMaquinaria}"
+														style="width: 80%;font-size: 0.8em;" required="false"
+														requiredMessage="Seleccione una unidad de pago">
+														<f:selectItem itemLabel="Unidad de pago" itemValue="" />
+														<f:selectItems
+															value="#{datEjecucionLaboresNoPlanificaV2View.selectUdadMaquinaria}" />
+														<p:ajax
+															listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaCodUmMaquinaria}"
+															update="txtCodUmPagoMaquinaria" />
+
+													</p:selectOneMenu>
+
+													<p:inputText style="visibility:hidden"
+														id="txtCodUmPagoMaquinaria"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtCodUmPagoMaquinaria}" />
+
+												</h:panelGrid>
+											</p:column>
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtTotalHorasMaquinaria"
+														value="Horas: " style="font-size: 0.8em;" />
+													<p:inputText id="txtTotalHorasMaquinaria" disabled="false"
+														size="10"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtTotalHorasMaquinaria}"
+														required="false" requiredMessage="Indique el # horas">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+
+
+													<p:outputLabel for="txtValorUnitMaquinaria"
+														value="Tarifa: " style="font-size: 0.8em;" />
+													<p:panelGrid columns="2">
+														<p:inputText id="txtValorUnitMaquinaria" disabled="false"
+															size="12"
+															binding="#{datEjecucionLaboresNoPlanificaV2View.txtValorUnitMaquinaria}"
+															required="false"
+															requiredMessage="Indique el valor unitario">
+
+														</p:inputText>
+														<p:commandButton icon="ui-icon-calculator"
+															value="Calcular">
+															<p:ajax process="@all" update="txtValorUnitMaquinaria"
+																listener="#{datEjecucionLaboresNoPlanificaV2View.ConsultarTarifaPagoMaquinaria}" />
+														</p:commandButton>
+
+													</p:panelGrid>
+
+													<p:outputLabel for="txtCostoTotalMaquinaria"
+														value="Costo total: " style="font-size: 0.8em;" />
+													<p:panelGrid columns="2">
+														<p:inputText id="txtCostoTotalMaquinaria" size="12"
+															binding="#{datEjecucionLaboresNoPlanificaV2View.txtCostoTotalMaquinaria}"
+															required="false"
+															requiredMessage="No se tiene el costo total"
+															disable="true">
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputText>
+														<p:commandButton icon="ui-icon-calculator"
+															value="Calcular">
+															<p:ajax
+																process="@this, txtValorUnitMaquinaria, txtTotalHorasMaquinaria"
+																listener="#{datEjecucionLaboresNoPlanificaV2View.listener_calcularCostoTotalMaquinaria}"
+																update="txtCostoTotalMaquinaria" />
+														</p:commandButton>
+													</p:panelGrid>
+													<div>
+
+														<div class="ui-g-1">
+															<p:inputText style="visibility:hidden; font-size: 0em;"
+																id="txtNombreLaborMaq"
+																binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreLaborMaq}" />
+														</div>
+
+														<div class="ui-g-1">
+															<p:inputText style="visibility:hidden; font-size: 0em;"
+																id="txtNombreNivel2Maq"
+																binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreNivel2Maq}" />
+														</div>
+														<div class="ui-g-1">
+															<p:inputText style="visibility:hidden; font-size: 0em;"
+																id="txtNombreNivel4Maq"
+																binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreNivel4Maq}" />
+														</div>
+													</div>
+
+
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<h:panelGrid columns="2">
+										<p:commandButton id="btnAgregarMaquinaria"
+											style="margin:10px;" icon="ui-icon-plusthick"
+											process="@this,	txtEquipoId_Equipo, txtHoraInicialMaquinaria,
+																txtHoraFinalMaquinaria, txtUdadMaquinaria,
+																txtTotalHorasMaquinaria, txtValorUnitMaquinaria,
+																txtCostoTotalMaquinaria, txtCodUmPagoMaquinaria,
+																txtCodEquipo,txtHorometroInicalMq, txtHorometroFinalMq,
+																txtNombreLaborMaq,	txtNombreNivel2Maq,txtNombreNivel4Maq,
+																 txtNivel2IdMaq,  txtNivel4Id_Nivel4Maq "
+											binding="#{datEjecucionLaboresNoPlanificaV2View.btnAgregarMaquinaria}"
+											value="Agregar"
+											action="#{datEjecucionLaboresNoPlanificaV2View.action_agregarServicio}"
+											ajax="true" update="tablaDetServicioDet, msgMQ" />
+
+										<p:commandButton id="btnlimpiar2" icon="ui-icon-trash"
+											value="Limpiar">
+											<p:ajax update="gridDatMaquinariaDet" resetValues="true" />
+										</p:commandButton>
+
+
+									</h:panelGrid>
+
+									<p:outputPanel id="dataTableServicios">
+										<p:dataTable id="tablaDetServicioDet"
+											value="#{datEjecucionLaboresNoPlanificaV2View.dataServicioDet}"
+											var="listaDetServicioDet" paginator="true" rows="5"
+											reflow="true" editable="true" editMode="cell"
+													widgetVar="cellMaquinaria">
+													
+											<p:ajax event="cellEdit" listener="#{datEjecucionLaboresNoPlanificaV2View.onCellEditMaquinaria}"/>
+											
+											<p:column headerText="Hda" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.nombreNivel2}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetServicioDet.nivel2Id.nivel2Id}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel2MaqEdit}"
+															var="var7" itemValue="#{var7}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Lote" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.nombreNivel4}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetServicioDet.nivel4.nivel4Id}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel4MaqEdit}"
+															var="var8" itemValue="#{var8}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Labor" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.nombreLabor}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetServicioDet.laborId.laborId}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectLaborIdMaq}"
+															var="var9" itemValue="#{var9}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Equipo" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.codigoEquipo}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetServicioDet.equipoId_Equipo.equipoId}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectEquipo}"
+															var="var10" itemValue="#{va10}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="HoraIni" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.horaInicial}">
+															<f:convertDateTime type="time" pattern="HH:mm" />
+														</h:outputText>
+
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetServicioDet.horaInicial}">
+															<f:convertDateTime type="time" pattern="HH:mm" />
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="HoraFin" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.horaFinal}">
+															<f:convertDateTime type="time" pattern="HH:mm" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetServicioDet.horaFinal}">
+															<f:convertDateTime type="time" pattern="HH:mm" />
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="HorómetroInic"
+												style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetServicioDet.horometroInicial}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetServicioDet.horometroInicial}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="HorómetroFin" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetServicioDet.horometroFinal}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetServicioDet.horometroFinal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="U.M(Pago)" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.codigoUmPago}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetServicioDet.udadMedPago.udadMedId}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectUdadMaquinaria}"
+															var="var11" itemValue="#{va11}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Horas" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.totalHoras}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetServicioDet.totalHoras}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Tarifa" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.valorUnit}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetServicioDet.valorUnit}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="C. Total" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.costoTotal}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetServicioDet.costoTotal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<f:attribute name="selectedDatServicioDet"
+															value="#{listaDetServicioDet}" />
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datEjecucionLaboresNoPlanificaV2View.actionDeleteDetServicioDet}"
+														title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaDetServicioDet :dialogDatPlanillaNomina">
+														<f:attribute name="selectedDatServicioDet"
+															value="#{listaDetServicioDet}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								</p:scrollPanel>
+
+							</p:tab>
+
+							<p:tab title="Productos/Insumos">
+
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtLaborId_LaborProd" value="Labor: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtLaborId_LaborProd" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtLaborId_LaborProd}"
+													required="false" requiredMessage="Seleccione una labor">
+													<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectLaborIdProd}" />
+													<p:ajax
+														listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaNombreLaborProd}"
+														update="txtNombreLaborProd" />
+
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+
+												<p:outputLabel for="txtNivel1IdProd" value="Zona: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel1IdProd" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel1IdProd}"
+													required="false" requiredMessage="Seleccione una zona">
+													<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel1Prod}" />
+													<p:ajax update="txtNivel2IdProd" />
+
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtNivel2IdProd" value="Hacienda: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel2IdProd" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel2IdProd}"
+													required="false" requiredMessage="Seleccione una hacienda">
+													<f:selectItem itemLabel="Seleccione una hacienda"
+														itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel2Prod}" />
+													<p:ajax update="txtNivel3IdProd" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+
+												<p:outputLabel for="txtNivel3IdProd" value="Bloque: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel3IdProd" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel3IdProd}"
+													required="false"
+													requiredMessage="Seleccione un bloque del cultivo">
+													<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel3Prod}" />
+													<p:ajax update="txtNivel4Id_Nivel4Prod" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtNivel4Id_Nivel4Prod" value="Lote: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel4Id_Nivel4Prod" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel4Id_Nivel4Prod}"
+													required="false" requiredMessage="Seleccione un lote">
+													<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel4Prod}" />
+													<p:ajax
+														process="@this, txtNivel2IdProd,txtNivel4Id_Nivel4Prod "
+														listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaNombreNivel2_Nivel4Prod}"
+														update="txtNombreNivel4Prod, txtNombreNivel2Prod" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+
+									</p:row>
+								</p:panelGrid>
+
+
+								<p:scrollPanel mode="native" style="width:950px;height:270px">
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel for="txtAlmacenId_Almacen" value="Almacén: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtAlmacenId_Almacen" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="width: 100%;font-size: 0.8em;" autoWidth="false"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtAlmacenId_Almacen}"
+														required="false" requiredMessage="Seleccione un almacén">
+														<f:selectItem itemLabel="Seleccione un almacén"
+															itemValue="" />
+														<f:selectItems
+															value="#{datEjecucionLaboresNoPlanificaV2View.selectAlmacen}" />
+														<p:ajax
+															listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaNombreAlmacenProd}"
+															update="txtNombreAlmacenProd" />
+
+													</p:selectOneMenu>
+
+
+
+												</h:panelGrid>
+											</p:column>
+
+
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtNumTinas"
+														value="Área, #Tinas y/o Plantas: "
+														style="font-size: 0.8em;" />
+													<p:inputText id="txtNumTinas"
+														style="width: 80%;font-size: 0.8em;"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtNumTinas}"
+														required="false" requiredMessage="Indique el # de tinas">
+													</p:inputText>
+
+
+
+												</h:panelGrid>
+											</p:column>
+
+										</p:row>
+									</p:panelGrid>
+
+									<p:panel id="PanelProductosInsumos">
+
+										<p:messages id="msg1" closable="true" showDetail="true" />
+
+										<p:panelGrid id="gridDetProd">
+											<p:row>
+												<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel value="Producto: "
+															style="font-size: 0.8em; " />
+														<p:selectOneMenu id="txtProductoId_Producto" effect="fade"
+															filter="true" filterMatchMode="contains"
+															style="width: 100%;font-size: 0.8em;" autoWidth="false"
+															binding="#{datEjecucionLaboresNoPlanificaV2View.txtProductoId_Producto}">
+
+															<f:selectItem itemLabel="Seleccione un producto"
+																itemValue="" />
+															<f:selectItems
+																value="#{datEjecucionLaboresNoPlanificaV2View.selectProductoId}" />
+															<p:ajax
+																listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaUmProducto}"
+																update="txtUdadMedIdProducto,txtNombreProducto, txtNombreUdadMed" />
+														</p:selectOneMenu>
+
+														<p:outputLabel value="Unidad Aplic. "
+															style="font-size: 0.8em;" />
+														<p:selectOneMenu id="txtUdadMedIdProducto" effect="fade"
+															filter="true" filterMatchMode="contains"
+															style="width: 100%;font-size: 0.8em;" autoWidth="false"
+															binding="#{datEjecucionLaboresNoPlanificaV2View.txtUdadMedIdProducto}">
+
+															<f:selectItem itemLabel="Seleccione una unidad de medida"
+																itemValue="" />
+															<f:selectItems
+																value="#{datEjecucionLaboresNoPlanificaV2View.selectUdadMedProducto}" />
+														</p:selectOneMenu>
+
+
+
+													</h:panelGrid>
+												</p:column>
+
+												<p:column>
+													<h:panelGrid columns="2">
+
+														<p:outputLabel value="Cantidad:"
+															style="font-size: 0.8em; " />
+														<p:inputText id="txtCantidadAplicada"
+															style="font-size: 0.8em;"
+															binding="#{datEjecucionLaboresNoPlanificaV2View.txtCantidadAplicada}"
+															disable="true">
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputText>
+
+														<p:outputLabel for="txtValorUnitInsumos" value="Precio: "
+															style="font-size: 0.8em; " />
+														<p:panelGrid columns="2">
+															<p:inputText id="txtValorUnitInsumos" disabled="false"
+																style="font-size: 0.8em; "
+																binding="#{datEjecucionLaboresNoPlanificaV2View.txtValorUnitInsumos}"
+																required="false"
+																requiredMessage="Indique el valor unitario">
+															</p:inputText>
+
+															<p:commandButton icon="ui-icon-calculator"
+																value="Calcular">
+																<p:ajax process="@all" update="txtValorUnitInsumos"
+																	listener="#{datEjecucionLaboresNoPlanificaV2View.ConsultarPrecioPromProductoDet()}" />
+															</p:commandButton>
+														</p:panelGrid>
+
+														<p:outputLabel value="Costo: " style="font-size: 0.8em;" />
+														<p:panelGrid columns="2">
+															<p:inputText id="txtCostoTotalInsumos"
+																binding="#{datEjecucionLaboresNoPlanificaV2View.txtCostoTotalInsumos}"
+																disable="true">
+																<f:converter converterId="javax.faces.Double" />
+															</p:inputText>
+
+															<p:commandButton icon="ui-icon-calculator"
+																value="Calcular">
+																<p:ajax
+																	process="@this,txtValorUnitInsumos,txtCantidadAplicada "
+																	listener="#{datEjecucionLaboresNoPlanificaV2View.listener_calcularCostoTotalInsumos}"
+																	update="txtCostoTotalInsumos" />
+															</p:commandButton>
+														</p:panelGrid>
+
+													</h:panelGrid>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+
+										<div class="ui-g" align="left"
+											style="visibility: hidden; font-size: 0em;">
+											<div class="ui-g-1">
+												<p:inputText style="visibility:hidden; font-size: 0em;"
+													size="0" id="txtNombreProducto"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreProducto}" />
+											</div>
+
+											<div class="ui-g-1">
+												<p:inputText style="visibility:hidden; font-size: 0em;"
+													size="0" id="txtNombreUdadMed"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreUdadMed}" />
+											</div>
+											<div class="ui-g-1">
+												<p:inputText style="visibility:hidden; font-size: 0em;"
+													id="txtNombreLaborProd"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreLaborProd}" />
+											</div>
+
+											<div class="ui-g-1">
+												<p:inputText style="visibility:hidden; font-size: 0em;"
+													size="0" id="txtNombreNivel2Prod"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreNivel2Prod}" />
+											</div>
+											<div class="ui-g-1">
+												<p:inputText style="visibility:hidden; font-size: 0em;"
+													size="0" id="txtNombreNivel4Prod"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreNivel4Prod}" />
+											</div>
+
+											<div class="ui-g-1">
+												<p:inputText style="visibility:hidden; font-size: 0em;"
+													size="0" id="txtNombreAlmacenProd"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreAlmacenProd}" />
+											</div>
+
+
+										</div>
+
+
+										<h:panelGrid columns="2" style="margin:10px;">
+											<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+												process="@this,txtProductoId_Producto,
+											       txtUdadMedIdProducto,
+											       txtCantidadAplicada,txtValorUnitInsumos,txtCostoTotalInsumos,
+											       txtNombreLaborProd,	txtNombreNivel2Prod,txtNombreNivel4Prod,
+																txtNivel2IdProd,  txtNivel4Id_Nivel4Prod, 
+													txtAlmacenId_Almacen, txtNombreAlmacenProd
+													"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.btnAgregar}"
+												value="Agregar"
+												action="#{datEjecucionLaboresNoPlanificaV2View.action_agregarProductos}"
+												ajax="true" update="tablaDetProductos, msg1" />
+
+											<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+												value="Limpiar">
+												<p:ajax update="gridDetProd" resetValues="true" />
+											</p:commandButton>
+
+
+										</h:panelGrid>
+
+										<p:outputPanel id="dataTable">
+											<p:dataTable id="tablaDetProductos"
+												value="#{datEjecucionLaboresNoPlanificaV2View.dataDetProductos}"
+												var="listaDetProductos" paginator="true" rows="5"
+												reflow="true" editable="true" editMode="cell"
+													widgetVar="cellInsumo">
+													
+												<p:ajax event="cellEdit" listener="#{datEjecucionLaboresNoPlanificaV2View.onCellEditInsumo}"/>
+
+												<p:column headerText="Hda" style="font-size: 0.8em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.nombreNivel2}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaDetProductos.nivel2Id.nivel2Id}">
+																<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel2ProdEdit}"
+																var="var12" itemValue="#{var12}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Lote" style="font-size: 0.8em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.nombreNivel4}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaDetProductos.nivel4.nivel4Id}">
+																<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel4ProdEdit}"
+																var="var13" itemValue="#{var13}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Labor" style="font-size: 0.8em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.nombreLabor}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaDetProductos.laborId.laborId}">
+																<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectLaborIdProd}"
+																var="var14" itemValue="#{var14}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Almacén" style="font-size: 0.8em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.nombreAlmacen}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaDetProductos.almacenId.almacenId}">
+																<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectAlmacen}"
+																var="var15" itemValue="#{var15}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+												<p:column headerText="Producto" style="font-size: 0.8em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.nombreProducto}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaDetProductos.productoId_Producto.productoId}">
+																<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectProductoId}"
+																var="var16" itemValue="#{var16}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Unidad (Dosis)"
+													style="font-size: 0.8em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.nombreUdadMed}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaDetProductos.udadMedId_UdadMed.udadMedId}">
+																<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectUdadMedProducto}"
+																var="var17" itemValue="#{var17}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Cantidad Aplicada"
+													style="font-size: 0.8em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaDetProductos.cantidadAplicada}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaDetProductos.cantidadAplicada}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Valor Unitario"
+													style="font-size: 0.8em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.valorUnit}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetProductos.valorUnit}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Costo Total" style="font-size: 0.8em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.costoTotal}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetProductos.costoTotal}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<f:attribute name="selectedDatAplicProd"
+																value="#{listaDetProductos}" />
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{datEjecucionLaboresNoPlanificaV2View.actionDeleteDatAplicProdDet}"
+															title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaDetProductos :dialogDatPlanillaNomina">
+															<f:attribute name="selectedDatAplicProd"
+																value="#{listaDetProductos}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:panel>
+								</p:scrollPanel>
+							</p:tab>
+
+							<p:tab title="Riegos">
+
+								<p:messages id="msgRiego" closable="true" showDetail="true" />
+
+								<p:panelGrid >
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtLaborId_LaborRiego" value="Labor: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtLaborId_LaborRiego" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtLaborId_LaborRiego}"
+													required="false" requiredMessage="Seleccione una labor">
+													<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectLaborIdRiego}" />
+													<p:ajax
+														listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaNombreLaborRiego}"
+														update="txtNombreLaborRiego" />
+
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+
+												<p:outputLabel for="txtNivel1IdRiego" value="Zona: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel1IdRiego" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel1IdRiego}"
+													required="false" requiredMessage="Seleccione una zona">
+													<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel1Riego}" />
+													<p:ajax update="txtNivel2IdRiego" />
+
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtNivel2IdRiego" value="Hacienda: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel2IdRiego" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel2IdRiego}"
+													required="false" requiredMessage="Seleccione una hacienda">
+													<f:selectItem itemLabel="Seleccione una hacienda"
+														itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel2Riego}" />
+													<p:ajax update="txtNivel3IdRiego" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+
+												<p:outputLabel for="txtNivel3IdRiego" value="Bloque: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel3IdRiego" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel3IdRiego}"
+													required="false"
+													requiredMessage="Seleccione un bloque del cultivo">
+													<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel3Riego}" />
+													<p:ajax update="txtNivel4Id_Nivel4Riego" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtNivel4Id_Nivel4Riego" value="Lote: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel4Id_Nivel4Riego" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresNoPlanificaV2View.txtNivel4Id_Nivel4Riego}"
+													required="false" requiredMessage="Seleccione un lote">
+													<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel4Riego}" />
+													<p:ajax
+														process="@this, txtNivel2IdRiego,txtNivel4Id_Nivel4Riego "
+														listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaNombreNivel2_Nivel4Riego}"
+														update="txtNombreNivel4Riego, txtNombreNivel2Riego,  txtAreaRegada" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+
+									</p:row>
+								</p:panelGrid>
+
+
+								<p:scrollPanel mode="native" style="width:950px;height:270px">
+									<p:panelGrid id="gridDataRiego">
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+
+
+													<p:outputLabel for="txtNumeroRiegos"
+														value="#Número de riegos: " style="font-size: 0.8em;" />
+													<p:spinner id="txtNumeroRiegos"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtNumeroRiegos}"
+														required="false" requiredMessage="Indique un número"
+														size="3">
+													</p:spinner>
+
+													<p:outputLabel for="txtTrabIdSupervisorRiego"
+														value="Supervisor: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtTrabIdSupervisorRiego"
+														effect="fade" filter="true" filterMatchMode="contains"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtTrabIdSupervisorRiego}"
+														required="false" autoWidth="false"
+														style="width: 100%;font-size: 0.8em;"
+														requiredMessage="Seleccione un supervisor">
+														<f:selectItem itemLabel="Seleccione un supervisor"
+															itemValue="" />
+														<f:selectItems
+															value="#{datEjecucionLaboresNoPlanificaV2View.selectTrabajadorRiego}" />
+														<p:ajax
+															listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaNombreSupervisorRiego}"
+															update="txtCodigoSupervisorRiego" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtTurnoCampoId_turnoCampo"
+														value="Turno riego: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtTurnoCampoId_turnoCampo"
+														autoWidth="false" effect="fade" filter="true"
+														style="width: 100%;font-size: 0.8em;"
+														filterMatchMode="contains"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtTurnoCampoId_turnoCampo}">
+														<f:selectItem itemLabel="Seleccione un turno" itemValue="" />
+														<f:selectItems
+															value="#{datEjecucionLaboresNoPlanificaV2View.selectTurnoCampo}" />
+														<p:ajax
+															listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaCodTurnoCampo}"
+															update="txtCodigoTurnoCampo" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtSistemaRiegoId_SistemaRiego"
+														value="Sistema de riego: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtSistemaRiegoId_SistemaRiego"
+														autoWidth="false" style="width: 100%;font-size: 0.8em;"
+														effect="fade" filter="true" filterMatchMode="contains"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtSistemaRiegoId_SistemaRiego}"
+														required="false" requiredMessage="Seleccione un sistema">
+														<f:selectItem itemLabel="Seleccione un sistema"
+															itemValue="" />
+														<f:selectItems
+															value="#{datEjecucionLaboresNoPlanificaV2View.selectSistemaRiego}" />
+														<p:ajax
+															listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaNombreSistemaRiegoRiego}"
+															update="txtNombreSistemaRiego" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtInfraId_Infraestructura"
+														value="Fuente de agua: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtInfraId_Infraestructura"
+														effect="fade" filter="true" filterMatchMode="contains"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtInfraId_Infraestructura}"
+														required="false" autoWidth="false"
+														style="width: 100%;font-size: 0.8em;"
+														requiredMessage="Seleccione una fuente de agua">
+														<f:selectItem itemLabel="Seleccione una infraestructura"
+															itemValue="" />
+														<f:selectItems
+															value="#{datEjecucionLaboresNoPlanificaV2View.selectInfraestructura}" />
+														<p:ajax
+															listener="#{datEjecucionLaboresNoPlanificaV2View.listener_ConsultaNombreInfraestructuraRiego}"
+															update="txtNombreInfraestructura" />
+													</p:selectOneMenu>
+
+
+												</h:panelGrid>
+											</p:column>
+											<p:column>
+												<h:panelGrid columns="2">
+
+
+
+													<p:outputLabel for="txtTotalAreaRegada"
+														value="Área total regada: " style="font-size: 0.8em;" />
+													<p:inputText id="txtTotalAreaRegada" disabled="false"
+														size="12"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtTotalAreaRegada}"
+														required="false" requiredMessage="Indique el área total">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+
+													<p:outputLabel for="txtAreaRegada"
+														value="Área regada por lote: " style="font-size: 0.8em;" />
+													<p:inputText id="txtAreaRegada" disabled="false" size="12"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtAreaRegada}"
+														required="false" requiredMessage="Indique el area">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+
+													<p:outputLabel for="txtCaudalNivel4" value="Caudal(L/Sg): "
+														style="font-size: 0.8em;" />
+													<p:inputText id="txtCaudalNivel4" disabled="false"
+														style="width: 60%;" size="10"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtCaudalNivel4}"
+														required="false" requiredMessage="Indique el caudal">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+
+													<p:outputLabel for="txtHoraIniNivel4" value="H.Inicial: "
+														style="font-size: 0.8em;" />
+													<p:calendar id="txtHoraIniNivel4" disabled="false"
+														style="width: 100%;" size="8"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtHoraIniNivel4}"
+														pattern="HH:mm" timeOnly="true" required="false"
+														requiredMessage="Indique la hora inicial">
+													</p:calendar>
+
+													<p:outputLabel for="txtHoraFinNivel4" value="H.Final: "
+														style="font-size: 0.8em;" />
+													<p:calendar id="txtHoraFinNivel4" disabled="false"
+														style="width: 100%;" size="8"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtHoraFinNivel4}"
+														pattern="HH:mm" timeOnly="true" required="false"
+														requiredMessage="Indique la hora final">
+													</p:calendar>
+
+													<p:outputLabel for="txtHoraTotalNivel4"
+														value="Horas de riego: " style="font-size: 0.8em;" />
+													<p:inputText id="txtHoraTotalNivel4" disabled="false"
+														style="width: 60%;" size="8"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtHoraTotalNivel4}"
+														required="false"
+														requiredMessage="Indique las horas de riego">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtVolTotalNivel4"
+														value="(M3) Totales: " style="font-size: 0.8em;" />
+													<p:panelGrid columns="2">
+														<p:inputText id="txtVolTotalNivel4" style="width: 60%;"
+															binding="#{datEjecucionLaboresNoPlanificaV2View.txtVolTotalNivel4}"
+															disable="true">
+															<f:converter converterId="javax.faces.Double" />
+
+														</p:inputText>
+														<p:commandButton icon="ui-icon-calculator"
+															value="Calcular" style="width: 100%;">
+															<p:ajax
+																process="@this,txtHoraTotalNivel4,txtAreaRegada,txtCaudalNivel4 "
+																update="txtVolTotalNivel4"
+																listener="#{datEjecucionLaboresNoPlanificaV2View.listener_calcularVolTotalNivel4}" />
+														</p:commandButton>
+													</p:panelGrid>
+
+													<p:outputLabel for="txtHorometroInicalR"
+														value="Horómetro inicial: " style="font-size: 0.8em;" />
+													<p:inputText id="txtHorometroInicalR" disabled="false"
+														size="10"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtHorometroInicalR}">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+
+													<p:outputLabel for="txtHorometroFinalR"
+														value="Horómetro final: " style="font-size: 0.8em;" />
+													<p:inputText id="txtHorometroFinalR" disabled="false"
+														size="10"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtHorometroFinalR}">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+
+													<p:outputLabel for="txtTotalHorometro"
+														value="Total(Horómetro): " style="font-size: 0.8em;" />
+													<p:inputText id="txtTotalHorometro" disabled="false"
+														size="10"
+														binding="#{datEjecucionLaboresNoPlanificaV2View.txtTotalHorometro}"
+														required="false" requiredMessage="Indique el caudal">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+
+									<div class="ui-g" align="left"
+										style="width: 0%; font-size: 0.0em;">
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												size="0" id="txtNombreLaborRiego"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreLaborRiego}" />
+										</div>
+
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												size="0" id="txtNombreNivel2Riego"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreNivel2Riego}" />
+										</div>
+
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												size="0" id="txtNombreNivel4Riego"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreNivel4Riego}" />
+										</div>
+
+
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												size="0" id="txtNombreSistemaRiego"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreSistemaRiego}" />
+										</div>
+
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												size="0" id="txtNombreInfraestructura"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtNombreInfraestructura}" />
+										</div>
+
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												size="0" id="txtCodigoSupervisorRiego"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtCodigoSupervisorRiego}" />
+										</div>
+
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												size="0" id="txtCodigoTurnoCampo"
+												binding="#{datEjecucionLaboresNoPlanificaV2View.txtCodigoTurnoCampo}" />
+										</div>
+
+									</div>
+
+
+
+
+									<h:panelGrid columns="2">
+										<p:commandButton id="btnAgregarRiego" style="margin:10px;"
+											icon="ui-icon-plusthick"
+											process="@this,	
+											txtNumeroRiegos,	txtNivel1IdRiego,	txtNombreLaborRiego,
+											txtHorometroFinalR,	txtNivel2IdRiego,	txtNombreInfraestructura,
+											txtHorometroInicalR,	txtNivel3IdRiego,	txtCodigoSupervisorRiego,
+											txtTotalAreaRegada,	txtNivel4Id_Nivel4Riego,	txtNombreSistemaRiego,
+											txtTotalHorometro,	txtLaborId_LaborRiego,	txtCodigoTurnoCampo,
+											txtTurnoCampoId_turnoCampo,	txtNombreNivel2Riego,	
+												txtNombreNivel4Riego, txtVolTotalNivel4																							
+											"
+											binding="#{datEjecucionLaboresNoPlanificaV2View.btnAgregarRiego}"
+											value="Agregar"
+											action="#{datEjecucionLaboresNoPlanificaV2View.action_agregarRiego}"
+											ajax="true" update="tablaDatRiego, msgRiego" />
+
+										<p:commandButton id="btnlimpiar3" icon="ui-icon-trash"
+											value="Limpiar">
+											<p:ajax update="gridDataRiego" resetValues="true" />
+										</p:commandButton>
+
+
+									</h:panelGrid>
+
+									<p:outputPanel id="dataTableRiegos">
+										<p:dataTable id="tablaDatRiego"
+											value="#{datEjecucionLaboresNoPlanificaV2View.dataRiegos}"
+											var="listaDatRiego" paginator="true" rows="5" reflow="true"
+											editable="true" editMode="cell"
+													widgetVar="cellRiego">
+													
+											<p:ajax event="cellEdit" listener="#{datEjecucionLaboresNoPlanificaV2View.onCellEditRiegos}"/>
+
+											<p:column headerText="Hda" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDatRiego.nivel2Nombre}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDatRiego.nivel2Id.nivel2Id}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel2RiegoEdit}"
+															var="var18" itemValue="#{var18}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Lote" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDatRiego.nivel4Nombre}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDatRiego.nivel4Id_Nivel4.nivel4Id}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectNivel4RiegoEdit}"
+															var="var19" itemValue="#{var19}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Labor" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDatRiego.laborNombre}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDatRiego.laborId_Labor.laborId}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectLaborIdRiego}"
+															var="var20" itemValue="#{var20}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="F.(Agua)" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDatRiego.nombreInfraestructura}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDatRiego.infraId_Infraestructura.infraId}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectInfraestructura}"
+															var="var21" itemValue="#{var21}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="S. Riego" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDatRiego.sistemaRieNombre}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDatRiego.sistemaRiegoId_SistemaRiego.sistemaRiegoId}">
+															<f:selectItems value="#{datEjecucionLaboresNoPlanificaV2View.selectSistemaRiego}"
+															var="var22" itemValue="#{var22}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Área Regada" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDatRiego.areaRegada}">
+														</h:outputText>
+
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDatRiego.areaRegada}">
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Hras de Riego"
+												style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDatRiego.horaTotalNivel4}">
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDatRiego.horaTotalNivel4}">
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Total. Horómetro"
+												style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDatRiego.totalHorometro}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDatRiego.totalHorometro}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Caudal(Ls)" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDatRiego.caudalNivel4}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDatRiego.caudalNivel4}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Vól(M3)" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDatRiego.volTotalNivel4}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDatRiego.volTotalNivel4}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<f:attribute name="selectedDatRiegos"
+															value="#{listaDatRiego}" />
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datEjecucionLaboresNoPlanificaV2View.actionDeleteDatRiego}"
+														title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaDatRiego :dialogDatPlanillaNomina">
+														<f:attribute name="selectedDatRiegos"
+															value="#{listaDatRiego}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								</p:scrollPanel>
+							</p:tab>
+
+
+						</p:tabView>
+
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datEjecucionLaboresNoPlanificaV2View.btnSave}"
+									value="Grabar"
+									action="#{datEjecucionLaboresNoPlanificaV2View.action_save()}"
+									update=":dialogDatPlanillaNomina :frm:panelDataTableDatPlanillaNomina" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datEjecucionLaboresNoPlanificaV2View.action_clear()}"
+									process="@this" update=":dialogDatPlanillaNomina" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datEjecucionLaboresNoPlanificaV2View.showDialog}"
+					modal="true" width="600">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datEjecucionLaboresNoPlanificaV2View.txtObservacionAnularReg}"
+									rows="5" cols="26" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+
+								<p:inputText style="font-size: 0.8em; visibility:hidden"
+									id="txtPlanillaNominaId"
+									binding="#{datEjecucionLaboresNoPlanificaV2View.txtPlanillaNominaId}">
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false"
+									binding="#{datEjecucionLaboresNoPlanificaV2View.btnDelete}"
+									value="Grabar"
+									action="#{datEjecucionLaboresNoPlanificaV2View.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatPlanillaNomina" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datEjecucionLaboresNoPlanificaV2View.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

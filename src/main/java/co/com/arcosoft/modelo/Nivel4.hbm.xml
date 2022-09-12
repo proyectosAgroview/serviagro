@@ -1,0 +1,481 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Nivel4" table="nivel4" >
+        <id name="nivel4Id" type="java.lang.Long">
+            <column name="nivel4_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="etapa" class="co.com.arcosoft.modelo.Etapa" fetch="select" >
+            <column name="etapa_id" />
+        </many-to-one>
+        <many-to-one name="grpSuelo" class="co.com.arcosoft.modelo.GrpSuelo" fetch="select">
+            <column name="grupo_suelo" />
+        </many-to-one>
+        <many-to-one name="estClimat" class="co.com.arcosoft.modelo.EstClimat" fetch="select">
+            <column name="est_climat_id" />
+        </many-to-one>
+        <many-to-one name="ocupacion" class="co.com.arcosoft.modelo.Ocupacion" fetch="select">
+            <column name="ocupacion_id" />
+        </many-to-one>
+        <many-to-one name="zonAgroec" class="co.com.arcosoft.modelo.ZonAgroec" fetch="select">
+            <column name="zon_agroec" />
+        </many-to-one>
+        <many-to-one name="faseFenologica" class="co.com.arcosoft.modelo.FaseFenologica" fetch="select">
+            <column name="fase_feno_id" />
+        </many-to-one>
+        <many-to-one name="ordenSuelo" class="co.com.arcosoft.modelo.OrdenSuelo" fetch="select">
+            <column name="orden_suelo" />
+        </many-to-one>
+        <many-to-one name="claseTextSuelo" class="co.com.arcosoft.modelo.ClaseTextSuelo" fetch="select">
+            <column name="clase_text_suelo_id" />
+        </many-to-one>
+        <many-to-one name="n4Motivo" class="co.com.arcosoft.modelo.N4Motivo" fetch="select">
+            <column name="n4_mot" />
+        </many-to-one>
+        <many-to-one name="tenencia" class="co.com.arcosoft.modelo.Tenencia" fetch="select">
+            <column name="tenen_id" />
+        </many-to-one>
+        <many-to-one name="tipCultivo" class="co.com.arcosoft.modelo.TipCultivo" fetch="select">
+            <column name="tipo_cultivo_id" />
+        </many-to-one>
+        <many-to-one name="fliaTextSuelo" class="co.com.arcosoft.modelo.FliaTextSuelo" fetch="select">
+            <column name="flia_text_suelo_id" />
+        </many-to-one>
+        <many-to-one name="trabajador"  class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="trab_id" />
+        </many-to-one>
+        <many-to-one name="estEvaporimetro" class="co.com.arcosoft.modelo.EstEvaporimetro" fetch="select">
+            <column name="est_evaporimetro_id" />
+        </many-to-one>
+        <many-to-one name="organizacion" class="co.com.arcosoft.modelo.Organizacion" fetch="select">
+            <column name="organiz_id" />
+        </many-to-one>
+        <many-to-one name="tipoDrenaje" class="co.com.arcosoft.modelo.TipoDrenaje" fetch="select">
+            <column name="tipo_drenaje_id" />
+        </many-to-one>
+        <many-to-one name="serieSuelo" class="co.com.arcosoft.modelo.SerieSuelo" fetch="select">
+            <column name="serie_suelo_id" />
+        </many-to-one>
+        <many-to-one name="topografia" class="co.com.arcosoft.modelo.Topografia" fetch="select">
+            <column name="topografia_id" />
+        </many-to-one>
+        <many-to-one name="almacen" class="co.com.arcosoft.modelo.Almacen" fetch="select">
+            <column name="almacen_id" />
+        </many-to-one>
+        <many-to-one name="anioFiscal" class="co.com.arcosoft.modelo.AnioFiscal" fetch="select">
+            <column name="anio_fiscal_id" />
+        </many-to-one>
+        <many-to-one name="estPluvio" class="co.com.arcosoft.modelo.EstPluvio" fetch="select" >
+            <column name="est_pluvio_id" />
+        </many-to-one>
+        <many-to-one name="nivel3" class="co.com.arcosoft.modelo.Nivel3" fetch="select" >
+            <column name="nivel3_id" />
+        </many-to-one>
+        <property name="persEmpr" type="java.lang.Long">
+            <column name="pers_empr_id" />
+        </property>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="areaBruta" type="java.lang.Double">
+            <column name="area_bruta" precision="12" scale="4" />
+        </property>
+        <property name="areaMecanizada" type="java.lang.Double">
+            <column name="area_mecanizada" precision="12" scale="4" />
+        </property>
+        <property name="areaManual" type="java.lang.Double">
+            <column name="area_manual" precision="12" scale="4" />
+        </property>
+        <property name="areaInutil" type="java.lang.Double">
+            <column name="area_inutil" precision="12" scale="4" />
+        </property>
+        <property name="areaOtrosCultivos" type="java.lang.Double">
+            <column name="area_otros_cultivos" precision="12" scale="4" />
+        </property>
+        <property name="areaReservada" type="java.lang.Double">
+            <column name="area_reservada" precision="12" scale="4" />
+        </property>
+        <property name="areaRestringida" type="java.lang.Double">
+            <column name="area_restringida" precision="12" scale="4" />
+        </property>
+        <property name="areaNeta" type="java.lang.Double">
+            <column name="area_neta" precision="12" scale="4" />
+        </property>
+        <property name="fechaSiembra" type="java.util.Date">
+            <column name="fecha_siembra" length="19" />
+        </property>
+        <property name="fechaPrimerCorte" type="java.util.Date">
+            <column name="fecha_primer_corte" length="19" />
+        </property>
+        <property name="fechaUltimoCorte" type="java.util.Date">
+            <column name="fecha_ultimo_corte" length="19" />
+        </property>
+        <property name="fechaCorteAnterior" type="java.util.Date">
+            <column name="fecha_corte_anterior" length="19" />
+        </property>
+        <property name="fechaAnalisisPostCosecha" type="java.util.Date">
+            <column name="fecha_analisis_post_cosecha" length="19" />
+        </property>
+        <property name="fechaAplicacionMadurante" type="java.util.Date">
+            <column name="fecha_aplicacion_madurante" length="19" />
+        </property>
+        <property name="fechaProximoCorte" type="java.util.Date">
+            <column name="fecha_proximo_corte" length="19" />
+        </property>
+        <property name="fechaUltimoApunteRiego" type="java.util.Date">
+            <column name="fecha_ultimo_apunte_riego" length="19" />
+        </property>
+        <property name="fechaEstimadaUltimoRiego" type="java.util.Date">
+            <column name="fecha_estimada_ultimo_riego" length="19" />
+        </property>
+        <property name="numEstimTonHectPrimVez" type="java.lang.Double">
+            <column name="num_estim_ton_hect_prim_vez" precision="12" scale="4" />
+        </property>
+        <property name="numEstimTonAnioFiscal" type="java.lang.Double">
+            <column name="num_estim_ton_anio_fiscal" precision="12" scale="4" />
+        </property>
+        <property name="numEstimTonMesAnioFiscal" type="java.lang.Double">
+            <column name="num_estim_ton_mes_anio_fiscal" precision="12" scale="4" />
+        </property>
+        <property name="numHectUltCosecha" type="java.lang.Double">
+            <column name="num_hect_ult_cosecha" precision="12" scale="4" />
+        </property>
+        <property name="numTonUltCosecha" type="java.lang.Double">
+            <column name="num_ton_ult_cosecha" precision="12" scale="4" />
+        </property>
+        <property name="numHectCosIndFab" type="java.lang.Double">
+            <column name="num_hect_cos_ind_fab" precision="12" scale="4" />
+        </property>
+        <property name="numTonCosIndFab" type="java.lang.Double">
+            <column name="num_ton_cos_ind_fab" precision="12" scale="4" />
+        </property>
+        <property name="numHectOtroDestino" type="java.lang.Double">
+            <column name="num_hect_otro_destino" precision="12" scale="4" />
+        </property>
+        <property name="edadActual" type="java.lang.Double">
+            <column name="edad_actual" precision="12" scale="4" />
+        </property>
+        <property name="edadUltimaCosecha" type="java.lang.Double">
+            <column name="edad_ultima_cosecha" precision="12" scale="4" />
+        </property>
+        <property name="indiceHelada" type="java.lang.String">
+            <column name="indice_helada" length="1" />
+        </property>
+        <property name="kilmNivel4Fab" type="java.lang.Double">
+            <column name="kilm_nivel4_fab" precision="12" scale="4" />
+        </property>
+        <property name="kilmNivel4FabPav" type="java.lang.Double">
+            <column name="kilm_nivel4_fab_pav" precision="12" scale="4" />
+        </property>
+        <property name="kilmNivel4FabTerraceria" type="java.lang.Double">
+            <column name="kilm_nivel4_fab_terraceria" precision="12" scale="4" />
+        </property>
+        <property name="aplicacionMadurante" type="java.lang.Integer">
+            <column name="aplicacion_madurante" />
+        </property>
+        <property name="ultDosisAplicadaMadurante" type="java.lang.Double">
+            <column name="ult_dosis_aplicada_madurante" precision="12" scale="4" />
+        </property>
+        <property name="longitud" type="java.lang.Double">
+            <column name="longitud" precision="22" scale="0" />
+        </property>
+        <property name="latitud" type="java.lang.Double">
+            <column name="latitud" precision="22" scale="0" />
+        </property>
+        <property name="precision" type="java.lang.Double">
+            <column name="precision1" precision="22" scale="0" />
+        </property>
+        <property name="numComederosHect" type="java.lang.Long">
+            <column name="num_comederos_hect" />
+        </property>
+        <property name="totalComederos" type="java.lang.Long">
+            <column name="total_comederos" />
+        </property>
+        <property name="numLarvasSembradas" type="java.lang.Long">
+            <column name="num_larvas_sembradas" />
+        </property>
+        <property name="numRacionesCrustaceos" type="java.lang.Double">
+            <column name="num_raciones_crustaceos" precision="12" scale="4" />
+        </property>
+        <property name="renovacion" type="java.lang.String">
+            <column name="renovacion" length="1" />
+        </property>
+        <property name="semillero" type="java.lang.String">
+            <column name="semillero" length="1" />
+        </property>
+        <property name="fechaInactivo" type="java.util.Date">
+            <column name="fecha_inactivo" length="19" />
+        </property>
+        <property name="numPlantasSembradas" type="java.lang.Long">
+            <column name="num_plantas_sembradas" />
+        </property>
+        <property name="numPlantasActuales" type="java.lang.Long">
+            <column name="num_plantas_actuales" />
+        </property>
+        <property name="numDensidadSiembra" type="java.lang.Double">
+            <column name="num_densidad_siembra" precision="12" scale="4" />
+        </property>
+        <property name="alturaPromedioPlantas" type="java.lang.Double">
+            <column name="altura_promedio_plantas" precision="12" scale="4" />
+        </property>
+        <property name="pesoPromedioNivel4" type="java.lang.Double">
+            <column name="peso_promedio_nivel4" precision="12" scale="4" />
+        </property>
+        <property name="cantidadValvulasRiego" type="java.lang.Long">
+            <column name="cantidad_valvulas_riego" />
+        </property>
+        <property name="numLineasSembradas" type="java.lang.Long">
+            <column name="num_lineas_sembradas" />
+        </property>
+        <property name="numPlantasSembradas2" type="java.lang.Long">
+            <column name="num_plantas_sembradas_2" />
+        </property>
+        <property name="espacioLineasSembradas" type="java.lang.Long">
+            <column name="espacio_lineas_sembradas" />
+        </property>
+        <property name="generico" type="java.lang.String">
+            <column name="generico" length="1" />
+        </property>
+        <property name="costosAmortizados" type="java.lang.String">
+            <column name="costos_amortizados" length="1" />
+        </property>
+        <property name="fechaCierreCosecha" type="java.util.Date">
+            <column name="fecha_cierre_cosecha" length="19" />
+        </property>
+        <property name="fechaAperturaCosecha" type="java.util.Date">
+            <column name="fecha_apertura_cosecha" length="19" />
+        </property>
+        <property name="fotoInfraestructura" type="java.lang.String">
+            <column name="foto_infraestructura" length="300" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="ana1" type="java.lang.String">
+            <column name="ana1" length="40" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="codigoUsuarioApertura" type="java.lang.Long">
+            <column name="codigo_usuario_apertura" />
+        </property>
+        <property name="codigoUsuarioCierre" type="java.lang.Long">
+            <column name="codigo_usuario_cierre" />
+        </property>
+        <property name="numTonOtroDestino" type="java.lang.Double">
+            <column name="num_ton_otro_destino" precision="12" scale="4" />
+        </property>
+        <property name="numDensidadActual" type="java.lang.Double">
+            <column name="num_densidad_actual" precision="12" scale="4" />
+        </property>
+        <property name="madurante" type="java.lang.Long">
+            <column name="madurante" />
+        </property>
+        <property name="fechaAnalisisPreCosecha" type="java.util.Date">
+            <column name="fecha_analisis_pre_cosecha" length="19" />
+        </property>
+        <property name="ciclo" type="java.lang.Integer">
+            <column name="ciclo" />
+        </property>
+        <property name="fechaDescanso" type="java.util.Date">
+            <column name="fecha_descanso" length="19" />
+        </property>
+        <property name="sistemaRiego" type="java.lang.Long">
+            <column name="sistema_riego" />
+        </property>
+        <property name="variedad" type="java.lang.Long">
+            <column name="variedad_id" />
+        </property>
+        <property name="fechaStart" type="java.util.Date">
+            <column name="fecha_start" length="19" />
+        </property>
+        <property name="vacunosIniciales" type="java.lang.Double">
+            <column name="vacunos_iniciales" precision="12" scale="4" />
+        </property>
+        <property name="vacunosActuales" type="java.lang.Double">
+            <column name="vacunos_actuales" precision="12" scale="4" />
+        </property>
+        <property name="codigoAlternativo" type="java.lang.String">
+            <column name="codigo_alternativo" length="20" />
+        </property>
+        <property name="numTonUltCosechaPorHa" type="java.lang.Double">
+            <column name="num_ton_ult_cosecha_por_ha" precision="12" scale="4" />
+        </property>
+        
+        <property name="numTonHaMesUltCosecha" type="java.lang.Double">
+            <column name="num_ton_ha_mes_ult_cosecha" precision="12" scale="4" />
+        </property>
+        
+        <set name="datAnaLaboratorios" table="dat_ana_laboratorio" inverse="true" lazy="true" fetch="select">
+   
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatAnaLaboratorio" />
+        </set>
+        <set name="datPlanillaNominas" table="dat_planilla_nomina" inverse="true" lazy="true" fetch="select">
+   
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanillaNomina" />
+        </set>
+        <set name="datTransProdNivel4s" table="dat_trans_prod_nivel4" inverse="true" lazy="true" fetch="select">
+   
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatTransProdNivel4" />
+        </set>
+        <set name="datServicios" table="dat_servicio" inverse="true" lazy="true" fetch="select">
+   
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServicio" />
+        </set>
+        <set name="datPlanillaNominaDets" table="dat_planilla_nomina_det" inverse="true" lazy="true" fetch="select">
+    
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanillaNominaDet" />
+        </set>
+        <set name="datTransProdTrabajadoreses" table="dat_trans_prod_trabajadores" inverse="true" lazy="true" fetch="select">
+     
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatTransProdTrabajadores" />
+        </set>
+        <set name="variedadNivel4s" table="variedad_nivel4" inverse="true" lazy="true" fetch="select">
+   
+            <key>
+                <column name="nivel4_nivel4_id" not-null="true" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.VariedadNivel4" />
+        </set>
+        <set name="datPlanLaborDets" table="dat_plan_labor_det" inverse="true" lazy="true" fetch="select">
+
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanLaborDet" />
+        </set>
+        <set name="datAplicProductos" table="dat_aplic_producto" inverse="true" lazy="true" fetch="select">
+      
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatAplicProducto" />
+        </set>
+        <set name="datServicioDets" table="dat_servicio_det" inverse="true" lazy="true" fetch="select">
+   
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServicioDet" />
+        </set>
+        <set name="estructSiembs" table="estruct_siemb" inverse="true" lazy="true" fetch="select">
+   
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.EstructSiemb" />
+        </set>
+        <set name="datOtrosCostosNivel4s" table="dat_otros_costos_nivel4" inverse="true" lazy="true" fetch="select">
+  
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatOtrosCostosNivel4" />
+        </set>
+        <set name="datProgramaRiegoDets" table="dat_programa_riego_det" inverse="true" lazy="true" fetch="select">
+
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatProgramaRiegoDet" />
+        </set>
+        <set name="datPlanLabors" table="dat_plan_labor" inverse="true" lazy="true" fetch="select">
+         
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanLabor" />
+        </set>
+        <set name="datPlanillaNominaOnivel4s" table="dat_planilla_nomina_onivel4" inverse="true" lazy="true" fetch="select">
+          
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanillaNominaOnivel4" />
+        </set>
+        <set name="restriMaduranteNivel4s" table="restri_madurante_nivel4" inverse="true" lazy="true" fetch="select">
+            
+            <key>
+                <column name="nivel4_nivel4_id" not-null="true" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.RestriMaduranteNivel4" />
+        </set>
+        <set name="datAplicProdDets" table="dat_aplic_prod_det" inverse="true" lazy="true" fetch="select">
+           
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatAplicProdDet" />
+        </set>
+        <set name="datRiegos" table="dat_riego" inverse="true" lazy="true" fetch="select">
+           
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatRiego" />
+        </set>
+        <set name="cronogramaLaboresNivel4s" table="cronograma_labores_nivel4" inverse="true" lazy="true" fetch="select">
+           
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.CronogramaLaboresNivel4" />
+        </set>
+        <set name="datEstimCosechas" table="dat_estim_cosecha" inverse="true" lazy="true" fetch="select">
+           
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatEstimCosecha" />
+        </set>
+        <set name="datSanVegs" table="dat_san_veg" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel4_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatSanVeg" />
+        </set>
+        <set name="restriccionQuemaNivel4s" table="restriccion_quema_nivel4" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel4_nivel4_id" not-null="true" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.RestriccionQuemaNivel4" />
+        </set>
+    </class>
+</hibernate-mapping>

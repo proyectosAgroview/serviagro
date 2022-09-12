@@ -1,0 +1,173 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Interface: Exportación de registros de mano de obra (Ausentismos) a Manager">
+
+						<p:panelGrid styleClass="ui-panelgrid-blank">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+							<p:row>
+								<p:column style="font-weight: bold;">
+
+									<h:panelGrid columns="2" id="panelGrid" width="500">
+
+
+										<p:outputLabel for="txtCompania" value="Compañía" />
+										<p:selectOneMenu id="txtCompania"
+											binding="#{interfaceManagerExportRegAusMoView.txtCompania}"
+											required="true" requiredMessage="Seleccione una compañía">
+											<f:selectItem itemLabel="Seleccione una compañía"
+												itemValue="" />
+											<f:selectItems
+												value="#{interfaceManagerExportRegAusMoView.selectCompania}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{interfaceManagerExportRegAusMoView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+									
+										<p:outputLabel for="msgFechaFinal" value="Fecha Final: " />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{interfaceManagerExportRegAusMoView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+									
+										<p:outputLabel for="contratistas" value="Contratista: " />
+										<p:selectCheckboxMenu id="contratistas"
+											value="#{interfaceManagerExportRegAusMoView.selectedContratista}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un contratista">
+											<f:selectItems
+												value="#{interfaceManagerExportRegAusMoView.contratistas}"
+												var="contratistas" itemLabel=" #{contratistas.nombre}"
+												itemValue="#{contratistas.persEmprId}" />
+										</p:selectCheckboxMenu>
+										
+										<p:outputLabel for="trabajadores" value="Trabajador: " />
+										<p:selectCheckboxMenu id="trabajadores"
+											value="#{interfaceManagerExportRegAusMoView.selectedTrabajador}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false" requiredMessage="Seleccione un trabajador">
+											<f:selectItems
+												value="#{interfaceManagerExportRegAusMoView.trabajadores}"
+												var="trabajadores" itemLabel=" #{trabajadores.nombre}"
+												itemValue="#{trabajadores.trabId}" />
+										</p:selectCheckboxMenu>
+										
+										<p:outputLabel for="conceptonominas" value="Concepto nómina: " />
+										<p:selectCheckboxMenu id="conceptonominas"
+											value="#{interfaceManagerExportRegAusMoView.selectedConceptoNomina}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false" requiredMessage="Seleccione un concepto">
+											<f:selectItems
+												value="#{interfaceManagerExportRegAusMoView.conceptoNominas}"
+												var="conceptonominas" itemLabel=" #{conceptonominas.nombre}"
+												itemValue="#{conceptonominas.ceptoNominaId}" />
+										</p:selectCheckboxMenu>
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+
+								</p:column>
+
+							</p:row>
+
+						</p:panelGrid>
+
+					</p:panel>
+
+
+					<p:dialog id="dialog" appendTo="@(body)" draggable="true"
+						closable="true"
+						visible="#{interfaceManagerExportRegAusMoView.showDialog}"
+						modal="true" showEffect="fade" width="1200" responsive="true"
+						resizable="false" styleClass="dialogFix">
+
+						<p:dataTable id="tbl"
+							value="#{interfaceManagerExportRegAusMoView.data}"
+							var="informeCosG" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+								<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="InterfazAus" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a EXCEL" />
+
+
+								<h:commandLink id="csv" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/csv.png"
+											width="30" />
+										<p:dataExporter type="csv" target="tbl" fileName="InterfazAus" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade1" for="csv"
+										value="Exportar todos los datos a CSV" />
+									
+
+								</div>
+							</f:facet>
+
+							<p:column>
+								<h:outputText value="#{informeCosG.planoNomina}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:dialog>
+
+					<p:panel id="panelBoton1">
+						<div align="center">
+							<p:commandButton id="btnConsultar" value="Generar plano y visualizar"
+								icon="ui-icon-newwin"
+								action="#{interfaceManagerExportRegAusMoView.action_informe1()}"
+								update="frm:dialog, :frm:tbl" />
+						</div>
+					</p:panel>
+					
+						<p:panel id="panelBoton2">
+						<div align="center">
+							<p:commandButton id="btnConsultar1" value="Generar archivo Excel Ver1"
+								icon="ui-icon-newwin"
+								action="#{interfaceManagerExportRegAusMoView.exportInterfazVer1}" update="growl, frm" process="@all" partialSubmit="true"/>
+
+							<p:commandButton disabled="#{interfaceManagerExportRegAusMoView.disableButton}" 
+								icon="ui-icon-arrowthick-1-s" value="Descargar" ajax="false">
+								<p:fileDownload value="#{interfaceManagerExportRegAusMoView.file}" />
+							</p:commandButton>
+							
+						</div>
+					</p:panel>
+				</h:form>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

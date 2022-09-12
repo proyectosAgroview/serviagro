@@ -1,0 +1,512 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatSanVegDiatrea"
+						header="Análisis de diatrea">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datSanVegDiatreaView.data}"
+							var="datSanVegDiatrea" paginator="true" lazy="true" rows="5"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Análisis de diatrea" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datSanVegDiatrea.estado}"
+								sortBy="#{datSanVegDiatrea.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datSanVegDiatrea.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datSanVegDiatrea.consecutivo}"
+								sortBy="#{datSanVegDiatrea.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datSanVegDiatrea.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datSanVegDiatrea.fechaAnalisis}"
+								sortBy="#{datSanVegDiatrea.fechaAnalisis}">
+								<f:facet name="header">
+									<h:outputText value="Fecha de análisis" />
+								</f:facet>
+								<h:outputText value="#{datSanVegDiatrea.fechaAnalisis}" />
+							</p:column>
+
+							<p:column filterBy="#{datSanVegDiatrea.anaSanVegId_AnaSanVeg}"
+								sortBy="#{datSanVegDiatrea.anaSanVegId_AnaSanVeg}">
+								<f:facet name="header">
+									<h:outputText value="Tipo Análisis" />
+								</f:facet>
+								<h:outputText value="#{datSanVegDiatrea.anaSanVegId_AnaSanVeg}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatSanVegDiatrea"
+										actionListener="#{datSanVegDiatreaView.action_edit}">
+										<f:attribute name="selectedDatSanVegDiatrea"
+											value="#{datSanVegDiatrea}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datSanVegDiatreaView.action_new()}"
+								update=":dialogDatSanVegDiatrea" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatSanVegDiatrea" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datSanVegDiatreaView.showDialog}" resizable="false"
+					modal="true" width="650"  styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data" acceptcharset="ISO-8859-1">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatSanVegDiatrea" header="Análisis de diatrea">
+
+							<p:tabView id="tabMapa" activeIndex="#{datSanVegDiatreaView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="5" id="panelGrid1">
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{datSanVegDiatreaView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel value="# Consecutivo: " />
+										<p:inputText id="txtConsecutivo" disabled="false"
+											binding="#{datSanVegDiatreaView.txtConsecutivo}"
+											placeholder="Buscar o crear registro" size="23">
+										</p:inputText>
+										<p:outputLabel />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="msgfechaAnalisis"
+											value="Fecha del análisis: " />
+										<p:calendar id="msgfechaAnalisis" showOn="button"
+											navigator="false" locale="es"
+											binding="#{datSanVegDiatreaView.txtFechaAnalisis}"
+											pattern="dd/MM/yyyy" mask="true" required="true"
+											requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgfechaAnalisis" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+
+										<p:outputLabel for="txtAnaSanVegId_AnaSanVeg"
+											value="Tipo de análisis: " />
+										<p:selectOneMenu id="txtAnaSanVegId_AnaSanVeg" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datSanVegDiatreaView.txtAnaSanVegId_AnaSanVeg}"
+											required="true" requiredMessage="Seleccione un análisis">
+
+											<f:selectItems
+												value="#{datSanVegDiatreaView.selectTipoAnalisis}" />
+										</p:selectOneMenu>
+										<p:message for="txtAnaSanVegId_AnaSanVeg" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtTrabId_Trabajador" value="Analista: " />
+										<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datSanVegDiatreaView.txtTrabId_Trabajador}"
+											required="false" requiredMessage="Seleccione un analista">
+											<f:selectItem itemLabel="Seleccione un analista" itemValue="" />
+											<f:selectItems
+												value="#{datSanVegDiatreaView.selectTrabajador}" />
+
+										</p:selectOneMenu>
+										<p:message for="txtTrabId_Trabajador" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel1Id" value="Zona: " />
+										<p:selectOneMenu id="txtNivel1Id" effect="fade" filter="true"
+											filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datSanVegDiatreaView.txtNivel1Id}"
+											required="true" requiredMessage="Seleccione una zona">
+											<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+											<f:selectItems value="#{datSanVegDiatreaView.selectNivel1}" />
+											<p:ajax update="txtNivel2Id_Nivel2" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel1Id" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel2Id_Nivel2" value="Hacienda: " />
+										<p:selectOneMenu id="txtNivel2Id_Nivel2" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datSanVegDiatreaView.txtNivel2Id_Nivel2}"
+											required="true" requiredMessage="Seleccione una hacienda">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems value="#{datSanVegDiatreaView.selectNivel2}" />
+											<p:ajax update="txtNivel3Id" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel2Id_Nivel2" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel3Id" value="Bloque: " />
+										<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+											filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datSanVegDiatreaView.txtNivel3Id}"
+											required="true"
+											requiredMessage="Seleccione un bloque del cultivo">
+											<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+											<f:selectItems value="#{datSanVegDiatreaView.selectNivel3}" />
+											<p:ajax update="txtNivel4Id_Nivel4" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel3Id" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: " />
+										<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datSanVegDiatreaView.txtNivel4Id_Nivel4}"
+											required="true" requiredMessage="Seleccione un lote" autoWidth="false">
+											
+											<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+											<f:selectItems value="#{datSanVegDiatreaView.selectNivel4}" />
+                                            <f:ajax render="btoLoteSuerte"></f:ajax>
+                                            
+										</p:selectOneMenu>
+										<p:message for="txtNivel4Id_Nivel4" />
+										<p:outputLabel />
+										<p:outputLabel />
+										
+										<p:outputLabel />
+										 <p:commandButton id="btoLoteSuerte" value="Info. lote" 
+										      disabled="#{datSanVegDiatreaView.desactivarBoton}" 
+										      action="#{datSanVegDiatreaView.action_formaciónLoteSuerte()}" 
+										      update="display3"  
+										      oncomplete="PF('dlg').show()" icon="ui-icon-check"  process="@this,txtNivel4Id_Nivel4 "/>
+										
+										<p:outputLabel />
+										<p:outputLabel />
+										<p:outputLabel />
+ 
+										
+										<p:outputLabel for="txtObservacion" value="Observación:" />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{datSanVegDiatreaView.txtObservacion}" rows="3"
+											cols="30" counter="display" maxlength="1000"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+										<p:outputLabel />
+										<p:outputLabel />
+ 
+									    <p:dialog header="Información lote/suerte" appendTo="@(body)" 
+									         width="400"  modal="false" showEffect="bounce" 
+									         widgetVar="dlg" resizable="false" closable="true" responsive="true" >
+									       
+									        <p:panelGrid columns="2" id="display3" style="width:100%" >
+									           
+									            <h:outputLabel value="Área (HA):" />
+									            <h:outputText value="#{datSanVegDiatreaView.hectareaNetaN4}" />
+									            
+									            <h:outputLabel value="Variedad:" />
+									            <h:outputText value="#{datSanVegDiatreaView.variedadN4}" />
+									 
+									            <h:outputLabel value="Fecha ult. corte:" />
+									            <h:outputText value="#{datSanVegDiatreaView.fechaCorteN4}" />
+									 
+									            <h:outputLabel value="Corte:" />
+									            <h:outputText value="#{datSanVegDiatreaView.etapaN4}" />
+									            
+									            <h:outputLabel value="Edad:" />
+									            <h:outputText value="#{datSanVegDiatreaView.edadN4}" />
+
+									        </p:panelGrid>
+									        
+									    </p:dialog>
+
+								
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden"
+											id="txtdatSanVegDiatreaId"
+											binding="#{datSanVegDiatreaView.txtDatSanVegId}">
+											<p:ajax update=":dialogDatSanVegDiatrea"
+												listener="#{datSanVegDiatreaView.listener_txtId}" />
+										</p:inputText>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+
+								<p:tab title="Variables digitadas">
+
+									<h:panelGrid columns="5" id="panelGrid2">
+
+										<p:outputLabel for="txtVariable1" value="Número de cañas analizadas: " />
+										<p:inputText id="txtVariable1"
+											binding="#{datSanVegDiatreaView.txtVariable1}"
+											required="true" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />	
+										</p:inputText>
+										<p:message for="txtVariable1" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable2"
+											value="Total de entrenudos: " />
+										<p:inputText id="txtVariable2"
+											binding="#{datSanVegDiatreaView.txtVariable2}"
+											required="true" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+											
+										</p:inputText>
+										<p:message for="txtVariable2" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable3"
+											value="Total entrenudos con diatrea: " />
+										<p:inputText id="txtVariable3"
+											binding="#{datSanVegDiatreaView.txtVariable3}"
+											required="true" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtVariable3" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable4" value="Total entrenudos con valentina: " />
+										<p:inputText id="txtVariable4"
+											binding="#{datSanVegDiatreaView.txtVariable4}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtVariable4" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable5" value="Cañas con diatrea: " />
+										<p:inputText id="txtVariable5"
+											binding="#{datSanVegDiatreaView.txtVariable5}"
+											required="true" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtVariable5" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtVariable6"
+											value="Cañas con valentina: " />
+										<p:inputText id="txtVariable6"
+											binding="#{datSanVegDiatreaView.txtVariable6}"
+											required="false" requiredMessage="La variable es obligatorio">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>										
+										<p:message for="txtVariable6" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Variables calculadas">
+									<h:panelGrid columns="5" id="panelGrid3">
+										<p:outputLabel for="txtVariable7" value="% Intensidad de infestación diatrea: " />
+										<p:panelGrid columns="3">
+											<p:inputText id="txtVariable7"
+												binding="#{datSanVegDiatreaView.txtVariable7}">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											<h:outputText id="estado" value="#{datSanVegDiatreaView.estadoIntensidadInfDiatrea}" />
+											<p:commandButton id="iconOnly1" icon="ui-icon-calculator"  value="Calcular"
+												ondblclick="true">
+												<p:ajax process="@this,txtVariable2,txtVariable3"
+													update="txtVariable7, estado"
+													listener="#{datSanVegDiatreaView.listener_calcular_IntensidadInfDiatrea}" />
+											</p:commandButton>
+										</p:panelGrid>
+										<p:message for="txtVariable7" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+
+										<p:outputLabel for="txtVariable8" value="% Infestación diatrea: " />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtVariable8"
+												binding="#{datSanVegDiatreaView.txtVariable8}">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											<p:commandButton id="iconOnly2" icon="ui-icon-calculator"  value="Calcular"
+												ondblclick="true">
+												<p:ajax process="@this,txtVariable1,txtVariable5"
+													update="txtVariable8"
+													listener="#{datSanVegDiatreaView.listener_calcular_Por_InfesDiatrea}" />
+											</p:commandButton>
+										</p:panelGrid>
+										<p:message for="txtVariable8" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+
+										<p:outputLabel for="txtVariable9" value="Intensidad infestación valentina: " />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtVariable9"
+												binding="#{datSanVegDiatreaView.txtVariable9}">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											<p:commandButton id="iconOnly3" icon="ui-icon-calculator"  value="Calcular"
+												ondblclick="true">
+												<p:ajax process="@this,txtVariable4,txtVariable2"
+													update="txtVariable9"
+													listener="#{datSanVegDiatreaView.listener_calcular_Int_infesValentina}" />
+											</p:commandButton>
+										</p:panelGrid>
+										<p:message for="txtVariable9" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+
+										<p:outputLabel for="txtVariable10" value="% Infestación valentina: " />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtVariable10"
+												binding="#{datSanVegDiatreaView.txtVariable10}">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											<p:commandButton id="iconOnly4" icon="ui-icon-calculator"  value="Calcular"
+												ondblclick="true">
+												<p:ajax
+													process="@this,txtVariable6,txtVariable6,txtVariable1"
+													update="txtVariable10"
+													listener="#{datSanVegDiatreaView.listener_calcular_Por_InfesValentina}" />
+											</p:commandButton>
+										</p:panelGrid>
+										<p:message for="txtVariable10" />
+										<p:outputLabel></p:outputLabel>
+										<p:outputLabel></p:outputLabel>
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Evidencia del análisis">
+									<h:panelGrid columns="5" id="panelGrid4">
+										<p:outputLabel value="Foto: " />
+										<h:panelGroup>
+											<p:fileUpload value="#{datSanVegDiatreaView.file}"
+												mode="simple" auto="true"
+												fileUploadListener="#{datSanVegDiatreaView.subirImagen}"
+												update="image" cancelLabel="Cancelar" sizeLimit="100000"
+												skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+												invalidFileMessage="Tipo de imagem inválido"
+												invalidSizeMessage="Ups!! El tamaño de la imagen es muy grande"
+												uploadLabel="Subir imagen" label="Elegir">
+											</p:fileUpload>
+											<p:lightBox styleClass="imagebox" id="lighbox1">
+												<h:outputLink
+													value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{datSanVegDiatreaView.imagenSanVeg}">
+													<h:graphicImage
+														value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{datSanVegDiatreaView.imagenSanVeg}"
+														id="image" style="height: 160px; width: 160px" />
+												</h:outputLink>
+											</p:lightBox>
+										</h:panelGroup>
+									</h:panelGrid>
+								</p:tab>
+
+ 				
+								<p:tab title="Ubicación(Maps)">
+									<h:panelGrid columns="3" cellpadding="5">
+										<p:outputLabel for="txtLatitud" value="Latitud: " />
+										<p:inputText id="txtLatitud" disabled="true"
+											binding="#{datSanVegDiatreaView.txtLatitud}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtLatitud" />
+
+										<p:outputLabel for="txtLongitud" value="Longitud: " />
+										<p:inputText id="txtLongitud" disabled="true"
+											binding="#{datSanVegDiatreaView.txtLongitud}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtLongitud" />
+
+										<p:outputLabel for="txtPrecision" value="Precision: " />
+										<p:inputText id="txtPrecision" disabled="true"
+											binding="#{datSanVegDiatreaView.txtPrecision}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtPrecision" />
+									</h:panelGrid>
+									
+								</p:tab>
+								 
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk" 
+									binding="#{datSanVegDiatreaView.btnSave}" value="Grabar"
+									action="#{datSanVegDiatreaView.action_save()}"
+									update=":dialogDatSanVegDiatrea :frm:panelDataTableDatSanVegDiatrea" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datSanVegDiatreaView.action_clear()}"
+									process="@all" update=":dialogDatSanVegDiatrea" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

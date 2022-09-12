@@ -1,0 +1,218 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableUsuarios" header="Usuarios">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable value="#{usuariosView.data}" var="usuarios"
+							paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+							reflow="true">
+
+							<p:column filterBy="#{usuarios.enabled}"
+								sortBy="#{usuarios.enabled}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{usuarios.enabled}" />
+							</p:column>
+
+
+							<p:column filterBy="#{usuarios.login}" sortBy="#{usuarios.login}">
+								<f:facet name="header">
+									<h:outputText value="Login" />
+								</f:facet>
+								<h:outputText value="#{usuarios.login}" />
+							</p:column>
+
+							<p:column filterBy="#{usuarios.nombreCompania}"
+								sortBy="#{usuarios.nombreCompania}">
+								<f:facet name="header">
+									<h:outputText value="Compañía" />
+								</f:facet>
+								<h:outputText value="#{usuarios.nombreCompania}" />
+							</p:column>
+
+							<p:column filterBy="#{usuarios.fechaCreacion}"
+								sortBy="#{usuarios.fechaCreacion}">
+								<f:facet name="header">
+									<h:outputText value="Fecha creación" />
+								</f:facet>
+								<h:outputText value="#{usuarios.fechaCreacion}" />
+							</p:column>
+
+							<p:column filterBy="#{usuarios.fechaModificacion}"
+								sortBy="#{usuarios.fechaModificacion}">
+								<f:facet name="header">
+									<h:outputText value="Fecha modificación" />
+								</f:facet>
+								<h:outputText value="#{usuarios.fechaModificacion}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+										update=":dialogUsuarios"
+										actionListener="#{usuariosView.action_edit}">
+										<f:attribute name="selectedUsuarios" value="#{usuarios}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{usuariosView.action_new()}" update=":dialogUsuarios" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogUsuarios" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{usuariosView.showDialog}"
+					resizable="false" modal="true" width="700" responsive="true"
+					closeOnEscape="true" styleClass="dialogFix">
+					<h:form id="formDialog">
+
+						<p:messages id="msg" autoUpdate="true" closable="true" />
+						<p:panel id="panelUsuarios" header="Usuarios">
+
+							<p:tabView>
+
+								<p:tab title="General">
+
+
+									<h:panelGrid columns="2" id="panelGrid">
+
+										<p:outputLabel for="txtEnabled" value="Estado: " />
+										<p:selectOneRadio id="txtEnabled" disabled="true"
+											binding="#{usuariosView.txtEnabled}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="true" />
+											<f:selectItem itemLabel="Inactivo" itemValue="false" />
+										</p:selectOneRadio>
+
+										<p:outputLabel for="txtLogin"
+											value="Nombre de usuario (login): " />
+										<p:inputText id="txtLogin" disabled="true"
+											binding="#{usuariosView.txtLogin}" required="true"
+											requiredMessage="El Nombre de usuario es Obligatorio">
+											<p:ajax
+												update=":formDialog:panelUsuarios,:formDialog:panelBotones"
+												listener="#{usuariosView.listener_txtId}" />
+										</p:inputText>
+
+										<p:outputLabel for="contrasena" value="Contraseña: " />
+										<p:password id="contrasena" disabled="false"
+											value="#{usuariosView.contrasena}" required="true"
+											requiredMessage="La contraseña es Obligatoria"
+											redisplay="true">
+										</p:password>
+										
+										
+										  <p:outputLabel for="txtNombre" value="Contraseña móvil:" />
+										<p:inputText id="txtNombre" disabled="true" size="40"
+											binding="#{usuariosView.txtNombre}" required="true"
+											requiredMessage="La contraseña es Obligatorio" />
+										
+										<p:outputLabel 
+											value="Permitir acceso en el móvil  a:" />
+										<p:selectCheckboxMenu 
+											value="#{usuariosView.selectePermisos}" label="Permisos"
+											required="true" requiredMessage="Seleccione que permiso tendrá en el app móvil"
+											multiple="true" filter="true" filterMatchMode="contains"
+											panelStyle="width:250px">
+
+											<f:selectItem itemLabel="Todos" itemValue="todos" />
+											<f:selectItem itemLabel="Suministros"
+												itemValue="mtto_suministros" />
+											<f:selectItem itemLabel="Programador de labores"
+												itemValue="mtto_programador" />
+											<f:selectItem itemLabel="Servicios"
+												itemValue="mtto_servicios" />
+												<f:selectItem itemLabel="Mtto. Maquinaria"
+												itemValue="mtto_maquinaria" />
+											<f:selectItem itemLabel="Reportes" itemValue="mtto_indicadores" />
+											
+											<f:selectItem itemLabel="Auditoría" itemValue="mtto_auditoria" />
+											<f:selectItem itemLabel="Ninguno" itemValue="ninguno" />
+											
+										</p:selectCheckboxMenu>
+										
+										<p:outputLabel for="txtCompaniaId_Compania" value="Compañía: " />
+										<p:selectOneMenu id="txtCompaniaId_Compania" disabled="true"
+											binding="#{usuariosView.txtCompaniaId_Compania}"
+											showCheckbox="true" required="true"
+											requiredMessage="seleccione una compañía:">
+											<f:selectItem itemLabel="Seleccione una compañía"
+												itemValue="" />
+											<f:selectItems value="#{usuariosView.selectCompania}" />
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtGruposUsuarios"
+											value="Grupos de usuarios " />
+										<p:selectManyMenu id="txtGruposUsuarios"
+											value="#{usuariosView.grpUser}" showCheckbox="true"
+											required="true"
+											requiredMessage="Seleccione un grupo de usuario"
+											disabled="false">
+											<f:selectItems value="#{usuariosView.selectedItemGrpUser}"
+												var="grpMembers" itemLabel=" #{grpMembers.groupName}"
+												itemValue="#{grpMembers.id}" />
+										</p:selectManyMenu>
+										
+										<p:outputLabel for="txtNivelAcceso" value="Tipo de control: " />
+										<p:selectOneMenu id="txtNivelAcceso" disabled="true"
+											binding="#{usuariosView.txtNivelAcceso}" required="true"
+											requiredMessage="Seleccione un tipo">
+											<f:selectItem itemLabel="TOTAL" itemValue="TOTAL" />
+											<f:selectItem itemLabel="PARCIAL" itemValue="PARCIAL" />
+										</p:selectOneMenu>
+										
+										
+										
+										
+
+										<p:inputText style="visibility:hidden" id="txtUsuarioId"
+											disabled="false" binding="#{usuariosView.txtUsuarioId}">
+											<p:ajax
+												update=":dialogUsuarios,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{usuariosView.listener_txtId}" />
+										</p:inputText>
+
+
+									</h:panelGrid>
+								</p:tab>
+
+							</p:tabView>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{usuariosView.btnSave}" value="Grabar"
+									action="#{usuariosView.action_save()}"
+									update=":dialogUsuarios :frm:panelDataTableUsuarios" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									process="@this" value="Limpiar"
+									action="#{usuariosView.action_clear()}"
+									update=":dialogUsuarios" />
+							</div>
+						</p:panel>
+
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

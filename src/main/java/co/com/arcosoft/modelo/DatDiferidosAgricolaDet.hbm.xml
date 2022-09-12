@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 29/07/2019 11:07:23 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatDiferidosAgricolaDet" table="dat_diferidos_agricola_det">
+        <id name="datDiferidosAgricolaDetId" type="java.lang.Long">
+            <column name="dat_diferidos_agricola_det_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_id" />
+        </many-to-one>
+        <many-to-one name="datDiferidosAgricola" class="co.com.arcosoft.modelo.DatDiferidosAgricola" fetch="select">
+            <column name="dat_diferidos_agricola_id" />
+        </many-to-one>
+        <many-to-one name="nivel2" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="nivel2_id" />
+        </many-to-one>
+        <property name="valorFactura" type="java.lang.Double">
+            <column name="valor_factura" precision="12" scale="4" />
+        </property>
+        <property name="areaNeta" type="java.lang.Double">
+            <column name="area_neta" precision="12" scale="4" />
+        </property>
+        
+        <property name="etapaId" type="java.lang.Long">
+            <column name="etapa_id"/>
+        </property>
+        <property name="variedadId" type="java.lang.Long">
+            <column name="variedad_id"/>
+        </property>
+    </class>
+</hibernate-mapping>

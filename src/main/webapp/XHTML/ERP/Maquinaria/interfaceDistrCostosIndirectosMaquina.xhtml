@@ -1,0 +1,436 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Consulta de costos/gastos a distribuir en máquinas productivas">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2" id="panelGrid">
+
+
+										<p:outputLabel for="msgFechaInicial" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{interfaceDistribucionCostosIndirectosMaquinaView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFinal" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											style="font-size: 0.9em;" mask="true" size="12"
+											binding="#{interfaceDistribucionCostosIndirectosMaquinaView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtTipoCosto" value="Tipo de costo:"
+											style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtTipoCosto"
+											binding="#{interfaceDistribucionCostosIndirectosMaquinaView.txtTipoCosto}"
+											required="true" style="font-size: 0.9em;"
+											requiredMessage="Seleccione un tipo de costo">
+											<f:selectItem itemLabel="TODOS" itemValue="0" />
+											<f:selectItem itemLabel="SUMINISTRO" itemValue="SUMINISTRO" />
+											<f:selectItem itemLabel="CAJA MENOR" itemValue="CAJA MENOR" />
+											<f:selectItem itemLabel="GASTOS DE OPERACION"
+												itemValue="GASTOS DE OPERACION" />
+											<f:selectItem itemLabel="NOMINA ADMON"
+												itemValue="NOMINA ADMON" />
+												<f:selectItem itemLabel="NOMINA OPERATIVA"
+												itemValue="NOMINA OPERATIVA" />
+											<f:selectItem itemLabel="DIFERIDOS" itemValue="DIFERIDOS" />
+											<f:selectItem itemLabel="PROVISIONES" itemValue="PROVISIONES" />
+											
+										</p:selectOneMenu>
+
+										<p:commandButton id="btnConsultar" value="Consultar"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{interfaceDistribucionCostosIndirectosMaquinaView.costosDistribuirMaquina}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+										<p:outputLabel></p:outputLabel>
+
+
+									</h:panelGrid>
+								</p:column>
+
+
+
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<div align="center">
+						<p:commandButton process="tbl" update=":r4" icon="ui-icon-search"
+							value="Ejecutar distribucción"
+							oncomplete="PF('multiCarDialog').show()" />
+					</div>
+
+
+					<!-- <p:growl id="men"/>	 -->
+					<p:dataTable id="tbl"
+						value="#{interfaceDistribucionCostosIndirectosMaquinaView.dataDistr}"
+						scrollable="true" scrollWidth="99%" scrollHeight="400"
+						var="datServRealizadosEquipo" resizableColumns="true"
+						style="margin-bottom:20px" lazy="true" reflow="true"
+						rows="999999999" rowKey="#{datServRealizadosEquipo.origenDatos}"
+						selection="#{interfaceDistribucionCostosIndirectosMaquinaView.selectedDistr2}">
+
+						<p:column width="70" selectionMode="multiple"
+							style="text-align:center">
+							<f:facet name="header">
+								<h:outputText value="Marcar">
+
+								</h:outputText>
+							</f:facet>
+						</p:column>
+
+						<p:column headerText="Opciones" exportable="false" width="120">
+							<div align="center">
+								<p:commandButton id="btnDetalle" value="Detalle gastos"
+									icon="ui-icon-pencil" style="font-size: 0.8em;"
+									update=":dialogDetalleCostos"
+									actionListener="#{interfaceDistribucionCostosIndirectosMaquinaView.action_detalle_gastos}">
+									<f:attribute name="selectedDistr"
+										value="#{datServRealizadosEquipo}" />
+								</p:commandButton>
+
+							</div>
+						</p:column>
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Año" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.anio}"
+								style="font-size: 0.9em;">
+								<f:convertNumber />
+							</h:outputText>
+						</p:column>
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Mes" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.mes}"
+								style="font-size: 0.9em;">
+								<f:convertNumber />
+							</h:outputText>
+						</p:column>
+
+						<p:column width="150">
+							<f:facet name="header">
+								<h:outputText value="Tipo de costo" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.origenDatos}"
+								style="font-size: 0.9em;">
+
+							</h:outputText>
+						</p:column>
+
+
+
+						<p:column width="90">
+							<f:facet name="header">
+								<h:outputText value="Costo($)" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.costoTotal}"
+								style="font-size: 0.9em;">
+								<f:convertNumber type="currency" currencySymbol="$" />
+							</h:outputText>
+						</p:column>
+
+						<p:column width="90">
+							<f:facet name="header">
+								<h:outputText value="Costo distribuido"
+									style="font-size: 0.8em;" />
+							</f:facet>
+							<div
+								style=" font-size: 1em; background-color:#{datServRealizadosEquipo.color}; padding:12px; ; line-height:1.4;">
+								<h:outputText style=" font-size: 1em;"
+									value="#{datServRealizadosEquipo.totalCostoDistribuido}">
+									<f:convertNumber type="currency" currencySymbol="$" />
+								</h:outputText>
+							</div>
+						</p:column>
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="% Distribuido" style="font-size: 0.8em;" />
+							</f:facet>
+							<div
+								style=" font-size: 1em; background-color:#{datServRealizadosEquipo.color}; padding:12px; ; line-height:1.4;">
+								<h:outputText style=" font-size: 1em;"
+									value="#{datServRealizadosEquipo.porcentajeDistribuido}">
+									<f:convertNumber pattern="0.00" />
+								</h:outputText>
+							</div>
+						</p:column>
+
+
+					</p:dataTable>
+
+
+					<p:panelGrid>
+
+
+						<p:row>
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel value="TOTALES:  " style="font-size: 1em;" />
+								</h:panelGrid>
+							</p:column>
+
+
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtCostoTotal" value="Costo total($): "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtCostoTotal" style="font-size: 0.9em;"
+										size="12"
+										binding="#{interfaceDistribucionCostosIndirectosMaquinaView.txtCostoTotal}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+										required="false">
+									</p:inputNumber>
+								</h:panelGrid>
+							</p:column>
+
+
+
+						</p:row>
+
+
+
+
+					</p:panelGrid>
+
+
+				</h:form>
+
+				<p:dialog id="r4"
+					header="Distribuir costos indirectos en múltiples máquinas"
+					appendTo="@(body)" widgetVar="multiCarDialog" draggable="true"
+					closable="true" styleClass="dialogFix"
+					visible="#{interfaceDistribucionCostosIndirectosMaquinaView.showDialog}"
+					modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+					width="500">
+					<h:form>
+						<p:messages id="msg1" showDetail="true" autoUpdate="true"
+							closable="true">
+						</p:messages>
+						<p:outputPanel id="multiCarDetail" style="text-align:center;">
+							<ui:repeat
+								value="#{interfaceDistribucionCostosIndirectosMaquinaView.selectedDistr}"
+								var="datServRealizadosEquipo">
+							</ui:repeat>
+							<h:outputText
+								value="Seleccione las máquinas a las cuales le re-asignara los costos indirectos"
+								style="font-size: 1em;" />
+
+
+							<p:panelGrid columns="2">
+								<p:outputLabel for="equipoDistr" value="Máquina: "
+									style="font-size: 0.9em;" />
+								<p:selectCheckboxMenu id="equipoDistr" style="font-size: 0.9em;"
+									value="#{interfaceDistribucionCostosIndirectosMaquinaView.selectEquiposDistribucciones}"
+									filter="true" filterMatchMode="contains" showCheckbox="true"
+									required="false"
+									requiredMessage="Seleccione al menos una máquina">
+									<f:selectItems
+										value="#{interfaceDistribucionCostosIndirectosMaquinaView.equipoDistr}"
+										var="equipoDistr"
+										itemLabel="#{equipoDistr.codEquipo} **Ingresos #{equipoDistr.ingresoTotal}**"
+										itemValue="#{equipoDistr.equipoId}" />
+								</p:selectCheckboxMenu>
+
+							</p:panelGrid>
+							<p:commandButton id="btnNew2" value="Confirmar"
+								icon="ui-icon-newwin"
+								action="#{interfaceDistribucionCostosIndirectosMaquinaView.action_valoresSeleccionados}"
+								process="@all" update=":r4, msg1, :frm:growl, :frm:tbl">
+								<f:attribute name="selectedDistr"
+									value="#{datServRealizadosEquipo}" />
+							</p:commandButton>
+
+
+
+						</p:outputPanel>
+					</h:form>
+				</p:dialog>
+
+				<p:dialog id="dialogDetalleCostos" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{interfaceDistribucionCostosIndirectosMaquinaView.showDialog}"
+					resizable="false" modal="true" width="900" responsive="true">
+
+					<h:form id="detalleCosto">
+
+						<p:dataTable id="tblDetalle"
+							value="#{interfaceDistribucionCostosIndirectosMaquinaView.dataDetalleCostos}"
+							scrollable="true" scrollWidth="99%" scrollHeight="400"
+							var="costosDetalle" resizableColumns="false"
+							style="margin-bottom:20px" lazy="true" reflow="true"
+							rows="999999999">
+
+
+
+							<p:column width="100">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<div
+									style=" font-size: 1em; background-color:#{costosDetalle.color2}; padding:12px; ; line-height:1.4;">
+									<h:outputText value="#{costosDetalle.fechaServicio}">
+										<f:convertDateTime pattern="dd-MM-yyyy" />
+									</h:outputText>
+								</div>
+							</p:column>
+
+						
+
+							<p:column width="150">
+								<f:facet name="header">
+									<h:outputText value="Concepto inventario"
+										style="font-size: 0.8em;" />
+								</f:facet>
+								<div
+									style=" font-size: 1em; background-color:#{costosDetalle.color2}; padding:12px; ; line-height:1.4;">
+									<h:outputText value="#{costosDetalle.conceptoInventario}"
+										style="font-size: 0.8em;">
+
+									</h:outputText>
+								</div>
+							</p:column>
+
+							<p:column width="150">
+								<f:facet name="header">
+									<h:outputText value="Máquinas" style="font-size: 0.8em;" />
+								</f:facet>
+								<div
+									style=" font-size: 1em; background-color:#{costosDetalle.color3}; padding:12px; ; line-height:1.4;">
+									<h:outputText value="#{costosDetalle.maquina}"
+										style="font-size: 0.8em;">
+
+									</h:outputText>
+								</div>
+							</p:column>
+
+
+							<p:column width="90">
+								<f:facet name="header">
+									<h:outputText value="Costo($)" style="font-size: 0.8em;" />
+								</f:facet>
+								<div
+									style=" font-size: 1em; background-color:#{costosDetalle.color2}; padding:12px; ; line-height:1.4;">
+									<h:outputText value="#{costosDetalle.costoTotal}"
+										style="font-size: 0.8em;">
+										<f:convertNumber type="currency" currencySymbol="$" />
+									</h:outputText>
+								</div>
+							</p:column>
+
+							<p:column width="150">
+								<f:facet name="header">
+									<h:outputText value="Observación" style="font-size: 0.8em;" />
+								</f:facet>
+								<div
+									style=" font-size: 1em; background-color:#{costosDetalle.color3}; padding:12px; ; line-height:1.4;">
+									<h:outputText value="#{costosDetalle.observacion}"
+										style="font-size: 0.8em;">
+
+									</h:outputText>
+								</div>
+							</p:column>
+
+
+						</p:dataTable>
+
+
+						<p:panelGrid>
+
+
+							<p:row>
+								<p:column style="text-align:right">
+									<h:panelGrid columns="2">
+										<p:outputLabel value="TOTALES:  " style="font-size: 0.9em;" />
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column style="text-align:right">
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtCostoTotalDetalle"
+											value="Costo total($): " style="font-size: 0.8em;" />
+										<p:inputNumber id="txtCostoTotalDetalle"
+											style="font-size: 0.9em;" size="12"
+											binding="#{interfaceDistribucionCostosIndirectosMaquinaView.txtCostoTotalDetalle}"
+											decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+											required="false">
+										</p:inputNumber>
+									</h:panelGrid>
+								</p:column>
+
+
+
+							</p:row>
+
+
+
+
+						</p:panelGrid>
+
+
+					</h:form>
+				</p:dialog>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

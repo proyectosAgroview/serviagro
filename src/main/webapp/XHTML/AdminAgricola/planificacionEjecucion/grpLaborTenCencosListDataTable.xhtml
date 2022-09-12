@@ -1,0 +1,144 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTablegrpLaborTenCencos"
+						header="CeCos - Tenencias - Grp. Labores">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{grpLaborTenCencosView.data}"
+							var="grpLaborTenCencos" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="GrpLabor_Cecos_Tenencias" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+							<p:column filterBy="#{grpLaborTenCencos.grpLabor}"
+								sortBy="#{grpLaborTenCencos.grpLabor}">
+								<f:facet name="header">
+									<h:outputText value="Grupo de labores" />
+								</f:facet>
+								<h:outputText value="#{grpLaborTenCencos.grpLabor}" />
+							</p:column>
+
+							<p:column filterBy="#{grpLaborTenCencos.centCost}"
+								sortBy="#{grpLaborTenCencos.centCost}">
+								<f:facet name="header">
+									<h:outputText value="Centros de costos" />
+								</f:facet>
+								<h:outputText value="#{grpLaborTenCencos.centCost}" />
+							</p:column>
+
+							<p:column filterBy="#{grpLaborTenCencos.tenencia}"
+								sortBy="#{grpLaborTenCencos.tenencia}">
+								<f:facet name="header">
+									<h:outputText value="Tenencias" />
+								</f:facet>
+								<h:outputText value="#{grpLaborTenCencos.tenencia}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogGrpLaborTenCencos"
+										actionListener="#{grpLaborTenCencosView.action_edit}">
+										<f:attribute name="selectedGrpLaborTenCencos"
+											value="#{grpLaborTenCencos}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{grpLaborTenCencosView.action_new()}"
+								update=":dialogGrpLaborTenCencos" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogGrpLaborTenCencos" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{grpLaborTenCencosView.showDialog}" resizable="false"
+					modal="true" width="600" showEffect="fade" styleClass="dialogFix">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelGrpLaborTenCencos"
+							header="CeCos - Tenencias - Grp. Labores">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtGrpLabor" value="Grupo de labor: " />
+								<p:selectOneMenu id="txtGrpLabor" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									binding="#{grpLaborTenCencosView.txtGrpLabor}" required="true"
+									requiredMessage="Seleccione un grupo de labor ">
+									<f:selectItem itemLabel="Seleccione un grupo de labor"
+										itemValue="" />
+									<f:selectItems value="#{grpLaborTenCencosView.selectGrpLabor}" />
+								</p:selectOneMenu>
+								<p:message for="txtGrpLabor" />
+
+								<p:outputLabel for="txtCentCost" value="Centro de costo: " />
+								<p:selectOneMenu id="txtCentCost" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									binding="#{grpLaborTenCencosView.txtCentCost}" required="true"
+									requiredMessage="Seleccione un CeCos: ">
+									<f:selectItem itemLabel="Seleccione un CeCos" itemValue="" />
+									<f:selectItems value="#{grpLaborTenCencosView.selectCentCost}" />
+								</p:selectOneMenu>
+								<p:message for="txtCentCost" />
+
+								<p:outputLabel for="txtTenencia" value="Tenencia: " />
+								<p:selectOneMenu id="txtTenencia" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									binding="#{grpLaborTenCencosView.txtTenencia}" required="true"
+									requiredMessage="Seleccione una tenencia: ">
+									<f:selectItem itemLabel="Seleccione una tenencia" itemValue="" />
+									<f:selectItems
+										value="#{grpLaborTenCencosView.selectTenenciaId}" />
+								</p:selectOneMenu>
+								<p:message for="txtTenencia" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{grpLaborTenCencosView.btnSave}" value="Grabar"
+									action="#{grpLaborTenCencosView.action_save()}"
+									update=":dialogGrpLaborTenCencos :frm:panelDataTablegrpLaborTenCencos" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{grpLaborTenCencosView.action_clear()}"
+									process="@this" update=":dialogGrpLaborTenCencos" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

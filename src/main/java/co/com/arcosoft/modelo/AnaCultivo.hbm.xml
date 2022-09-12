@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.AnaCultivo" table="ana_cultivo" >
+        <id name="anaCultId" type="java.lang.Long">
+            <column name="ana_cult_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="anaSanVeg" class="co.com.arcosoft.modelo.AnaSanVeg" fetch="select">
+            <column name="ana_san_veg_id" />
+        </many-to-one>
+        <many-to-one name="cultivo" class="co.com.arcosoft.modelo.Cultivo" fetch="select">
+            <column name="cultivo_id" />
+        </many-to-one>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

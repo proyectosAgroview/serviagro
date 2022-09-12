@@ -1,0 +1,413 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableProfesion" header="Profesiones">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{profesionMttoView.data}"
+							var="profesion" paginator="true" rows="5" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Profesión" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{profesion.estado}"
+								sortBy="#{profesion.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{profesion.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{profesion.codigo}"
+								sortBy="#{profesion.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{profesion.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{profesion.nombre}"
+								sortBy="#{profesion.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{profesion.nombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogProfesion"
+										actionListener="#{profesionMttoView.action_edit}">
+										<f:attribute name="selectedProfesion" value="#{profesion}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{profesionMttoView.action_new()}" update=":dialogProfesion" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogProfesion" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{profesionMttoView.showDialog}"
+					resizable="false" modal="true" width="800" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelProfesion" header="Profesiones">
+
+							<p:tabView>
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="3" cellpadding="5">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{profesionMttoView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{profesionMttoView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelProfesion,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{profesionMttoView.listener_txtCodigo}" />
+
+										</p:inputText>
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true"
+											binding="#{profesionMttoView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+										<p:message for="txtNombre" />
+
+										<p:outputLabel for="txtFunciones" value="Rol:" />
+										<p:selectOneMenu id="txtFunciones"
+											binding="#{profesionMttoView.txtFunciones}" required="true"
+											requiredMessage="Seleccione un Rol">
+											<f:selectItem itemLabel="Seleccione un Rol" itemValue="" />
+											<f:selectItem itemLabel="Obrero Agrícola"
+												itemValue="Obrero Agrícola" />
+											<f:selectItem itemLabel="Cortero" itemValue="Cortero" />
+											<f:selectItem itemLabel="Operador equipos cosecha"
+												itemValue="Operador equipos cosecha" />
+											<f:selectItem itemLabel="Conductor" itemValue="Conductor" />
+											<f:selectItem itemLabel="Supervisor" itemValue="Supervisor" />
+											<f:selectItem itemLabel="Asistente técnico"
+												itemValue="Asistente técnico" />
+											<f:selectItem itemLabel="Administrativo"
+												itemValue="Administrativo" />
+											<f:selectItem itemLabel="Otros" itemValue="Otros" />
+										</p:selectOneMenu>
+										<p:message for="txtFunciones" />
+
+
+										<p:outputLabel for="txtElemCostoId_ElementoCosto"
+											value="Elemento de costo: " />
+										<p:selectOneMenu id="txtElemCostoId_ElementoCosto"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{profesionMttoView.txtElemCostoId_ElementoCosto}"
+											required="false"
+											requiredMessage="Seleccione un elemento de costo">
+											<f:selectItem itemLabel="Seleccione un elemento de costo"
+												itemValue="" />
+											<f:selectItems value="#{profesionMttoView.selectElementoCosto}" />
+										</p:selectOneMenu>
+										<p:message for="txtElemCostoId_ElementoCosto" />
+
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1:" />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{profesionMttoView.txtInfoAdicional}" rows="2"
+											cols="30" counter="display" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2:" />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{profesionMttoView.txtInfoAdicional2}" rows="2"
+											cols="30" counter="display2" maxlength="100"
+											counterTemplate="{0} Caracteres." autoResize="true" />
+										<h:outputText id="display2" />
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtProfId"
+											binding="#{profesionMttoView.txtProfId}">
+											<p:ajax update=":dialogProfesion"
+												listener="#{profesionMttoView.listener_txtId}" />
+										</p:inputText>
+
+									</h:panelGrid>
+								</p:tab>
+
+								<p:tab title="Tarifas por profesión">
+
+									<p:panel id="toggleable" toggleable="true" widgetVar="panel">
+
+										<p:messages id="msg1" closable="true" showDetail="true" />
+
+										<h:panelGrid id="gridTarifaProfesion" columns="3">
+
+											<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+											<p:calendar id="msgFechaInicial" showOn="button"
+												navigator="false" locale="es"
+												binding="#{profesionMttoView.txtFechaInicial}"
+												pattern="dd/MM/yyyy" mask="true" required="false"
+												requiredMessage="La Fecha   es obligatoria">
+											</p:calendar>
+											<p:message for="msgFechaInicial" />
+
+											<p:outputLabel for="msgFechaFinal" value="Fecha final: " />
+											<p:calendar id="msgFechaFinal" showOn="button"
+												navigator="false" locale="es"
+												binding="#{profesionMttoView.txtFechaFinal}"
+												pattern="dd/MM/yyyy" mask="true" required="false"
+												requiredMessage="La Fecha   es obligatoria">
+											</p:calendar>
+											<p:message for="msgFechaFinal" />
+
+											<p:outputLabel for="txtContratistaId_Contratista"
+												value="Contratista: " />
+											<p:selectOneMenu id="txtContratistaId_Contratista"
+												effect="fade" filter="true" filterMatchMode="contains"
+												binding="#{profesionMttoView.txtContratistaId_Contratista}"
+												style="font-size: 1em; width: 160" autoWidth="false"
+												required="false" requiredMessage="Seleccione un contratista">
+												<f:selectItem itemLabel="Seleccione un contratista"
+													itemValue="" />
+												<f:selectItems value="#{profesionMttoView.selectContratista}" />
+											</p:selectOneMenu>
+											<p:message for="txtContratistaId_Contratista" />
+
+											<p:outputLabel for="txtCeptoNominaId_ConceptoNomina"
+												value="Concepto nómina: " />
+											<p:selectOneMenu id="txtCeptoNominaId_ConceptoNomina"
+												effect="fade" filter="true" filterMatchMode="contains"
+												style="font-size: 1em; width: 160" autoWidth="false"
+												binding="#{profesionMttoView.txtCeptoNominaId_ConceptoNomina}"
+												required="false" requiredMessage="Seleccione un concepto">
+												<f:selectItem itemLabel="Seleccione un concepto"
+													itemValue="" />
+												<f:selectItems value="#{profesionMttoView.selectCeptoNominaId}" />
+											</p:selectOneMenu>
+											<p:message for="txtCeptoNominaId_ConceptoNomina" />
+
+											<p:outputLabel for="txtUdadMedId_UdadMed"
+												value="Unidad de medida: " />
+											<p:selectOneMenu id="txtUdadMedId_UdadMed" effect="fade"
+												filter="true" filterMatchMode="contains"
+												binding="#{profesionMttoView.txtUdadMedId_UdadMed}"
+												required="false"
+												style="font-size: 1em; width: 160" autoWidth="false"
+												requiredMessage="Seleccione una unidad de medida">
+												<f:selectItem itemLabel="Seleccione  una unidad de medida"
+													itemValue="" />
+												<f:selectItems value="#{profesionMttoView.selectUdadMed}" />
+											</p:selectOneMenu>
+											<p:message for="txtUdadMedId_UdadMed" />
+
+											<p:outputLabel for="txtValorUnit" value="Tarifa: " />
+											<p:inputText id="txtValorUnit" disabled="true"
+												binding="#{profesionMttoView.txtValorUnit}" required="false"
+												requiredMessage="Indique el valor unitario">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											<p:message for="txtValorUnit" />
+											
+											
+										</h:panelGrid>
+
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+													binding="#{profesionMttoView.btnAgregar}" value="Agregar"
+													action="#{profesionMttoView.action_agregarTarifaProfesion}"
+													update="tablaTarifaProfesion :dialogProfesion" />
+
+												<p:commandButton id="btnlimpiar" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridTarifaProfesion" resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+										
+										<p:outputPanel>
+											<p:scrollPanel mode="native" style="width:650px;height:250px">
+											<p:dataTable id="tablaTarifaProfesion"
+												value="#{profesionMttoView.dataTarifaProfesion}"
+												var="listaTarifaProfesion" paginator="true" rows="5"
+												editable="true" reflow="true" editMode="cell"
+												widgetVar="cellTar">
+												
+												<p:ajax event="cellEdit" listener="#{profesionMttoView.onCellEditTarifa}" />
+
+												<p:column headerText="Fecha inicial">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaTarifaProfesion.fechaInicial}" >
+																<f:convertDateTime pattern="dd-MM-yyyy" />
+															</h:outputText>
+														</f:facet>
+														<f:facet name="input">
+															<p:calendar navigator="false" locale="es"
+															value="#{listaTarifaProfesion.fechaInicial}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Fecha final">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaTarifaProfesion.fechaFinal}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+														</f:facet>
+														<f:facet name="input">
+															<p:calendar navigator="false" locale="es"
+															value="#{listaTarifaProfesion.fechaInicial}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+												<p:column headerText="Contratista">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaTarifaProfesion.codContratista}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaTarifaProfesion.contratistaId.persEmprId}">
+																<f:selectItems value="#{profesionMttoView.selectContratista}"
+																	var="var1" itemValue="#{var1}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+												<p:column headerText="Cepto. nómina">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaTarifaProfesion.codConceptoNomina}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaTarifaProfesion.ceptoNominaId_ConceptoNomina.ceptoNominaId}">
+																<f:selectItems value="#{profesionMttoView.selectCeptoNominaId}"
+																	var="var2" itemValue="#{var2}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+												<p:column headerText="Unidad de medida">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaTarifaProfesion.codUdadMed}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaTarifaProfesion.udadMedId_UdadMed.udadMedId}">
+																<f:selectItems value="#{profesionMttoView.selectUdadMed}"
+																	var="var3" itemValue="#{var3}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<p:column headerText="Tarifa">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaTarifaProfesion.tarifa}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaTarifaProfesion.tarifa}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<f:attribute name="selectedTarifaProfesion"
+																value="#{listaTarifaProfesion}" />
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{profesionMttoView.actionDeleteTarifaProfesion}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaTarifaProfesion :dialogProfesion">
+															<f:attribute name="selectedTarifaProfesion"
+																value="#{listaTarifaProfesion}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+											</p:scrollPanel>
+										</p:outputPanel>
+									</p:panel>
+								</p:tab>
+
+							</p:tabView>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{profesionMttoView.btnSave}" value="Grabar"
+									action="#{profesionMttoView.action_save()}"
+									update=":dialogProfesion :frm:panelDataTableProfesion" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{profesionMttoView.action_clear()}"
+									process="@this" update=":dialogProfesion" />
+							</div>
+						</p:panel>
+					</h:form>
+
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.TarifaContratista" table="tarifa_contratista" >
+        <id name="tarifaCtrId" type="java.lang.Long">
+            <column name="tarifa_ctr_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="servicio" class="co.com.arcosoft.modelo.ConceptoNomina" fetch="select">
+            <column name="servicio_id" />
+        </many-to-one>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <many-to-one name="profesion" class="co.com.arcosoft.modelo.Profesion" fetch="select">
+            <column name="prof_id" />
+        </many-to-one>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" />
+        </many-to-one>
+        <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="contratista_id" />
+        </many-to-one>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="tarifa" type="java.lang.Double">
+            <column name="tarifa" precision="12" scale="4" />
+        </property>
+        <property name="fechaInicial" type="java.util.Date">
+            <column name="fecha_inicial" length="19" />
+        </property>
+        <property name="fechaFinal" type="java.util.Date">
+            <column name="fecha_final" length="19" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="NIVEL4_ID" precision="18" scale="0" />
+        </many-to-one>
+        <many-to-one name="nivel2" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="NIVEL2_ID" precision="18" scale="0" />
+        </many-to-one>
+          <property name="edadInicial" type="java.lang.Double">
+            <column name="edad_inicial" precision="12" scale="4" />
+        </property>
+        <property name="edadFinal" type="java.lang.Double">
+            <column name="edad_final" precision="12" scale="4" />
+        </property>
+        <property name="pesoPromedio" type="java.lang.Double">
+            <column name="peso_promedio" precision="12" scale="4" />
+        </property>
+        <property name="estadoIncidencia" type="java.lang.String">
+            <column name="estado_incidencia" length="30" />
+        </property>
+        <property name="alturaPlanta" type="java.lang.String">
+            <column name="altura_planta" length="30" />
+        </property>
+    </class>
+</hibernate-mapping>

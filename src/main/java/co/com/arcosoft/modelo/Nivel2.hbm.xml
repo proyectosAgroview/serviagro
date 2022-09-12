@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Nivel2" table="nivel2" >
+        <id name="nivel2Id" type="java.lang.Long">
+            <column name="nivel2_id" />
+            <generator class="identity" />
+        </id>
+        <property name="grpTenen" type="java.lang.Long">
+            <column name="grp_ten_id" />
+        </property>
+        <property name="trabajador" type="java.lang.Long">
+            <column name="trab_id" />
+        </property>
+        <property name="ciudad" type="java.lang.Long">
+            <column name="ciudad_id" />
+        </property>
+        <property name="centCost"  type="java.lang.Long">
+                    <column name="cent_cost_id" />
+        </property>
+        <property name="frenteCos" type="java.lang.Long">
+            <column name="frt_cos_id" />
+        </property>
+        <many-to-one name="nivel1" class="co.com.arcosoft.modelo.Nivel1" fetch="select">
+            <column name="nivel1_id" />
+        </many-to-one>
+        <many-to-one name="proveedor" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="prove_id" />
+        </many-to-one>
+        <property name="zonaGeografica" type="java.lang.Long">
+            <column name="zona_geografica_id" />
+        </property>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="tipoPropiedad" type="java.lang.String">
+            <column name="tipo_propiedad" length="30" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="150" />
+        </property>
+        <property name="direccion" type="java.lang.String">
+            <column name="direccion" length="30" />
+        </property>
+        <property name="barrio" type="java.lang.String">
+            <column name="barrio" length="30" />
+        </property>
+        <property name="telefono" type="java.lang.String">
+            <column name="telefono" length="20" />
+        </property>
+        <property name="pbx" type="java.lang.String">
+            <column name="pbx" length="20" />
+        </property>
+        <property name="distanciaPlanta" type="java.lang.Double">
+            <column name="distancia_planta" precision="12" scale="4" />
+        </property>
+        <property name="distanciaOficina" type="java.lang.Double">
+            <column name="distancia_oficina" precision="12" scale="4" />
+        </property>
+        <property name="latitud" type="java.lang.Double">
+            <column name="latitud" precision="22" scale="0" />
+        </property>
+        <property name="longitud" type="java.lang.Double">
+            <column name="longitud" precision="22" scale="0" />
+        </property>
+        <property name="precision" type="java.lang.Double">
+            <column name="precision1" precision="22" scale="0" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="pesoPromedio" type="java.lang.Double">
+            <column name="peso_promedio" precision="12" scale="4" />
+        </property>
+        <property name="vereda" type="java.lang.Long">
+            <column name="vereda" />
+        </property>
+        <property name="codigoAlternativo" type="java.lang.String">
+            <column name="codigo_alternativo" length="20" />
+        </property>
+        
+        <many-to-one name="pluvioId" class="co.com.arcosoft.modelo.EstPluvio" fetch="select">
+            <column name="pluvio_id" />
+        </many-to-one>
+        
+        <set name="nivel3s" table="nivel3" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Nivel3" />
+        </set>
+       
+        <set name="datPlanillaNominas" table="dat_planilla_nomina" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanillaNomina" />
+        </set>
+        <set name="cronogramaLaboresNivel4s" table="cronograma_labores_nivel4" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.CronogramaLaboresNivel4" />
+        </set>
+        <set name="datServicios" table="dat_servicio" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServicio" />
+        </set>
+        <set name="datTransProdNivel4s" table="dat_trans_prod_nivel4" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatTransProdNivel4" />
+        </set>
+
+        <set name="datServicioDets" table="dat_servicio_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServicioDet" />
+        </set>
+        <set name="datTransProdTrabajadoreses" table="dat_trans_prod_trabajadores" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatTransProdTrabajadores" />
+        </set>
+        <set name="datAplicProductos" table="dat_aplic_producto" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatAplicProducto" />
+        </set>
+        <set name="datProgramaRiegoDets" table="dat_programa_riego_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatProgramaRiegoDet" />
+        </set>
+        <set name="datPlanLaborDets" table="dat_plan_labor_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanLaborDet" />
+        </set>
+        <set name="datOtrosCostosNivel4s" table="dat_otros_costos_nivel4" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatOtrosCostosNivel4" />
+        </set>
+        <set name="datPlanillaNominaDets" table="dat_planilla_nomina_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanillaNominaDet" />
+        </set>
+        <set name="nivel2Persemprs" table="nivel2_persempr" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" not-null="true" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Nivel2Persempr" />
+        </set>
+        <set name="datRiegos" table="dat_riego" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatRiego" />
+        </set>
+        <set name="datAplicProdDets" table="dat_aplic_prod_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatAplicProdDet" />
+        </set>
+        <set name="datPlanLabors" table="dat_plan_labor" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanLabor" />
+        </set>
+        <set name="datPlanillaNominaOnivel4s" table="dat_planilla_nomina_onivel4" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanillaNominaOnivel4" />
+        </set>
+        <set name="datSanVegs" table="dat_san_veg" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="nivel2_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatSanVeg" />
+        </set>
+    </class>
+</hibernate-mapping>

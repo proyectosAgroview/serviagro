@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<f:facet name="first">
+		<title>AgroView</title>
+		<meta name="content-type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<link REL="SHORTCUT ICON"
+			href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/agrocana.ico" />
+
+		<script
+			src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/plugin/webfont/webfont.min.js"></script>
+		<script>
+		
+			WebFont.load({
+				google: {"families":["Lato:300,400,700,900"]},
+				custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/template/css/fonts.min.css']},
+				active: function() {
+					sessionStorage.fonts = true;
+				}
+			});
+
+		</script>
+
+
+	</f:facet>
+
+	<f:facet name="middle">
+
+		<link
+			href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/template/css/bootstrap.min.css"
+			rel="stylesheet" />
+
+		<link rel="stylesheet" type="text/css"
+			href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/style.css" /> 
+
+		<link
+			href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/template/css/atlantis.css"
+			rel="stylesheet" />
+
+<!-- 		<link rel="stylesheet"
+			href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/template/css/demo.css" /> -->
+
+
+		<link rel="stylesheet" type="text/css"
+			href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/hover-min.css" />
+
+		<link rel="stylesheet" type="text/css"
+			href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/primeflex.css" />
+
+		<link rel="stylesheet" type="text/css"
+			href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/primeflex.scss" />
+
+
+	</f:facet>
+
+	<f:facet name="last">
+
+		<script type="text/javascript"
+			src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/customNavBar.js"></script>
+
+	</f:facet>
+
+
+</h:head>
+
+<h:body  onload="nobackbutton()">
+
+	<!-- <ui:include src="/WEB-INF/template/header_home.xhtml" /> -->
+	
+	<ui:include src="/WEB-INF/template/header_home.xhtml" />
+    
+  <!--  <div class="main-panel"> -->
+	   <div class="content">
+         <div class="container">
+			<!-- Inicio Modulos -->
+			<div align="center"
+			     class="page-inner">
+            
+            <div style="margin-top:15%;"> 
+             
+            <div class="p-col-12 p-md-10  p-col-nogutter">
+			<div class="p-grid">
+			
+				<div class="p-col-12 p-md-15">
+					<a
+						href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/homedashboard.xhtml?moduloSeleccionado=suministros"
+						class="hvr-float-shadow"> <img id="imgsapcing"
+						src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_suministros.png" />
+					</a> <a
+						href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/homedashboard.xhtml?moduloSeleccionado=prog_labores"
+						class="hvr-float-shadow"> <img id="imgsapcing"
+						src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/prog_labores.png" />
+					</a> <a
+						href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/homedashboard.xhtml?moduloSeleccionado=servicios"
+						class="hvr-float-shadow"> <img id="imgsapcing"
+						src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_servicios.png" />
+					</a> <a
+						href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/homedashboard.xhtml?moduloSeleccionado=gastos"
+						class="hvr-float-shadow"> <img id="imgsapcing"
+						src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_gastos.png" />
+					</a>	
+				</div>
+				
+				<div class="p-col-12 p-md-15">
+					<!-- <a
+						href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/homedashboard.xhtml?moduloSeleccionado=facturacion"
+						class="hvr-float-shadow"> <img id="imgsapcing"
+						src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_facturacion.png" />
+					</a>  -->
+					<a
+						href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/homedashboard.xhtml?moduloSeleccionado=nomina"
+						class="hvr-float-shadow"> <img id="imgsapcing"
+						src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_nomina.png" />
+					</a>  <a
+						href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/homedashboard.xhtml?moduloSeleccionado=mantenimiento_maquinaria"
+						class="hvr-float-shadow"> <img id="imgsapcing"
+						src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_mantenimiento_maquinaria.png" />
+					</a>	
+					 <a
+						href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/homedashboard.xhtml?moduloSeleccionado=agro_analytics"
+						class="hvr-float-shadow"> <img id="imgsapcing"
+						src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_report_agricola.png" />
+					</a>	
+				</div>
+				
+				<div class="p-col-12 p-md-15">
+					 <a
+						href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/homedashboard.xhtml?moduloSeleccionado=auditoria"
+						class="hvr-float-shadow"> <img id="imgsapcing"
+						src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_auditoria.png" />
+					</a> <a
+						href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/homedashboard.xhtml?moduloSeleccionado=sgu"
+						class="hvr-float-shadow"> <img id="imgsapcing"
+						src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/bto_guser_agricola.png" />
+					</a>
+		
+				</div>
+			</div>
+	        </div>
+	        </div>
+	        
+	        
+	        
+	        </div>
+			<!-- Fin Modulos -->
+		  	  </div>
+	    </div>	
+    <!-- </div> -->
+
+
+	<!--   Core JS Files   -->
+	<script
+		src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/core/jquery.3.2.1.min.js"></script>
+
+	<script
+		src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/core/popper.min.js"></script>
+
+	<script
+		src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/core/bootstrap.min.js"></script>
+
+
+
+	<!-- Bootstrap Notify -->
+	<script
+		src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+	<!-- Sweet Alert -->
+	<script
+		src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+
+    <script>
+	$(document).ready(function(){
+	  $('[data-toggle="tooltip"]').tooltip(); 
+	});
+	</script>
+	
+	<script>
+		$('#displayNotif').on('click', function(){
+			var placementFrom = $('#notify_placement_from option:selected').val();
+			var placementAlign = $('#notify_placement_align option:selected').val();
+			var state = $('#notify_state option:selected').val();
+			var style = $('#notify_style option:selected').val();
+			var content = {};
+
+			content.message = 'Turning standard Bootstrap alerts into "notify" like notifications';
+			content.title = 'Bootstrap notify';
+			if (style == "withicon") {
+				content.icon = 'fa fa-bell';
+			} else {
+				content.icon = 'none';
+			}
+			content.url = 'index.html';
+			content.target = '_blank';
+
+			$.notify(content,{
+				type: state,
+				placement: {
+					from: placementFrom,
+					align: placementAlign
+				},
+				time: 1000,
+				delay: 0,
+			});
+		});
+	</script>
+
+
+
+
+</h:body>
+</html>

@@ -1,0 +1,298 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatPlanLabor" header="Plan de labores">
+						<p:growl id="men" />
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="msgFechaInicial" value="F. Inicial: "
+											style="font-size: 0.8em;" />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy" size="12"
+											mask="true" binding="#{datPlanLaborView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha es obligatoria"
+											style="font-size: 0.8em;">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFinal" value="F. Final: "
+											style="font-size: 0.8em;" />
+										<p:calendar id="msgFechaFinal" showOn="button" size="12"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											style="font-size: 0.8em;" mask="true"
+											binding="#{datPlanLaborView.txtFechaFinal}" required="true"
+											requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="zonas" value="Zonas: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="zonas"
+											value="#{datPlanLaborView.selectedNivel1}"
+											style="font-size: 0.8em;" filter="true"
+											filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una zona">
+											<f:selectItems value="#{datPlanLaborView.zonas}" var="zonas"
+												itemLabel=" #{zonas.nombre}" itemValue="#{zonas.nivel1Id}" />
+										</p:selectCheckboxMenu>
+										
+										<p:outputLabel for="fincas" value="Fincas: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="fincas" style="font-size: 0.8em;"
+											value="#{datPlanLaborView.selectedNivel2}" filter="true"
+											filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una finca">
+											<f:selectItems value="#{datPlanLaborView.fincas}"
+												var="fincas" itemLabel=" #{fincas.nombre}"
+												itemValue="#{fincas.nivel2Id}" />
+										</p:selectCheckboxMenu>
+										
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="bloques" value="Bloques: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="bloques" style="font-size: 0.8em;"
+											value="#{datPlanLaborView.selectedNivel3}" filter="true"
+											filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un bloque">
+											<f:selectItems value="#{datPlanLaborView.bloques}"
+												var="bloques" itemLabel=" #{bloques.nombre}"
+												itemValue="#{bloques.nivel3Id}" />
+										</p:selectCheckboxMenu>
+										
+										<p:outputLabel for="lotes" value="Lote: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="lotes" style="font-size: 0.8em;"
+											value="#{datPlanLaborView.selectedNivel4}" filter="true"
+											filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un lote">
+											<f:selectItems value="#{datPlanLaborView.lotes}" var="lotes"
+												itemLabel=" #{lotes.nombre}" itemValue="#{lotes.nivel4Id}" />
+										</p:selectCheckboxMenu>
+										
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="grupoLabores" value="Grupos de labor: "
+											style="font-size: 0.8em;" />
+
+										<p:selectCheckboxMenu id="grupoLabores"
+											value="#{datPlanLaborView.selectedGrupoLabor}"
+											style="font-size: 0.8em;" filter="true"
+											filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un grupo">
+											<f:selectItems value="#{datPlanLaborView.grupoLabores}"
+												var="grupoLabores" itemLabel=" #{grupoLabores.nombre}"
+												itemValue="#{grupoLabores.grpLaborId}" />
+										</p:selectCheckboxMenu>
+										
+										<p:outputLabel for="labores" value="Labor: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="labores" style="font-size: 0.8em;"
+											value="#{datPlanLaborView.selectedLabor}" filter="true"
+											filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una labor">
+											<f:selectItems value="#{datPlanLaborView.labores}"
+												var="labores" itemLabel=" #{labores.nombre}"
+												itemValue="#{labores.laborId}" />
+										</p:selectCheckboxMenu>
+										
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:commandButton id="btnConsultar" value="Consultar"
+											icon="ui-icon-newwin" style="font-size: 0.9em;"
+											action="#{datPlanLaborView.action_informe1()}"
+											update=":frm:tbl" process="@all" partialSubmit="true" />
+										<p:outputLabel></p:outputLabel>
+
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+						<p:scrollPanel mode="native" style="width:880px;height:350px">
+
+							<p:dataTable id="tbl" value="#{datPlanLaborView.data2}"
+								var="datPlanLabor" lazy="true" rows="999999999"
+								selection="#{datPlanLaborView.selectedDatPlanLabor2}"
+								rowKey="#{datPlanLabor.ordenTrabajo}" reflow="true">
+
+								<f:facet name="header">
+									<div align="right">
+										<h:commandLink id="excel" style=" margin-right:15px;">
+											<p:graphicImage
+												value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+												width="30" />
+											<p:dataExporter type="xls" target="tbl"
+												fileName="datPlanLabor" />
+										</h:commandLink>
+										<p:tooltip id="toolTipFade" for="excel"
+											value="Exportar todos los datos a Excel" />
+									</div>
+								</f:facet>
+
+								<p:column selectionMode="multiple" style="text-align:center">
+									<f:facet name="header">
+										<h:outputText value="Marcar" />
+									</f:facet>
+								</p:column>
+
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="O.T" style="font-size: 0.8em;" />
+									</f:facet>
+									<h:outputText value="#{datPlanLabor.ordenTrabajo}"
+										style="font-size: 0.8em;" />
+								</p:column>								
+								
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="F.Inicial" style="font-size: 0.8em;" />
+									</f:facet>
+									<h:outputText value="#{datPlanLabor.periodoInicial}">
+										<f:convertDateTime pattern="dd-MM-yyyy"
+											style="font-size: 0.8em;" />
+									</h:outputText>
+								</p:column>
+
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="F.Final" style="font-size: 0.8em;" />
+									</f:facet>
+									<h:outputText value="#{datPlanLabor.periodoFinal}">
+										<f:convertDateTime pattern="dd-MM-yyyy"
+											style="font-size: 0.8em;" />
+									</h:outputText>
+								</p:column>
+
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="Labor" style="font-size: 0.8em;" />
+									</f:facet>
+									<h:outputText value="#{datPlanLabor.nombreLabor}"
+										style="font-size: 0.8em;" />
+								</p:column>
+								
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="U. Medida" style="font-size: 0.8em;" />
+									</f:facet>
+									<h:outputText value="#{datPlanLabor.nombreUdadMed}"
+										style="font-size: 0.8em;" />
+								</p:column>
+							</p:dataTable>
+						</p:scrollPanel>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">						
+							<p:commandButton process="tbl" update=":r4"
+								 disabled="#{datPlanLaborView.disableNivel1}"
+								icon="ui-icon-search" value="Aprobar  OT's (Nivel1)"
+								oncomplete="PF('multiCarDialog').show()" />
+						
+							<p:commandButton process="tbl" update=":r5"
+							 disabled="#{datPlanLaborView.disableNivel2}"
+								icon="ui-icon-search" value="Aprobar OT's (Nivel 2)"
+								oncomplete="PF('multiCarDialog').show()" />
+						</div>
+					</p:panel>
+				</h:form>
+				
+				<p:dialog id="r4" header="Aprobar ordenes de servicio(Nivel 1 de autorización)"
+					appendTo="@(body)" widgetVar="multiCarDialog" draggable="true"
+					closable="true" styleClass="dialogFix"  
+					visible="#{datPlanLaborView.showDialog}" modal="true"
+					showEffect="fade" hideEffect="fade" resizable="false" width="350">
+					<p:messages id="msg1" showDetail="true" autoUpdate="true"
+							closable="true">
+							</p:messages>
+					<p:outputPanel id="multiCarDetail" style="text-align:center;">
+						<ui:repeat value="#{datPlanLaborView.selectedDatPlanLabor2}"
+							var="datPlanLabor">
+						</ui:repeat>
+						
+						<p:panelGrid  columns="2">
+						<h:outputText value="¿Esta seguro de aprobar las OT's seleccionadas?" style="font-size: 1em;" />
+						
+						<p:commandButton id="btnNew2" value="Confirmar"
+							 disabled="#{datPlanLaborView.disableButton}"
+							icon="ui-icon-newwin"
+							action="#{datPlanLaborView.action_valoresSeleccionados}"
+							process="@all" update=":r4, msg1">
+							<f:attribute name="selectedDatPlanLabor2" value="#{datPlanLabor}" />
+						</p:commandButton>
+						
+						</p:panelGrid>
+					</p:outputPanel>
+				</p:dialog>
+
+				<p:dialog id="r5" header="Aprobar ordenes de servicio (Nivel 2 de autorización)"
+					appendTo="@(body)" widgetVar="multiCarDialog" draggable="true"
+					closable="true" styleClass="dialogFix"  
+					visible="#{datPlanLaborView.showDialog}" modal="true"
+					showEffect="fade" hideEffect="fade" resizable="false" width="350">
+					<p:messages id="msg2" showDetail="true" autoUpdate="true"
+							closable="true">
+							</p:messages>
+					<p:outputPanel id="multiCarDetail2" style="text-align:center;">
+						<ui:repeat value="#{datPlanLaborView.selectedDatPlanLabor2}"
+							var="datPlanLabor">
+						</ui:repeat>
+						
+						<p:panelGrid  columns="2">
+						<h:outputText value="¿Esta seguro de aprobar las OT's seleccionadas?" style="font-size: 1em;" />
+						
+						<p:commandButton id="btnNew3" value="Confirmar"
+							 disabled="#{datPlanLaborView.disableButton1}"
+							icon="ui-icon-newwin"
+							action="#{datPlanLaborView.action_valoresSeleccionados2}"
+							process="@all" update=":r5, msg1">
+							<f:attribute name="selectedDatPlanLabor2" value="#{datPlanLabor}" />
+						</p:commandButton>
+						
+						</p:panelGrid>
+					</p:outputPanel>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

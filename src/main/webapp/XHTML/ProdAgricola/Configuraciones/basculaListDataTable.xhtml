@@ -1,0 +1,341 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableBascula" header="Báscula">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{basculaView.data}" var="bascula"
+							paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Bascula" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{bascula.estado}" sortBy="#{bascula.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{bascula.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{bascula.codigo}" sortBy="#{bascula.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{bascula.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{bascula.nombre}" sortBy="#{bascula.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{bascula.nombre}" />
+							</p:column>
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit"  value="Editar"icon="ui-icon-pencil"
+										update=":dialogBascula"
+										actionListener="#{basculaView.action_edit}">
+										<f:attribute name="selectedBascula" value="#{bascula}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{basculaView.action_new()}" update=":dialogBascula" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogBascula" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{basculaView.showDialog}"
+					resizable="false" modal="true" width="600" showEffect="fade"
+					enctype="multipart/form-data" acceptcharset="ISO-8859-1"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" showDetail="true" />
+						<p:panel id="panelBascula" header="Báscula">
+
+							<p:tabView>
+								<p:tab title="General">
+
+									<h:panelGrid columns="2" id="panelGrid">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{basculaView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{basculaView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax listener="#{basculaView.listener_txtCodigo}"
+											    process="@this,txtTipoLectura"
+												update="txtTipoLectura, :formDialog:panelBascula,:formDialog:msg,:formDialog:panelBotones" />
+										</p:inputText>
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true"
+											binding="#{basculaView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+
+										<p:outputLabel for="txtTipoLectura" value="Tipo de lectura: " />
+										<p:selectOneMenu id="txtTipoLectura"
+											binding="#{basculaView.txtTipoLectura}" required="true"
+											requiredMessage="Indique el tipo de lectura">
+											<f:selectItem itemLabel="Manual" itemValue="Manual" />
+											<f:selectItem itemLabel="Automática" itemValue="Automatica" />
+											<p:ajax listener="#{basculaView.listener_activarBotones()}"
+											                event="change"
+															process="@this,txtTipoLectura"
+															update="txtTipoLectura,panelGrid4,panelGrid2,panelGrid5,:formDialog:panelBotones" />
+										</p:selectOneMenu>
+
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1:" />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{basculaView.txtInfoAdicional}" rows="2" cols="30"
+											maxlength="100" autoResize="true" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2:" />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{basculaView.txtInfoAdicional2}" rows="2" cols="30"
+											maxlength="100" autoResize="true" />
+
+									</h:panelGrid>
+								</p:tab>
+								<p:tab title="Configuraciones puerto serial">
+
+									<h:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="4" id="panelGrid2" style="display:#{basculaView.ocultaCampoAutomatico}">
+
+
+													<p:outputLabel for="txtPuertoCom" value="Puerto COM:" />
+													<p:selectOneMenu id="txtPuertoCom"
+														binding="#{basculaView.txtPuertoCom}" required="#{basculaView.campoRequeridoAutomatico}"
+														requiredMessage="Seleccione un puerto">
+
+														<f:selectItem itemLabel="Seleccione un Puerto"
+															itemValue="" />
+														<f:selectItems value="#{basculaView.selectedPortNames}" />
+
+														<!-- <p:ajax listener="#{basculaView.listener_activarBotonProbarPruerto()}"
+											                event="change"
+															process="@this,:formDialog:btnProbar"
+															update=":formDialog:btnProbar" />
+
+													 <f:selectItem itemLabel="COM1" itemValue="COM1" />
+														<f:selectItem itemLabel="COM2" itemValue="COM2" />
+														<f:selectItem itemLabel="COM3" itemValue="COM3" />
+														<f:selectItem itemLabel="COM4" itemValue="COM4" />
+														<f:selectItem itemLabel="COM5" itemValue="COM5" />
+														<f:selectItem itemLabel="COM6" itemValue="COM6" />
+														<f:selectItem itemLabel="COM7" itemValue="COM7" />
+														<f:selectItem itemLabel="COM8" itemValue="COM8" /> -->
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtBitDatos" value="Bits de datos: " />
+													<p:selectOneMenu id="txtBitDatos"
+														binding="#{basculaView.txtBitDatos}" required="#{basculaView.campoRequeridoAutomatico}"
+														requiredMessage="Seleccione un bit de datos">
+														<f:selectItem itemLabel="4" itemValue="4" />
+														<f:selectItem itemLabel="5" itemValue="5" />
+														<f:selectItem itemLabel="6" itemValue="6" />
+														<f:selectItem itemLabel="7" itemValue="7" />
+														<f:selectItem itemLabel="8" itemValue="8" />
+													</p:selectOneMenu>
+
+
+													<p:outputLabel for="txtVelocidad" value="Velocidad" />
+													<p:selectOneMenu id="txtVelocidad"
+														binding="#{basculaView.txtVelocidad}" required="#{basculaView.campoRequeridoAutomatico}"
+														requiredMessage="Indique la velocidad">
+														<f:selectItem itemLabel="9600" itemValue="9600" />
+														<f:selectItem itemLabel="4800" itemValue="4800" />
+														<f:selectItem itemLabel="2400" itemValue="2400" />
+														<f:selectItem itemLabel="1200" itemValue="1200" />
+														<f:selectItem itemLabel="600" itemValue="600" />
+														<f:selectItem itemLabel="300" itemValue="300" />
+														<f:selectItem itemLabel="110" itemValue="110" />
+
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtBitParada" value="Bits de parada: " />
+													<p:selectOneMenu id="txtBitParada"
+														binding="#{basculaView.txtBitParada}" required="#{basculaView.campoRequeridoAutomatico}"
+														requiredMessage="Seleccione un bit de parada">
+														<f:selectItem itemLabel="1" itemValue="1" />
+														<f:selectItem itemLabel="2" itemValue="2" />
+														<f:selectItem itemLabel="1.5" itemValue="3" />
+													</p:selectOneMenu>
+
+
+													<p:outputLabel for="txtParidad" value="Paridad: " />
+													<p:selectOneMenu id="txtParidad"
+														binding="#{basculaView.txtParidad}" required="#{basculaView.campoRequeridoAutomatico}"
+														requiredMessage="Indique la paridad">
+														<f:selectItem itemLabel="none" itemValue="0" />
+														<f:selectItem itemLabel="Odd" itemValue="1" />
+														<f:selectItem itemLabel="Even" itemValue="2" />
+														<f:selectItem itemLabel="Mark" itemValue="3" />
+														<f:selectItem itemLabel="Space" itemValue="4" />
+													</p:selectOneMenu>
+
+
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</h:panelGrid>
+
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+
+									<h:panelGrid columns="2" id="panelGrid3">
+
+										<p:outputLabel for="txtUdadMedId_UdadMed"
+											value="Unidad de medida: " />
+										<p:selectOneMenu id="txtUdadMedId_UdadMed" effect="fade"
+											filter="true" filterMatchMode="startsWith"
+											binding="#{basculaView.txtUdadMedId_UdadMed}" required="true"
+											requiredMessage="Seleccione una unidad de medida">
+											<f:selectItem itemLabel="Seleccione  una unidad de medida"
+												itemValue="" />
+											<f:selectItems value="#{basculaView.selectUdadMed}" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+
+									<h:panelGrid>
+										<p:row>
+											<p:column>
+
+												<h:panelGrid columns="2" id="panelGrid4" style="display:#{basculaView.ocultaCampoAutomatico}">
+
+
+													<p:outputLabel for="txtFormatoCadena"
+														value="Formato Cadena: " />
+													<p:inputText id="txtFormatoCadena" disabled="true"
+														binding="#{basculaView.txtFormatoCadena}" required="#{basculaView.campoRequeridoAutomatico}"
+														requiredMessage="El formato cadena es obligatorio" />
+
+													<p:outputLabel for="txtIniciolectura"
+														value="Inicio de Lectura (Formato Cadena): " />
+													<p:inputText id="txtIniciolectura" required="#{basculaView.campoRequeridoAutomatico}" size="4"
+														requiredMessage="Inicio lectura es obligatorio"
+														disabled="true" binding="#{basculaView.txtIniciolectura}">
+
+														<f:convertNumber type="number" />
+
+													</p:inputText>
+
+													<p:outputLabel for="txtFinlectura"
+														value="Fin de lectura (Formato Cadena): " />
+													<p:inputText id="txtFinlectura" required="#{basculaView.campoRequeridoAutomatico}" size="4"
+														requiredMessage="Fin Lectura es obligatorio"
+														disabled="true" binding="#{basculaView.txtFinlectura}">
+
+														<f:convertNumber type="number" />
+
+													</p:inputText>
+
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</h:panelGrid>
+
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+
+									<h:panelGrid columns="2" id="panelGrid5" style="display:#{basculaView.ocultaCampoAutomatico}">
+
+										<p:outputLabel for="txtSubcadena" value="Subcadena Cadena: " />
+										<p:inputText id="txtSubcadena" disabled="true"
+											binding="#{basculaView.txtSubcadena}" required="#{basculaView.campoRequeridoAutomatico}"
+											requiredMessage="El formato de la Subcadena es obligatorio">
+
+										</p:inputText>
+
+
+										<p:outputLabel for="txtIntervaloLectura"
+											value="Intervalo de Lectura (Sg): " />
+										<p:inputText id="txtIntervaloLectura" size="3" disabled="true" required="#{basculaView.campoRequeridoAutomatico}" 
+											binding="#{basculaView.txtIntervaloLectura}" >
+											<f:convertNumber type="number" />
+										</p:inputText>
+
+
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtBasculaId"
+											binding="#{basculaView.txtBasculaId}">
+										</p:inputText>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+							</p:tabView>
+
+						</p:panel>
+
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{basculaView.btnSave}" value="Grabar"
+									action="#{basculaView.action_save()}"
+									update=":dialogBascula :frm:panelDataTableBascula" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{basculaView.action_clear()}"
+									process="@this" update=":dialogBascula" />
+								<p:commandButton id="btnProbar" icon="fas fa-plug"
+									disabled="true" binding="#{basculaView.btnProbar}"
+									value="Probar configuración"
+									actionListener="#{basculaView.listener_probarConexionBascula()}"
+									process="@this" update=":dialogBascula" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

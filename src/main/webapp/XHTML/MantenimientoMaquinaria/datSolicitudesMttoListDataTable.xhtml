@@ -1,0 +1,255 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	</h:head>
+
+	<h:body>
+		  <ui:composition template="/XHTML/homedashboard.xhtml">	
+		 
+		 	<ui:define name="body">	
+				<f:view>
+					
+					
+		  			<h:form id="frm">								  		
+						
+						<p:panel id="panelDataTableDatSolicitudesMtto" header="DatSolicitudesMttoData">
+							<p:growl id="men"/>				
+							<p:dataTable value="#{datSolicitudesMttoView.data}" var="datSolicitudesMtto"
+								paginator="true" rows="5">
+																										<p:column filterBy="#{datSolicitudesMtto.datSolicitudesMttoId}" sortBy="#{datSolicitudesMtto.datSolicitudesMttoId}" >
+										 <f:facet name="header">
+										<h:outputText value="datSolicitudesMttoId"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.datSolicitudesMttoId}"/>
+										 </p:column>
+			                    																									
+										<p:column filterBy="#{datSolicitudesMtto.compania}" sortBy="#{datSolicitudesMtto.compania}" >
+										 <f:facet name="header">
+										<h:outputText value="Compania"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.compania}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.consecutivo}" sortBy="#{datSolicitudesMtto.consecutivo}" >
+										 <f:facet name="header">
+										<h:outputText value="Consecutivo"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.consecutivo}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.descripcionSolicitud}" sortBy="#{datSolicitudesMtto.descripcionSolicitud}" >
+										 <f:facet name="header">
+										<h:outputText value="DescripcionSolicitud"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.descripcionSolicitud}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.estado}" sortBy="#{datSolicitudesMtto.estado}" >
+										 <f:facet name="header">
+										<h:outputText value="Estado"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.estado}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.fechaAnulacion}" sortBy="#{datSolicitudesMtto.fechaAnulacion}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaAnulacion"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.fechaAnulacion}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.fechaCreacion}" sortBy="#{datSolicitudesMtto.fechaCreacion}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaCreacion"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.fechaCreacion}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.fechaModificacion}" sortBy="#{datSolicitudesMtto.fechaModificacion}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaModificacion"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.fechaModificacion}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.fechaRegistro}" sortBy="#{datSolicitudesMtto.fechaRegistro}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaRegistro"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.fechaRegistro}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.observacionAnularReg}" sortBy="#{datSolicitudesMtto.observacionAnularReg}" >
+										 <f:facet name="header">
+										<h:outputText value="ObservacionAnularReg"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.observacionAnularReg}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.observaciones}" sortBy="#{datSolicitudesMtto.observaciones}" >
+										 <f:facet name="header">
+										<h:outputText value="Observaciones"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.observaciones}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.requiereParadaFabrica}" sortBy="#{datSolicitudesMtto.requiereParadaFabrica}" >
+										 <f:facet name="header">
+										<h:outputText value="RequiereParadaFabrica"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.requiereParadaFabrica}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.areaTrabajoId_AreaTrabajo}" sortBy="#{datSolicitudesMtto.areaTrabajoId_AreaTrabajo}" >
+										 <f:facet name="header">
+										<h:outputText value="AreaTrabajoId_AreaTrabajo"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.areaTrabajoId_AreaTrabajo}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.equipoId_Equipo}" sortBy="#{datSolicitudesMtto.equipoId_Equipo}" >
+										 <f:facet name="header">
+										<h:outputText value="EquipoId_Equipo"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.equipoId_Equipo}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.nivelPrioridadId_NivelPrioridad}" sortBy="#{datSolicitudesMtto.nivelPrioridadId_NivelPrioridad}" >
+										 <f:facet name="header">
+										<h:outputText value="NivelPrioridadId_NivelPrioridad"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.nivelPrioridadId_NivelPrioridad}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.tagId_Tag}" sortBy="#{datSolicitudesMtto.tagId_Tag}" >
+										 <f:facet name="header">
+										<h:outputText value="TagId_Tag"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.tagId_Tag}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.tipoMantenimientoId_TipoMantenimiento}" sortBy="#{datSolicitudesMtto.tipoMantenimientoId_TipoMantenimiento}" >
+										 <f:facet name="header">
+										<h:outputText value="TipoMantenimientoId_TipoMantenimiento"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.tipoMantenimientoId_TipoMantenimiento}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.trabId_Trabajador}" sortBy="#{datSolicitudesMtto.trabId_Trabajador}" >
+										 <f:facet name="header">
+										<h:outputText value="TrabId_Trabajador"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.trabId_Trabajador}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{datSolicitudesMtto.zonasFabricaId_ZonasFabrica}" sortBy="#{datSolicitudesMtto.zonasFabricaId_ZonasFabrica}" >
+										 <f:facet name="header">
+										<h:outputText value="ZonasFabricaId_ZonasFabrica"/>
+										</f:facet>
+										 <h:outputText value="#{datSolicitudesMtto.zonasFabricaId_ZonasFabrica}"/>
+										</p:column>   
+			                    			                    
+								<p:column headerText="Options">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogDatSolicitudesMtto"
+										actionListener="#{datSolicitudesMttoView.action_edit}">
+										<f:attribute name="selectedDatSolicitudesMtto" value="#{datSolicitudesMtto}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"									
+										title="Delete" actionListener="#{datSolicitudesMttoView.action_delete_datatable}"
+										onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+										icon="ui-icon-trash" update="@form">
+										<f:attribute name="selectedDatSolicitudesMtto" value="#{datSolicitudesMtto}" />
+									</p:commandButton>
+								</p:column>									                    
+							</p:dataTable>	
+						</p:panel>
+						<p:panel id="panelBoton">
+							<div align="center">
+								<p:commandButton id="btnNew" value="New"
+									action="#{datSolicitudesMttoView.action_new()}" update=":dialogDatSolicitudesMtto" />
+							</div>
+						</p:panel>						
+		   			</h:form>
+					<p:dialog id="dialogDatSolicitudesMtto" appendTo="@(body)" draggable="true"
+						closable="false" visible="#{datSolicitudesMttoView.showDialog}" resizable="false"
+						modal="true" width="500">
+						<h:form id="formDialog">
+							<p:messages id="msg" />
+							<p:panel id="panelDatSolicitudesMtto" header="DatSolicitudesMtto">							
+							    <h:panelGrid columns="2" id="panelGrid" >
+																		 <h:outputText id="msgDatSolicitudesMttoId" value="DatSolicitudesMttoId"/>
+									 <p:inputText id="txtDatSolicitudesMttoId" binding="#{datSolicitudesMttoView.txtDatSolicitudesMttoId}">
+									 <p:ajax update=":dialogDatSolicitudesMtto" listener="#{datSolicitudesMttoView.listener_txtId}"/>
+									 </p:inputText>	
+																											
+																		<h:outputText id="msgCompania" value=" Compania"/>
+									<p:inputText id="txtCompania" disabled="true" binding="#{datSolicitudesMttoView.txtCompania}"/>
+																		<h:outputText id="msgConsecutivo" value=" Consecutivo"/>
+									<p:inputText id="txtConsecutivo" disabled="true" binding="#{datSolicitudesMttoView.txtConsecutivo}"/>
+																		<h:outputText id="msgDescripcionSolicitud" value=" DescripcionSolicitud"/>
+									<p:inputText id="txtDescripcionSolicitud" disabled="true" binding="#{datSolicitudesMttoView.txtDescripcionSolicitud}"/>
+																		<h:outputText id="msgEstado" value=" Estado"/>
+									<p:inputText id="txtEstado" disabled="true" binding="#{datSolicitudesMttoView.txtEstado}"/>
+																		<h:outputText id="msgObservacionAnularReg" value=" ObservacionAnularReg"/>
+									<p:inputText id="txtObservacionAnularReg" disabled="true" binding="#{datSolicitudesMttoView.txtObservacionAnularReg}"/>
+																		<h:outputText id="msgObservaciones" value=" Observaciones"/>
+									<p:inputText id="txtObservaciones" disabled="true" binding="#{datSolicitudesMttoView.txtObservaciones}"/>
+																		<h:outputText id="msgRequiereParadaFabrica" value=" RequiereParadaFabrica"/>
+									<p:inputText id="txtRequiereParadaFabrica" disabled="true" binding="#{datSolicitudesMttoView.txtRequiereParadaFabrica}"/>
+																		<h:outputText id="msgAreaTrabajoId_AreaTrabajo" value=" AreaTrabajoId_AreaTrabajo"/>
+									<p:inputText id="txtAreaTrabajoId_AreaTrabajo" disabled="true" binding="#{datSolicitudesMttoView.txtAreaTrabajoId_AreaTrabajo}"/>
+																		<h:outputText id="msgEquipoId_Equipo" value=" EquipoId_Equipo"/>
+									<p:inputText id="txtEquipoId_Equipo" disabled="true" binding="#{datSolicitudesMttoView.txtEquipoId_Equipo}"/>
+																		<h:outputText id="msgNivelPrioridadId_NivelPrioridad" value=" NivelPrioridadId_NivelPrioridad"/>
+									<p:inputText id="txtNivelPrioridadId_NivelPrioridad" disabled="true" binding="#{datSolicitudesMttoView.txtNivelPrioridadId_NivelPrioridad}"/>
+																		<h:outputText id="msgTagId_Tag" value=" TagId_Tag"/>
+									<p:inputText id="txtTagId_Tag" disabled="true" binding="#{datSolicitudesMttoView.txtTagId_Tag}"/>
+																		<h:outputText id="msgTipoMantenimientoId_TipoMantenimiento" value=" TipoMantenimientoId_TipoMantenimiento"/>
+									<p:inputText id="txtTipoMantenimientoId_TipoMantenimiento" disabled="true" binding="#{datSolicitudesMttoView.txtTipoMantenimientoId_TipoMantenimiento}"/>
+																		<h:outputText id="msgTrabId_Trabajador" value=" TrabId_Trabajador"/>
+									<p:inputText id="txtTrabId_Trabajador" disabled="true" binding="#{datSolicitudesMttoView.txtTrabId_Trabajador}"/>
+																		<h:outputText id="msgZonasFabricaId_ZonasFabrica" value=" ZonasFabricaId_ZonasFabrica"/>
+									<p:inputText id="txtZonasFabricaId_ZonasFabrica" disabled="true" binding="#{datSolicitudesMttoView.txtZonasFabricaId_ZonasFabrica}"/>
+																		
+																													<h:outputText id="msgFechaAnulacion" value=" FechaAnulacion"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{datSolicitudesMttoView.txtFechaAnulacion}" >
+										<p:ajax event="dateSelect" listener="#{datSolicitudesMttoView.listener_txtFechaAnulacion}" />
+										</p:calendar>
+																				<h:outputText id="msgFechaCreacion" value=" FechaCreacion"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{datSolicitudesMttoView.txtFechaCreacion}" >
+										<p:ajax event="dateSelect" listener="#{datSolicitudesMttoView.listener_txtFechaCreacion}" />
+										</p:calendar>
+																				<h:outputText id="msgFechaModificacion" value=" FechaModificacion"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{datSolicitudesMttoView.txtFechaModificacion}" >
+										<p:ajax event="dateSelect" listener="#{datSolicitudesMttoView.listener_txtFechaModificacion}" />
+										</p:calendar>
+																				<h:outputText id="msgFechaRegistro" value=" FechaRegistro"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{datSolicitudesMttoView.txtFechaRegistro}" >
+										<p:ajax event="dateSelect" listener="#{datSolicitudesMttoView.listener_txtFechaRegistro}" />
+										</p:calendar>
+																										    </h:panelGrid>
+							</p:panel>						   
+							<p:panel id="panelBotones">
+								<div align="center">					
+									<p:commandButton id="btnSave" binding="#{datSolicitudesMttoView.btnSave}" value="Save" action="#{datSolicitudesMttoView.action_save()}" update=":dialogDatSolicitudesMtto :frm:panelDataTableDatSolicitudesMtto" />
+									<p:commandButton id="btnClear" value="Clear" action="#{datSolicitudesMttoView.action_clear()}" update=":dialogDatSolicitudesMtto" />
+									<p:commandButton id="btnExit" value="Exit" action="#{datSolicitudesMttoView.action_closeDialog()}" update=":dialogDatSolicitudesMtto" />
+								</div>
+							</p:panel>					
+						</h:form>
+					</p:dialog>
+				</f:view>
+			</ui:define>		
+		</ui:composition>	
+	</h:body>	
+</html>	

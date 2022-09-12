@@ -1,0 +1,205 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableFaseFenologica" header="Fase Fenológica">
+						<!--	<p:growl id="men"/>	-->
+						<p:dataTable id="tbl" value="#{faseFenologicaView.data}"
+							var="faseFenologica" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="faseFenologica" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{faseFenologica.estado}"
+								sortBy="#{faseFenologica.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{faseFenologica.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{faseFenologica.codigo}"
+								sortBy="#{faseFenologica.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{faseFenologica.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{faseFenologica.nombre}"
+								sortBy="#{faseFenologica.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{faseFenologica.nombre}" />
+							</p:column>
+
+							<p:column filterBy="#{faseFenologica.edadInicial}"
+								sortBy="#{faseFenologica.edadInicial}">
+								<f:facet name="header">
+									<h:outputText value="# de Días inicial" />
+								</f:facet>
+								<h:outputText value="#{faseFenologica.edadInicial}" />
+							</p:column>
+
+							<p:column filterBy="#{faseFenologica.edadFinal}"
+								sortBy="#{faseFenologica.edadFinal}">
+								<f:facet name="header">
+									<h:outputText value="# Días final" />
+								</f:facet>
+								<h:outputText value="#{faseFenologica.edadFinal}" />
+							</p:column>
+
+
+							<p:column filterBy="#{faseFenologica.cultivo}"
+								sortBy="#{faseFenologica.cultivo}">
+								<f:facet name="header">
+									<h:outputText value="Cultivo" />
+								</f:facet>
+								<h:outputText value="#{faseFenologica.cultivo}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogFaseFenologica"
+										actionListener="#{faseFenologicaView.action_edit}">
+										<f:attribute name="selectedFaseFenologica"
+											value="#{faseFenologica}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{faseFenologicaView.action_new()}"
+								update=":dialogFaseFenologica" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogFaseFenologica" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{faseFenologicaView.showDialog}" resizable="false"
+					modal="true" width="600" responsive="true" showEffect="fade"
+					styleClass="dialogFix" closeOnEscape="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelFaseFenologica" header="Fase Fenológica">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{faseFenologicaView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+
+								<p:outputLabel value="Código: " />
+								<p:inputText id="txtCodigo" disabled="false"
+									binding="#{faseFenologicaView.txtCodigo}"
+									placeholder="Buscar o crear registro" size="23">
+									<p:ajax update="panelFaseFenologica,msg,panelBotones"
+										listener="#{faseFenologicaView.listener_txtCodigo}" />
+								</p:inputText>
+								<h:outputText />
+
+								<p:outputLabel for="txtNombre" value="Nombre: " />
+								<p:inputText id="txtNombre" disabled="true"
+									binding="#{faseFenologicaView.txtNombre}" required="true"
+									requiredMessage="El Nombre es Obligatorio" />
+								<p:message for="txtNombre" />
+
+
+								<p:outputLabel for="txtCultivoId_Cultivo" value=" Cultivo: " />
+								<p:selectOneMenu id="txtCultivoId_Cultivo" disabled="true"
+									binding="#{faseFenologicaView.txtCultivoId_Cultivo}"
+									required="true" requiredMessage="Seleccione un cultivo">
+									<f:selectItem itemLabel="Seleccione un cultivo" itemValue="" />
+									<f:selectItems value="#{faseFenologicaView.selectCultivos}" />
+								</p:selectOneMenu>
+								<p:message for="txtCultivoId_Cultivo" />
+
+								<p:outputLabel for="txtEdadInicial" value="# Días inicial:" />
+								<p:inputText id="txtEdadInicial" disabled="true"
+									binding="#{faseFenologicaView.txtEdadInicial}">
+									<f:converter converterId="javax.faces.Integer" />
+								</p:inputText>
+								<p:message for="txtEdadInicial" />
+
+								<p:outputLabel for="txtEdadFinal" value="# Días final:" />
+								<p:inputText id="txtEdadFinal" disabled="true"
+									binding="#{faseFenologicaView.txtEdadFinal}">
+									<f:converter converterId="javax.faces.Integer" />
+								</p:inputText>
+								<p:message for="txtEdadFinal" />
+
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional" disabled="true"
+									binding="#{faseFenologicaView.txtInfoAdicional}" rows="5"
+									cols="30" counter="display" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+								<h:outputText id="display" />
+
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional2" disabled="true"
+									binding="#{faseFenologicaView.txtInfoAdicional2}" rows="5"
+									cols="30" counter="display2" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+								<h:outputText id="display2" />
+
+								<p:inputText style="visibility:hidden" id="txtFaseFenoId"
+									binding="#{faseFenologicaView.txtFaseFenoId}">
+									<p:ajax update=":dialogFaseFenologica"
+										listener="#{faseFenologicaView.listener_txtId}" />
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{faseFenologicaView.btnSave}" value="Grabar"
+									action="#{faseFenologicaView.action_save()}"
+									update=":dialogFaseFenologica :frm:panelDataTableFaseFenologica" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{faseFenologicaView.action_clear()}"
+									process="@this" update=":dialogFaseFenologica" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

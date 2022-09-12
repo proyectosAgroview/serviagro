@@ -1,0 +1,44 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:mp="http://primefaces.org/ui/material"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableItemsMenuGlosario" header="Glosario de terminos">
+						<p:dataTable value="#{itemsMenuView.dataGlosario}" var="itemsMenu"
+							reflow="true" paginator="true" rows="3" >
+
+							<p:column width="250" filterMatchMode="contains"  filterBy="#{itemsMenu.nombreItem}"
+								sortBy="#{itemsMenu.nombreItem}" filterStyle="width:90%" >
+								<f:facet name="header">
+									<h:outputText value="¿Que palabra desea buscar?" />
+								</f:facet>
+								<h:outputText value="#{itemsMenu.nombreItem}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header" >
+									<h:outputText value="Descripción" />
+								</f:facet>
+								<h:outputText escape="false" style="width:100%"
+								 value="#{itemsMenu.descripcion}" />
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+				</h:form>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

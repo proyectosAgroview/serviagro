@@ -1,0 +1,246 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable" header="Consulta costos totales por concepto de pago">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2" id="panelGrid">
+
+
+										<p:outputLabel for="msgFechaInicial" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{informeSRCostosTotalesConceptoPagoMaquinariaView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFinal" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											style="font-size: 0.9em;" mask="true" size="12"
+											binding="#{informeSRCostosTotalesConceptoPagoMaquinariaView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+
+										<p:outputLabel for="categoriaEquipos"
+											value="Categoría Máquinaria:" style="font-size: 0.9em;" />
+										<p:selectCheckboxMenu id="categoriaEquipos" style="font-size: 0.9em;"
+											value="#{informeSRCostosTotalesConceptoPagoMaquinariaView.selectedCategoriaEquipo}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una categoría">
+											<f:selectItems
+												value="#{informeSRCostosTotalesConceptoPagoMaquinariaView.categoriaEquipos}"
+												var="categoriaEquipos"
+												itemLabel=" #{categoriaEquipos.nombre}"
+												itemValue="#{categoriaEquipos.categEquipId}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="equipos" value="Máquinaria:"
+											style="font-size: 0.9em;" />
+										<p:selectCheckboxMenu id="equipos" style="font-size: 0.9em;"
+											value="#{informeSRCostosTotalesConceptoPagoMaquinariaView.selectedEquipo}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una máquina">
+											<f:selectItems value="#{informeSRCostosTotalesConceptoPagoMaquinariaView.equipos}"
+												var="equipos" itemLabel=" #{equipos.codigo}"
+												itemValue="#{equipos.equipoId}" />
+										</p:selectCheckboxMenu>
+
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+
+										<p:outputLabel for="txtEstadoServicio"
+											value="Estado del servicio: " style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtEstadoServicio"
+											style="font-size: 0.9em;"
+											binding="#{informeSRCostosTotalesConceptoPagoMaquinariaView.txtEstadoServicio}"
+											required="true" requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Servicios prestados"
+												itemValue="Servicios prestados" />
+											<f:selectItem itemLabel="Facturados" itemValue="facturado" />
+										</p:selectOneMenu>
+
+
+										<p:commandButton id="btnConsultar" value="Generar reporte"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{informeSRCostosTotalesConceptoPagoMaquinariaView.consultaCostosTotalesConceptoPago}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+										<p:outputLabel></p:outputLabel>
+
+									</h:panelGrid>
+								</p:column>
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+
+					<!-- <p:growl id="men"/>	 -->
+					<p:dataTable id="tbl" value="#{informeSRCostosTotalesConceptoPagoMaquinariaView.data}"
+						scrollable="true" scrollWidth="99%" scrollHeight="150"
+						var="datServRealizadosEquipo" resizableColumns="true"
+						style="margin-bottom:20px" lazy="true" reflow="true">
+						<f:facet name="header">
+							<div align="right">
+
+								<h:commandLink id="excel" style=" margin-right:15px;">
+									<p:graphicImage
+										value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+										width="30" />
+									<p:dataExporter type="xls" target="tbl"
+										fileName="datServRealizadosEquipo" />
+								</h:commandLink>
+								<p:tooltip id="toolTipFade" for="excel"
+									value="Exportar todos los datos a Excel" />
+							</div>
+						</f:facet>
+
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Máquina" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.codEquipo}"
+								style="font-size: 0.8em;">
+								
+							</h:outputText>
+						</p:column>
+
+
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Concepto del gasto" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.conceptoGasto}"
+								style="font-size: 0.8em;">
+							
+							</h:outputText>
+						</p:column>
+						
+						
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Año-mes" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.anio_mes}"
+								style="font-size: 0.8em;">
+							
+							</h:outputText>
+						</p:column>
+						
+						
+						
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Costo total($)" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.costoTotal}"
+								style="font-size: 0.8em;">
+								<f:convertNumber type="currency" currencySymbol="$" />
+							</h:outputText>
+						</p:column>
+						
+		
+
+						
+
+					</p:dataTable>
+
+
+					<p:panelGrid>
+
+
+						<p:row>
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel value="TOTALES:  " style="font-size: 1em;" />
+								</h:panelGrid>
+							</p:column>
+						
+						
+							
+
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtVlTotal" value="Costo total($): "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtVlTotal" style="font-size: 0.9em;"
+										size="12"
+										binding="#{informeSRCostosTotalesConceptoPagoMaquinariaView.txtVlTotal}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+										required="false">
+									</p:inputNumber>
+								</h:panelGrid>
+							</p:column>
+
+							
+						</p:row>
+
+					
+
+					</p:panelGrid>
+
+
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

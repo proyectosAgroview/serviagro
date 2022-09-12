@@ -1,0 +1,202 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Informe: Insumos detallados(Excel)">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+
+						<h:panelGrid columns="3" id="panelGrid" width="500">
+														<p:outputLabel for="txtCompania" value="Compañía" />
+										<p:selectOneMenu id="txtCompania"
+											binding="#{informeInsumosAgricolasExcelView.txtCompania}"
+											required="true" requiredMessage="Seleccione una compañía">
+											<f:selectItem itemLabel="Seleccione una compañía"
+												itemValue="" />
+											<f:selectItems
+												value="#{informeInsumosAgricolasExcelView.selectCompania}" />
+										</p:selectOneMenu>
+
+										<p:message for="txtCompania" />
+
+										<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{informeInsumosAgricolasExcelView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaInicial" />
+
+										<p:outputLabel for="msgFechaFinal" value="Fecha Final: " />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{informeInsumosAgricolasExcelView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaFinal" />
+
+										<p:outputLabel for="zonas" value="Zonas: " />
+										<p:selectCheckboxMenu id="zonas"
+											value="#{informeInsumosAgricolasExcelView.selectedNivel1}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una zona">
+											<f:selectItems
+												value="#{informeInsumosAgricolasExcelView.zonas}"
+												var="zonas" itemLabel=" #{zonas.nombre}"
+												itemValue="#{zonas.nivel1Id}" />
+										</p:selectCheckboxMenu>
+										<p:message for="zonas" />
+
+										<p:outputLabel for="fincas" value="Fincas: " />
+										<p:selectCheckboxMenu id="fincas"
+											value="#{informeInsumosAgricolasExcelView.selectedNivel2}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una finca">
+											<f:selectItems
+												value="#{informeInsumosAgricolasExcelView.fincas}"
+												var="fincas" itemLabel=" #{fincas.nombre}"
+												itemValue="#{fincas.nivel2Id}" />
+										</p:selectCheckboxMenu>
+										<p:message for="fincas" />
+
+										<p:outputLabel for="bloques" value="Bloques: " />
+										<p:selectCheckboxMenu id="bloques"
+											value="#{informeInsumosAgricolasExcelView.selectedNivel3}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un bloque">
+											<f:selectItems
+												value="#{informeInsumosAgricolasExcelView.bloques}"
+												var="bloques" itemLabel=" #{bloques.nombre}"
+												itemValue="#{bloques.nivel3Id}" />
+										</p:selectCheckboxMenu>
+										<p:message for="bloques" />
+
+										<p:outputLabel for="lotes" value="Lote: " />
+										<p:selectCheckboxMenu id="lotes"
+											value="#{informeInsumosAgricolasExcelView.selectedNivel4}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un lote">
+											<f:selectItems
+												value="#{informeInsumosAgricolasExcelView.lotes}"
+												var="lotes" itemLabel=" #{lotes.nombre}"
+												itemValue="#{lotes.nivel4Id}" />
+										</p:selectCheckboxMenu>
+										<p:message for="lotes" />
+
+										<p:outputLabel for="tenencias" value="Tenencia: " />
+										<p:selectCheckboxMenu id="tenencias"
+											value="#{informeInsumosAgricolasExcelView.selectedTenencia}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una tenencia">
+											<f:selectItems
+												value="#{informeInsumosAgricolasExcelView.tenencias}"
+												var="tenencias" itemLabel=" #{tenencias.nombre}"
+												itemValue="#{tenencias.tenenId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="tenencias" />
+
+										<p:outputLabel for="grupoLabores" value="Grupos de labor: " />
+										<p:selectCheckboxMenu id="grupoLabores"
+											value="#{informeInsumosAgricolasExcelView.selectedGrupoLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un grupo">
+											<f:selectItems
+												value="#{informeInsumosAgricolasExcelView.grupoLabores}"
+												var="grupoLabores" itemLabel=" #{grupoLabores.nombre}"
+												itemValue="#{grupoLabores.grpLaborId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="grupoLabores" />
+
+										<p:outputLabel for="labores" value="Labor: " />
+										<p:selectCheckboxMenu id="labores"
+											value="#{informeInsumosAgricolasExcelView.selectedLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una labor">
+											<f:selectItems
+												value="#{informeInsumosAgricolasExcelView.labores}"
+												var="labores" itemLabel=" #{labores.nombre}"
+												itemValue="#{labores.laborId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="labores" />
+
+									<p:outputLabel for="productos" value="Producto: " />
+										<p:selectCheckboxMenu id="productos"
+											value="#{informeInsumosAgricolasExcelView.selectedProducto}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un producto">
+											<f:selectItems value="#{informeInsumosAgricolasExcelView.productos}"
+												var="productos" itemLabel=" #{productos.nombre}"
+												itemValue="#{productos.productoId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="productos" />
+									
+										<p:outputLabel for="unidadesMedida" value="Unidad de medida: " />
+										<p:selectCheckboxMenu id="unidadesMedida"
+											value="#{informeInsumosAgricolasExcelView.selectedUdadMed}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una Udad. de medida">
+											<f:selectItems
+												value="#{informeInsumosAgricolasExcelView.unidadesMedida}"
+												var="unidadesMedida" itemLabel=" #{unidadesMedida.nombre}"
+												itemValue="#{unidadesMedida.udadMedId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="unidadesMedida" />
+				
+				
+											<!--Filtros del reporte  -->
+						</h:panelGrid>
+
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+
+							<p:commandButton id="btnConsultar" value="Generar reporte"
+								icon="ui-icon-newwin"
+								action="#{informeInsumosAgricolasExcelView.exportToPyGExcel}" update="growl, frm" process="@all" partialSubmit="true"/>
+
+							<p:commandButton disabled="#{informeInsumosAgricolasExcelView.disableButton}"
+								icon="ui-icon-arrowthick-1-s" value="Descargar" ajax="false">
+								<p:fileDownload value="#{informeInsumosAgricolasExcelView.file}" />
+							</p:commandButton>
+
+
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" process="@all" partialSubmit="true" resetValues="true" />
+							</p:commandButton>
+
+						</div>
+					</p:panel>
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

@@ -1,0 +1,1314 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableTipoRecurso" header="Configuración de recursos">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{tipoRecursoView.data}"
+							var="tipoRecurso" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="tipoRecurso" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{tipoRecurso.estado}"
+								sortBy="#{tipoRecurso.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{tipoRecurso.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{tipoRecurso.codigo}"
+								sortBy="#{tipoRecurso.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{tipoRecurso.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{tipoRecurso.nombre}"
+								sortBy="#{tipoRecurso.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{tipoRecurso.nombre}" />
+							</p:column>
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogTipoRecurso"
+										actionListener="#{tipoRecursoView.action_edit}">
+										<f:attribute name="selectedTipoRecurso" value="#{tipoRecurso}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{tipoRecursoView.action_new()}"
+								update=":dialogTipoRecurso" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogTipoRecurso" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{tipoRecursoView.showDialog}"
+					 resizable="false" modal="true" width="1000"
+					showEffect="fade" styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelTipoRecurso" header="Configuración de recursos">
+
+							<p:tabView id="tabMapa" activeIndex="#{tipoRecursoView.activeTapIndex}">
+								<p:tab title="General">
+									<h:panelGrid columns="2" >
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{tipoRecursoView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{tipoRecursoView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelTipoRecurso,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{tipoRecursoView.listener_txtCodigo}" />
+										</p:inputText>
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true"
+											binding="#{tipoRecursoView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+
+										<p:outputLabel for="txtClaseRecurso" value="Tipo de recurso: " />
+										<p:selectOneMenu id="txtClaseRecurso"
+											binding="#{tipoRecursoView.txtClaseRecurso}" required="true"
+											requiredMessage="Seleccione un tipo de recurso">
+											<f:selectItem itemLabel="Seleccione un tipo de recurso"
+												itemValue="" />
+											<f:selectItem itemLabel="Profesiones/Cargos"
+												itemValue="Profesiones/Cargos" />
+											<f:selectItem itemLabel="Materiales/Productos"
+												itemValue="Productos" />
+											<f:selectItem itemLabel="Categoria de equipos"
+												itemValue="Categoria de equipos" />
+											<f:selectItem itemLabel="Otros" itemValue="Otros" />
+											<p:ajax
+												listener="#{tipoRecursoView.listener_VerificarTipoTransaccion}"
+												update="
+												txtDisponibilidadDiaE,	txtProductoId_ProductoI,	txtElemCostoId_ElementoCostoO,	txtElemCostoId_ElementoCostoP,	txtNomElementoCostoE,
+									txtDisponibilidadTotalE,	txtElemCostoId_ElementoCostoI,	txtUdadMedId_UdadMedO,	txtUdadMedId_UdadMedP,	txtNomUdadMedI,
+									txtValorE,	txtUdadMedId_UdadMedI,	txtTipoRecursosOtrosId,	txtTipoRecursosProfesionId,	txtNomElementoCostoI,
+									txtCategEquipId_CategoriaEquipo,	txtTipoRecursosInsumosId,	msgFechaFinalO,	msgFechaFinalP,	txtNomUdadMedO,
+									txtElemCostoId_ElementoCostoE,	msgFechaFinalI,	msgFechaInicialO,	msgFechaInicialP,	txtNomElementoCostoPO,
+									txtUdadMedId_UdadMedE,	msgFechaInicialI,	btnAgregarOtrosO,	btnAgregarProfP,	txtNomCategoriaE,
+									txtTipoRecursosEquiposId,	btnAgregarIns,	txtDisponibilidadDiaP,	txtNomProfesionP,	txtNomProductoI
+									msgFechaFinalE,	txtValorO,	txtDisponibilidadTotalP,	txtNomUdadMedP,	txtValorI,
+									msgFechaInicialE,		txtValorP,	txtNomElementoCostoP,	
+									btnAgregarEquip, txtServicioId_Servicio, txtNomServicio	,	txtProfId_ProfesionP,	txtNomUdadMedE	
+																					
+												" />
+
+										</p:selectOneMenu>
+
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1:" />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{tipoRecursoView.txtInfoAdicional}" rows="5"
+											cols="30"  maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2:" />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{tipoRecursoView.txtInfoAdicional2}" rows="5"
+											cols="30" maxlength="100" counterTemplate="{0} Caracteres."
+											autoResize="true" />
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtTpRecursoId"
+											binding="#{tipoRecursoView.txtTpRecursoId}">
+
+										</p:inputText>
+
+
+
+									</h:panelGrid>
+								</p:tab>
+
+								<p:tab title="Profesión/Cargos">
+									<p:panelGrid id="R1">
+										<p:column>
+											<h:panelGrid columns="1" >
+												<p:outputLabel for="msgFechaInicialP" 
+												value="Fecha Inicial: "  style="font-size: 0.8em;"/>
+												<p:calendar id="msgFechaInicialP" showOn="button"
+													navigator="false" locale="es"
+													style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtFechaInicialP}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+
+												<p:outputLabel for="msgFechaFinalP" 
+												value="Fecha final: "  style="font-size: 0.8em;"/>
+												<p:calendar id="msgFechaFinalP" showOn="button"
+													navigator="false" locale="es"
+													style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtFechaFinalP}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+
+												<p:outputLabel for="txtProfId_ProfesionP"
+													value="Profesión: " style="font-size: 0.8em;"/>
+												<p:selectOneMenu id="txtProfId_ProfesionP"
+													binding="#{tipoRecursoView.txtProfId_ProfesionP}"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													filter="true" filterMatchMode="contains" disabled="true">
+													<f:selectItem itemLabel="Seleccione" itemValue="" />
+													<f:selectItems value="#{tipoRecursoView.selectItempProfesion}" />
+													<p:ajax
+														listener="#{tipoRecursoView.listener_ConsultaCodProfesion}"
+														update="txtNomProfesionP" />
+												</p:selectOneMenu>
+												
+												<!-- id auto incrementable -->
+												<p:inputText style="visibility:hidden"
+													id="txtTipoRecursosProfesionId"
+													binding="#{tipoRecursoView.txtTipoRecursosProfesionId}" />
+												
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1" >
+												<p:outputLabel for="txtUdadMedId_UdadMedP"
+													value="Unidad de medida: " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtUdadMedId_UdadMedP" effect="fade"
+													filter="true" filterMatchMode="contains"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtUdadMedId_UdadMedP}"
+													required="false"
+													requiredMessage="Seleccione una unidad de medida">
+													<f:selectItem itemLabel="Seleccione  una unidad de medida"
+														itemValue="" />
+													<f:selectItems value="#{tipoRecursoView.selectItemUdadMedP}" />
+													<p:ajax
+														listener="#{tipoRecursoView.listener_ConsultaCodUdadMedProfesion}"
+														update="txtNomUdadMedP" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtValorP" 
+													value="Valor unitario: " style="font-size: 0.8em;"/>
+												<p:inputText id="txtValorP" disabled="true"
+												style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtValorP}" required="false"
+													requiredMessage="Indique el valor unitario">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+												<p:outputLabel for="txtElemCostoId_ElementoCostoP"
+													value="Elemento de costo: " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtElemCostoId_ElementoCostoP"
+													effect="fade" filter="true" filterMatchMode="contains"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtElemCostoId_ElementoCostoP}"
+													required="false"
+													requiredMessage="Seleccione un elemento de costo">
+													<f:selectItem itemLabel="Seleccione un elemento de costo"
+														itemValue="" />
+													<f:selectItems
+														value="#{tipoRecursoView.selectItemElemCostoP}" />
+													<p:ajax
+														listener="#{tipoRecursoView.listener_ConsultaCodElemCostoProfesion}"
+														update="txtNomElementoCostoP" />
+												</p:selectOneMenu>
+
+												<p:inputText style="visibility:hidden" id="txtNomProfesionP"
+													binding="#{tipoRecursoView.txtNomProfesionP}" />
+
+												
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1" >
+
+												<p:outputLabel for="txtDisponibilidadDiaP" value="Recurso(Día): " style="font-size: 0.8em;" />
+												<p:inputText id="txtDisponibilidadDiaP" disabled="true"
+													binding="#{tipoRecursoView.txtDisponibilidadDiaP}"
+													required="false"
+													style="font-size: 0.8em;"
+													requiredMessage="Indique el valor ">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+												<p:outputLabel for="txtDisponibilidadTotalP" 
+												value="# Recursos totales disponibles: " style="font-size: 0.8em;"/>
+												<p:inputText id="txtDisponibilidadTotalP" disabled="true"
+													binding="#{tipoRecursoView.txtDisponibilidadTotalP}"
+													required="false"
+													style="font-size: 0.8em;"
+													requiredMessage="Indique el valor unitario">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+
+												<p:inputText style="visibility:hidden" id="txtNomUdadMedP"
+													binding="#{tipoRecursoView.txtNomUdadMedP}" />
+
+												<p:inputText style="visibility:hidden"
+													id="txtNomElementoCostoP"
+													binding="#{tipoRecursoView.txtNomElementoCostoP}" />
+
+											</h:panelGrid>
+										</p:column>
+									</p:panelGrid>
+										
+										
+											<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+												<f:facet name="header">
+													<p:commandButton id="btnAgregarProfP" icon="ui-icon-plusthick"
+														binding="#{tipoRecursoView.btnAgregarProfP}" value="Agregar"
+														action="#{tipoRecursoView.action_agregarTipoRecursoProfesion}"
+														update="tablaTRProfesion :dialogTipoRecurso" />
+
+													<p:commandButton id="btnlimpiar3" process="@this"
+														icon="ui-icon-trash" value="Limpiar">
+														<p:ajax update="R1" resetValues="true" />
+													</p:commandButton>
+												</f:facet>
+											</h:panelGrid>
+									
+									<p:scrollPanel mode="native" style="width:870px;height:250px">
+											<p:outputPanel>
+												<p:dataTable id="tablaTRProfesion"
+													value="#{tipoRecursoView.dataTRProfesion}"
+													var="listaTRProfesion" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+													editable="true" reflow="true" editMode="cell"
+													widgetVar="cellProfesion">
+													
+													<p:ajax event="cellEdit" listener="#{tipoRecursoView.onCellEditProfesion}" />
+
+													<p:column headerText="Fecha inicial">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRProfesion.fechaInicial}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:calendar navigator="false" locale="es"
+																 value="#{listaTRProfesion.fechaInicial}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Fecha final">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRProfesion.fechaFinal}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:calendar navigator="false" locale="es"
+															value="#{listaTRProfesion.fechaFinal}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Recurso">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRProfesion.nombreProfesion}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaTRProfesion.profId_Profesion.profId}">
+																	<f:selectItems value="#{tipoRecursoView.selectItempProfesion}"
+																	var="var1" itemValue="#{var1}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													
+													<p:column headerText="UM">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRProfesion.nombreUm}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaTRProfesion.udadMedId_UdadMed.udadMedId}">
+																	<f:selectItems value="#{tipoRecursoView.selectItemUdadMedP}"
+																	var="var2" itemValue="#{var2}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													<p:column headerText="El. Costo">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRProfesion.nombreElemCosto}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaTRProfesion.elemCostoId_ElementoCosto.elemCostoId}">
+																	<f:selectItems value="#{tipoRecursoView.selectItemElemCostoP}"
+																	var="var3" itemValue="#{var3}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Valor">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRProfesion.valor}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaTRProfesion.valor}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													
+													<p:column headerText="Rec.(Día)">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRProfesion.disponibilidadDia}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaTRProfesion.disponibilidadDia}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													
+													<p:column headerText="Rec. Total">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRProfesion.disponibilidadTotal}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaTRProfesion.disponibilidadTotal}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													<f:attribute name="selectedTRProfesion"
+																	value="#{listaTRProfesion}" />
+
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{tipoRecursoView.actionDeleteTipoRecursosProfesion}"
+																required="false" title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaTRProfesion :dialogTipoRecurso">
+																<f:attribute name="selectedTRProfesion"
+																	value="#{listaTRProfesion}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:scrollPanel>
+				
+
+								</p:tab>
+							
+								<p:tab title="Materiales/Productos">
+									 <p:panelGrid id="R2">
+															<p:column>
+											<h:panelGrid columns="1" >
+												<p:outputLabel for="msgFechaInicialI" 
+												value="Fecha Inicial: "  style="font-size: 0.8em;"/>
+												<p:calendar id="msgFechaInicialI" showOn="button"
+													navigator="false" locale="es"
+													style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtFechaInicialI}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+
+												<p:outputLabel for="msgFechaFinalI" 
+												value="Fecha final: "  style="font-size: 0.8em;"/>
+												<p:calendar id="msgFechaFinalI" showOn="button"
+													navigator="false" locale="es"
+													style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtFechaFinalI}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+												
+												<!-- id auto incrementable -->
+												<p:inputText style="visibility:hidden"
+													id="txtTipoRecursosInsumosId"
+													binding="#{tipoRecursoView.txtTipoRecursosInsumosId}" />
+												
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1" >
+											
+											
+												<p:outputLabel value="Producto: "
+													style="font-size: 0.8em; " />
+												<p:selectOneMenu id="txtProductoId_ProductoI" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtProductoId_ProductoI}">
+
+													<f:selectItem itemLabel="Seleccione un producto"
+														itemValue="" />
+													<f:selectItems
+														value="#{tipoRecursoView.selectItemProducto}" />
+													<p:ajax
+														listener="#{tipoRecursoView.listener_ConsultaCodProducto}"
+														update="txtNomProductoI" />
+												</p:selectOneMenu>
+											
+												<p:outputLabel for="txtUdadMedId_UdadMedI"
+													value="Unidad de medida: " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtUdadMedId_UdadMedI" effect="fade"
+													filter="true" filterMatchMode="contains"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtUdadMedId_UdadMedI}"
+													required="false"
+													requiredMessage="Seleccione una unidad de medida">
+													<f:selectItem itemLabel="Seleccione  una unidad de medida"
+														itemValue="" />
+													<f:selectItems value="#{tipoRecursoView.selectItemUdadMedI}" />
+													<p:ajax
+														listener="#{tipoRecursoView.listener_ConsultaCodUdadMedProducto}"
+														update="txtNomUdadMedI" />
+												</p:selectOneMenu>
+
+												
+												<p:inputText style="visibility:hidden" id="txtNomProductoI"
+													binding="#{tipoRecursoView.txtNomProductoI}" />
+
+												
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1" >
+												
+												<p:outputLabel for="txtValorI" 
+													value="Valor unitario: " style="font-size: 0.8em;"/>
+												<p:inputText id="txtValorI" disabled="true"
+												style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtValorI}" required="false"
+													requiredMessage="Indique el valor unitario">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+												<p:outputLabel for="txtElemCostoId_ElementoCostoI"
+													value="Elemento de costo: " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtElemCostoId_ElementoCostoI"
+													effect="fade" filter="true" filterMatchMode="contains"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtElemCostoId_ElementoCostoI}"
+													required="false"
+													requiredMessage="Seleccione un elemento de costo">
+													<f:selectItem itemLabel="Seleccione un elemento de costo"
+														itemValue="" />
+													<f:selectItems
+														value="#{tipoRecursoView.selectItemElemCostoI}" />
+													<p:ajax
+														listener="#{tipoRecursoView.listener_ConsultaCodElemCostoProducto}"
+														update="txtNomElementoCostoI" />
+												</p:selectOneMenu>
+												
+												
+
+												<p:inputText style="visibility:hidden" id="txtNomUdadMedI"
+													binding="#{tipoRecursoView.txtNomUdadMedI}" />
+
+												<p:inputText style="visibility:hidden"
+													id="txtNomElementoCostoI"
+													binding="#{tipoRecursoView.txtNomElementoCostoI}" />
+
+											</h:panelGrid>
+										</p:column>
+									
+									</p:panelGrid>
+										
+										
+											<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+												<f:facet name="header">
+													<p:commandButton id="btnAgregarIns" icon="ui-icon-plusthick"
+														binding="#{tipoRecursoView.btnAgregarIns}" value="Agregar"
+														action="#{tipoRecursoView.action_agregarTipoRecursoInsumos}"
+														update="tablaTRInsumos :dialogTipoRecurso" />
+
+													<p:commandButton id="btnlimpiar4" process="@this"
+														icon="ui-icon-trash" value="Limpiar">
+														<p:ajax update="R2" resetValues="true" />
+													</p:commandButton>
+												</f:facet>
+											</h:panelGrid>
+									
+									<p:scrollPanel mode="native" style="width:870px;height:250px">
+											<p:outputPanel>
+												<p:dataTable id="tablaTRInsumos"
+													value="#{tipoRecursoView.dataTRInsumos}"
+													var="listaTRInsumos" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+													editable="true" reflow="true" editMode="cell"
+													widgetVar="cellMatProd">
+													
+													<p:ajax event="cellEdit" listener="#{tipoRecursoView.onCellEditMaterialProducto}" />
+
+													<p:column headerText="Fecha inicial">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRInsumos.fechaInicial}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:calendar navigator="false" locale="es"
+															value="#{listaTRInsumos.fechaInicial}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Fecha final">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRInsumos.fechaFinal}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:calendar navigator="false" locale="es"
+															value="#{listaTRInsumos.fechaInicial}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Recurso">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRInsumos.nombreProducto}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaTRInsumos.productoId_Producto.productoId}">
+																	<f:selectItems value="#{tipoRecursoView.selectItemProducto}"
+																	var="var4" itemValue="#{var4}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													
+													<p:column headerText="UM">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRInsumos.nombreUm}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaTRInsumos.udadMedId_UdadMed.udadMedId}">
+																	<f:selectItems value="#{tipoRecursoView.selectItemUdadMedI}"
+																	var="var5" itemValue="#{var5}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													<p:column headerText="El. Costo">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRInsumos.nombreElemCosto}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaTRInsumos.elemCostoId_ElementoCosto.elemCostoId}">
+																	<f:selectItems value="#{tipoRecursoView.selectItemElemCostoI}"
+																	var="var6" itemValue="#{var6}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Valor">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTRInsumos.valor}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaTRInsumos.valor}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													<f:attribute name="selectedTRInsumos"
+																	value="#{listaTRInsumos}" />
+													
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{tipoRecursoView.actionDeleteTipoRecursosInsumos}"
+																required="false" title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaTRInsumos :dialogTipoRecurso">
+																<f:attribute name="selectedTRInsumos"
+																	value="#{listaTRInsumos}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:scrollPanel>
+									
+								</p:tab>
+								
+								<p:tab title="Categoría de equipos">
+									<p:panelGrid  id="R3">
+													<p:column>
+											<h:panelGrid columns="1" >
+												<p:outputLabel for="msgFechaInicialE" 
+												value="Fecha Inicial: "  style="font-size: 0.8em;"/>
+												<p:calendar id="msgFechaInicialE" showOn="button"
+													navigator="false" locale="es"
+													style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtFechaInicialE}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+
+												<p:outputLabel for="msgFechaFinalE" 
+												value="Fecha final: "  style="font-size: 0.8em;"/>
+												<p:calendar id="msgFechaFinalE" showOn="button"
+													navigator="false" locale="es"
+													style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtFechaFinalE}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+
+										<p:outputLabel for="txtCategEquipId_CategoriaEquipo"
+											value="Categoria: "  style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtCategEquipId_CategoriaEquipo"
+											effect="fade" filter="true" filterMatchMode="startsWith"
+											binding="#{tipoRecursoView.txtCategEquipId_CategoriaEquipo}"
+											required="false"  style="width: 100%;font-size: 0.8em;"
+											requiredMessage="Seleccione una categoria de equipo">
+											<f:selectItem itemLabel="Seleccione una categoria de equipo"
+												itemValue="" />
+											<f:selectItems value="#{tipoRecursoView.selectItemCategoriaEquipo}" />
+													<p:ajax
+														listener="#{tipoRecursoView.listener_ConsultaCodCategoria}"
+														update="txtNomCategoriaE" />
+												</p:selectOneMenu>
+												
+												<!-- id auto incrementable -->
+												<p:inputText style="visibility:hidden"
+													id="txtTipoRecursosEquiposId"
+													binding="#{tipoRecursoView.txtTipoRecursosEquiposId}" />
+												
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1" >
+												<p:outputLabel for="txtUdadMedId_UdadMedE"
+													value="Unidad de medida: " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtUdadMedId_UdadMedE" effect="fade"
+													filter="true" filterMatchMode="contains"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtUdadMedId_UdadMedE}"
+													required="false"
+													requiredMessage="Seleccione una unidad de medida">
+													<f:selectItem itemLabel="Seleccione  una unidad de medida"
+														itemValue="" />
+													<f:selectItems value="#{tipoRecursoView.selectItemUdadMedE}" />
+													<p:ajax
+														listener="#{tipoRecursoView.listener_ConsultaCodUdadMedCategoria}"
+														update="txtNomUdadMedE" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtValorE" 
+													value="Valor unitario: " style="font-size: 0.8em;"/>
+												<p:inputText id="txtValorE" disabled="true"
+												style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtValorE}" required="false"
+													requiredMessage="Indique el valor unitario">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+												<p:outputLabel for="txtElemCostoId_ElementoCostoE"
+													value="Elemento de costo: " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtElemCostoId_ElementoCostoE"
+													effect="fade" filter="true" filterMatchMode="contains"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtElemCostoId_ElementoCostoE}"
+													required="false"
+													requiredMessage="Seleccione un elemento de costo">
+													<f:selectItem itemLabel="Seleccione un elemento de costo"
+														itemValue="" />
+													<f:selectItems
+														value="#{tipoRecursoView.selectItemElemCostoE}" />
+													<p:ajax
+														listener="#{tipoRecursoView.listener_ConsultaCodElemCostoCategoria}"
+														update="txtNomElementoCostoE" />
+												</p:selectOneMenu>
+
+												<p:inputText style="visibility:hidden" id="txtNomCategoriaE"
+													binding="#{tipoRecursoView.txtNomCategoriaE}" />
+
+												
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1" >
+
+												<p:outputLabel for="txtDisponibilidadDiaE" value="Recurso(Día): " style="font-size: 0.8em;" />
+												<p:inputText id="txtDisponibilidadDiaE" disabled="true"
+													binding="#{tipoRecursoView.txtDisponibilidadDiaE}"
+													required="false"
+													style="font-size: 0.8em;"
+													requiredMessage="Indique el valor ">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+												<p:outputLabel for="txtDisponibilidadTotalE" 
+												value="# Recursos totales disponibles: " style="font-size: 0.8em;"/>
+												<p:inputText id="txtDisponibilidadTotalE" disabled="true"
+													binding="#{tipoRecursoView.txtDisponibilidadTotalE}"
+													required="false"
+													style="font-size: 0.8em;"
+													requiredMessage="Indique el valor unitario">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+
+												<p:inputText style="visibility:hidden" id="txtNomUdadMedE"
+													binding="#{tipoRecursoView.txtNomUdadMedE}" />
+
+												<p:inputText style="visibility:hidden"
+													id="txtNomElementoCostoE"
+													binding="#{tipoRecursoView.txtNomElementoCostoE}" />
+
+											</h:panelGrid>
+										</p:column>
+									</p:panelGrid>
+										
+										
+											<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+												<f:facet name="header">
+													<p:commandButton id="btnAgregarEquip" icon="ui-icon-plusthick"
+														binding="#{tipoRecursoView.btnAgregarEquip}" value="Agregar"
+														action="#{tipoRecursoView.action_agregarTipoRecursoEquipos}"
+														update="tablaTREquipos :dialogTipoRecurso" />
+
+													<p:commandButton id="btnlimpiar" process="@this"
+														icon="ui-icon-trash" value="Limpiar">
+														<p:ajax update="R3" resetValues="true" />
+													</p:commandButton>
+												</f:facet>
+											</h:panelGrid>
+									
+									<p:scrollPanel mode="native" style="width:870px;height:250px">
+											<p:outputPanel>
+												<p:dataTable id="tablaTREquipos"
+													value="#{tipoRecursoView.dataTREquipos}"
+													var="listaTREquipos" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+													editable="true" reflow="true" editMode="cell"
+													widgetVar="cellEquipos">
+													
+													<p:ajax event="cellEdit" listener="#{tipoRecursoView.onCellEditEquipos}" />
+
+													<p:column headerText="Fecha inicial">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTREquipos.fechaInicial}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<f:facet name="input">
+																	<p:calendar navigator="false" locale="es"
+																	value="#{listaTREquipos.fechaInicial}" />
+																</f:facet>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Fecha final">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTREquipos.fechaFinal}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<f:facet name="input">
+																	<p:calendar navigator="false" locale="es"
+																	value="#{listaTREquipos.fechaFinal}" />
+																</f:facet>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Recurso">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTREquipos.nombreCategoria}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaTREquipos.categEquipId_CategoriaEquipo.categEquipId}">
+																	<f:selectItems value="#{tipoRecursoView.selectItemCategoriaEquipo}"
+																	var="var7" itemValue="#{var7}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													
+													<p:column headerText="UM">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTREquipos.nombreUm}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaTREquipos.udadMedId_UdadMed.udadMedId}">
+																	<f:selectItems value="#{tipoRecursoView.selectItemUdadMedE}"
+																	var="var8" itemValue="#{var8}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													<p:column headerText="El. Costo">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTREquipos.nombreElemCosto}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaTREquipos.elemCostoId_ElementoCosto.elemCostoId}">
+																	<f:selectItems value="#{tipoRecursoView.selectItemElemCostoE}"
+																	var="var8" itemValue="#{var8}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Valor">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTREquipos.valor}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaTREquipos.valor}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													
+													<p:column headerText="Rec.(Día)">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTREquipos.disponibilidadDia}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaTREquipos.disponibilidadDia}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													
+													<p:column headerText="Rec. Total">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTREquipos.disponibilidadTotal}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaTREquipos.disponibilidadTotal}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													<f:attribute name="selectedTREquipos"
+																	value="#{listaTREquipos}" />
+
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{tipoRecursoView.actionDeleteTipoRecursosEquipos}"
+																required="false" title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaTREquipos :dialogTipoRecurso">
+																<f:attribute name="selectedTREquipos"
+																	value="#{listaTREquipos}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:scrollPanel>
+									
+								</p:tab>
+								<p:tab title="Otros recursos">
+									<p:panelGrid  id="R4">
+									
+										<p:column>
+											<h:panelGrid columns="1" >
+												<p:outputLabel for="msgFechaInicialO" 
+												value="Fecha Inicial: "  style="font-size: 0.8em;"/>
+												<p:calendar id="msgFechaInicialO" showOn="button"
+													navigator="false" locale="es"
+													style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtFechaInicialO}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+
+												<p:outputLabel for="msgFechaFinalO" 
+												value="Fecha final: "  style="font-size: 0.8em;"/>
+												<p:calendar id="msgFechaFinalO" showOn="button"
+													navigator="false" locale="es"
+													style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtFechaFinalO}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+												
+												
+												
+												<!-- id auto incrementable -->
+												<p:inputText style="visibility:hidden"
+													id="txtTipoRecursosOtrosId"
+													binding="#{tipoRecursoView.txtTipoRecursosOtrosId}" />
+												
+											<p:inputText style="visibility:hidden" id="txtNomServicio"
+													binding="#{tipoRecursoView.txtNomServicio}" />
+												
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1" >
+											
+											<p:outputLabel for="txtServicioId_Servicio" value="Otros recursos: "
+											 style="font-size: 0.8em;"  />
+											<p:selectOneMenu id="txtServicioId_Servicio" effect="fade" filter="true"
+												filterMatchMode="contains"
+												style="width: 100%;font-size: 0.8em;"
+												binding="#{tipoRecursoView.txtServicioId_Servicio}" required="false"
+												requiredMessage="Seleccione un recurso">
+												<f:selectItem itemLabel="Seleccione un recurso" itemValue="" />
+												<f:selectItems value="#{tipoRecursoView.selectItemServicio}" />
+													<p:ajax
+														listener="#{tipoRecursoView.listener_ConsultaCodServicioOtros}"
+														update="txtNomServicio" />
+											
+											</p:selectOneMenu>
+														
+												<p:outputLabel for="txtUdadMedId_UdadMedO"
+													value="Unidad de medida: " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtUdadMedId_UdadMedO" effect="fade"
+													filter="true" filterMatchMode="contains"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtUdadMedId_UdadMedO}"
+													required="false"
+													requiredMessage="Seleccione una unidad de medida">
+													<f:selectItem itemLabel="Seleccione  una unidad de medida"
+														itemValue="" />
+													<f:selectItems value="#{tipoRecursoView.selectItemUdadMedO}" />
+													<p:ajax
+														listener="#{tipoRecursoView.listener_ConsultaCodUdadMedOtros}"
+														update="txtNomUdadMedO" />
+												</p:selectOneMenu>
+												
+												<p:inputText style="visibility:hidden" id="txtNomUdadMedO"
+													binding="#{tipoRecursoView.txtNomUdadMedO}" />
+												
+
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1" >
+												
+												<p:outputLabel for="txtValorO" 
+													value="Valor unitario: " style="font-size: 0.8em;"/>
+												<p:inputText id="txtValorO" disabled="true"
+												style="font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtValorO}" required="false"
+													requiredMessage="Indique el valor unitario">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+												<p:outputLabel for="txtElemCostoId_ElementoCostoO"
+													value="Elemento de costo: " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtElemCostoId_ElementoCostoO"
+													effect="fade" filter="true" filterMatchMode="contains"
+													autoWidth="false" style="width: 100%;font-size: 0.8em;"
+													binding="#{tipoRecursoView.txtElemCostoId_ElementoCostoO}"
+													required="false"
+													requiredMessage="Seleccione un elemento de costo">
+													<f:selectItem itemLabel="Seleccione un elemento de costo"
+														itemValue="" />
+													<f:selectItems
+														value="#{tipoRecursoView.selectItemElemCostoO}" />
+													<p:ajax
+														listener="#{tipoRecursoView.listener_ConsultaCodElemCostoOtros}"
+														update="txtNomElementoCostoPO" />
+												</p:selectOneMenu>
+												
+
+												<p:inputText style="visibility:hidden"
+													id="txtNomElementoCostoPO"
+													binding="#{tipoRecursoView.txtNomElementoCostoPO}" />
+
+											</h:panelGrid>
+										</p:column>
+									
+									</p:panelGrid>
+										
+										
+											<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+												<f:facet name="header">
+													<p:commandButton id="btnAgregarOtrosO" icon="ui-icon-plusthick"
+														binding="#{tipoRecursoView.btnAgregarOtrosO}" value="Agregar"
+														action="#{tipoRecursoView.action_agregarTipoRecursoOtros}"
+														update="tablaTROtros :dialogTipoRecurso" />
+
+													<p:commandButton id="btnlimpiar2" process="@this"
+														icon="ui-icon-trash" value="Limpiar">
+														<p:ajax update="R2" resetValues="true" />
+													</p:commandButton>
+												</f:facet>
+											</h:panelGrid>
+									
+									<p:scrollPanel mode="native" style="width:870px;height:250px">
+											<p:outputPanel>
+												<p:dataTable id="tablaTROtros"
+													value="#{tipoRecursoView.dataTROtros}"
+													var="listaTROtros" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+													editable="true" reflow="true" editMode="cell"
+													widgetVar="cellOtros">
+													
+													<p:ajax event="cellEdit" listener="#{tipoRecursoView.onCellEditOtros}" />
+
+													<p:column headerText="Fecha inicial">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTROtros.fechaInicial}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<f:facet name="input">
+																	<p:calendar navigator="false" locale="es"
+																	value="#{listaTROtros.fechaInicial}" />
+																</f:facet>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Fecha final">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTROtros.fechaFinal}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<f:facet name="input">
+																	<p:calendar navigator="false" locale="es"
+																	value="#{listaTROtros.fechaFinal}" />
+																</f:facet>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+														<p:column headerText="Recurso:">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTROtros.nombreServicio}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaTROtros.servicioId.servicioId}">
+																	<f:selectItems value="#{tipoRecursoView.selectItemServicio}"
+																	var="var10" itemValue="#{var10}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													
+													<p:column headerText="UM">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTROtros.nombreUm}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaTROtros.udadMedId_UdadMed.udadMedId}">
+																	<f:selectItems value="#{tipoRecursoView.selectItemUdadMedO}"
+																	var="var11" itemValue="#{var11}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													
+													
+													<p:column headerText="El. Costo">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTROtros.nombreElemCosto}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaTROtros.elemCostoId_ElementoCosto.elemCostoId}">
+																	<f:selectItems value="#{tipoRecursoView.selectItemElemCostoO}"
+																	var="var11" itemValue="#{var11}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Valor">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText style="font-size: 0.8em;"
+																	value="#{listaTROtros.valor}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaTROtros.valor}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													<f:attribute name="selectedTROtros"
+																	value="#{listaTROtros}" />
+												
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{tipoRecursoView.actionDeleteTipoRecursosOtros}"
+																required="false" title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaTROtros :dialogTipoRecurso">
+																<f:attribute name="selectedTROtros"
+																	value="#{listaTROtros}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:scrollPanel>
+									
+									
+								</p:tab>
+
+
+							</p:tabView>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{tipoRecursoView.btnSave}" value="Grabar"
+									action="#{tipoRecursoView.action_save()}"
+									update=":dialogTipoRecurso :frm:panelDataTableTipoRecurso" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{tipoRecursoView.action_clear()}"
+									process="@this" update=":dialogTipoRecurso" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

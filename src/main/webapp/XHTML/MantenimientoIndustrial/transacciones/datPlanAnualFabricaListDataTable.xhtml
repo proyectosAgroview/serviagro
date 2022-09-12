@@ -1,0 +1,600 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatPlanAnualFabrica"
+						header="Plan anual de fábrica">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datPlanAnualFabricaView.data}"
+							var="datPlanAnualFabrica" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datPlanAnualFabrica" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datPlanAnualFabrica.estado}"
+								sortBy="#{datPlanAnualFabrica.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datPlanAnualFabrica.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datPlanAnualFabrica.consecutivo}"
+								sortBy="#{datPlanAnualFabrica.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="#Planilla" />
+								</f:facet>
+								<h:outputText value="#{datPlanAnualFabrica.consecutivo}" />
+							</p:column>
+
+
+							<p:column filterBy="#{datPlanAnualFabrica.anio}"
+								sortBy="#{datPlanAnualFabrica.anio}">
+								<f:facet name="header">
+									<h:outputText value="Año" />
+								</f:facet>
+								<h:outputText value="#{datPlanAnualFabrica.anio}" />
+							</p:column>
+
+							<p:column filterBy="#{datPlanAnualFabrica.produccionTotal}"
+								sortBy="#{datPlanAnualFabrica.produccionTotal}">
+								<f:facet name="header">
+									<h:outputText value="Toneladas anuales(TON)" />
+								</f:facet>
+								<h:outputText value="#{datPlanAnualFabrica.produccionTotal}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatPlanAnualFabrica"
+										actionListener="#{datPlanAnualFabricaView.action_edit}">
+										<f:attribute name="selectedDatPlanAnualFabrica"
+											value="#{datPlanAnualFabrica}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datPlanAnualFabricaView.action_new()}"
+								update=":dialogDatPlanAnualFabrica" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatPlanAnualFabrica" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datPlanAnualFabricaView.showDialog}" resizable="false"
+					modal="true" width="900" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatPlanAnualFabrica"
+							header="Plan anual de fábrica">
+
+							<p:tabView id="tabMapa"
+							activeIndex="#{datPlanAnualFabricaView.activeTapIndex}">
+
+								<p:tab title="General" >
+									
+										<h:panelGrid columns="2">
+
+											<p:outputLabel value="#Consecutivo:"
+												style="font-size: 0.9em;" />
+											<p:inputText id="txtConsecutivo" disabled="false"
+												style="font-size: 0.9em;"
+												binding="#{datPlanAnualFabricaView.txtConsecutivo}"
+												size="12">
+											</p:inputText>
+
+											<p:outputLabel value="Año:" style="font-size: 0.9em;" />
+											<p:spinner id="txtAnio" disabled="false"
+												style="font-size: 0.9em;"
+												binding="#{datPlanAnualFabricaView.txtAnio}" size="12">
+											</p:spinner>
+
+										</h:panelGrid>
+
+										<h:panelGrid columns="2">
+
+											<p:outputLabel value="TONELADAS ESTIMADAS MEAS A MES:"
+												style="font-size: 1.2em;" />
+										</h:panelGrid>
+
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel value="Enero(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEstEnero" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEstEnero}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Febrero(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEstFebrero" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEstFebrero}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Marzo(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEstMarzo" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEstMarzo}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Abril(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEstAbril" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEstAbril}"
+															size="12">
+														</p:spinner>
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel value="Mayo(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEstMayo" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEstMayo}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Junio(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEstJunio" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEstJunio}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Julio(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEstJulio" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEstJulio}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Agosto(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEstAgosto" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEstAgosto}"
+															size="12">
+														</p:spinner>
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel value="Septiembre(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEstSeptiembre"
+															disabled="false" style="font-size: 0.9em;"
+															stepFactor="0.25" min="0" max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEstSeptiembre}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Octubre(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEstOctubre" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEstOctubre}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Noviembre(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEstNoviembre" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEstNoviembre}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Diciembre(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEstDiciembre" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEstDiciembre}"
+															size="12">
+														</p:spinner>
+
+													</h:panelGrid>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+										<h:panelGrid columns="2">
+											<p:outputLabel value="Producción total(TON): "
+												style="font-size: 1em;" />
+											<p:panelGrid columns="2">
+												<p:inputText id="txtProduccionEstTotal"
+													binding="#{datPlanAnualFabricaView.txtProduccionEstTotal}"
+													disable="true">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+												<p:commandButton icon="ui-icon-calculator" value="Calcular">
+													<p:ajax
+														process="@this,txtProduccionEstEnero,txtProduccionEstFebrero,txtProduccionEstMarzo,txtProduccionEstAbril,
+																	txtProduccionEstMayo,txtProduccionEstJunio,txtProduccionEstJulio,txtProduccionEstAgosto,txtProduccionEstSeptiembre,
+																	txtProduccionEstOctubre,txtProduccionEstNoviembre,txtProduccionEstDiciembre "
+														listener="#{datPlanAnualFabricaView.listener_calcularProduccionEstimadaTotal}"
+														update="txtProduccionEstTotal" />
+												</p:commandButton>
+											</p:panelGrid>
+										</h:panelGrid>
+
+
+										<h:panelGrid columns="2">
+
+											<p:outputLabel value="TONELADAS REALES MEAS A MES:"
+												style="font-size: 1.2em;" />
+										</h:panelGrid>
+
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel value="Enero(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionEnero" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionEnero}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Febrero(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionFebrero" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionFebrero}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Marzo(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionMarzo" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionMarzo}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Abril(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionAbril" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionAbril}"
+															size="12">
+														</p:spinner>
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel value="Mayo(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionMayo" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionMayo}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Junio(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionJunio" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionJunio}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Julio(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionJulio" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionJulio}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Agosto(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionAgosto" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionAgosto}"
+															size="12">
+														</p:spinner>
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel value="Septiembre(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionSeptiembre" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionSeptiembre}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Octubre(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionOctubre" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionOctubre}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Noviembre(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionNoviembre" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionNoviembre}"
+															size="12">
+														</p:spinner>
+														<p:outputLabel value="Diciembre(TON):"
+															style="font-size: 0.9em;" />
+														<p:spinner id="txtProduccionDiciembre" disabled="false"
+															style="font-size: 0.9em;" stepFactor="0.25" min="0"
+															max="999999999"
+															binding="#{datPlanAnualFabricaView.txtProduccionDiciembre}"
+															size="12">
+														</p:spinner>
+
+													</h:panelGrid>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+
+
+
+										<h:panelGrid columns="2">
+
+											<p:outputLabel value="Producción total(TON): "
+												style="font-size: 1em;" />
+											<p:panelGrid columns="2">
+												<p:inputText id="txtProduccionTotal"
+													binding="#{datPlanAnualFabricaView.txtProduccionTotal}"
+													disable="true">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+												<p:commandButton icon="ui-icon-calculator" value="Calcular">
+													<p:ajax
+														process="@this,txtProduccionEnero,txtProduccionFebrero,txtProduccionMarzo,txtProduccionAbril,
+																	txtProduccionMayo,txtProduccionJunio,txtProduccionJulio,txtProduccionAgosto,txtProduccionSeptiembre,
+																	txtProduccionOctubre,txtProduccionNoviembre,txtProduccionDiciembre "
+														listener="#{datPlanAnualFabricaView.listener_calcularProduccionTotal}"
+														update="txtProduccionTotal" />
+												</p:commandButton>
+											</p:panelGrid>
+
+											<p:outputLabel for="txtObservacion" value="Observación: " />
+											<p:inputTextarea id="txtObservacion"
+												style="font-size: 0.9em;"
+												binding="#{datPlanAnualFabricaView.txtObservacion}" rows="2"
+												cols="50" maxlength="3900" autoResize="true" />
+
+
+											<p:outputLabel for="txtOrigenDatos" value="Origen de datos: " />
+											<p:selectOneMenu id="txtOrigenDatos"
+												binding="#{datPlanAnualFabricaView.txtOrigenDatos}"
+												required="true" requiredMessage="Seleccione una opción">
+												<f:selectItem itemLabel="Modulo_MttoIndustrial"
+													itemValue="Modulo_MttoIndustrial" />
+											</p:selectOneMenu>
+
+											<!-- id auto incrementable -->
+											<p:inputText style="visibility:hidden"
+												id="txtDatPlanAnualFabricaId"
+												binding="#{datPlanAnualFabricaView.txtDatPlanAnualFabricaId}">
+											</p:inputText>
+
+										</h:panelGrid>
+
+								</p:tab>
+
+
+								<p:tab title="Otras variables">
+									
+									<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<h:outputText id="msgVelocidadEstandar" value="Velocidad:" style="font-size: 0.9em;" />
+														<p:spinner id="txtVelocidadEstandar"  size="12" style="font-size: 0.9em;"
+															binding="#{datPlanAnualFabricaView.txtVelocidadEstandar}" />
+
+
+														<p:outputLabel value="Horas proceso estimado: " style="font-size: 0.9em;"
+															/>
+														<p:panelGrid columns="2">
+															<p:inputText id="txtHorasProcesoEst"  size="12" style="font-size: 0.9em;"
+																binding="#{datPlanAnualFabricaView.txtHorasProcesoEst}"
+																disable="true">
+																<f:converter converterId="javax.faces.Double" />
+															</p:inputText>
+
+															<p:commandButton icon="ui-icon-calculator"
+																value="Calcular">
+																<p:ajax
+																	process="@this, txtProduccionEstTotal, txtVelocidadEstandar"
+																	listener="#{datPlanAnualFabricaView.listener_calcularHorasProcesoEstimado}"
+																	update="txtHorasProcesoEst" />
+															</p:commandButton>
+														</p:panelGrid>
+
+
+														<p:outputLabel value="Horas proceso ejecutado:"
+															style="font-size: 0.9em;" />
+														<p:panelGrid columns="2">
+															<p:inputText id="txtHorasProcesoEjec"  size="12" style="font-size: 0.9em;"
+																binding="#{datPlanAnualFabricaView.txtHorasProcesoEjec}"
+																disable="true">
+																<f:converter converterId="javax.faces.Double" />
+															</p:inputText>
+
+															<p:commandButton icon="ui-icon-calculator"
+																value="Calcular">
+																<p:ajax
+																	process="@this, txtProduccionTotal, txtVelocidadEstandar"
+																	listener="#{datPlanAnualFabricaView.listener_calcularHorasProcesoEjecutado}"
+																	update="txtHorasProcesoEjec" />
+															</p:commandButton>
+														</p:panelGrid>
+
+														<h:outputText id="msgHorasArranque" style="font-size: 0.9em;"
+															value="Horas arranque:" />
+														<p:spinner id="txtHorasArranque"  size="12" style="font-size: 0.9em;"
+															binding="#{datPlanAnualFabricaView.txtHorasArranque}" />
+
+
+														<h:outputText id="msgHorasMttoProgEst" style="font-size: 0.9em;"
+															value="Horas mantenimiento programado estimado:" />
+														<p:spinner id="txtHorasMttoProgEst"  size="12" style="font-size: 0.9em;"
+															binding="#{datPlanAnualFabricaView.txtHorasMttoProgEst}" /> 
+
+														<h:outputText id="msgHorasMttoProgEjec" style="font-size: 0.9em;"
+															value="Horas mantenimiento programado ejecutado:" />
+														<p:spinner id="txtHorasMttoProgEjec"  size="12" style="font-size: 0.9em;"
+															binding="#{datPlanAnualFabricaView.txtHorasMttoProgEjec}" />
+
+
+
+													</h:panelGrid>
+												</p:column>
+
+												<p:column>
+													<h:panelGrid columns="1">
+
+
+														<h:outputText id="msgHorasMttoNoProgEst" style="font-size: 0.9em;"
+															value="Horas mantenimiento no programado estimado:" />
+														<p:spinner id="txtHorasMttoNoProgEst"  size="12" style="font-size: 0.9em;"
+															binding="#{datPlanAnualFabricaView.txtHorasMttoNoProgEst}" />
+
+														<h:outputText id="msgHorasMttoNoProgEjec" style="font-size: 0.9em;"
+															value="Horas mantenimiento no programado ejecutado:" />
+														<p:spinner id="txtHorasMttoNoProgEjec"  size="12" style="font-size: 0.9em;"
+															binding="#{datPlanAnualFabricaView.txtHorasMttoNoProgEjec}" />
+
+														<p:outputLabel value="Horas planta estimado:"
+															style="font-size: 0.9em;" />
+														<p:panelGrid columns="2">
+															<p:inputText id="txtHorasPlantaEst"  size="12" style="font-size: 0.9em;"
+																binding="#{datPlanAnualFabricaView.txtHorasPlantaEst}"
+																disable="true">
+																<f:converter converterId="javax.faces.Double" />
+															</p:inputText>
+
+															<p:commandButton icon="ui-icon-calculator"
+																value="Calcular">
+																<p:ajax
+																	process="@this, txtHorasProcesoEst, txtHorasArranque, txtHorasMttoProgEst, txtHorasMttoNoProgEst"
+																	listener="#{datPlanAnualFabricaView.listener_calcularHorasPlantaEstimado}"
+																	update="txtHorasPlantaEst" />
+															</p:commandButton>
+														</p:panelGrid>
+
+														<p:outputLabel value="Horas planta ejecutado:" 
+															style="font-size: 0.9em;" />
+														<p:panelGrid columns="2">
+															<p:inputText id="txtHorasPlantaEjec"  size="12" style="font-size: 0.9em;"
+																binding="#{datPlanAnualFabricaView.txtHorasPlantaEjec}"
+																disable="true">
+																<f:converter converterId="javax.faces.Double" />
+															</p:inputText>
+
+															<p:commandButton icon="ui-icon-calculator"
+																value="Calcular">
+																<p:ajax
+																	process="@this, txtHorasProcesoEjec, txtHorasArranque, txtHorasMttoProgEjec, txtHorasMttoNoProgEjec"
+																	listener="#{datPlanAnualFabricaView.listener_calcularHorasPlantaEjecutado}"
+																	update="txtHorasPlantaEjec" />
+															</p:commandButton>
+														</p:panelGrid>
+
+
+														<h:outputText id="msgValorPromedioHrDia" style="font-size: 0.9em;"
+															value="Valor promedio horas día:" />
+														<p:spinner id="txtValorPromedioHrDia"  size="12" style="font-size: 0.9em;"
+															binding="#{datPlanAnualFabricaView.txtValorPromedioHrDia}" />
+														
+														<h:outputLabel></h:outputLabel>
+														<h:outputLabel></h:outputLabel>
+														
+													</h:panelGrid>
+												</p:column>
+
+											</p:row>
+										</p:panelGrid>
+
+
+								</p:tab>
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datPlanAnualFabricaView.btnSave}" value="Grabar"
+									action="#{datPlanAnualFabricaView.action_save()}"
+									update=":dialogDatPlanAnualFabrica :frm:panelDataTableDatPlanAnualFabrica" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datPlanAnualFabricaView.action_clear()}"
+									process="@this" update=":dialogDatPlanAnualFabrica" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

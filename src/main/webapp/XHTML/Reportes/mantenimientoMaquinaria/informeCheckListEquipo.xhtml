@@ -1,0 +1,143 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Informe: Consulta CheckList de equipos/maquinarias">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+
+						<h:panelGrid columns="3" id="panelGrid" width="500">
+									<p:outputLabel for="txtCompania" value="Compañía" />
+									<p:selectOneMenu id="txtCompania"
+											binding="#{informeMttoCheckListEquipoView.txtCompania}"
+											required="true" requiredMessage="Seleccione una compañía">
+											<f:selectItem itemLabel="Seleccione una compañía"
+												itemValue="" />
+											<f:selectItems
+												value="#{informeMttoCheckListEquipoView.selectCompania}" />
+										</p:selectOneMenu>
+
+										<p:message for="txtCompania" />
+
+										<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{informeMttoCheckListEquipoView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaInicial" />
+
+										<p:outputLabel for="msgFechaFinal" value="Fecha Final: " />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{informeMttoCheckListEquipoView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaFinal" />
+
+										<p:outputLabel for="propietarios" value="Propietario: " />
+										<p:selectCheckboxMenu id="propietarios"
+											value="#{informeMttoCheckListEquipoView.selectedPropietario}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un propietario">
+											<f:selectItems
+												value="#{informeMttoCheckListEquipoView.propietarios}"
+												var="propietarios" itemLabel=" #{propietarios.nombre}"
+												itemValue="#{propietarios.persEmprId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="propietarios" />
+
+										<p:outputLabel for="equipos" value="Equipo: " />
+										<p:selectCheckboxMenu id="equipos"
+											value="#{informeMttoCheckListEquipoView.selectedEquipo}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un equipo">
+											<f:selectItems
+												value="#{informeMttoCheckListEquipoView.equipos}"
+												var="equipos" itemLabel=" #{equipos.nombre}"
+												itemValue="#{equipos.equipoId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="equipos" />
+												
+										
+										<p:outputLabel for="tipoMtto" value="Tipo de mantenimiento " />
+										<p:selectCheckboxMenu id="tipoMtto"
+											value="#{informeMttoCheckListEquipoView.selectedTipoMtto}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un tipo de mtto">
+											<f:selectItems
+												value="#{informeMttoCheckListEquipoView.tipoMtto}"
+												var="tipoMtto" itemLabel=" #{tipoMtto.nombre}"
+												itemValue="#{tipoMtto.tipoMantenimientoId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="tipoMtto" />
+														
+																
+							<!--Filtros del reporte  -->
+						</h:panelGrid>
+
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+
+							<p:commandButton id="btnConsultar" value="Generar reporte"
+								icon="ui-icon-newwin"
+								action="#{informeMttoCheckListEquipoView.exportToPyGExcel}" update="growl, frm" process="@all" partialSubmit="true"/>
+
+							<p:commandButton disabled="#{informeMttoCheckListEquipoView.disableButton}"
+								icon="ui-icon-arrowthick-1-s" value="Descargar" ajax="false">
+								<p:fileDownload value="#{informeMttoCheckListEquipoView.file}" />
+							</p:commandButton>
+
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" process="@all" partialSubmit="true" resetValues="true" />
+							</p:commandButton>
+
+						</div>
+					</p:panel>
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

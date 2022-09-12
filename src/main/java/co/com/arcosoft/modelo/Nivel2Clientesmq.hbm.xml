@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30-jul-2018 10:42:53 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Nivel2Clientesmq" table="nivel2_clientesmq" >
+        <id name="nivel2ClientesmqId" type="java.lang.Long">
+            <column name="nivel2_clientesmq_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="ciudad" class="co.com.arcosoft.modelo.Ciudad" fetch="select">
+            <column name="ciudad_id" />
+        </many-to-one>
+        <many-to-one name="centCost" class="co.com.arcosoft.modelo.CentCost" fetch="select">
+            <column name="cent_cost_id" />
+        </many-to-one>
+        <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="prove_id" />
+        </many-to-one>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="tipoPropiedad" type="java.lang.String">
+            <column name="tipo_propiedad" length="30" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="150" />
+        </property>
+        <property name="direccion" type="java.lang.String">
+            <column name="direccion" length="30" />
+        </property>
+        <property name="barrio" type="java.lang.String">
+            <column name="barrio" length="30" />
+        </property>
+        <property name="telefono" type="java.lang.String">
+            <column name="telefono" length="20" />
+        </property>
+        <property name="pbx" type="java.lang.String">
+            <column name="pbx" length="20" />
+        </property>
+        <property name="distanciaPlanta" type="java.lang.Double">
+            <column name="distancia_planta" precision="12" scale="4" />
+        </property>
+        <property name="distanciaOficina" type="java.lang.Double">
+            <column name="distancia_oficina" precision="12" scale="4" />
+        </property>
+        <property name="latitud" type="java.lang.Float">
+            <column name="latitud"  />
+        </property>
+        <property name="longitud" type="java.lang.Float">
+            <column name="longitud" />
+        </property>
+        <property name="precision1" type="java.lang.Float">
+            <column name="precision1"  />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="vereda" type="java.lang.Long">
+            <column name="vereda" />
+        </property>
+        <property name="codigoAlternativo" type="java.lang.String">
+            <column name="codigo_alternativo" length="20" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,307 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Informe: Consulta saldos por producto">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2" >
+									
+
+
+										<p:outputLabel for="txtTipoProducto"
+											value="Tipo producto: " style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtTipoProducto" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{informeInventarioSRLMaqSaldoProductoView.txtTipoProducto}"
+											autoWidth="false" style="width: 160; font-size: 0.9em;"
+											required="false"
+											requiredMessage="Seleccione un tipo de producto">
+											<f:selectItem itemLabel="Seleccione un tipo de producto"
+												itemValue="" />
+											<f:selectItems
+												value="#{informeInventarioSRLMaqSaldoProductoView.selectTipoProducto}" />
+											<p:ajax process="@this, txtTipoProducto "
+												update="txtProductoId_Producto" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+								</p:column>
+							
+							<p:column>
+								<h:panelGrid columns="2">
+
+
+									<p:outputLabel for="txtProductoId_Producto" value="Producto: "
+										style="font-size: 0.9em;" />
+									<p:selectOneMenu id="txtProductoId_Producto" effect="fade"
+										filter="true" filterMatchMode="contains"
+										binding="#{informeInventarioSRLMaqSaldoProductoView.txtProductoId_Producto}"
+										autoWidth="false" style="width: 160; font-size: 0.9em;"
+										required="false" requiredMessage="Seleccione un producto">
+										<f:selectItem itemLabel="Seleccione un producto" itemValue="" />
+										<f:selectItems value="#{informeInventarioSRLMaqSaldoProductoView.selectProductoId}" />
+										<p:ajax process="@this, txtTipoProducto "
+											/>
+									</p:selectOneMenu>
+							</h:panelGrid>
+							</p:column>
+							<p:column>
+								<h:panelGrid columns="2">
+									<p:commandButton id="btnConsultar" value="Generar reporte"
+										icon="ui-icon-newwin"
+										action="#{informeInventarioSRLMaqSaldoProductoView.consultaSaldoProducto}"
+										update="growl, frm" process="@all" partialSubmit="true" />
+
+									<!--Filtros del reporte  -->
+								</h:panelGrid>
+							</p:column>
+							</p:row>
+							</p:panelGrid>
+					</p:panel>
+					<p:panel id="panelDataTablePrecioPromProd"
+						header="Saldo por producto">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{informeInventarioSRLMaqSaldoProductoView.dataSaldoProducto}"
+							var="producto" paginator="true" rows="5"  resizableColumns="true" style="margin-bottom:20px"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Almacén" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{producto.codAlmacen}"
+									style="font-size: 0.9em;" />
+							</p:column>
+	
+	
+
+						
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Cod. Producto" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{producto.codProducto}"
+									style="font-size: 0.9em;" />
+							</p:column>
+							
+							
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Producto" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{producto.nomProducto}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="U.M." style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{producto.nombreUdadMed}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							
+							
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Saldo" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{producto.cantidadDisponible}"
+									style="font-size: 0.9em;" >
+											<f:convertNumber pattern="#0.00" />
+										</h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="V. Unitario" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{producto.v_unitario}"
+								decimalSeparator="." thousandSeparator=","  decimalPlaces="2"
+									style="font-size: 0.9em;" ><f:convertNumber pattern="#0.00" />
+										</h:outputText>
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="SubTotal" style="font-size: 0.9em;" />
+								</f:facet>
+								<p:inputNumber value="#{producto.costo_total}" readonly="true"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+
+									<p:column headerText="Opciones" exportable="false">
+										<div align="center">
+											<p:commandButton id="btnEdit" value="Saldos por ubicación"
+												icon="ui-icon-pencil" update=":dialogConsultaUbicacionProducto"
+												actionListener="#{informeInventarioSRLMaqSaldoProductoView.action_saldo_ubicacion}">
+												<f:attribute name="selectedDatCompraProductos2"
+													value="#{producto}" />
+											</p:commandButton>
+
+										</div>
+									</p:column>
+									
+						</p:dataTable>
+						
+						<p:panelGrid>
+						<p:row>
+							<p:column>
+									<h:panelGrid columns="2" >
+                                        	<p:outputLabel value="SALDO TOTAL: " style="font-size: 0.9em;" />
+												<p:inputNumber id="txtSaldoTotal" 
+													size="12"
+													binding="#{informeInventarioSRLMaqSaldoProductoView.txtSaldoTotal}"
+													decimalSeparator="." thousandSeparator=","  decimalPlaces="2"
+													disable="true">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputNumber>
+										</h:panelGrid>
+								</p:column>
+								<p:column>
+									<h:panelGrid columns="2" >
+                                        	<p:outputLabel value="VLR. SALDO TOTAL: " style="font-size: 0.9em;" />
+												<p:inputNumber id="txtValorTotalAcumulado" 
+													size="12"
+													binding="#{informeInventarioSRLMaqSaldoProductoView.txtValorTotalAcumulado}"
+													decimalSeparator="." thousandSeparator=","  decimalPlaces="2"
+													disable="true">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputNumber>
+										</h:panelGrid>
+								</p:column>
+							</p:row>				
+						</p:panelGrid>
+										
+					</p:panel>
+				</h:form>
+				
+						<p:dialog id="dialogConsultaUbicacionProducto" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{informeInventarioSRLMaqSaldoProductoView.showDialog}"
+					resizable="false" modal="true" width="650" responsive="true">
+
+					<h:form id="formDialogVSaldo">
+						<p:messages id="msgP" closable="true" />
+						<p:panel id="panelProducto" header="Saldos por ubicación">
+							<p:dataTable id="tablaSaldosUbicacion"
+								value="#{informeInventarioSRLMaqSaldoProductoView.dataProductoUbicacion}"
+								var="listaProductoUbicacion" scrollable="true" scrollWidth="99%"
+								scrollHeight="100" resizableColumns="true"
+								style="margin-bottom:20px" editable="true" editMode="cell"
+								widgetVar="cellEventos3">
+
+										<p:column headerText="Almacen">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="almacenData" style="font-size: 0.9em;"
+															value="#{listaProductoUbicacion.almacen}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:outputLabel
+															value="#{listaProductoUbicacion.almacen}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+								<p:column headerText="Ubicaciones">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText
+												value="#{listaProductoUbicacion.nombreUbicacion}"
+												style="font-size: 0.9em;" />
+										</f:facet>
+										<f:facet name="input">
+											<p:outputLabel
+												value="#{listaProductoUbicacion.nombreUbicacion}" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+
+								<p:column headerText="Saldo actual">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText
+												value="#{listaProductoUbicacion.cantidadDisponible}">
+
+											</h:outputText>
+										</f:facet>
+										<f:facet name="input">
+											<div
+												style=" font-size: 1em; background-color:#{listaProductoUbicacion.color2}; padding:12px; ; line-height:1.4;">
+												<p:outputLabel
+													value="#{listaProductoUbicacion.cantidadDisponible}" />
+											</div>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+
+								<p:column headerText="Precio">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{listaProductoUbicacion.v_unitario}" />
+										</f:facet>
+										<f:facet name="input">
+											<h:outputText value="#{listaProductoUbicacion.v_unitario}" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<f:attribute name="selectedProductoUbicacion"
+									value="#{listaProductoUbicacion}" />
+
+							</p:dataTable>
+
+
+						</p:panel>
+
+					</h:form>
+				</p:dialog>
+				
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

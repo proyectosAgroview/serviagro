@@ -1,0 +1,374 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable" header="Consumo de ACPM por máquina">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2" id="panelGrid">
+
+
+										<p:outputLabel for="msgFechaInicial" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{informeInventarioProdSRLMaquinariaView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFinal" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											style="font-size: 0.9em;" mask="true" size="12"
+											binding="#{informeInventarioProdSRLMaquinariaView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+									
+										<p:outputLabel for="txtCategEquipId_CategoriaEquipo"
+											value="Categoria: " />
+										<p:selectOneMenu id="txtCategEquipId_CategoriaEquipo"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{informeInventarioProdSRLMaquinariaView.txtCategEquipId_CategoriaEquipo}"
+											required="true"
+											requiredMessage="Seleccione una categoria de equipo">
+											<f:selectItem itemLabel="Seleccione una categoria de equipo"
+												itemValue="" />
+											<f:selectItems value="#{informeInventarioProdSRLMaquinariaView.selectCategoriaEquipo}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="equipos" value="Máquinaria:"
+											style="font-size: 0.9em;" />
+										<p:selectCheckboxMenu id="equipos" style="font-size: 0.9em;"
+											value="#{informeInventarioProdSRLMaquinariaView.selectedEquipo}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una máquina">
+											<f:selectItems value="#{informeInventarioProdSRLMaquinariaView.equipos}"
+												var="equipos" itemLabel=" #{equipos.codigo}"
+												itemValue="#{equipos.equipoId}" />
+										</p:selectCheckboxMenu>
+
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:commandButton id="btnConsultar" value="Generar reporte"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{informeInventarioProdSRLMaquinariaView.consumoAcpmRdl}"
+											update="growl, frm, :frm:tbl" process="@all" partialSubmit="true" />
+										<p:outputLabel></p:outputLabel>
+
+									</h:panelGrid>
+								</p:column>
+								
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:commandButton id="btnExportar" value="Exportar a excel"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{informeInventarioProdSRLMaquinariaView.exportConsumoCombustibleRDL}"
+											update="growl, frm" process="@all" partialSubmit="true" />
+											
+										<p:outputLabel></p:outputLabel>
+
+									</h:panelGrid>
+								</p:column>
+								
+									<p:column>
+									<h:panelGrid columns="2">
+
+										<p:commandButton
+											disabled="#informeInventarioProdSRLMaquinariaView.disableButton}"
+											icon="ui-icon-arrowthick-1-s" value="Descargar" ajax="false">
+											
+											<p:fileDownload
+												value="#{informeInventarioProdSRLMaquinariaView.file}" />
+										</p:commandButton>
+											
+										<p:outputLabel></p:outputLabel>
+
+									</h:panelGrid>
+								</p:column>
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+
+					<!-- <p:growl id="men"/>	 -->
+					<p:dataTable id="tbl" value="#{informeInventarioProdSRLMaquinariaView.data}"
+						scrollable="true" scrollWidth="99%" scrollHeight="450"
+						var="consumo" resizableColumns="true"
+						style="margin-bottom:20px" lazy="true" reflow="true">
+						
+						
+						
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Máquina" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{consumo.cod_equipo}"
+								style="font-size: 0.8em;">
+								
+							</h:outputText>
+						</p:column>
+						
+						
+							 <p:column width="60">
+								<f:facet name="header">
+									<h:outputText value="Fecha" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{consumo.fecha_registro}"
+									style="font-size: 0.9em;">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+							
+
+							<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="ACPM (Combustible)" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{consumo.cantidad_compra}"
+								style="font-size: 0.8em;">
+								<f:convertNumber />
+							</h:outputText>
+						</p:column>
+						
+							
+							<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Hórometro anterior" style="font-size: 0.8em; color: #800000;"  />
+							</f:facet>
+							<h:outputText value="#{consumo.horometroAbastecimientoAnterior}" 
+								style="font-size: 0.8em; color: #800000;"> 
+								<f:convertNumber pattern="#0.0" />
+							</h:outputText>
+						</p:column>
+							
+							<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Hórometro registro" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{consumo.horometroAbastecimiento}"
+								style="font-size: 0.8em;">
+								<f:convertNumber pattern="#0.0" />
+							</h:outputText>
+						</p:column>
+
+						
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Horas" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{consumo.horas}"
+								style="font-size: 0.8em;">
+								<f:convertNumber pattern="#0.0" />
+							</h:outputText>
+						</p:column>
+						
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Gln/Hora Estándar" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{consumo.glHorasEstandar}"
+								style="font-size: 0.8em;">
+								<f:convertNumber pattern="#0.0" />
+							</h:outputText>
+						</p:column>
+						
+						
+						<p:column width="60">
+								<f:facet name="header">
+									<h:outputText value="Gln/Hora" style="font-size: 0.8em;" />
+								</f:facet>
+								<div style=" font-size: 1em; background-color:#{consumo.color}; padding:12px; ; line-height:1.4;">
+									<h:outputText style=" font-size: 1em;" 
+										value="#{consumo.glHoras}"  >
+										<f:convertNumber pattern="#0.00" />
+									</h:outputText>
+  							   	</div>
+							</p:column>
+							
+					<p:column width="90">
+							<f:facet name="header">
+								<h:outputText value="Labores" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{consumo.codLabor}"
+								style="font-size: 0.8em;">
+								<f:convertNumber />
+							</h:outputText>
+						</p:column>
+						
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Consecutivo" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{consumo.consecutivoPin}"
+								style="font-size: 0.8em;">
+								<f:convertNumber />
+							</h:outputText>
+						</p:column>
+						
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="RDL" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{consumo.consecutivoRdl}"
+								style="font-size: 0.8em;">
+								<f:convertNumber />
+							</h:outputText>
+						</p:column>
+						
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Surtidor" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{consumo.cod_almacen}"
+								style="font-size: 0.8em;">
+							</h:outputText>
+						</p:column>
+						
+						<p:column width="90">
+							<f:facet name="header">
+								<h:outputText value="Notas" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{consumo.infoAdicional}"
+								style="font-size: 0.8em;">
+								<f:convertNumber />
+							</h:outputText>
+						</p:column>
+						
+							
+					</p:dataTable>
+
+
+					<p:panelGrid>
+
+
+						<p:row>
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel value="TOTALES:  " style="font-size: 1em;" />
+								</h:panelGrid>
+							</p:column>
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtTotalHoras" value="Horas: "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtTotalHoras" style="font-size: 0.9em;"
+										size="12" binding="#{informeInventarioProdSRLMaquinariaView.txtTotalHoras}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+										required="false">
+									</p:inputNumber>
+								</h:panelGrid>
+							</p:column>
+							
+
+							
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtTotalGalones" value="Combustible: "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtTotalGalones" style="font-size: 0.9em;"
+										size="12"
+										binding="#{informeInventarioProdSRLMaquinariaView.txtTotalGalones}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+										required="false">
+									</p:inputNumber>
+								</h:panelGrid>
+							</p:column>
+							
+								<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtGlnHorasEstandar" value="Gln/Hr Estándar "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtGlnHorasEstandar" style="font-size: 0.9em;"
+										size="12" binding="#{informeInventarioProdSRLMaquinariaView.txtGlnHorasEstandar}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="1"
+										required="false">
+									</p:inputNumber>
+								</h:panelGrid>
+							</p:column>
+							
+								<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtGlnHoras" value="Gln/Hr "
+										style="font-size: 0.9em;" />
+								
+									<p:inputNumber id="txtGlnHoras" style="font-size: 0.9em;"
+										size="12" binding="#{informeInventarioProdSRLMaquinariaView.txtGlnHoras}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+										required="false">
+										<div style=" font-size: 1em; background-color:#{informeInventarioProdSRLMaquinariaView.colorGalonesHora}; padding:12px; ; line-height:1.4;">
+									</div>
+									</p:inputNumber>
+									
+								</h:panelGrid>
+							</p:column>
+							
+							
+							
+						</p:row>
+
+						
+
+					
+					</p:panelGrid>
+
+
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

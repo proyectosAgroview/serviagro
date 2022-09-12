@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Variedad" table="variedad" >
+        <id name="variedId" type="java.lang.Long">
+            <column name="varied_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="cultivo" class="co.com.arcosoft.modelo.Cultivo" fetch="select">
+            <column name="cultivo_id" />
+        </many-to-one>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="tipoMaduracion" type="java.lang.String">
+            <column name="tipo_maduracion" length="30" />
+        </property>
+        <property name="edadCosecha" type="java.lang.Double">
+            <column name="edad_cosecha" precision="12" scale="4" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="peso" type="java.lang.String">
+            <column name="peso" length="200" />
+        </property>
+        <property name="color" type="java.lang.String">
+            <column name="color" length="200" />
+        </property>
+        <property name="diametro" type="java.lang.String">
+            <column name="diametro" length="200" />
+        </property>
+        <property name="forma" type="java.lang.String">
+            <column name="forma" length="200" />
+        </property>
+        <property name="limpieza" type="java.lang.String">
+            <column name="limpieza" length="200" />
+        </property>
+        <property name="recepcion" type="java.lang.String">
+            <column name="recepcion" length="200" />
+        </property>
+        <property name="condicionesRechazo" type="java.lang.String">
+            <column name="condiciones_rechazo" length="1000" />
+        </property>
+        <set name="variedadNivel4s" table="variedad_nivel4" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="variedad_varied_id" not-null="true" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.VariedadNivel4" />
+        </set>
+    </class>
+</hibernate-mapping>

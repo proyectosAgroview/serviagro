@@ -1,0 +1,382 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatTransProd"
+						header="Registros de producción">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datTransProdPalmaView.data}"
+							var="datTransProd" paginator="true" lazy="true" rows="5"
+							rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datTransProd" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{datTransProd.consecutivo}"
+								sortBy="#{datTransProd.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datTransProd.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datTransProd.fechaRegistro}"
+								sortBy="#{datTransProd.fechaRegistro}">
+								<f:facet name="header">
+									<h:outputText value="Fecha de registro" />
+								</f:facet>
+								<h:outputText value="#{datTransProd.fechaRegistro}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column filterBy="#{datTransProd.tipoTransaccion}"
+								sortBy="#{datTransProd.tipoTransaccion}">
+								<f:facet name="header">
+									<h:outputText value="Tipo Transacción" />
+								</f:facet>
+								<h:outputText value="#{datTransProd.tipoTransaccion}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogDatTransProd"
+										disabled="#{datTransProd.estadoTrue}"
+										actionListener="#{datTransProdPalmaView.action_edit}">
+										<f:attribute name="selectedDatTransProd"
+											value="#{datTransProd}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"
+										disabled="#{datTransProd.estadoTrue}" title="Anular Registro"
+										actionListener="#{datTransProdPalmaView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatTransProd"
+											value="#{datTransProd}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datTransProdPalmaView.action_new()}"
+								update=":dialogDatTransProd" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatTransProd" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datTransProdPalmaView.showDialog}" resizable="false"
+					modal="true" width="1000" styleClass="dialogFix"
+					header="Registros de producción" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatTransProd">
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{datTransProdPalmaView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="2" id="panelGrid2">
+
+										<p:outputLabel value="# Consecutivo: "
+											style="font-size: 0.8em;" />
+										<p:inputText id="txtConsecutivo" disabled="false"
+											binding="#{datTransProdPalmaView.txtConsecutivo}"
+											style="font-size: 0.8em;"
+											placeholder="Buscar o crear registro" size="23">
+										</p:inputText>
+
+										<p:outputLabel for="msgInicial" value="Fecha Ini Cosecha: "
+											style="font-size: 0.8em;" />
+										<p:calendar id="msgInicial" showOn="button" navigator="false"
+											style="font-size: 0.8em;" locale="es"
+											binding="#{datTransProdPalmaView.txtFechaInicial}"
+											pattern="dd/MM/yyyy" mask="true" required="true"
+											requiredMessage="La Fecha inicial  es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFinal" value="Fecha Fin Cosecha: "
+											style="font-size: 0.8em;" />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											style="font-size: 0.8em;" navigator="false" locale="es"
+											binding="#{datTransProdPalmaView.txtFechaRegistro}"
+											pattern="dd/MM/yyyy" mask="true" required="true"
+											requiredMessage="La Fecha  final es obligatoria">
+										</p:calendar>
+
+
+										<p:outputLabel for="txtTipoTransaccion" value="Transacción:"
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtTipoTransaccion" disabled="true"
+											style="font-size: 0.8em;"
+											binding="#{datTransProdPalmaView.selectTipoTransaccion}"
+											required="true" requiredMessage="Seleccione una transacción">
+											<f:selectItem itemLabel="Producción" itemValue="Producción" />
+										</p:selectOneMenu>
+
+
+										<p:outputLabel for="txtEmpresaCompradora" value="Cliente: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtEmpresaCompradora" effect="fade"
+											autoWidth="false" filter="true" filterMatchMode="contains"
+											style="width: 170%;font-size: 0.8em;"
+											binding="#{datTransProdPalmaView.txtEmpresaCompradora}"
+											required="false" requiredMessage="Seleccione un cliente">
+											<f:selectItem itemLabel="Seleccione un cliente" itemValue="" />
+											<f:selectItems
+												value="#{datTransProdPalmaView.selectEmpresaCompradora}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtNroRemsionVariable1" value="No. de Remisión:"
+											style="font-size: 0.8em;" />
+										<p:spinner id="txtNroRemsionVariable1" disabled="false"
+													min="1" max="99999999"  required="true" size="12"
+											binding="#{datTransProdPalmaView.txtNroRemsionVariable1}">
+										</p:spinner>
+
+
+									</h:panelGrid>
+
+									<p:panelGrid>
+
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+
+												<p:outputLabel value="Información para pagos "
+													style="font-size: 1.2em;" />
+												<p:outputLabel />
+
+												<p:outputLabel for="txtCantidadKilosLiq" value="Kilos(Kg): "
+													style="font-size: 0.8em;" />
+												<p:inputText id="txtCantidadKilosLiq" disabled="true"
+													binding="#{datTransProdPalmaView.txtCantidadKilosLiq}"
+													style="font-size: 0.8em;" required="false"
+													requiredMessage="Indique el valor unitario">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+
+												<p:outputLabel for="txtValorUnitario"
+													value="Valor unitario: " style="font-size: 0.8em;" />
+												<p:inputText id="txtValorUnitario" disabled="true"
+													binding="#{datTransProdPalmaView.txtValorUnitario}"
+													style="font-size: 0.8em;" required="false"
+													requiredMessage="Indique el valor unitario">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+												<p:outputLabel for="txtValorTotal" value="Costo total: "
+													style="font-size: 0.8em;" />
+												<p:panelGrid columns="2">
+													<p:inputText id="txtValorTotal" style="font-size: 0.8em;"
+														binding="#{datTransProdPalmaView.txtValorTotal}"
+														disable="true">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+													<p:commandButton icon="ui-icon-calculator" value="Calcular">
+														<p:ajax
+															process="@this,txtValorUnitario,txtCantidadKilosLiq"
+															update="txtValorTotal"
+															listener="#{datTransProdPalmaView.listener_calcularCostoTotal}" />
+													</p:commandButton>
+												</p:panelGrid>
+
+
+												<p:outputLabel for="txtValorDeduccion"
+													value="Valor deducciones: " style="font-size: 0.8em;" />
+												<p:inputText id="txtValorDeduccion" disabled="true"
+													style="font-size: 0.8em;"
+													binding="#{datTransProdPalmaView.txtValorDeduccion}"
+													required="false" requiredMessage="Indique el valor">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+												<p:outputLabel for="txtValorNeto" value="Valor neto: "
+													style="font-size: 0.8em;" />
+												<p:panelGrid columns="2">
+													<p:inputText id="txtValorNeto" style="font-size: 0.8em;"
+														binding="#{datTransProdPalmaView.txtValorNeto}"
+														disable="true">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+													<p:commandButton icon="ui-icon-calculator" value="Calcular">
+														<p:ajax process="@this,txtValorDeduccion,txtValorTotal"
+															update="txtValorNeto"
+															listener="#{datTransProdPalmaView.listener_calcularValorNeto}" />
+													</p:commandButton>
+												</p:panelGrid>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel for="txtTranspId_Transportadora"
+													style="font-size: 0.8em;" value="Transportadora: " />
+												<p:selectOneMenu id="txtTranspId_Transportadora"
+													effect="fade" filter="true" filterMatchMode="contains"
+													autoWidth="false"
+													binding="#{datTransProdPalmaView.txtTranspId_Transportadora}"
+													style="width: 100%;font-size: 0.8em;" required="false"
+													requiredMessage="Seleccione una transportadora">
+													<f:selectItem itemLabel="Seleccione una transportadora"
+														itemValue="" />
+													<f:selectItems
+														value="#{datTransProdPalmaView.selectTransportadora}" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtVehiTranspId_VehiculosTransp"
+													style="font-size: 0.8em;" value="Vehiculo: " />
+												<p:selectOneMenu id="txtVehiTranspId_VehiculosTransp"
+													autoWidth="false" effect="fade" filter="true"
+													filterMatchMode="contains"
+													binding="#{datTransProdPalmaView.txtVehiTranspId_VehiculosTransp}"
+													style="width: 100%;font-size: 0.8em;" required="false"
+													requiredMessage="Seleccione un vehiculo">
+													<f:selectItem itemLabel="Seleccione un vehiculo"
+														itemValue="" />
+													<f:selectItems
+														value="#{datTransProdPalmaView.selectVehiculosTransp}" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtConductorId_Conductor"
+													style="font-size: 0.8em;" value="Conductor: " />
+												<p:selectOneMenu id="txtConductorId_Conductor" effect="fade"
+													autoWidth="false" filter="true" filterMatchMode="contains"
+													binding="#{datTransProdPalmaView.txtConductorId_Conductor}"
+													style="width: 100%;font-size: 0.8em;" required="false"
+													requiredMessage="Seleccione un conductor">
+													<f:selectItem itemLabel="Seleccione un conductor"
+														itemValue="" />
+													<f:selectItems
+														value="#{datTransProdPalmaView.selectConductor}" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+
+									</p:panelGrid>
+
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtObservacion" value="Observación:" />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{datTransProdPalmaView.txtObservacion}" rows="3"
+											cols="30" maxlength="100" counterTemplate="{0} Caracteres"
+											autoResize="true" />
+										<h:outputText />
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtDatTransProdId"
+											binding="#{datTransProdPalmaView.txtDatTransProdId}">
+
+										</p:inputText>
+
+
+									</h:panelGrid>
+
+								</p:tab>
+
+
+
+
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datTransProdPalmaView.btnSave}" value="Grabar"
+									action="#{datTransProdPalmaView.action_save()}"
+									update=":dialogDatTransProd :frm:panelDataTableDatTransProd" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datTransProdPalmaView.action_clear()}"
+									process="@this" update=":dialogDatTransProd " />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datTransProdPalmaView.showDialog}" modal="true"
+					width="500">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datTransProdPalmaView.txtObservacionAnularReg}"
+									rows="5" cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datTransProdPalmaView.btnDelete}"
+									value="Grabar"
+									action="#{datTransProdPalmaView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatTransProd" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datTransProdPalmaView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

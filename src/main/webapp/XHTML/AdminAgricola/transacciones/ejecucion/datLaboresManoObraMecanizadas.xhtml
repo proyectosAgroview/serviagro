@@ -1,0 +1,898 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatPlanillaNomina"
+						header="Ejecución de labores Mecanizadas">
+						<!-- <p:growl id="men"/>	 -->
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtFechaIni" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaIni" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{datLaboresManoObraMecanizadasView.txtFechaIni}"
+											required="false"
+											requiredMessage="La Fecha inicial es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="txtFechaFin" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{datLaboresManoObraMecanizadasView.txtFechaFin}"
+											required="false"
+											requiredMessage="La Fecha  final  es obligatoria">
+										</p:calendar>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtEstadoPlanilla"
+											value="Estado de planilla: " style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtEstadoPlanilla"
+											binding="#{datLaboresManoObraMecanizadasView.txtEstadoPlanilla}"
+											required="true" requiredMessage="Seleccione un estado"
+											style="font-size: 0.9em;" effect="fade" filter="true"
+											filterMatchMode="contains">
+											<f:selectItem itemLabel="TODAS" itemValue="TODAS" />
+											<f:selectItem itemLabel="ABIERTA" itemValue="ABIERTA" />
+											<f:selectItem itemLabel="LIQUIDADA" itemValue="LIQUIDADA" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtPlanilla" value="n° Planilla "
+											style="font-size: 0.9em;" />
+										<p:inputText id="txtPlanilla" style="font-size: 0.9em;"
+											binding="#{datLaboresManoObraMecanizadasView.txtPlanilla}"
+											maxlength="1000" autoResize="true" size="15">
+											<f:convertNumber></f:convertNumber>
+										</p:inputText>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+
+										<p:commandButton id="btnCargarDatos" value="Consultar"
+											icon="ui-icon-newwin" style="font-size: 1em;"
+											action="#{datLaboresManoObraMecanizadasView.listarPlanillaNomina}"
+											update=":frm:tbl, txtValorTotalAcumulado " process="@all" />
+										<h:outputLabel></h:outputLabel>
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+						<p:dataTable id="tbl"
+							value="#{datLaboresManoObraMecanizadasView.data2}"
+							scrollable="true" scrollWidth="99%" scrollHeight="150"
+							var="datPlanillaNomina" paginator="true" lazy="true" rows="5"
+							rowsPerPageTemplate="5,10,15" reflow="true">
+
+							<p:column headerText="Opciones" exportable="false"
+								style="font-size: 0.9em;">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										style="font-size: 0.9em;" update=":dialogDatPlanillaNomina"
+										value="Editar"
+										disabled="#{datPlanillaNomina.estadoLiquidacionTrue}"
+										actionListener="#{datLaboresManoObraMecanizadasView.action_edit_maquinaria}">
+										<f:attribute name="selectedDatPlanillaNominaLista"
+											value="#{datPlanillaNomina}" />
+									</p:commandButton>
+									<p:commandButton id="btnLiquidar" icon="ui-icon-pencil"
+										value="Liquidar" update=":frm:tbl, :frm"
+										style="font-size: 0.9em;"
+										disabled="#{datPlanillaNomina.estadoLiquidacionTrue}"
+										title="Liquidar"
+										onclick="if(!confirm('Realmente desea liquidar esta planilla?')){return false;}"
+										actionListener="#{datLaboresManoObraMecanizadasView.action_liquidar}">
+										<f:attribute name="selectedDatPlanillaNominaLista"
+											value="#{datPlanillaNomina}" />
+									</p:commandButton>
+
+									<p:commandButton id="btnDelete"
+										disabled="#{datPlanillaNomina.estadoLiquidacionTrue}"
+										title="Anular Registro" style="font-size: 0.9em;"
+										value="Anular"
+										actionListener="#{datLaboresManoObraMecanizadasView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatPlanillaNominaLista"
+											value="#{datPlanillaNomina}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="N° Planilla" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.consecutivo}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fecha" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.fechaRegistro}"
+									style="font-size: 0.9em;">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Observación" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.observacion}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Contiene registros de:?"
+										style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.origenDatos}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Estado planilla" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.estadoPlanilla}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Costo total" style="font-size: 0.9em;" />
+								</f:facet>
+								<p:inputNumber style="font-size: 0.9em;" size="6"
+									decimalSeparator="." thousandSeparator="," decimalPlaces="1"
+									disabled="true" value="#{datPlanillaNomina.costoTotalPlanilla}">
+								</p:inputNumber>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Usr. digitación" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.usuarioDigitacion}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Usr. cierre" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.usuarioCierrePlanilla}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="F. cierre" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.fechaCierrePlanilla}"
+									style="font-size: 0.9em;">
+
+								</h:outputText>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="F. re-abertura" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.fechaAberturaPlanilla}"
+									style="font-size: 0.9em;">
+								</h:outputText>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+
+					<p:panelGrid>
+						<p:row>
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel value="TOTALES:  " style="font-size: 1em;" />
+								</h:panelGrid>
+							</p:column>
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtValorTotalAcumulado"
+										value="Costo total($): " style="font-size: 0.9em;" />
+									<p:inputNumber id="txtValorTotalAcumulado"
+										style="font-size: 0.9em;" size="12"
+										binding="#{datLaboresManoObraMecanizadasView.txtValorTotalAcumulado}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+										required="false">
+									</p:inputNumber>
+								</h:panelGrid>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datLaboresManoObraMecanizadasView.action_new()}"
+								update=":dialogDatPlanillaNomina" />
+
+							<p:commandButton id="btnConsultar" value="Generar reporte"
+								icon="ui-icon-newwin"
+								action="#{datLaboresManoObraMecanizadasView.exportPlanillasNomina}"
+								update=" frm" process="@all" partialSubmit="true" />
+
+							<p:commandButton id="btnLiquidarRangoFechas"
+								value="Liquidar planillas rango de fechas" icon="ui-icon-newwin"
+								onclick="if(!confirm('Realmente desea liquidar las planillas en el rango de fechas definido?')){return false;}"
+								action="#{datLaboresManoObraMecanizadasView.liquidarPlanillasRangoFechas}"
+								update=" frm, tbl" process="@all" partialSubmit="true" />
+
+							<p:commandButton
+								disabled="#{datLaboresManoObraMecanizadasView.disableButton}"
+								icon="ui-icon-arrowthick-1-s" value="Descargar" ajax="false">
+								<p:fileDownload
+									value="#{datLaboresManoObraMecanizadasView.file}" />
+							</p:commandButton>
+
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" process="@all" partialSubmit="true"
+									resetValues="true" />
+							</p:commandButton>
+						</div>
+					</p:panel>
+				</h:form>
+
+				<p:dialog id="dialogDatPlanillaNomina" appendTo="@(body)"
+					draggable="true" closable="false"
+					visible="#{datLaboresManoObraMecanizadasView.showDialog}"
+					resizable="false" modal="true" width="1000" styleClass="dialogFix"
+					header="Ejecución de labores mecanizadas" responsive="true">
+					<h:form id="formDialog">
+
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+
+						<h:panelGrid columns="2">
+							<p:outputLabel value="#Planilla: " style="font-size: 0.8em;" />
+							<p:inputText id="txtConsecutivo" disabled="false"
+								binding="#{datLaboresManoObraMecanizadasView.txtConsecutivo}"
+								placeholder="Buscar o crear registro" size="23">
+							</p:inputText>
+
+							<p:outputLabel for="msgFechaRegistro" value="Fecha: "
+								style="font-size: 0.8em;" />
+							<p:calendar id="msgFechaRegistro" showOn="button"
+								navigator="false" locale="es"
+								binding="#{datLaboresManoObraMecanizadasView.txtFechaRegistro}"
+								pattern="dd/MM/yyyy" mask="true" required="true"
+								requiredMessage="La    es obligatoria">
+							</p:calendar>
+
+							<p:outputLabel for="txtObservacion" value="Observación:"
+								style="font-size: 0.8em;" />
+							<p:inputTextarea id="txtObservacion"
+								binding="#{datLaboresManoObraMecanizadasView.txtObservacion}"
+								rows="1" cols="50" maxlength="1000"
+								counterTemplate="{0} Caracteres" autoResize="true" />
+							<h:outputText />
+
+							<p:inputText style="font-size: 0.8em; visibility:hidden"
+								id="txtPlanillaNominaId"
+								binding="#{datLaboresManoObraMecanizadasView.txtPlanillaNominaId}">
+							</p:inputText>
+
+						</h:panelGrid>
+
+						<p:tabView id="tabMapa"
+							activeIndex="#{datLaboresManoObraMecanizadasView.activeTapIndex}">
+
+							<p:tab title="labores mecanizadas">
+
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtOrdenTrabajo" value="O.T: "
+										style="font-size: 0.8em;" />
+									<p:selectOneMenu id="txtOrdenTrabajo" effect="fade"
+										filter="true" filterMatchMode="contains"
+										binding="#{datLaboresManoObraMecanizadasView.txtOrdenTrabajo}"
+										required="false" requiredMessage="O.T(Ot, labor, Hda, Lote): ">
+										<f:selectItem itemLabel="O.T(Ot, labor, Hda, Lote): " itemValue="" noSelectionOption="true" />
+										<f:selectItems value="#{datLaboresManoObraMecanizadasView.selectOrdenTrabajo}" />
+										<p:ajax listener="#{datLaboresManoObraMecanizadasView.listener_ConsultaOrdenTrabajo}"
+											update="txtLaborId_Labor,txtNivel2Id,lotesManoObra,
+											txtUdadMedPago, txtCantidadPago, txtTipoDistribucion" />
+									</p:selectOneMenu>
+								
+								</h:panelGrid>
+
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtLaborId_Labor" value="Labor: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtLaborId_Labor" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datLaboresManoObraMecanizadasView.txtLaborId_Labor}"
+													required="false" requiredMessage="Seleccione una labor">
+													<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+													<f:selectItems value="#{datLaboresManoObraMecanizadasView.selectLaborId}" />
+													<p:ajax listener="#{datLaboresManoObraMecanizadasView.listener_ConsultaNombreLaborMo}"
+														update="txtUdadMedPago" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtNivel2Id" value="Hacienda: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel2Id" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datLaboresManoObraMecanizadasView.txtNivel2Id}"
+													required="false" requiredMessage="Seleccione una hacienda">
+													<f:selectItem itemLabel="Seleccione una hacienda" itemValue="" />
+													<f:selectItems value="#{datLaboresManoObraMecanizadasView.selectNivel2}" />
+													<p:ajax update="lotesManoObra,txtNivel4Erp,txtTipoDistribucion" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+												
+
+												<p:outputLabel for="txtTipoDistribucion"
+													value="Tipo distribución " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtTipoDistribucion" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datLaboresManoObraMecanizadasView.txtTipoDistribucion}"
+													required="false" requiredMessage="Seleccione un lote">
+													<f:selectItem itemLabel="Seleccione un tipo de distribucion" itemValue="" />
+													<f:selectItem itemLabel="Código Erp" itemValue="codigoErp" />
+													<f:selectItem itemLabel="Lotes" itemValue="lote" />
+													<p:ajax listener="#{datLaboresManoObraMecanizadasView.tipoDistribucion()}"
+														process="@this, txtNivel2Id" update="lotesManoObra, txtNivel4Erp" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtNivel4Erp" value="Código ERP:"
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel4Erp" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datLaboresManoObraMecanizadasView.txtNivel4Erp}"
+													required="false" requiredMessage="Seleccione un código">
+													<f:selectItem itemLabel="Seleccione un código" itemValue="" />
+													<f:selectItems value="#{datLaboresManoObraMecanizadasView.selectNivel4Erp}" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="lotesManoObra" value="Lote: " />
+												<p:selectCheckboxMenu id="lotesManoObra"
+													value="#{datLaboresManoObraMecanizadasView.selectedNivel4ManoObra}"
+													filter="true" filterMatchMode="contains"
+													showCheckbox="true" required="false"
+													requiredMessage="Seleccione al menos un lote">
+													<f:selectItems value="#{datLaboresManoObraMecanizadasView.lotesManoObra}"
+														var="lotes" itemLabel=" #{lotes.nom_nivel4} Area: #{lotes.area_neta}"
+														itemValue="#{lotes.nivel4_id}" />
+												</p:selectCheckboxMenu>
+												
+											</h:panelGrid>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+
+							
+									<p:messages id="msgMO" closable="true" showDetail="true" />
+
+									<p:panelGrid id="gridDatPlanillaNominaDet">
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+
+											
+													<p:outputLabel for="txtTrabId_Trabajador"
+														value="Trabajador: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+														filter="true" filterMatchMode="contains"
+														binding="#{datLaboresManoObraMecanizadasView.txtTrabId_Trabajador}"
+														style="width: 100%;font-size: 0.8em;" required="false"
+														requiredMessage="Seleccione un trabajador">
+														<f:selectItem itemLabel="Seleccione un trabajador" itemValue="" />
+														<f:selectItems value="#{datLaboresManoObraMecanizadasView.selectTrabajador}" />
+														<p:ajax process="@all" update="txtCeptoNominaId_ConceptoNomina"
+															listener="#{datLaboresManoObraMecanizadasView.limpiarConceptoNomina}" />
+													</p:selectOneMenu>
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtCeptoNominaId_ConceptoNomina"
+														value="Concepto nómina: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtCeptoNominaId_ConceptoNomina"
+														effect="fade" filter="true" filterMatchMode="contains"
+														binding="#{datLaboresManoObraMecanizadasView.txtCeptoNominaId_ConceptoNomina}"
+														style="width: 100%;font-size: 0.8em;" required="false"
+														requiredMessage="Seleccione un concepto">
+														<f:selectItem itemLabel="Seleccione un concepto" itemValue="" />
+														<f:selectItems value="#{datLaboresManoObraMecanizadasView.selectCeptoNominaId}" />
+														<p:ajax process="@all" update="txtValorUnitario"
+															listener="#{datLaboresManoObraMecanizadasView.ConsultarSalario}" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtUdadMedPago"
+														value="Unidad de Pago: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtUdadMedPago" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="width: 100%;font-size: 0.8em;"
+														binding="#{datLaboresManoObraMecanizadasView.txtUdadMedPago}"
+														required="false"
+														requiredMessage="Seleccione una unidad de pago">
+														<f:selectItem itemLabel="Seleccione una  unidad de pago" itemValue="" />
+														<f:selectItems value="#{datLaboresManoObraMecanizadasView.selectUdadMedPago}" />
+													</p:selectOneMenu>
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtCantidadPago"
+														value="Cantidad (Pago): " style="font-size: 0.8em;" />
+													<p:inputText id="txtCantidadPago" disabled="false"
+														size="10"
+														binding="#{datLaboresManoObraMecanizadasView.txtCantidadPago}"
+														required="false"
+														requiredMessage="Indique la cantidad a pagar">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+													
+													<p:outputLabel for="txtValorUnitario" value="Tarifa: "
+														style="font-size: 0.8em;" />
+													<p:panelGrid columns="2">
+														<p:inputText id="txtValorUnitario" disabled="false"
+															size="10"
+															binding="#{datLaboresManoObraMecanizadasView.txtValorUnitario}"
+															required="false"
+															requiredMessage="Indique el valor unitario">
+															<f:convertNumber></f:convertNumber>
+														</p:inputText>
+
+													</p:panelGrid>
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+										<p:panelGrid id="gridDatMaquinariaDet">
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtEquipoId_Equipo" value="Equipo: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtEquipoId_Equipo" effect="fade"
+														filter="true" filterMatchMode="contains" autoWidth="false"
+														binding="#{datLaboresManoObraMecanizadasView.txtEquipoId_Equipo}"
+														style="width: 100%;font-size: 0.8em;" required="false"
+														requiredMessage="Seleccione un equipo">
+														<f:selectItem itemLabel="Seleccione un equipo"
+															itemValue="" />
+														<f:selectItems
+															value="#{datLaboresManoObraMecanizadasView.selectEquipo}" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtHorometroInicalMq"
+														value="Horómetro inicial: " style="font-size: 0.8em;" />
+													<p:inputText id="txtHorometroInicalMq" disabled="false"
+														size="10"
+														binding="#{datLaboresManoObraMecanizadasView.txtHorometroInicalMq}">
+														<f:converter converterId="javax.faces.Number" />
+													</p:inputText>
+
+													<p:outputLabel for="txtHorometroFinalMq"
+														value="Horómetro final: " style="font-size: 0.8em;" />
+													<p:inputText id="txtHorometroFinalMq" disabled="false"
+														size="10"
+														binding="#{datLaboresManoObraMecanizadasView.txtHorometroFinalMq}">
+														<f:converter converterId="javax.faces.Number" />
+													</p:inputText>
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+
+														<p:outputLabel for="txtImplemento" value="Implemento: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtImplemento" effect="fade"
+														filter="true" filterMatchMode="contains" autoWidth="false"
+														binding="#{datLaboresManoObraMecanizadasView.txtImplemento}"
+														style="width: 100%;font-size: 0.8em;" required="false"
+														requiredMessage="Seleccione un implemento">
+														<f:selectItem itemLabel="Seleccione un implemento"
+															itemValue="" />
+														<f:selectItems
+															value="#{datLaboresManoObraMecanizadasView.selectImplemento}" />
+													</p:selectOneMenu>
+													
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+									<h:panelGrid columns="2" style="margin:10px;">
+										<p:commandButton id="btnAgregarNomina"
+											icon="ui-icon-plusthick"
+											process="@this,txtOrdenTrabajo, txtValorUnitario,txtCantidadPago,txtUdadMedPago,
+												txtCeptoNominaId_ConceptoNomina,txtTrabId_Trabajador, txtLaborId_Labor,
+												txtNivel2Id,  txtNivel4Erp,txtTipoDistribucion,lotesManoObra,
+												txtEquipoId_Equipo, txtHorometroInicalMq, txtHorometroFinalMq ,txtImplemento"
+											binding="#{datLaboresManoObraMecanizadasView.btnAgregarNomina}"
+											value="Agregar"
+											action="#{datLaboresManoObraMecanizadasView.action_agregarPlanillaMaquinaria}"
+											ajax="true"
+											update="tablaDetPlanillaDet, txtOrdenTrabajo, txtValorUnitario,txtCantidadPago,txtUdadMedPago,
+												txtTrabId_Trabajador, txtLaborId_Labor,txtTipoDistribucion, txtCeptoNominaId_ConceptoNomina,
+												txtNivel2Id, lotesManoObra, txtNivel4Erp, 
+												txtEquipoId_Equipo,	txtHorometroInicalMq, txtHorometroFinalMq,txtImplemento
+												msgMO" />
+
+										<p:commandButton id="btnlimpiar1" icon="ui-icon-trash"
+											value="Limpiar">
+											<p:ajax update="gridDatPlanillaNominaDet" resetValues="true" />
+										</p:commandButton>
+
+									</h:panelGrid>
+								</p:tab>
+								
+								<p:tab title="Registros adicionados">
+									<p:scrollPanel mode="native" style="width:950px;height:270px">
+									
+									<p:outputPanel id="dataTableNomina">
+										<p:dataTable id="tablaDetPlanillaDet"
+											value="#{datLaboresManoObraMecanizadasView.dataPlanillaDet}"
+											var="listaDetPlanillaDet" paginator="true" rows="5"
+											resizableColumns="true" style="margin-bottom:20px" 
+											scrollable="true" scrollHeight="99px"
+											rowsPerPageTemplate="5,10,15" reflow="true" editable="true"
+											editMode="cell" widgetVar="cellManoObra">
+
+											<p:ajax event="cellEdit" listener="#{datLaboresManoObraMecanizadasView.onCellEditManoObra}" />
+
+											<p:column headerText="Hda" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.nombreNivel2}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.nivel2Id.nivel2Id}">
+															<f:selectItems
+																value="#{datLaboresManoObraMecanizadasView.selectNivel2Edit}"
+																var="var1" itemValue="#{var1}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Lote" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.nombreNivel4}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.nivel4.nivel4Id}">
+															<f:selectItems
+																value="#{datLaboresManoObraMecanizadasView.selectNivel4Edit}"
+																var="var2" itemValue="#{var2}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Labor" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.nombreLabor}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.laborId.laborId}">
+															<f:selectItems
+																value="#{datLaboresManoObraMecanizadasView.selectLaborId}"
+																var="var3" itemValue="#{var3}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Trabajador" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.codTrabajador}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.trabId_Trabajador.trabId}">
+															<f:selectItems
+																value="#{datLaboresManoObraMecanizadasView.selectTrabajador}"
+																var="var4" itemValue="#{var4}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Concepto" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPlanillaDet.codConceptoNomina}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.ceptoNominaId_ConceptoNomina.ceptoNominaId}">
+															<f:selectItems
+																value="#{datLaboresManoObraMecanizadasView.selectCeptoNominaId}"
+																var="var5" itemValue="#{var5}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="U.M(Pago)" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.codUmPago}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.udadMedIdPago.udadMedId}">
+															<f:selectItems
+																value="#{datLaboresManoObraMecanizadasView.selectUdadMedPago}"
+																var="var6" itemValue="#{var6}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Cantidad" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.cantidadPago}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPlanillaDet.cantidadPago}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Tarifa" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.valorUnitario}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPlanillaDet.valorUnitario}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="C. Total" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.costoTotal}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPlanillaDet.costoTotal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+												<p:column headerText="Equipo" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.nombreEquipo}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetPlanillaDet.equipoId.equipoId}">
+															<f:selectItems
+																value="#{datLaboresManoObraMecanizadasView.selectEquipo}"
+																var="var10" itemValue="#{va10}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="HorómetroInic"
+												style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPlanillaDet.horometroInicial}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetPlanillaDet.horometroInicial}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="HorómetroFin" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPlanillaDet.horometroFinal}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPlanillaDet.horometroFinal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Horas" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPlanillaDet.horometroTotal}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPlanillaDet.horometroTotal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+
+											<f:attribute name="selectedDatPlanillaDet"
+												value="#{listaDetPlanillaDet}" />
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datLaboresManoObraMecanizadasView.actionDeleteDatPlanillaNominaDet}"
+														title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaDetPlanillaDet :dialogDatPlanillaNomina">
+														<f:attribute name="selectedDatPlanillaDet"
+															value="#{listaDetPlanillaDet}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								</p:scrollPanel>
+							</p:tab>
+						</p:tabView>
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datLaboresManoObraMecanizadasView.btnSave}"
+									value="Grabar"
+									action="#{datLaboresManoObraMecanizadasView.action_save()}"
+									update=":dialogDatPlanillaNomina :frm:panelDataTableDatPlanillaNomina" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datLaboresManoObraMecanizadasView.action_clear()}"
+									process="@this" update=":dialogDatPlanillaNomina" />
+								<p:commandButton id="btnCerrar" icon="ui-icon-closethick"
+									title="Cerrar" value="Cerrar"
+									onclick="if(!confirm('Realmente desea salir sin grabar? Sí ya lo hizo, omita este mensaje')){return false;}"
+									action="#{datLaboresManoObraMecanizadasView.action_closeDialog}"
+									update=":dialogDatPlanillaNomina">
+								</p:commandButton>
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datLaboresManoObraMecanizadasView.showDialog}"
+					modal="true" width="600">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datLaboresManoObraMecanizadasView.txtObservacionAnularReg}"
+									rows="5" cols="26" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+								<p:inputText style="font-size: 0.8em; visibility:hidden"
+									id="txtPlanillaNominaId"
+									binding="#{datLaboresManoObraMecanizadasView.txtPlanillaNominaId}">
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false"
+									binding="#{datLaboresManoObraMecanizadasView.btnDelete}"
+									value="Grabar" 
+									action="#{datLaboresManoObraMecanizadasView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatPlanillaNomina" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datLaboresManoObraMecanizadasView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,277 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/tmp_modulo.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatAnaTransProd"
+						header="DatAnaTransProdData">
+						<p:growl id="men" />
+						<p:dataTable value="#{datAnaTransProdView.data}"
+							var="datAnaTransProd" paginator="true" rows="5">
+							<p:column filterBy="#{datAnaTransProd.datAnaTransProdId}"
+								sortBy="#{datAnaTransProd.datAnaTransProdId}">
+								<f:facet name="header">
+									<h:outputText value="datAnaTransProdId" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.datAnaTransProdId}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.compania}"
+								sortBy="#{datAnaTransProd.compania}">
+								<f:facet name="header">
+									<h:outputText value="Compania" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.compania}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.consecutivo}"
+								sortBy="#{datAnaTransProd.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.estado}"
+								sortBy="#{datAnaTransProd.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.fechaAnalisis}"
+								sortBy="#{datAnaTransProd.fechaAnalisis}">
+								<f:facet name="header">
+									<h:outputText value="FechaAnalisis" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.fechaAnalisis}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.fechaCreacion}"
+								sortBy="#{datAnaTransProd.fechaCreacion}">
+								<f:facet name="header">
+									<h:outputText value="FechaCreacion" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.fechaCreacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.fechaModificacion}"
+								sortBy="#{datAnaTransProd.fechaModificacion}">
+								<f:facet name="header">
+									<h:outputText value="FechaModificacion" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.fechaModificacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.infoAdicional}"
+								sortBy="#{datAnaTransProd.infoAdicional}">
+								<f:facet name="header">
+									<h:outputText value="InfoAdicional" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.infoAdicional}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.infoAdicional2}"
+								sortBy="#{datAnaTransProd.infoAdicional2}">
+								<f:facet name="header">
+									<h:outputText value="InfoAdicional2" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.infoAdicional2}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.mobileId}"
+								sortBy="#{datAnaTransProd.mobileId}">
+								<f:facet name="header">
+									<h:outputText value="MobileId" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.mobileId}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.observacion}"
+								sortBy="#{datAnaTransProd.observacion}">
+								<f:facet name="header">
+									<h:outputText value="Observacion" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.observacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.observacionAnularReg}"
+								sortBy="#{datAnaTransProd.observacionAnularReg}">
+								<f:facet name="header">
+									<h:outputText value="ObservacionAnularReg" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.observacionAnularReg}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.responsable}"
+								sortBy="#{datAnaTransProd.responsable}">
+								<f:facet name="header">
+									<h:outputText value="Responsable" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.responsable}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.usuarioDigitacion}"
+								sortBy="#{datAnaTransProd.usuarioDigitacion}">
+								<f:facet name="header">
+									<h:outputText value="UsuarioDigitacion" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.usuarioDigitacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaTransProd.anaLabId_AnaLaboratorio}"
+								sortBy="#{datAnaTransProd.anaLabId_AnaLaboratorio}">
+								<f:facet name="header">
+									<h:outputText value="AnaLabId_AnaLaboratorio" />
+								</f:facet>
+								<h:outputText value="#{datAnaTransProd.anaLabId_AnaLaboratorio}" />
+							</p:column>
+
+							<p:column
+								filterBy="#{datAnaTransProd.datTransProdId_DatTransProd}"
+								sortBy="#{datAnaTransProd.datTransProdId_DatTransProd}">
+								<f:facet name="header">
+									<h:outputText value="DatTransProdId_DatTransProd" />
+								</f:facet>
+								<h:outputText
+									value="#{datAnaTransProd.datTransProdId_DatTransProd}" />
+							</p:column>
+
+							<p:column headerText="Options">
+								<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+									update=":dialogDatAnaTransProd"
+									actionListener="#{datAnaTransProdView.action_edit}">
+									<f:attribute name="selectedDatAnaTransProd"
+										value="#{datAnaTransProd}" />
+								</p:commandButton>
+								<p:commandButton id="btnDelete" title="Delete"
+									actionListener="#{datAnaTransProdView.action_delete_datatable}"
+									onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+									icon="ui-icon-trash" update="@form">
+									<f:attribute name="selectedDatAnaTransProd"
+										value="#{datAnaTransProd}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="New"
+								action="#{datAnaTransProdView.action_new()}"
+								update=":dialogDatAnaTransProd" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatAnaTransProd" appendTo="@(body)"
+					draggable="true" closable="false"
+					visible="#{datAnaTransProdView.showDialog}" resizable="false"
+					modal="true" width="500">
+					<h:form id="formDialog">
+						<p:messages id="msg" />
+						<p:panel id="panelDatAnaTransProd" header="DatAnaTransProd">
+							<h:panelGrid columns="2" id="panelGrid">
+								<h:outputText id="msgDatAnaTransProdId"
+									value="DatAnaTransProdId" />
+								<p:inputText id="txtDatAnaTransProdId"
+									binding="#{datAnaTransProdView.txtDatAnaTransProdId}">
+									<p:ajax update=":dialogDatAnaTransProd"
+										listener="#{datAnaTransProdView.listener_txtId}" />
+								</p:inputText>
+
+								<h:outputText id="msgCompania" value=" Compania" />
+								<p:inputText id="txtCompania" disabled="true"
+									binding="#{datAnaTransProdView.txtCompania}" />
+								<h:outputText id="msgConsecutivo" value=" Consecutivo" />
+								<p:inputText id="txtConsecutivo" disabled="true"
+									binding="#{datAnaTransProdView.txtConsecutivo}" />
+								<h:outputText id="msgEstado" value=" Estado" />
+								<p:inputText id="txtEstado" disabled="true"
+									binding="#{datAnaTransProdView.txtEstado}" />
+								<h:outputText id="msgInfoAdicional" value=" InfoAdicional" />
+								<p:inputText id="txtInfoAdicional" disabled="true"
+									binding="#{datAnaTransProdView.txtInfoAdicional}" />
+								<h:outputText id="msgInfoAdicional2" value=" InfoAdicional2" />
+								<p:inputText id="txtInfoAdicional2" disabled="true"
+									binding="#{datAnaTransProdView.txtInfoAdicional2}" />
+								<h:outputText id="msgMobileId" value=" MobileId" />
+								<p:inputText id="txtMobileId" disabled="true"
+									binding="#{datAnaTransProdView.txtMobileId}" />
+								<h:outputText id="msgObservacion" value=" Observacion" />
+								<p:inputText id="txtObservacion" disabled="true"
+									binding="#{datAnaTransProdView.txtObservacion}" />
+								<h:outputText id="msgObservacionAnularReg"
+									value=" ObservacionAnularReg" />
+								<p:inputText id="txtObservacionAnularReg" disabled="true"
+									binding="#{datAnaTransProdView.txtObservacionAnularReg}" />
+								<h:outputText id="msgResponsable" value=" Responsable" />
+								<p:inputText id="txtResponsable" disabled="true"
+									binding="#{datAnaTransProdView.txtResponsable}" />
+								<h:outputText id="msgUsuarioDigitacion"
+									value=" UsuarioDigitacion" />
+								<p:inputText id="txtUsuarioDigitacion" disabled="true"
+									binding="#{datAnaTransProdView.txtUsuarioDigitacion}" />
+								<h:outputText id="msgAnaLabId_AnaLaboratorio"
+									value=" AnaLabId_AnaLaboratorio" />
+								<p:inputText id="txtAnaLabId_AnaLaboratorio" disabled="true"
+									binding="#{datAnaTransProdView.txtAnaLabId_AnaLaboratorio}" />
+								<h:outputText id="msgDatTransProdId_DatTransProd"
+									value=" DatTransProdId_DatTransProd" />
+								<p:inputText id="txtDatTransProdId_DatTransProd" disabled="true"
+									binding="#{datAnaTransProdView.txtDatTransProdId_DatTransProd}" />
+
+								<h:outputText id="msgFechaAnalisis" value=" FechaAnalisis" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{datAnaTransProdView.txtFechaAnalisis}">
+									<p:ajax event="dateSelect"
+										listener="#{datAnaTransProdView.listener_txtFechaAnalisis}" />
+								</p:calendar>
+								<h:outputText id="msgFechaCreacion" value=" FechaCreacion" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{datAnaTransProdView.txtFechaCreacion}">
+									<p:ajax event="dateSelect"
+										listener="#{datAnaTransProdView.listener_txtFechaCreacion}" />
+								</p:calendar>
+								<h:outputText id="msgFechaModificacion"
+									value=" FechaModificacion" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{datAnaTransProdView.txtFechaModificacion}">
+									<p:ajax event="dateSelect"
+										listener="#{datAnaTransProdView.listener_txtFechaModificacion}" />
+								</p:calendar>
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave"
+									binding="#{datAnaTransProdView.btnSave}" value="Save"
+									action="#{datAnaTransProdView.action_save()}"
+									update=":dialogDatAnaTransProd :frm:panelDataTableDatAnaTransProd" />
+								<p:commandButton id="btnClear" value="Clear"
+									action="#{datAnaTransProdView.action_clear()}"
+									update=":dialogDatAnaTransProd" />
+								<p:commandButton id="btnExit" value="Exit"
+									action="#{datAnaTransProdView.action_closeDialog()}"
+									update=":dialogDatAnaTransProd" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

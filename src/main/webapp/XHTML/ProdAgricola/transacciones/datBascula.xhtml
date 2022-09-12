@@ -1,0 +1,318 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+		
+			<f:view>
+				<!-- <p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				Expired session
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 60}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog> -->
+
+				<p:menubar>
+					<p:menuitem value="Estado de vehículos"
+						url="/XHTML/ProdAgricola/transacciones/datEstadoVehiculos.xhtml"
+						icon="ui-icon-transferthick-e-w" style="margin-right:20px;" />
+					<p:menuitem value="Análisis de calidad del fruto"
+						url="/XHTML/ProdAgricola/transacciones/datAnaCalidadFruto.xhtml"
+						icon="ui-icon-transferthick-e-w" style="margin-right:20px;" />
+				</p:menubar>
+				
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatTransProd"
+						header="Báscula de producción y despacho de fruta y otros productos">
+						<!-- <p:growl id="men"/>	 -->
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtFechaInicialConsulta"
+											value="F. Inicial: " style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaInicialConsulta" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true" style="font-size: 0.9em;" size="12"
+											binding="#{datTransProdBasculaView.txtFechaInicialConsulta}"
+											required="false"
+											requiredMessage="La Fecha inicial  es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="txtFechaFinalConsulta" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaFinalConsulta" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true" style="font-size: 0.9em;" size="12"
+											binding="#{datTransProdBasculaView.txtFechaFinalConsulta}"
+											required="false"
+											requiredMessage="La Fecha  final  es obligatoria">
+										</p:calendar>
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+
+										<p:outputLabel for="selectedTipoTransaccion"
+											value="Tipo transacción: " style="font-size: 0.9em;" />
+										<p:selectOneMenu id="selectedTipoTransaccion"
+											binding="#{datTransProdBasculaView.selectedTipoTransaccion}"
+											required="true" requiredMessage="Seleccione un tipo"
+											style="font-size: 0.9em;" effect="fade" filter="true"
+											filterMatchMode="contains">
+											<f:selectItem itemLabel="Todas" itemValue="Todas" />
+											<f:selectItem itemLabel="Producción" itemValue="Produccion" />
+											<f:selectItem itemLabel="Despachos - Otros movimientos"
+												itemValue="Despachos" />
+											<f:selectItem itemLabel="Servicio de báscula"
+												itemValue="Servicios" />
+										</p:selectOneMenu>
+
+
+										<p:outputLabel for="selectedEstadoTiquete" value="Estado: "
+											style="font-size: 0.9em;" />
+										<p:selectOneMenu id="selectedEstadoTiquete"
+											binding="#{datTransProdBasculaView.selectedEstadoTiquete}"
+											required="true" requiredMessage="Seleccione un estado"
+											style="font-size: 0.9em;" effect="fade" filter="true"
+											filterMatchMode="contains">
+											<f:selectItem itemLabel="Todas" itemValue="Todas" />
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Anulado" itemValue="I" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel style="font-size: 0.9em;" value="Vehiculo(Placa): " />
+			       						<p:autoComplete id="txtVehiTranspId_VehiculosTransp" maxResults="5" 
+			       							converter="equipoConverter" size="15" style="font-size: 0.9em;"
+			       							completeMethod="#{datTransProdBasculaView.completarEquipos}"
+			       							binding="#{datTransProdBasculaView.txtVehiTranspId_VehiculosTranspCon}"
+			       							var="equipo" itemLabel="#{equipo.codigo}" itemValue="#{equipo}" />
+										
+										<p:outputLabel for="selectedTiquete" value="Consecutivo: "
+											style="font-size: 0.9em;" />
+										<p:inputText id="selectedTiquete" style="font-size: 0.9em;"
+											binding="#{datTransProdBasculaView.selectedTiquete}"
+											maxlength="1000" autoResize="true" size="15">
+												<f:convertNumber></f:convertNumber>
+										</p:inputText>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+
+										<p:commandButton id="btnConsultar" value="Consultar"
+											icon="ui-icon-newwin" style="font-size: 1em;"
+											action="#{datTransProdBasculaView.action_ConsultarTiqueteBascula()}"
+											update=":frm:tbl" process="@all" />
+										<p:inputText id="equipos2"
+											style="font-size: 0.9em; visibility:hidden"
+											binding="#{datTransProdBasculaView.equipos2}" size="1"
+											maxlength="1000" autoResize="true" />
+
+									</h:panelGrid>
+								</p:column>
+
+
+							</p:row>
+						</p:panelGrid>
+                        
+						<p:dataTable id="tbl" value="#{datTransProdBasculaView.data2}"
+							var="datTransProd" paginator="true" lazy="true" rows="10"
+							selection="#{datTransProdBasculaView.selectedDatBasculaTiquete}"
+							selectionMode="single"
+							rowStyleClass="#{datTransProd.estado eq 'A' ? 'a' : null}"
+							rowKey="#{datTransProd.consecutivo}" scrollable="true"
+							scrollHeight="250" rowsPerPageTemplate="10,15, 20" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datTransProd" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column style="width: 3%">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{datTransProd.consecutivo}"
+									style="font-size: 0.8em;" />
+							</p:column>
+							
+						   <p:column style="width: 3%">
+								<f:facet name="header">
+									<h:outputText value="Vehículo(Placa)" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{datTransProd.equipo}"
+									style="font-size: 0.8em;" />
+							</p:column>
+
+							<p:column style="width: 5%">
+								<f:facet name="header">
+									<h:outputText value="Fecha de Mov." style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{datTransProd.fecha_registro}"
+									style="font-size: 0.8em;">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width: 3%">
+								<f:facet name="header">
+									<h:outputText value="Tipo Transacción"
+										style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{datTransProd.tipo_transaccion}"
+									style="font-size: 0.8em;" />
+							</p:column>
+
+							<p:column style="width: 5%">
+								<f:facet name="header">
+									<h:outputText value="Fecha ingreso" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{datTransProd.fecha_entrada}"
+									style="font-size: 0.8em;">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+								</h:outputText>
+
+							</p:column>
+
+							<p:column style="width: 5%">
+								<f:facet name="header">
+									<h:outputText value="Fecha sálida" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{datTransProd.fecha_salida}"
+									style="font-size: 0.8em;">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+								</h:outputText>
+
+							</p:column>
+                            
+                            <p:column style="width: 5%;">
+								<f:facet name="header">
+									<h:outputText value="Peso bruto" style="font-size: 0.8em;" />
+								</f:facet>
+								<div style=" font-size:0.8em; background-color:#{datTransProd.color1}; 0.8em; padding:12px; line-height:1.4;">
+									<h:outputText value="#{datTransProd.peso_bruto}" 
+										style="font-size: 0.8em; ">
+										<f:convertNumber pattern="#0" />
+									</h:outputText>
+  							   	</div>
+							</p:column>
+							
+							<p:column style="width: 5%;">
+								<f:facet name="header">
+									<h:outputText value="Peso tara" style="font-size: 0.8em;" />
+								</f:facet>
+								<div style=" font-size: 0.8em; background-color:#{datTransProd.color2}; padding:12px; ; line-height:1.4;">
+									<h:outputText style=" font-size: 0.8em;" 
+										value="#{datTransProd.peso_tara}"  >
+										<f:convertNumber pattern="#0" />
+									</h:outputText>
+  							   	</div>
+							</p:column>
+
+							<p:column style="width: 5% ;font-size: 0.9em;"
+								headerText="Opciones" exportable="false">
+								<div align="left">		
+								
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										value="Editar" style="font-size: 0.9em;"
+										actionListener="#{datTransProdBasculaView.action_edit}">
+										<f:attribute name="selectedDatBasculaTiquete"
+											value="#{datTransProd}" />
+									</p:commandButton>									
+																
+									<p:commandButton id="btnPesar" icon="ui-icon-pencil"
+										value="Pesar" style="font-size: 0.9em;"
+										update=":dialogP2, :frm" 
+										actionListener="#{datTransProdBasculaView.action_Pesar}">
+										<f:attribute name="selectedDatTransProd"
+											value="#{datTransProd}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:column>
+								<p:commandButton id="btnNew" value="Nuevo tiquete (Producción)" icon="ui-icon-newwin"
+									action="#{datTransProdBasculaView.action_new()}"
+									style="margin-right:20px;" update=":dialogDatTransProd">
+									<p:ajax listener="#{datTransProdBasculaView.setProduccion}"/>
+								</p:commandButton>
+									
+								<p:commandButton id="btnNew2" value="Nuevo tiquete (Despachos)" icon="ui-icon-newwin"
+									action="#{datTransProdBasculaView.action_new()}"
+									style="margin-right:20px;" update=":dialogDatTransProd2">
+									<p:ajax listener="#{datTransProdBasculaView.setDespachos}"/>
+								</p:commandButton>
+								
+								<p:commandButton id="btnNew3" value="Nuevo tiquete (Servicios)" icon="ui-icon-newwin"
+									action="#{datTransProdBasculaView.action_new()}"
+									style="margin-right:20px;" update=":dialogDatTransProd3" >
+									<p:ajax listener="#{datTransProdBasculaView.setServicios}"/>
+								</p:commandButton>
+								
+							</p:column>
+						</div>
+					</p:panel>
+				</h:form>
+		
+				<ui:include src="/XHTML/ProdAgricola/transacciones/dialogDatBasculaProduccion.xhtml" />
+				
+				<ui:include src="/XHTML/ProdAgricola/transacciones/dialogDatBasculaDespachos.xhtml" />
+				
+				<ui:include src="/XHTML/ProdAgricola/transacciones/dialogDatBasculaServicios.xhtml" /> 
+				
+				<ui:include src="/XHTML/ProdAgricola/transacciones/dialogPesar.xhtml" /> 
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

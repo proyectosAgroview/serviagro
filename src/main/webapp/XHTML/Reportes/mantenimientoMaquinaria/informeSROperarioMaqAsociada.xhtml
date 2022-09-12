@@ -1,0 +1,240 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable" header="Consulta liquidación máquinaria">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2" id="panelGrid">
+
+
+										<p:outputLabel for="msgFechaInicial" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{informeSROperarioMaquinaPeriodoView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFinal" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											style="font-size: 0.9em;" mask="true" size="12"
+											binding="#{informeSROperarioMaquinaPeriodoView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+									
+									
+										<p:outputLabel for="cargos" value="Cargo: " />
+										<p:selectCheckboxMenu id="cargos"
+											value="#{informeSROperarioMaquinaPeriodoView.selectedCargo}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un cargo">
+											<f:selectItems
+												value="#{informeSROperarioMaquinaPeriodoView.cargos}"
+												var="cargos" itemLabel=" #{cargos.nombre}"
+												itemValue="#{cargos.profId}" />
+										</p:selectCheckboxMenu>
+										
+
+
+										<p:outputLabel for="operadores" value="Operarario: " />
+										<p:selectCheckboxMenu id="operadores"
+											value="#{informeSROperarioMaquinaPeriodoView.selectedOperador}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un operador">
+											<f:selectItems
+												value="#{informeSROperarioMaquinaPeriodoView.operadores}"
+												var="operadores" itemLabel=" #{operadores.nombre}"
+												itemValue="#{operadores.trabId}" />
+										</p:selectCheckboxMenu>
+									
+
+
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										
+										<p:outputLabel for="equipos" value="Máquinaria:"
+											style="font-size: 0.9em;" />
+										<p:selectCheckboxMenu id="equipos" style="font-size: 0.9em;"
+											value="#{informeSROperarioMaquinaPeriodoView.selectedEquipo}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una máquina">
+											<f:selectItems value="#{informeSROperarioMaquinaPeriodoView.equipos}"
+												var="equipos" itemLabel=" #{equipos.codigo}"
+												itemValue="#{equipos.equipoId}" />
+										</p:selectCheckboxMenu>
+
+
+										<p:commandButton id="btnConsultar" value="Generar reporte"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{informeSROperarioMaquinaPeriodoView.consultaOperarioMaquinaPeriodo}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+										<p:outputLabel></p:outputLabel>
+
+									</h:panelGrid>
+								</p:column>
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+
+					<!-- <p:growl id="men"/>	 -->
+					<p:dataTable id="tbl" value="#{informeSROperarioMaquinaPeriodoView.data}"
+						scrollable="true" scrollWidth="95%" scrollHeight="300"
+						var="datServRealizadosEquipo" resizableColumns="false"
+						style="margin-bottom:20px" lazy="true" reflow="true">
+						<f:facet name="header">
+							<div align="right">
+
+								<h:commandLink id="excel" style=" margin-right:15px;">
+									<p:graphicImage
+										value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+										width="30" />
+									<p:dataExporter type="xls" target="tbl"
+										fileName="datServRealizadosEquipo" />
+								</h:commandLink>
+								<p:tooltip id="toolTipFade" for="excel"
+									value="Exportar todos los datos a Excel" />
+							</div>
+						</f:facet>
+
+						
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Cargo" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.nom_profesion}"
+								style="font-size: 0.8em;">
+								
+							</h:outputText>
+						</p:column>
+						
+						
+						<p:column width="40">
+							<f:facet name="header">
+								<h:outputText value="Código" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.cod_operario}"
+								style="font-size: 0.8em;">
+								
+							</h:outputText>
+						</p:column>
+						
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Operario" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.nom_operario}"
+								style="font-size: 0.8em;">
+								
+							</h:outputText>
+						</p:column>
+						
+						
+						
+						<p:column width="40">
+							<f:facet name="header">
+								<h:outputText value="Máquina" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.codEquipo}"
+								style="font-size: 0.8em;">
+								
+							</h:outputText>
+								
+						</p:column>
+						
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Horas" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.horas}"
+								style="font-size: 0.8em;">
+								<f:convertNumber />
+							</h:outputText>
+						</p:column>
+						
+						<p:column width="150">
+							<f:facet name="header">
+								<h:outputText value="Pines trabajados" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.listaPines}"
+								style="font-size: 0.8em;">
+							
+							</h:outputText>
+						</p:column>
+						
+						
+
+
+
+						
+
+						
+						
+
+
+					</p:dataTable>
+
+
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 06-ago-2017 12:13:30 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatOtrosCostosMq" table="dat_otros_costos_mq" >
+        <id name="datOtrosCostosMqId" type="java.lang.Long">
+            <column name="dat_otros_costos_mq_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="elementoCosto" class="co.com.arcosoft.modelo.ElementoCosto" fetch="select">
+            <column name="costo_elem_id" />
+        </many-to-one>
+        <many-to-one name="centCost" class="co.com.arcosoft.modelo.CentCost" fetch="select">
+            <column name="cent_cost_id" />
+        </many-to-one>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" />
+        </many-to-one>
+        <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="pers_empr_id" />
+        </many-to-one>
+        <many-to-one name="categoria" class="co.com.arcosoft.modelo.CategoriaEquipo" fetch="select">
+            <column name="categ_equip_id" />
+        </many-to-one>
+
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="19" />
+        </property>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="tipoTransaccion" type="java.lang.String">
+            <column name="tipo_transaccion" length="30" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="numFactura" type="java.lang.String">
+            <column name="num_factura" length="60" />
+        </property>
+        <property name="serieFactura" type="java.lang.String">
+            <column name="serie_factura" length="60" />
+        </property>
+        <property name="valorTotal" type="java.lang.Double">
+            <column name="valor_total" precision="12" scale="4" />
+        </property>
+        <property name="reglaDistribuccion" type="java.lang.String">
+            <column name="regla_distribuccion" length="60" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="3900" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="fechaInicial" type="java.util.Date">
+            <column name="fecha_inicial" length="19" />
+        </property>
+        <property name="origenDatos" type="java.lang.String">
+            <column name="origen_datos" length="30" />
+        </property>
+        
+        <property name="cantidad" type="java.lang.Double">
+            <column name="cantidad" precision="12" scale="4" />
+        </property>
+        
+        <property name="tipoGasto" type="java.lang.String">
+            <column name="tipo_gasto" length="20" />
+        </property>
+        
+          
+        
+        <set name="datOtrosCostosMqdets" table="dat_otros_costos_mqdet" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="dat_otros_costos_mq_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatOtrosCostosMqdet" />
+        </set>
+    </class>
+</hibernate-mapping>

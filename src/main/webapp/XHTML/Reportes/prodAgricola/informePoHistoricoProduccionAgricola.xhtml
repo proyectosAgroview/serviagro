@@ -1,0 +1,120 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Informe: Histórico de producción por lote">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+
+						<p:panelGrid styleClass="ui-panelgrid-blank">
+
+							<p:row>
+								<p:column style="font-weight: bold;">
+
+									<h:panelGrid columns="2" id="panelGrid" width="500">
+									
+									
+										<p:outputLabel for="msgFechaInicial" value="Fecha Corte Inicial: "   />
+										<p:calendar id="msgFechaInicial" showOn="button"    
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{informeProduccionAgricolaView.txtFechaInicial}"
+											required="false" requiredMessage="La Fecha inicial  es obligatoria">
+										</p:calendar>
+										
+
+										<p:outputLabel for="msgFechaFinal" value="Fecha Corte Final: " />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{informeProduccionAgricolaView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha  final es obligatoria">
+										</p:calendar>
+										
+									
+											<p:outputLabel for="txtHacienda" value="Hacienda: " />
+										<p:selectOneMenu id="txtHacienda"
+											binding="#{informeProduccionAgricolaView.txtHacienda}"
+											filter="true" filterMatchMode="contains" style="width:160px"
+											required="true"
+											autoWidth="false" disabled="false" >
+											<f:selectItem itemLabel="Seleccione una hacienda" itemValue=""/>
+											<f:selectItems value="#{informeProduccionAgricolaView.selectHacienda}"/>
+											<p:ajax update="txtLote"/>
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtLote" value="Lote: " />
+										<p:selectOneMenu id="txtLote"
+											binding="#{informeProduccionAgricolaView.txtLote}"
+											filter="true" filterMatchMode="contains" style="width:160px"
+											autoWidth="false" disabled="false" >
+											<f:selectItem itemLabel="Seleccione un lote" itemValue=""/>
+											<f:selectItems value="#{informeProduccionAgricolaView.selectLote}"/>
+											<p:ajax  update="txtEtapa"/>
+										</p:selectOneMenu>
+										
+										
+										
+										<p:outputLabel for="txtEtapa" value="Cortes:"   style="visibility:hidden"/>
+										<p:selectOneMenu id="txtEtapa"
+											binding="#{informeProduccionAgricolaView.txtEtapa}" style="visibility:hidden"
+											required="false" requiredMessage="Seleccione un corte">
+											<f:selectItem itemLabel="Seleccione un corte"
+												itemValue="" />
+											<f:selectItems
+												value="#{informeProduccionAgricolaView.selectEtapa}" />
+												<p:ajax process="txtLote"/>
+										</p:selectOneMenu>
+	
+	
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+					</p:panel>
+					
+					<p:panel id="panelBoton">
+						<div align="center">
+
+							<p:commandButton id="btnConsultar" value="Generar reporte"
+								icon="ui-icon-newwin"
+								action="#{informeProduccionAgricolaView.historicoProduccion}" 
+								update="growl, frm" process="@all" partialSubmit="true"/>
+
+							<p:commandButton disabled="#{informeProduccionAgricolaView.disableButton}"
+								icon="ui-icon-arrowthick-1-s" value="Descargar" ajax="false">
+								<p:fileDownload value="#{informeProduccionAgricolaView.file}" />
+							</p:commandButton>
+
+
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" process="@all" partialSubmit="true" resetValues="true" />
+							</p:commandButton>
+
+						</div>
+					</p:panel>
+				
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

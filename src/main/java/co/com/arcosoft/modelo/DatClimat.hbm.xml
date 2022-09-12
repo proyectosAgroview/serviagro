@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatClimat" table="dat_climat" >
+        <id name="datsClimatoId" type="java.lang.Long">
+            <column name="dats_climato_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="estClimat" class="co.com.arcosoft.modelo.EstClimat" fetch="select">
+            <column name="est_climat_id" />
+        </many-to-one>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaLluvia" type="java.util.Date">
+            <column name="fecha_lluvia" length="19" />
+        </property>
+        <property name="precipitacion" type="java.lang.Double">
+            <column name="precipitacion" precision="12" scale="4" />
+        </property>
+        <property name="temperaturaMaxima" type="java.lang.Double">
+            <column name="temperatura_maxima" precision="12" scale="4" />
+        </property>
+        <property name="temperaturaMedia" type="java.lang.Double">
+            <column name="temperatura_media" precision="12" scale="4" />
+        </property>
+        <property name="temperaturaMinima" type="java.lang.Double">
+            <column name="temperatura_minima" precision="12" scale="4" />
+        </property>
+        <property name="temperaturaAmbiente" type="java.lang.Double">
+            <column name="temperatura_ambiente" precision="12" scale="4" />
+        </property>
+        <property name="sensacionTermica" type="java.lang.Double">
+            <column name="sensacion_termica" precision="12" scale="4" />
+        </property>
+        <property name="humedadMaxima" type="java.lang.Double">
+            <column name="humedad_maxima" precision="12" scale="4" />
+        </property>
+        <property name="humedadMedia" type="java.lang.Double">
+            <column name="humedad_media" precision="12" scale="4" />
+        </property>
+        <property name="humedadMinima" type="java.lang.Double">
+            <column name="humedad_minima" precision="12" scale="4" />
+        </property>
+        <property name="humedadExterior" type="java.lang.Double">
+            <column name="humedad_exterior" precision="12" scale="4" />
+        </property>
+        <property name="humedadInterior" type="java.lang.Double">
+            <column name="humedad_interior" precision="12" scale="4" />
+        </property>
+        <property name="evaporacion" type="java.lang.Double">
+            <column name="evaporacion" precision="12" scale="4" />
+        </property>
+        <property name="evaporacionTranspiracion" type="java.lang.Double">
+            <column name="evaporacion_transpiracion" precision="12" scale="4" />
+        </property>
+        <property name="insolacion" type="java.lang.Double">
+            <column name="insolacion" precision="12" scale="4" />
+        </property>
+        <property name="energiaSolar" type="java.lang.Double">
+            <column name="energia_solar" precision="12" scale="4" />
+        </property>
+        <property name="radiacionSolar" type="java.lang.Double">
+            <column name="radiacion_solar" precision="12" scale="4" />
+        </property>
+        <property name="nubosidad" type="java.lang.Double">
+            <column name="nubosidad" precision="12" scale="4" />
+        </property>
+        <property name="horasSol" type="java.lang.Double">
+            <column name="horas_sol" precision="12" scale="4" />
+        </property>
+        <property name="puntoRocio" type="java.lang.Double">
+            <column name="punto_rocio" precision="12" scale="4" />
+        </property>
+        <property name="velocidadViento" type="java.lang.Double">
+            <column name="velocidad_viento" precision="12" scale="4" />
+        </property>
+        <property name="velocidadMaxima" type="java.lang.Double">
+            <column name="velocidad_maxima" precision="12" scale="4" />
+        </property>
+        <property name="direccionViento" type="java.lang.Double">
+            <column name="direccion_viento" precision="12" scale="4" />
+        </property>
+        <property name="gradosDiaCalor" type="java.lang.Double">
+            <column name="grados_dia_calor" precision="12" scale="4" />
+        </property>
+        <property name="gradosDiaFrio" type="java.lang.Double">
+            <column name="grados_dia_frio" precision="12" scale="4" />
+        </property>
+        <property name="horasLuz" type="java.lang.Double">
+            <column name="horas_luz" precision="12" scale="4" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="500" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

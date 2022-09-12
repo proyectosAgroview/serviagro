@@ -1,0 +1,282 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frmConsulta">
+
+					<p:panel id="panelDataTable"
+						header="Registro de pagos de eventos(documentos)">
+
+						<p:growl id="growl" showDetail="true" sticky="true" />
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{datConsultaEventosPorPagarView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFinal" value="Fecha Final: " />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{datConsultaEventosPorPagarView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="equipos" value="Equipo: " />
+										<p:selectCheckboxMenu id="equipos"
+											value="#{datConsultaEventosPorPagarView.selectedEquipo}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un equipo">
+											<f:selectItems
+												value="#{datConsultaEventosPorPagarView.equipos}"
+												var="equipos" itemLabel=" #{equipos.nombre}"
+												itemValue="#{equipos.equipoId}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="propietarios" value="Propietario: " />
+										<p:selectCheckboxMenu id="propietarios"
+											value="#{datConsultaEventosPorPagarView.selectedPropietario}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un propietario">
+											<f:selectItems
+												value="#{datConsultaEventosPorPagarView.propietarios}"
+												var="propietarios" itemLabel=" #{propietarios.nombre}"
+												itemValue="#{propietarios.persEmprId}" />
+										</p:selectCheckboxMenu>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="eventosEquipo" value="Eventos: " />
+										<p:selectCheckboxMenu id="eventosEquipo"
+											value="#{datConsultaEventosPorPagarView.selectedEventos}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un evento">
+											<f:selectItems
+												value="#{datConsultaEventosPorPagarView.eventosEquipo}"
+												var="eventosEquipo" itemLabel=" #{eventosEquipo.nombre}"
+												itemValue="#{eventosEquipo.eventosId}" />
+										</p:selectCheckboxMenu>
+									</h:panelGrid>
+								</p:column>
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnConsultar" value="Consultar"
+								icon="ui-icon-newwin"
+								action="#{datConsultaEventosPorPagarView.action_informe1()}"
+								update="frmConsulta, tablaEventos" />
+						</div>
+					</p:panel>
+
+
+					<p:panel id="tablaEventos">
+
+						<p:dataTable id="tbl3"
+							value="#{datConsultaEventosPorPagarView.data}" var="informeCosG"
+							paginator="true" rows="10" rowKey="#{informeCosG.idEquipoEvento}"
+							scrollable="true" scrollHeight="150" rowsPerPageTemplate="10,15"
+							reflow="true">
+
+							<p:column style="width: 3%">
+								<f:facet name="header">
+									<h:outputText value="Id. Registro" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.idEquipoEvento}"
+									style="font-size: 0.8em;" />
+
+							</p:column>
+
+
+							<p:column style="width: 8%">
+								<f:facet name="header">
+									<h:outputText value="Equipo/Maquinaria"
+										style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.nombreEquipo}"
+									style="font-size: 0.8em;" />
+
+							</p:column>
+
+
+							<p:column style="width: 8%">
+								<f:facet name="header">
+									<h:outputText value="Evento" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.nombreEvento}"
+									style="font-size: 0.8em;" />
+
+							</p:column>
+
+
+							<p:column style="width: 8% ">
+								<f:facet name="header">
+									<h:outputText value="Vigencia inicial"
+										style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.fechaInicial}"
+									style="font-size: 0.8em;">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+
+							<p:column style="width: 8% ">
+								<f:facet name="header">
+									<h:outputText value="Vigencia final" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.fechaFinal}"
+									style="font-size: 0.8em;">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width: 6%">
+								<f:facet name="header">
+									<h:outputText value="Ya se pagó?" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.registraPago}"
+									style="font-size: 0.8em;" />
+
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false"
+								style="width: 7% ">
+								<div align="left">
+									<p:commandButton id="btPagar" icon="ui-icon-pencil"
+										value="Registrar pago" style="font-size: 0.8em;"
+										actionListener="#{datConsultaEventosPorPagarView.action_Pagar}"
+										update="dialogT2">
+										<f:attribute name="selectedRegistro" value="#{informeCosG}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+
+				</h:form>
+
+				<p:dialog id="dialogT2" appendTo="@(body)" draggable="true"
+					closable="true"
+					visible="#{datConsultaEventosPorPagarView.showDialog}"
+					resizable="false" modal="true" width="500" styleClass="dialogFix"
+					header="Registrar pagos de eventos" responsive="true">
+
+					<p:messages id="msg4" closable="true" />
+					<h:form id="formDialogPagar">
+
+						<p:panel header="Registrar pagos de eventos (documentos)">
+						
+								<h:panelGrid columns="2">
+									<p:outputLabel value="#Id reg." />
+									<p:inputText id="txtIdRegistro" disabled="false"
+										binding="#{datConsultaEventosPorPagarView.txtIdRegistro}"
+										placeholder="Buscar o crear registro" size="12">
+									</p:inputText>
+
+									<p:outputLabel for="txtFechaPago" value="Fecha de pago: " />
+									<p:calendar id="txtFechaPago" showOn="button" navigator="false"
+										locale="es" size="12"
+										binding="#{datConsultaEventosPorPagarView.txtFechaPago}"
+										pattern="dd/MM/yyyy" mask="true" required="true"
+										requiredMessage="La Fecha   es obligatoria">
+									</p:calendar>
+
+									<p:outputLabel for="txtEquipo" value="Equipo/Maquinaria" />
+									<p:selectOneMenu id="txtEquipo" effect="fade" filter="true"
+										filterMatchMode="Contains"
+										binding="#{datConsultaEventosPorPagarView.txtEquipo}"
+										autoWidth="false" style="width: 100%;" required="false"
+										requiredMessage="Seleccione un equipo">
+										<f:selectItem itemLabel="Seleccione un equipo" itemValue="" />
+										<f:selectItems
+											value="#{datConsultaEventosPorPagarView.selectEquipo}" />
+									</p:selectOneMenu>
+
+									<p:outputLabel for="txtEvento" value="Documento: " />
+									<p:selectOneMenu id="txtEvento" effect="fade" filter="true"
+										filterMatchMode="contains" autoWidth="false"
+										binding="#{datConsultaEventosPorPagarView.txtEvento}">
+										<f:selectItem itemLabel="Seleccione" itemValue="" />
+										<f:selectItems
+											value="#{datConsultaEventosPorPagarView.selectEvento}" />
+									</p:selectOneMenu>
+
+
+									<h:outputText for="txtProveedor" value="Proveedor: " />
+									<p:selectOneMenu id="txtProveedor" effect="fade" filter="true"
+										filterMatchMode="contains" style="width: 150px;"
+										binding="#{datConsultaEventosPorPagarView.txtProveedor}"
+										autoWidth="false" required="true"
+										requiredMessage="Seleccione un proveedor">
+										<f:selectItem itemLabel="Seleccione un proveedor" itemValue="" />
+										<f:selectItems
+											value="#{datConsultaEventosPorPagarView.selectContratista}" />
+									</p:selectOneMenu>
+
+
+									<p:outputLabel for="txtValorTotal" value="Valor total($): " />
+									<p:spinner id="txtValorTotal" size="12" stepFactor="0.25"
+										prefix="$" required="true"
+										binding="#{datConsultaEventosPorPagarView.txtValorTotal}"
+										requiredMessage="El valor es Obligatorio" />
+								</h:panelGrid>
+
+							</p:panel>
+
+							<p:panel id="panelBotones">
+								<div align="center">
+									<p:commandButton id="btnSavePago" icon="ui-icon-disk"
+										binding="#{datConsultaEventosPorPagarView.btnSave}"
+										value="Grabar" process="@all"
+										action="#{datConsultaEventosPorPagarView.action_savePago()}"
+										update=":dialogT2, :frmConsulta,  :formDialogPagar" />
+
+								</div>
+							</p:panel>
+					</h:form>
+				</p:dialog>
+				<!-- Formulario pagar -->
+
+
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

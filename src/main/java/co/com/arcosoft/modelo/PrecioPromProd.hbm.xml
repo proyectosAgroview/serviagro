@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19-oct-2018 11:57:40 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+	<class name="co.com.arcosoft.modelo.PrecioPromProd"
+		table="precio_prom_prod">
+		<id name="precioProdId" type="java.lang.Long">
+			<column name="precio_prod_id" />
+			<generator class="identity" />
+		</id>
+		<many-to-one name="producto"
+			class="co.com.arcosoft.modelo.Producto" fetch="select">
+			<column name="producto_id" />
+		</many-to-one>
+		<many-to-one name="persEmpr"
+			class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+			<column name="pers_empr_id" />
+		</many-to-one>
+		<many-to-one name="almacenId"
+			class="co.com.arcosoft.modelo.Almacen" fetch="select">
+			<column name="almacen_id" />
+		</many-to-one>
+		<property name="compania" type="java.lang.Long">
+			<column name="compania" />
+		</property>
+		<property name="valorUnitario" type="java.lang.Double">
+			<column name="valor_unitario" precision="12" scale="4" />
+		</property>
+		<property name="infoAdicional" type="java.lang.String">
+			<column name="info_adicional" length="1000" />
+		</property>
+		<property name="infoAdicional2" type="java.lang.String">
+			<column name="info_adicional2" length="1000" />
+		</property>
+		<property name="fechaCreacion" type="java.util.Date">
+			<column name="fecha_creacion" length="19" />
+		</property>
+		<property name="fechaModificacion" type="java.util.Date">
+			<column name="fecha_modificacion" length="19" />
+		</property>
+		<property name="fechaInicial" type="java.util.Date">
+			<column name="fecha_inicial" length="19" />
+		</property>
+		<property name="fechaFinal" type="java.util.Date">
+			<column name="fecha_final" length="19" />
+		</property>
+		<property name="fechaVencimiento" type="java.util.Date">
+			<column name="fecha_vencimiento" length="19" />
+		</property>
+		<many-to-one name="unidadMedida"
+			class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+			<column name="unidad_medida" />
+		</many-to-one>
+		<property name="cantidadCompra" type="java.lang.Double">
+			<column name="cantidad_compra" precision="12" scale="4" />
+		</property>
+		<property name="loteCompraProducto" type="java.lang.String">
+			<column name="lote_compra_producto" length="90" />
+		</property>
+		<property name="registroIca" type="java.lang.String">
+			<column name="registro_ica" length="90" />
+		</property>
+		<property name="consecutivo" type="java.lang.Long">
+			<column name="consecutivo" />
+		</property>
+		<many-to-one name="conceptoKardexId"
+			class="co.com.arcosoft.modelo.ConceptoKardex" fetch="select">
+			<column name="concepto_kardex_id" />
+		</many-to-one>
+		<property name="tipoMovimiento" type="java.lang.String">
+			<column name="tipo_movimiento" length="20" />
+		</property>
+		<property name="numFacturaCompra" type="java.lang.Long">
+			<column name="num_factura_compra" />
+		</property>
+		<property name="costoTotal" type="java.lang.Double">
+			<column name="costo_total" precision="16" scale="4" />
+		</property>
+		<property name="porcIva" type="java.lang.Double">
+			<column name="porc_iva" precision="12" scale="4" />
+		</property>
+
+		<property name="valorIva" type="java.lang.Double">
+			<column name="valor_iva" precision="12" scale="4" />
+		</property>
+
+		<property name="diferido" type="java.lang.String">
+			<column name="diferido" length="20" />
+		</property>
+
+		<property name="origenDatos" type="java.lang.String">
+			<column name="origen_datos" length="60" />
+		</property>
+
+		<many-to-one name="equipoId"
+			class="co.com.arcosoft.modelo.Equipo" fetch="select">
+			<column name="equipo_id" />
+		</many-to-one>
+
+		<many-to-one name="trabajador"
+			class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+			<column name="trab_id" />
+		</many-to-one>
+		<many-to-one name="datCompraProductosId"
+			class="co.com.arcosoft.modelo.DatCompraProductos" fetch="select">
+			<column name="dat_compra_productos_id" />
+		</many-to-one>
+		<many-to-one name="datOtrosMovInventarioId"
+			class="co.com.arcosoft.modelo.DatOtrosMovInventario" fetch="select">
+			<column name="dat_otros_mov_inventario_id" />
+		</many-to-one>
+		<many-to-one name="datServRealizadosEquipoId"
+			class="co.com.arcosoft.modelo.DatServRealizadosEquipo" fetch="select">
+			<column name="dat_serv_realizados_equipo_id" />
+		</many-to-one>
+		<property name="conceptoGastoId" type="java.lang.Long">
+			<column name="concepto_gasto_id" />
+		</property>
+		<many-to-one name="nivel2Id"
+			class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+			<column name="nivel2_id" />
+		</many-to-one>
+		<many-to-one name="nivel4Id"
+			class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+			<column name="nivel4_id" />
+		</many-to-one>
+		<property name="transportadoraFactura"
+			type="java.lang.String">
+			<column name="transportadora_factura" length="300" />
+		</property>
+		<property name="transportadora_nguia" type="java.lang.String">
+			<column name="transportadora_nguia" length="300" />
+		</property>
+		<property name="transportadora_valor_flete"
+			type="java.lang.Double">
+			<column name="transportadora_valor_flete" precision="12"
+				scale="4" />
+		</property>
+
+		<property name="etapaId" type="java.lang.Long">
+			<column name="etapa_id" />
+		</property>
+		<property name="variedId" type="java.lang.Long">
+			<column name="varied_id" />
+		</property>
+
+		<many-to-one name="operario_equipo_id"
+			class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+			<column name="operario_equipo_id" />
+		</many-to-one>
+
+		<many-to-one name="nivel2_clientesmq_id"
+			class="co.com.arcosoft.modelo.Nivel2Clientesmq" fetch="select">
+			<column name="nivel2_clientesmq_id" />
+		</many-to-one>
+
+		<property name="nivel4_clientesmq_id" type="java.lang.Long">
+			<column name="nivel4_clientesmq_id" />
+		</property>
+
+		<property name="horometro_abastecimiento"
+			type="java.lang.Double">
+			<column name="horometro_abastecimiento" precision="12"
+				scale="4" />
+		</property>
+
+		<property name="usuarioDigitacion" type="java.lang.Long">
+			<column name="usuario_digitacion" />
+		</property>
+
+		<property name="indicador_vuelta_medidor"
+			type="java.lang.Long">
+			<column name="indicador_vuelta_medidor" />
+		</property>
+
+		<many-to-one name="ubicacionesAlmacen"
+			class="co.com.arcosoft.modelo.UbicacionesAlmacen" fetch="select">
+			<column name="ubicaciones_almacen_id" />
+		</many-to-one>
+
+		<many-to-one name="implementoId"
+			class="co.com.arcosoft.modelo.Equipo" fetch="select">
+			<column name="implemento_id" />
+		</many-to-one>
+		<property name="datMantenimientoEquipoId"
+			type="java.lang.Long">
+			<column name="dat_mantenimiento_equipo_id" />
+		</property>
+
+		<property name="centCostId" type="java.lang.Long">
+			<column name="cent_cost_id" />
+		</property>
+
+		<property name="referenciaFacCompra" type="java.lang.String">
+			<column name="referencia_compra" length="3900" />
+		</property>
+		
+		<property name="descuentoProducto" type="java.lang.Double">
+			<column name="descuento_producto" precision="12" scale="4" />
+		</property>
+	</class>
+</hibernate-mapping>

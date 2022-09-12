@@ -1,0 +1,299 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatHerramienta"
+						header="DatHerramientaData">
+						<p:growl id="men" />
+						<p:dataTable value="#{datHerramientaView.data}"
+							var="datHerramienta" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15">
+							<p:column filterBy="#{datHerramienta.datHerramientaId}"
+								sortBy="#{datHerramienta.datHerramientaId}">
+								<f:facet name="header">
+									<h:outputText value="datHerramientaId" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.datHerramientaId}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.cantidadEntregada}"
+								sortBy="#{datHerramienta.cantidadEntregada}">
+								<f:facet name="header">
+									<h:outputText value="CantidadEntregada" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.cantidadEntregada}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.compania}"
+								sortBy="#{datHerramienta.compania}">
+								<f:facet name="header">
+									<h:outputText value="Compania" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.compania}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.consecutivo}"
+								sortBy="#{datHerramienta.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.estado}"
+								sortBy="#{datHerramienta.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.fechaCreacion}"
+								sortBy="#{datHerramienta.fechaCreacion}">
+								<f:facet name="header">
+									<h:outputText value="FechaCreacion" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.fechaCreacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.fechaModificacion}"
+								sortBy="#{datHerramienta.fechaModificacion}">
+								<f:facet name="header">
+									<h:outputText value="FechaModificacion" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.fechaModificacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.fechaRegistro}"
+								sortBy="#{datHerramienta.fechaRegistro}">
+								<f:facet name="header">
+									<h:outputText value="FechaRegistro" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.fechaRegistro}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.infoAdicional}"
+								sortBy="#{datHerramienta.infoAdicional}">
+								<f:facet name="header">
+									<h:outputText value="InfoAdicional" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.infoAdicional}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.infoAdicional2}"
+								sortBy="#{datHerramienta.infoAdicional2}">
+								<f:facet name="header">
+									<h:outputText value="InfoAdicional2" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.infoAdicional2}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.observacion}"
+								sortBy="#{datHerramienta.observacion}">
+								<f:facet name="header">
+									<h:outputText value="Observacion" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.observacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.observacionAnularReg}"
+								sortBy="#{datHerramienta.observacionAnularReg}">
+								<f:facet name="header">
+									<h:outputText value="ObservacionAnularReg" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.observacionAnularReg}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.tipoRegistro}"
+								sortBy="#{datHerramienta.tipoRegistro}">
+								<f:facet name="header">
+									<h:outputText value="TipoRegistro" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.tipoRegistro}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.usuarioDigitacion}"
+								sortBy="#{datHerramienta.usuarioDigitacion}">
+								<f:facet name="header">
+									<h:outputText value="UsuarioDigitacion" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.usuarioDigitacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.almacenId_Almacen}"
+								sortBy="#{datHerramienta.almacenId_Almacen}">
+								<f:facet name="header">
+									<h:outputText value="AlmacenId_Almacen" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.almacenId_Almacen}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.productoId_Producto}"
+								sortBy="#{datHerramienta.productoId_Producto}">
+								<f:facet name="header">
+									<h:outputText value="ProductoId_Producto" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.productoId_Producto}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.trabId_Trabajador}"
+								sortBy="#{datHerramienta.trabId_Trabajador}">
+								<f:facet name="header">
+									<h:outputText value="TrabId_Trabajador" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.trabId_Trabajador}" />
+							</p:column>
+
+							<p:column filterBy="#{datHerramienta.udadMedId_UdadMed}"
+								sortBy="#{datHerramienta.udadMedId_UdadMed}">
+								<f:facet name="header">
+									<h:outputText value="UdadMedId_UdadMed" />
+								</f:facet>
+								<h:outputText value="#{datHerramienta.udadMedId_UdadMed}" />
+							</p:column>
+
+							<p:column headerText="Options">
+								<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+									update=":dialogDatHerramienta"
+									actionListener="#{datHerramientaView.action_edit}">
+									<f:attribute name="selectedDatHerramienta"
+										value="#{datHerramienta}" />
+								</p:commandButton>
+								<p:commandButton id="btnDelete" title="Delete"
+									actionListener="#{datHerramientaView.action_delete_datatable}"
+									onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+									icon="ui-icon-trash" update="@form">
+									<f:attribute name="selectedDatHerramienta"
+										value="#{datHerramienta}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="New"
+								action="#{datHerramientaView.action_new()}"
+								update=":dialogDatHerramienta" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatHerramienta" appendTo="@(body)"
+					draggable="true" closable="false"
+					visible="#{datHerramientaView.showDialog}" resizable="false"
+					modal="true" width="500">
+					<h:form id="formDialog">
+						<p:messages id="msg" />
+						<p:panel id="panelDatHerramienta" header="DatHerramienta">
+							<h:panelGrid columns="2" id="panelGrid">
+								<h:outputText id="msgDatHerramientaId" value="DatHerramientaId" />
+								<p:inputText id="txtDatHerramientaId"
+									binding="#{datHerramientaView.txtDatHerramientaId}">
+									<p:ajax update=":dialogDatHerramienta"
+										listener="#{datHerramientaView.listener_txtId}" />
+								</p:inputText>
+
+								<h:outputText id="msgCantidadEntregada"
+									value=" CantidadEntregada" />
+								<p:inputText id="txtCantidadEntregada" disabled="true"
+									binding="#{datHerramientaView.txtCantidadEntregada}" />
+								<h:outputText id="msgCompania" value=" Compania" />
+								<p:inputText id="txtCompania" disabled="true"
+									binding="#{datHerramientaView.txtCompania}" />
+								<h:outputText id="msgConsecutivo" value=" Consecutivo" />
+								<p:inputText id="txtConsecutivo" disabled="true"
+									binding="#{datHerramientaView.txtConsecutivo}" />
+								<h:outputText id="msgEstado" value=" Estado" />
+								<p:inputText id="txtEstado" disabled="true"
+									binding="#{datHerramientaView.txtEstado}" />
+								<h:outputText id="msgInfoAdicional" value=" InfoAdicional" />
+								<p:inputText id="txtInfoAdicional" disabled="true"
+									binding="#{datHerramientaView.txtInfoAdicional}" />
+								<h:outputText id="msgInfoAdicional2" value=" InfoAdicional2" />
+								<p:inputText id="txtInfoAdicional2" disabled="true"
+									binding="#{datHerramientaView.txtInfoAdicional2}" />
+								<h:outputText id="msgObservacion" value=" Observacion" />
+								<p:inputText id="txtObservacion" disabled="true"
+									binding="#{datHerramientaView.txtObservacion}" />
+								<h:outputText id="msgObservacionAnularReg"
+									value=" ObservacionAnularReg" />
+								<p:inputText id="txtObservacionAnularReg" disabled="true"
+									binding="#{datHerramientaView.txtObservacionAnularReg}" />
+								<h:outputText id="msgTipoRegistro" value=" TipoRegistro" />
+								<p:inputText id="txtTipoRegistro" disabled="true"
+									binding="#{datHerramientaView.txtTipoRegistro}" />
+								<h:outputText id="msgUsuarioDigitacion"
+									value=" UsuarioDigitacion" />
+								<p:inputText id="txtUsuarioDigitacion" disabled="true"
+									binding="#{datHerramientaView.txtUsuarioDigitacion}" />
+								<h:outputText id="msgAlmacenId_Almacen"
+									value=" AlmacenId_Almacen" />
+								<p:inputText id="txtAlmacenId_Almacen" disabled="true"
+									binding="#{datHerramientaView.txtAlmacenId_Almacen}" />
+								<h:outputText id="msgProductoId_Producto"
+									value=" ProductoId_Producto" />
+								<p:inputText id="txtProductoId_Producto" disabled="true"
+									binding="#{datHerramientaView.txtProductoId_Producto}" />
+								<h:outputText id="msgTrabId_Trabajador"
+									value=" TrabId_Trabajador" />
+								<p:inputText id="txtTrabId_Trabajador" disabled="true"
+									binding="#{datHerramientaView.txtTrabId_Trabajador}" />
+								<h:outputText id="msgUdadMedId_UdadMed"
+									value=" UdadMedId_UdadMed" />
+								<p:inputText id="txtUdadMedId_UdadMed" disabled="true"
+									binding="#{datHerramientaView.txtUdadMedId_UdadMed}" />
+
+								<h:outputText id="msgFechaCreacion" value=" FechaCreacion" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{datHerramientaView.txtFechaCreacion}">
+									<p:ajax event="dateSelect"
+										listener="#{datHerramientaView.listener_txtFechaCreacion}" />
+								</p:calendar>
+								<h:outputText id="msgFechaModificacion"
+									value=" FechaModificacion" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{datHerramientaView.txtFechaModificacion}">
+									<p:ajax event="dateSelect"
+										listener="#{datHerramientaView.listener_txtFechaModificacion}" />
+								</p:calendar>
+								<h:outputText id="msgFechaRegistro" value=" FechaRegistro" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{datHerramientaView.txtFechaRegistro}">
+									<p:ajax event="dateSelect"
+										listener="#{datHerramientaView.listener_txtFechaRegistro}" />
+								</p:calendar>
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave"
+									binding="#{datHerramientaView.btnSave}" value="Save"
+									action="#{datHerramientaView.action_save()}"
+									update=":dialogDatHerramienta :frm:panelDataTableDatHerramienta" />
+								<p:commandButton id="btnClear" value="Clear"
+									action="#{datHerramientaView.action_clear()}"
+									update=":dialogDatHerramienta" />
+								<p:commandButton id="btnExit" value="Exit"
+									action="#{datHerramientaView.action_closeDialog()}"
+									update=":dialogDatHerramienta" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

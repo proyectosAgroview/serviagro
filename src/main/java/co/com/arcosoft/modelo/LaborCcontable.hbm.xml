@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.LaborCcontable" table="labor_ccontable" >
+         <id name="laborCcontableId" type="java.lang.Long">
+            <column name="labor_ccontable_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="cuentaContable" class="co.com.arcosoft.modelo.CuentaContable" fetch="select">
+            <column name="ccontable_id" />
+        </many-to-one>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,523 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableVariable"
+						header="Variables del Análisis">
+						<!-- <p:growl id="men" />  -->
+						<p:dataTable id="tbl" value="#{variableView.data}" var="variable"
+							paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Variables" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{variable.estado}"
+								sortBy="#{variable.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{variable.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{variable.codigo}"
+								sortBy="#{variable.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{variable.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{variable.nombre}"
+								sortBy="#{variable.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{variable.nombre}" />
+							</p:column>
+
+
+							<p:column filterBy="#{variable.tipoDato}"
+								sortBy="#{variable.tipoDato}">
+								<f:facet name="header">
+									<h:outputText value="Tipo Dato" />
+								</f:facet>
+								<h:outputText value="#{variable.tipoDato}" />
+							</p:column>
+
+							<p:column filterBy="#{variable.analisis}"
+								filterMatchMode="contains" sortBy="#{variable.analisis}">
+								<f:facet name="header">
+									<h:outputText value="Análisis" />
+								</f:facet>
+								<h:outputText value="#{variable.analisis}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogVariable"
+										actionListener="#{variableView.action_edit}">
+										<f:attribute name="selectedVariable" value="#{variable}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{variableView.action_new()}" update=":dialogVariable" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogVariable" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{variableView.showDialog}"
+					resizable="false" modal="true" width="650" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+
+						<p:panel id="panelVariable" header="Variable">
+
+							<p:tabView scrollable="true">
+
+								<p:tab title="Información de Variable">
+
+									<h:panelGrid columns="5" id="panelGrid" layout="grid"
+										styleClass="ui-panelgrid-blank"
+										columnClasses="ui-grid-col-5,ui-grid-col-9">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{variableView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtAnaSanVegId_AnaSanVeg"
+											value="Análisis: " />
+										<p:selectOneMenu id="txtAnaSanVegId_AnaSanVeg"
+											binding="#{variableView.txtAnaSanVegId_AnaSanVeg}"
+											required="true" requiredMessage="Seleccione un análisis"
+											filter="true" filterMatchMode="contains">
+											<f:selectItem itemLabel="Seleccione un análisis" itemValue="" />
+											<f:selectItems value="#{variableView.selectAnalisis}" />
+										</p:selectOneMenu>
+										<p:message for="txtAnaSanVegId_AnaSanVeg" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{variableView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="25">
+											<p:ajax
+												update=":formDialog:panelVariable,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{variableView.listener_txtCodigo}" />
+										</p:inputText>
+										<p:outputLabel />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtOrden" value=" Orden: " />
+										<h:panelGrid columns="1" style="margin-bottom: 10px">
+											<p:inputText id="txtOrden" disabled="true"
+												value="#{variableView.number1}"
+												binding="#{variableView.txtOrden}" required="true"
+												requiredMessage="El Orden es Obligatorio" />
+											<p:slider for="txtOrden" />
+											<p:message for="txtOrden" />
+										</h:panelGrid>
+										<p:outputLabel />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true"
+											binding="#{variableView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+										<p:message for="txtNombre" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel value="Tipo de Dato:" />
+										<p:selectOneMenu id="txtTipoDato" disabled="true"
+											value="#{variableView.tipoDato}"
+											binding="#{variableView.selectTipoDato}" style="width:125px"
+											required="true" requiredMessage="Seleccione un tipo de dato">
+											<f:selectItem itemLabel="Ninguno" itemValue="Ninguno" />
+											<f:selectItem itemLabel="Decimal" itemValue="Decimal" />
+											<f:selectItem itemLabel="Texto" itemValue="Texto" />
+											<f:selectItem itemLabel="Fecha" itemValue="Fecha" />
+
+											<p:ajax
+												update="txtValorMaximo txtValorMinimo txtNumeroDecimales txtValorNumerico txtValorAlfanumerico txtCodigoValor txtNombreValor btnAgregar btnAgregarRango "
+												listener="#{variableView.listener_tipoDato}" />
+
+										</p:selectOneMenu>
+										<p:message for="txtTipoDato" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNumeroDecimales"
+											value="Número de decimales: " />
+										<p:spinner disabled="true" id="txtNumeroDecimales"
+											binding="#{variableView.txtNumeroDecimales}" value="0"
+											size="3">
+											<f:validateDoubleRange minimum="0" maximum="9" />
+										</p:spinner>
+										<p:outputLabel />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtValorMaximo" value=" Valor Máximo:" />
+										<p:inputText id="txtValorMaximo"
+											binding="#{variableView.txtValorMaximo}" size="3">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtValorMaximo" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtValorMinimo" value=" Valor Mínimo:" />
+										<p:inputText id="txtValorMinimo"
+											binding="#{variableView.txtValorMinimo}" size="3">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtValorMinimo" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1:" />
+										<p:inputTextarea id="txtInfoAdicional" disabled="true"
+											binding="#{variableView.txtInfoAdicional}" rows="5" cols="30"
+											counter="display" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2:" />
+										<p:inputTextarea id="txtInfoAdicional2" disabled="true"
+											binding="#{variableView.txtInfoAdicional2}" rows="5"
+											cols="30" counter="display2" maxlength="100"
+											counterTemplate="{0} Caracteres." autoResize="true" />
+										<h:outputText id="display2" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtTiempoDigitacion"
+											value="Tiempo digitación (Numero de Dias): " />
+										<p:spinner disabled="true" id="txtTiempoDigitacion"
+											binding="#{variableView.txtTiempoDigitacion}" value="0"
+											size="6" />
+										<p:outputLabel />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:inputText style="visibility:hidden" id="txtVariableId"
+											binding="#{variableView.txtVariableId}" />
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								<!-- Valores posibles -->
+
+								<p:tab title="Valores Posibles">
+
+									<h:panelGrid columns="3" id="gridVp" layout="grid"
+										styleClass="ui-panelgrid-blank"
+										columnClasses="ui-grid-col-3,ui-grid-col-5">
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigoValor" disabled="false"
+											binding="#{variableView.txtCodigoValor}"
+											placeholder="Buscar o crear registro" size="25">
+										</p:inputText>
+										<p:outputLabel />
+
+										<p:outputLabel value="Nombre: " />
+										<p:inputText id="txtNombreValor" disabled="false" size="25"
+											binding="#{variableView.txtNombreValor}" />
+										<p:message for="txtNombreValor" />
+
+
+										<p:outputLabel value="Valor Numérico: " />
+										<p:inputText id="txtValorNumerico" disabled="true" size="25"
+											binding="#{variableView.txtValorNumerico}" />
+										<p:message for="txtValorNumerico" />
+
+										<p:outputLabel value="Valor Alfanumérico: " />
+										<p:inputText id="txtValorAlfanumerico" disabled="true"
+											size="25" binding="#{variableView.txtValorAlfanumerico}" />
+										<p:message for="txtValorAlfanumerico" />
+
+										<p:outputLabel />
+										<p:outputLabel />
+										<p:outputLabel />
+
+									</h:panelGrid>
+
+									<h:panelGrid columns="2" style="margin:10px" cellpadding="5">
+
+										<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+											binding="#{variableView.btnAgregar}" value="Agregar"
+											action="#{variableView.action_agregarValoresPosibles}"
+											update="tablaValores" />
+
+										<p:commandButton id="btnlimpiar" process="@this"
+											icon="ui-icon-trash" value="Limpiar" update="gridVp" />
+									</h:panelGrid>
+
+									<p:outputPanel id="tvalores">
+
+										<p:dataTable id="tablaValores"
+											value="#{variableView.dataValores}" var="listaValor"
+											paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" editable="true" reflow="true">
+
+											<p:ajax event="rowEdit" update="@this " process="@this"
+												listener="#{variableView.rowEventEditValorListener}" />
+
+											<p:column headerText="Código">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaValor.codigo}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaValor.codigo}"
+															style="width:100%" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Nombre">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaValor.clasificacion}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaValor.clasificacion}"
+															style="width:100%" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Valor Numérico">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaValor.valorNumerico}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaValor.valorNumerico}"
+															style="width:100%" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Valor Alfanumérico">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaValor.valorAlfaNumerico}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaValor.valorAlfaNumerico}"
+															style="width:100%" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Opciones">
+												<div align="center">
+
+													<p:commandButton id="btnDelete"
+														actionListener="#{variableView.actionDeleteListaValor}"
+														title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														icon="ui-icon-trash" update="tablaValores">
+														<f:attribute name="selectedListValor"
+															value="#{listaValor}" />
+													</p:commandButton>
+
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+
+								</p:tab>
+
+								<!-- Clasificacion -->
+
+								<p:tab title="Clasificación">
+
+									<h:panelGrid columns="3" id="grid" layout="grid"
+										styleClass="ui-panelgrid-blank"
+										columnClasses="ui-grid-col-3,ui-grid-col-5">
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigoRango" disabled="false"
+											binding="#{variableView.txtCodigoRango}"
+											placeholder="Buscar o crear registro" size="25">
+
+										</p:inputText>
+										<p:outputLabel />
+
+
+										<p:outputLabel value="Clasificacion: " />
+										<p:inputText id="txtClasificacion" disabled="false"
+											binding="#{variableView.txtClasificacion}" size="25" />
+										<p:message for="txtClasificacion" />
+
+
+										<p:outputLabel value="Valor Inicial: " />
+										<p:inputText id="txtValorInicial" disabled="false"
+											binding="#{variableView.txtValorInicial}" size="25" />
+										<p:message for="txtValorInicial" />
+
+										<p:outputLabel value="Valor Final: " />
+										<p:inputText id="txtValorFinal" disabled="false"
+											binding="#{variableView.txtValorFinal}" size="25" />
+										<p:message for="txtValorFinal" />
+
+										<p:outputLabel />
+										<p:outputLabel />
+										<p:outputLabel />
+
+									</h:panelGrid>
+
+									<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregarRango"
+												icon="ui-icon-plusthick"
+												binding="#{variableView.btnAgregarRango}" value="Agregar"
+												action="#{variableView.action_agregarRango}"
+												update="tablaRango" />
+
+											<p:commandButton id="btnlimpiarRango" process="@this"
+												icon="ui-icon-trash" value="Limpiar" update="grid" />
+										</f:facet>
+									</h:panelGrid>
+
+									<p:outputPanel>
+										<p:dataTable editable="true" id="tablaRango" paginator="true"
+											rows="5" value="#{variableView.dataRango}" var="rangoValor"
+											reflow="true">
+
+											<p:column headerText="Código">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{rangoValor.codigo}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{rangoValor.codigo}"
+															style="width:100%" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Nombre">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{rangoValor.clasificacion}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{rangoValor.clasificacion}"
+															style="width:100%" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Valor Inicial">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{rangoValor.valorInicial}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{rangoValor.valorInicial}"
+															style="width:100%" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Valor Final">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{rangoValor.valorFinal}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{rangoValor.valorFinal}"
+															style="width:100%" />
+													</f:facet>
+
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDeleteRango"
+														actionListener="#{variableView.actionDeleteRangoValor}"
+														title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														icon="ui-icon-trash" update="tablaRango">
+														<f:attribute name="selectedRangoValor"
+															value="#{rangoValor}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+
+									</p:outputPanel>
+								</p:tab>
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{variableView.btnSave}" value="Grabar"
+									action="#{variableView.action_save()}"
+									update=":dialogVariable :frm:panelDataTableVariable" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" process="@this"
+									action="#{variableView.action_clear()}"
+									update=":dialogVariable" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

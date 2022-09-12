@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.LaraEdad" table="lara_edad" >
+        <id name="laraEdadId" type="java.lang.Long">
+            <column name="lara_edad_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="grpSuelo" class="co.com.arcosoft.modelo.GrpSuelo" fetch="select">
+            <column name="grupo_suelo" />
+        </many-to-one>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="edadInicial" type="java.lang.Double">
+            <column name="edad_inicial" precision="12" scale="4" />
+        </property>
+        <property name="edadFinal" type="java.lang.Double">
+            <column name="edad_final" precision="12" scale="4" />
+        </property>
+        <property name="valorLaraEdad" type="java.lang.Double">
+            <column name="valor_lara_edad" precision="12" scale="4" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional1" type="java.lang.String">
+            <column name="info_adicional_1" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

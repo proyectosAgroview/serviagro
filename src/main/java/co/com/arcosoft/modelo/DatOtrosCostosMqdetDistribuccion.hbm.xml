@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2/04/2019 05:01:55 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatOtrosCostosMqdetDistribuccion" table="dat_otros_costos_mqdet_distribuccion" >
+        <id name="datOtrosCostosMqdetDistrId" type="java.lang.Long">
+            <column name="dat_otros_costos_mqdet_distr_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        <many-to-one name="datOtrosCostosMq" class="co.com.arcosoft.modelo.DatOtrosCostosMq" fetch="select">
+            <column name="dat_otros_costos_mq_id" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

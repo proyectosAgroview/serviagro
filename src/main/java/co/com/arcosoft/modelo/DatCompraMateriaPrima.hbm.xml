@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 15/07/2020 09:38:10 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatCompraMateriaPrima" table="dat_compra_materia_prima" >
+        <id name="datCompraMateriaPrimaId" type="java.lang.Long">
+            <column name="dat_compra_materia_prima_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="pers_empr_id" />
+        </many-to-one>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="numFactura" type="java.lang.Long">
+            <column name="num_factura" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="0" />
+        </property>
+        <property name="valorFactura" type="java.lang.Double">
+            <column name="valor_factura" precision="16" scale="4" />
+        </property>
+        <property name="valorIva" type="java.lang.Double">
+            <column name="valor_iva" precision="12" scale="4" />
+        </property>
+        <property name="valorDescuento" type="java.lang.Double">
+            <column name="valor_descuento" precision="12" scale="4" />
+        </property>
+        <property name="detalleNota" type="java.lang.String">
+            <column name="detalle_nota" length="3900" />
+        </property>
+        <property name="tipoMoneda" type="java.lang.String">
+            <column name="tipo_moneda" length="20" />
+        </property>
+        <property name="tasaConversionTrm" type="java.lang.Double">
+            <column name="tasa_conversion_trm" precision="12" scale="4" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="0" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="0" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="3900" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="0" />
+        </property>
+        <property name="subTotalFactura" type="java.lang.Double">
+            <column name="sub_total_factura" precision="16" scale="4" />
+        </property>
+        <property name="valorAdicional" type="java.lang.Double">
+            <column name="valor_adicional" precision="12" scale="4" />
+        </property>
+        <property name="transportadoraFactura" type="java.lang.String">
+            <column name="transportadora_factura" length="300" />
+        </property>
+        <property name="transportadoraNguia" type="java.lang.String">
+            <column name="transportadora_nguia" length="300" />
+        </property>
+        <property name="transportadoraValorFlete" type="java.lang.Double">
+            <column name="transportadora_valor_flete" precision="12" scale="4" />
+        </property>
+        <property name="datMantenimientoEquipoId" type="java.lang.Long">
+            <column name="dat_mantenimiento_equipo_id" />
+        </property>
+        <property name="provTransporteFlete" type="java.lang.Long">
+            <column name="prov_transporte_flete" />
+        </property>
+        <property name="provGastosNacionales" type="java.lang.Long">
+            <column name="prov_gastos_nacionales" />
+        </property>
+        <property name="provImpuestosAranceles" type="java.lang.Long">
+            <column name="prov_impuestos_aranceles" />
+        </property>
+        <property name="provComisiones" type="java.lang.Long">
+            <column name="prov_comisiones" />
+        </property>
+        <property name="provOtros" type="java.lang.Long">
+            <column name="prov_otros" />
+        </property>
+        <property name="valTransporteFlete" type="java.lang.Double">
+            <column name="val_transporte_flete" precision="12" scale="4" />
+        </property>
+        <property name="valGastosNacionales" type="java.lang.Double">
+            <column name="val_gastos_nacionales" precision="12" scale="4" />
+        </property>
+        <property name="valImpuestosAranceles" type="java.lang.Double">
+            <column name="val_impuestos_aranceles" precision="12" scale="4" />
+        </property>
+        <property name="valComisiones" type="java.lang.Double">
+            <column name="val_comisiones" precision="12" scale="4" />
+        </property>
+        <property name="valOtros" type="java.lang.Double">
+            <column name="val_otros" precision="12" scale="4" />
+        </property>
+        <property name="valSumaProvs" type="java.lang.Double">
+            <column name="val_suma_provs" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

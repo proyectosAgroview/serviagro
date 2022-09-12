@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30-jul-2018 16:05:58 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.LaborAdicionalMo" table="labor_adicional_mo" >
+        <id name="laborAdicionalMoId" type="java.lang.Long">
+            <column name="labor_adicional_mo_id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" />
+        </many-to-one>
+        <property name="fechaInicial" type="java.util.Date">
+            <column name="fecha_inicial" length="19" />
+        </property>
+        <property name="fechaFinal" type="java.util.Date">
+            <column name="fecha_final" length="19" />
+        </property>
+        <property name="cantidadAdicionalMo" type="java.lang.Double">
+            <column name="cantidad_adicional_mo" precision="12" scale="4" />
+        </property>
+        <property name="tarifaAdicionalMo" type="java.lang.Double">
+            <column name="tarifa_adicional_mo" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

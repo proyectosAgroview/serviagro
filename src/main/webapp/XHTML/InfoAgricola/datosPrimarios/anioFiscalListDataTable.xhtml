@@ -1,0 +1,192 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+					<p:panel id="panelDataTableAnioFiscal" header="Año Fiscal">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{anioFiscalView.data}"
+							var="anioFiscal" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Año Fiscal" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{anioFiscal.estado}"
+								sortBy="#{anioFiscal.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{anioFiscal.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{anioFiscal.codigo}"
+								sortBy="#{anioFiscal.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{anioFiscal.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{anioFiscal.nombre}"
+								sortBy="#{anioFiscal.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{anioFiscal.nombre}" />
+							</p:column>
+
+							<p:column filterBy="#{anioFiscal.fechaInicial}"
+								sortBy="#{anioFiscal.fechaInicial}">
+								<f:facet name="header">
+									<h:outputText value="Fecha inicial" />
+								</f:facet>
+								<h:outputText value="#{anioFiscal.fechaInicial}" />
+							</p:column>
+
+							<p:column filterBy="#{anioFiscal.fechaFinal}"
+								sortBy="#{anioFiscal.fechaFinal}">
+								<f:facet name="header">
+									<h:outputText value="Fecha final" />
+								</f:facet>
+								<h:outputText value="#{anioFiscal.fechaFinal}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+								  
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogAnioFiscal"
+										actionListener="#{anioFiscalView.action_edit}">
+										<f:attribute name="selectedAnioFiscal" value="#{anioFiscal}" />
+									</p:commandButton>
+									
+								
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{anioFiscalView.action_new()}"
+								update=":dialogAnioFiscal" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogAnioFiscal" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{anioFiscalView.showDialog}"
+					resizable="false" modal="true" width="600" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelAnioFiscal" header="Año Fiscal">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{anioFiscalView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+
+								<p:outputLabel value="Código: " />
+								<p:inputText id="txtCodigo" disabled="false"
+									binding="#{anioFiscalView.txtCodigo}"
+									placeholder="Buscar o crear registro" size="23">
+									<p:ajax update="panelAnioFiscal,msg,panelBotones"
+										listener="#{anioFiscalView.listener_txtCodigo}" />
+								</p:inputText>
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNombre" value="Nombre: " />
+								<p:inputText id="txtNombre" disabled="true"
+									binding="#{anioFiscalView.txtNombre}" required="true"
+									requiredMessage="El Nombre es Obligatorio" />
+								<p:message for="txtNombre" />
+
+								<p:outputLabel for="msgFechaInicial" value=" Fecha inicial" />
+								<p:calendar id="msgFechaInicial" showOn="button"
+									navigator="false" locale="es"
+									binding="#{anioFiscalView.txtFechaInicial}"
+									pattern="dd/MM/yyyy" required="true"
+									requiredMessage="La Fecha   es Obligatoria">
+								</p:calendar>
+								<p:message for="msgFechaInicial" />
+
+								<p:outputLabel for="msgFechaFinal" value=" Fecha final" />
+								<p:calendar id="msgFechaFinal" showOn="button" navigator="false"
+									locale="es" binding="#{anioFiscalView.txtFechaFinal}"
+									pattern="dd/MM/yyyy" required="true"
+									requiredMessage="La Fecha   es Obligatoria">
+								</p:calendar>
+								<p:message for="msgFechaFinal" />
+
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional"
+									binding="#{anioFiscalView.txtInfoAdicional}" rows="5" cols="30"
+									counter="display" maxlength="100"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText id="display" />
+
+								<p:outputLabel for="txtInfoAdicional2"
+									value="Información Adicional 2:" />
+								<p:inputTextarea id="txtInfoAdicional2"
+									binding="#{anioFiscalView.txtInfoAdicional2}" rows="5"
+									cols="30" counter="display2" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+								<h:outputText id="display2" />
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden" id="txtAnioFiscalId"
+									binding="#{anioFiscalView.txtAnioFiscalId}">
+									<p:ajax update=":dialogAnioFiscal"
+										listener="#{anioFiscalView.listener_txtId}" />
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{anioFiscalView.btnSave}" value="Grabar"
+									action="#{anioFiscalView.action_save()}"
+									update=":dialogAnioFiscal :frm:panelDataTableAnioFiscal" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{anioFiscalView.action_clear()}"
+									process="@this" update=":dialogAnioFiscal" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

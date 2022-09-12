@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.PlanRevisionEquipoDet" table="plan_revision_equipo_det" >
+         <id name="planRevisionEquipoDetId" type="java.lang.Long">
+            <column name="plan_revision_equipo_det_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo" />
+        </many-to-one>
+        <many-to-one name="planRevisionEquipo" class="co.com.arcosoft.modelo.PlanRevisionEquipo" fetch="select">
+            <column name="plan_revision_equipo_id" />
+        </many-to-one>
+         <many-to-one name="compartimientosEquipo" class="co.com.arcosoft.modelo.CompartimientosEquipo" fetch="select">
+            <column name="compartimientos_equipo_id" />
+        </many-to-one>
+        <many-to-one name="sistemasEquipo" class="co.com.arcosoft.modelo.SistemasEquipo" fetch="select">
+            <column name="sistemas_equipo_id" />
+        </many-to-one>
+       
+        <property name="periocidadKm" type="java.lang.Double">
+            <column name="periocidad_km" precision="12" scale="4" />
+        </property>
+        <property name="periocidadHora" type="java.lang.Double">
+            <column name="periocidad_hora" precision="12" scale="4" />
+        </property>
+        <property name="periocidadDias" type="java.lang.Double">
+            <column name="periocidad_dias" precision="12" scale="4" />
+        </property>
+        <property name="acomuladorKm" type="java.lang.Double">
+            <column name="acomulador_km" precision="12" scale="4" />
+        </property>
+        <property name="acomuladorHora" type="java.lang.Double">
+            <column name="acomulador_hora" precision="12" scale="4" />
+        </property>
+        <property name="acomuladorDia" type="java.lang.Double">
+            <column name="acomulador_dia" precision="12" scale="4" />
+        </property>
+        <property name="fechaUltimoServicio" type="java.util.Date">
+            <column name="fecha_ultimo_servicio" length="19" />
+        </property>
+        <property name="horasUltimoServicio" type="java.lang.Double">
+            <column name="horas_ultimo_servicio" precision="12" scale="4" />
+        </property>
+        <property name="kmUltimoServicio" type="java.lang.Double">
+            <column name="km_ultimo_servicio" precision="12" scale="4" />
+        </property>
+        <property name="fechaProxServicio" type="java.util.Date">
+            <column name="fecha_prox_servicio" length="19" />
+        </property>
+        <property name="horasProxServicio" type="java.lang.Double">
+            <column name="horas_prox_servicio" precision="12" scale="4" />
+        </property>
+        <property name="kmProxServicio" type="java.lang.Double">
+            <column name="km_prox_servicio" precision="12" scale="4" />
+        </property>
+           <property name="alertaMin" type="java.lang.Double">
+            <column name="alerta_min" precision="12" scale="4" />
+        </property>
+        <property name="alertaMax" type="java.lang.Double">
+            <column name="alerta_max" precision="12" scale="4" />
+        </property>
+            <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="1000" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,125 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+					<p:panel id="panelDataTableLaborAsociada"
+						header="Labores relacionadas">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{laborAsociadaView.data}"
+							var="laborAsociada" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="laborAsociada" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+							<p:column filterBy="#{laborAsociada.laborId}"
+								sortBy="#{laborAsociada.laborId}">
+								<f:facet name="header">
+									<h:outputText value="Labor principal" />
+								</f:facet>
+								<h:outputText value="#{laborAsociada.laborId}" />
+							</p:column>
+
+							<p:column filterBy="#{laborAsociada.laborAsocId}"
+								sortBy="#{laborAsociada.laborAsocId}">
+								<f:facet name="header">
+									<h:outputText value="Labor relacionada" />
+								</f:facet>
+								<h:outputText value="#{laborAsociada.laborAsocId}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogLaborAsociada"
+										actionListener="#{laborAsociadaView.action_edit}">
+										<f:attribute name="selectedLaborAsociada"
+											value="#{laborAsociada}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{laborAsociadaView.action_new()}"
+								update=":dialogLaborAsociada" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogLaborAsociada" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{laborAsociadaView.showDialog}" resizable="false"
+					modal="true" width="600" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelLaborAsociada" header="Labores relacionadas">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtLaborId" value="Labor principal: " />
+								<p:selectOneMenu id="txtLaborId" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									binding="#{laborAsociadaView.txtLaborId}" required="true"
+									requiredMessage="Seleccione la labor principal">
+									<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+									<f:selectItems value="#{laborAsociadaView.selectLaborId}" />
+									<p:ajax update="panelLaborAsociada,msg,panelBotones"
+										listener="#{laborAsociadaView.listener_txtId}" />
+								</p:selectOneMenu>
+								<p:message for="txtLaborId" />
+
+
+								<p:outputLabel for="txtLaborAsocId" value="Labor relacionada: " />
+								<p:selectOneMenu id="txtLaborAsocId" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									binding="#{laborAsociadaView.txtLaborAsocId}" required="true"
+									requiredMessage="Seleccione una labor">
+									<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+									<f:selectItems value="#{laborAsociadaView.selectLaborAsocId}" />
+								</p:selectOneMenu>
+								<p:message for="txtLaborAsocId" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{laborAsociadaView.btnSave}" value="Grabar"
+									action="#{laborAsociadaView.action_save()}"
+									update=":dialogLaborAsociada :frm:panelDataTableLaborAsociada" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{laborAsociadaView.action_clear()}"
+									process="@this" update=":dialogLaborAsociada" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

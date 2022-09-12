@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-ene-2018 17:06:44 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatSolicitudesMtto" table="dat_solicitudes_mtto" >
+        <id name="datSolicitudesMttoId" type="java.lang.Long">
+            <column name="dat_solicitudes_mtto_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="trabajador" class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="trab_solicitante_id" />
+        </many-to-one>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        <many-to-one name="nivelPrioridad" class="co.com.arcosoft.modelo.NivelPrioridad" fetch="select">
+            <column name="nivel_prioridad_id" />
+        </many-to-one>
+        <many-to-one name="zonasFabrica" class="co.com.arcosoft.modelo.ZonasFabrica" fetch="select">
+            <column name="zonas_fabrica_id" />
+        </many-to-one>
+        <many-to-one name="tag" class="co.com.arcosoft.modelo.Tag" fetch="select">
+            <column name="tag_id" />
+        </many-to-one>
+        <many-to-one name="areaTrabajo" class="co.com.arcosoft.modelo.AreaTrabajo" fetch="select">
+            <column name="area_trabajo_id" />
+        </many-to-one>
+        <many-to-one name="tipoMantenimiento" class="co.com.arcosoft.modelo.TipoMantenimiento" fetch="select">
+            <column name="tipo_mantenimiento_id" />
+        </many-to-one>
+        <many-to-one name="tallerId" class="co.com.arcosoft.modelo.TallerMecanico" fetch="select">
+            <column name="taller_id" />
+        </many-to-one>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="19" />
+        </property>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="descripcionSolicitud" type="java.lang.String">
+            <column name="descripcion_solicitud" length="3900" />
+        </property>
+        <property name="observaciones" type="java.lang.String">
+            <column name="observaciones" length="3900" />
+        </property>
+        <property name="requiereParadaFabrica" type="java.lang.String">
+            <column name="requiere_parada_fabrica" length="60" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="origenDatos" type="java.lang.String">
+            <column name="origen_datos" length="30" />
+        </property>
+        <property name="fechaCierre" type="java.util.Date">
+            <column name="fecha_cierre" length="19" />
+        </property>
+         <property name="cierreSolicitud" type="java.lang.String">
+            <column name="cierre_solicitud" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

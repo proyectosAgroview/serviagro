@@ -1,0 +1,171 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/tmp_modulo.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+				<h:form id="frm">
+					<p:panel id="panelDataTableN4Motivo"
+						header="Motiv. Unión-División Nivel4">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{n4MotivoView.data}" var="n4Motivo"
+							paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Mot. Uni-Divi Nivel4" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{n4Motivo.estado}"
+								sortBy="#{n4Motivo.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{n4Motivo.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{n4Motivo.codigo}"
+								sortBy="#{n4Motivo.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{n4Motivo.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{n4Motivo.nombre}"
+								sortBy="#{n4Motivo.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{n4Motivo.nombre}" />
+							</p:column>
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogN4Motivo"
+										actionListener="#{n4MotivoView.action_edit}">
+										<f:attribute name="selectedN4Motivo" value="#{n4Motivo}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{n4MotivoView.action_new()}" update=":dialogN4Motivo" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogN4Motivo" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{n4MotivoView.showDialog}"
+					resizable="false" modal="true" width="600" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelN4Motivo" header="Motiv. Unión-División Nivel4">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{n4MotivoView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+
+								<p:outputLabel value="Código: " />
+								<p:inputText id="txtCodigo" disabled="false"
+									binding="#{n4MotivoView.txtCodigo}"
+									placeholder="Buscar o crear registro" size="23">
+									<p:ajax update="panelN4Motivo,msg,panelBotones"
+										listener="#{n4MotivoView.listener_txtCodigo}" />
+								</p:inputText>
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNombre" value="Nombre: " />
+								<p:inputText id="txtNombre" disabled="true"
+									binding="#{n4MotivoView.txtNombre}" required="true"
+									requiredMessage="El Nombre es Obligatorio" />
+								<p:message for="txtNombre" />
+
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional"
+									binding="#{n4MotivoView.txtInfoAdicional}" rows="5" cols="30"
+									counter="display" maxlength="100"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText id="display" />
+
+								<p:outputLabel for="txtInfoAdicional2"
+									value="Información Adicional 2:" />
+								<p:inputTextarea id="txtInfoAdicional2"
+									binding="#{n4MotivoView.txtInfoAdicional2}" rows="5" cols="30"
+									counter="display2" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+								<h:outputText id="display2" />
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden" id="txtN4Mot"
+									binding="#{n4MotivoView.txtN4Mot}">
+									<p:ajax update=":dialogN4Motivo"
+										listener="#{n4MotivoView.listener_txtId}" />
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{n4MotivoView.btnSave}" value="Grabar"
+									action="#{n4MotivoView.action_save()}"
+									update=":dialogN4Motivo :frm:panelDataTableN4Motivo" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{n4MotivoView.action_clear()}"
+									process="@this" update=":dialogN4Motivo" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

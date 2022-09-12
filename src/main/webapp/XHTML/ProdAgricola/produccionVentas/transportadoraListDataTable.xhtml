@@ -1,0 +1,183 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableTransportadora" header="Transportadoras">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{transportadoraView.data}"
+							var="transportadora" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="transportadora" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{transportadora.estado}"
+								sortBy="#{transportadora.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{transportadora.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{transportadora.codigo}"
+								sortBy="#{transportadora.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{transportadora.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{transportadora.nombre}"
+								sortBy="#{transportadora.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{transportadora.nombre}" />
+							</p:column>
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogTransportadora"
+										actionListener="#{transportadoraView.action_edit}">
+										<f:attribute name="selectedTransportadora"
+											value="#{transportadora}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{transportadoraView.action_new()}"
+								update=":dialogTransportadora" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogTransportadora" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{transportadoraView.showDialog}" resizable="false"
+					modal="true" width="600" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelTransportadora" header="Transportadoras">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{transportadoraView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+
+								<p:outputLabel value="Código: " />
+								<p:inputText id="txtCodigo" disabled="false"
+									binding="#{transportadoraView.txtCodigo}"
+									placeholder="Buscar o crear registro" size="23">
+									<p:ajax update="panelTransportadora,msg,panelBotones"
+										listener="#{transportadoraView.listener_txtCodigo}" />
+								</p:inputText>
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNombre" value="Nombre: " />
+								<p:inputText id="txtNombre" disabled="true"
+									binding="#{transportadoraView.txtNombre}" required="true"
+									requiredMessage="El Nombre es Obligatorio" />
+								<p:message for="txtNombre" />
+
+								<p:outputLabel for="txtNit" value="Nit: " />
+								<p:inputText id="txtNit" disabled="true"
+									binding="#{transportadoraView.txtNit}" required="false"
+									requiredMessage="El Nit es obligatorio" />
+								<p:message for="txtNit" />
+
+								<p:outputLabel for="txtEmail" value="E-mail: " />
+								<p:inputText id="txtEmail" disabled="true"
+									binding="#{transportadoraView.txtEmail}" required="false"
+									requiredMessage="El e-mail es obligatorio" />
+								<p:message for="txtEmail" />
+
+								<p:outputLabel for="txtTelefono" value="Teléfono: " />
+								<p:inputMask id="txtTelefono" disabled="true"
+									binding="#{transportadoraView.txtTelefono}" required="false"
+									mask="(999) 999-9999"
+									requiredMessage="El teléfono es obligatorio" />
+								<p:message for="txtTelefono" />
+
+								<p:outputLabel for="txtDireccion" value="Dirección: " />
+								<p:inputText id="txtDireccion" disabled="true"
+									binding="#{transportadoraView.txtDireccion}" required="false"
+									requiredMessage="La dirección es obligatoria" />
+								<p:message for="txtDireccion" />
+
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional"
+									binding="#{transportadoraView.txtInfoAdicional}" rows="5"
+									cols="30" counter="display" maxlength="100"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText id="display" />
+
+								<p:outputLabel for="txtInfoAdicional2"
+									value="Información Adicional 2:" />
+								<p:inputTextarea id="txtInfoAdicional2"
+									binding="#{transportadoraView.txtInfoAdicional2}" rows="5"
+									cols="30" counter="display2" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+								<h:outputText id="display2" />
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden" id="txtTranspId"
+									binding="#{transportadoraView.txtTranspId}">
+									<p:ajax update=":dialogTransportadora"
+										listener="#{transportadoraView.listener_txtId}" />
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{transportadoraView.btnSave}" value="Grabar"
+									action="#{transportadoraView.action_save()}"
+									update=":dialogTransportadora :frm:panelDataTableTransportadora" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{transportadoraView.action_clear()}"
+									process="@this" update=":dialogTransportadora" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

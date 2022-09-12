@@ -1,0 +1,556 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 20000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+
+				<h:form id="frmConsulta">
+
+					<p:panel id="panelDataTable"
+						header="Sálidas de combustibles adicionales en  (RDL)">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:column>
+								<h:panelGrid columns="2">
+
+									<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+									<p:calendar id="msgFechaInicial" showOn="button" size="14"
+										navigator="false" locale="es" pattern="dd/MM/yyyy" mask="true"
+										binding="#{datServRealizadosEquipoAbastCombustibleView.txtFechaInicial}"
+										required="false"
+										requiredMessage="La Fecha inicial  es obligatoria">
+									</p:calendar>
+
+									<p:outputLabel for="msgFechaFinal" value="Fecha Final: " />
+									<p:calendar id="msgFechaFinal" showOn="button" size="14"
+										navigator="false" locale="es" pattern="dd/MM/yyyy" mask="true"
+										binding="#{datServRealizadosEquipoAbastCombustibleView.txtFechaFinal}"
+										required="false"
+										requiredMessage="La Fecha final  es obligatoria">
+									</p:calendar>
+
+								</h:panelGrid>
+							</p:column>
+
+							<p:column>
+								<h:panelGrid columns="2">
+									<p:outputLabel for="equipos" value="Máquina: " />
+									<p:selectCheckboxMenu id="equipos"
+										value="#{datServRealizadosEquipoAbastCombustibleView.selectedEquipo}"
+										filter="true" filterMatchMode="contains" showCheckbox="true"
+										required="false"
+										requiredMessage="Seleccione al menos un equipo">
+										<f:selectItems value="#{datServRealizadosEquipoAbastCombustibleView.equipos}"
+											var="equipos" itemLabel=" #{equipos.codigo}"
+											itemValue="#{equipos.equipoId}" />
+									</p:selectCheckboxMenu>
+
+
+								</h:panelGrid>
+							</p:column>
+
+
+							<p:column>
+								<h:panelGrid columns="2">
+
+									<p:commandButton id="btnConsultar" value="Consultar"
+										icon="ui-icon-newwin"
+										action="#{datServRealizadosEquipoAbastCombustibleView.listarPines}"
+										update="growl, frm" process="@all" partialSubmit="true" />
+
+								</h:panelGrid>
+							</p:column>
+
+
+
+						</p:panelGrid>
+
+					</p:panel>
+
+				</h:form>
+
+
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatServRealizadosEquipo">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datServRealizadosEquipoAbastCombustibleView.data2}"
+							var="datServRealizadosEquipo" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datServRealizadosEquipo" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#ID REGISTRO" />
+								</f:facet>
+								<h:outputText
+									value="#{datServRealizadosEquipo.dat_serv_realizados_equipo_id}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.estado}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.consecutivo}" />
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#Consec RDL" />
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.consecutivoRdl}" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.fechaRegistro}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Cod. Máquina" />
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.codEquipo}" />
+							</p:column>
+
+							 
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Adicionar combustible" icon="ui-icon-pencil"
+										
+										update=":dialogDatServRealizadosEquipo"
+										actionListener="#{datServRealizadosEquipoAbastCombustibleView.action_edit}">
+										<f:attribute name="selectedDatServRealizadosEquipo2"
+											value="#{datServRealizadosEquipo}" />
+									</p:commandButton>
+
+								
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					
+				</h:form>
+				<p:dialog id="dialogDatServRealizadosEquipo" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datServRealizadosEquipoAbastCombustibleView.showDialog}"
+					header="Sálidas de combustibles adicionales en  (RDL)"
+					resizable="false" modal="true" width="1200" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:tabView id="tabMapa"
+							activeIndex="#{datServRealizadosEquipoAbastCombustibleView.activeTapIndex}">
+
+
+							<p:tab title="Detalle del combustible">
+								<p:panel>
+									<p:panelGrid>
+
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel for="txtFechaRegistro" value="Fecha: "
+														style="font-size: 0.9em" />
+													<p:calendar id="txtFechaRegistro" showOn="button"
+														navigator="false" locale="es" pattern="dd/MM/yyyy"
+														style="font-size: 0.9em;"
+														binding="#{datServRealizadosEquipoAbastCombustibleView.txtFechaRegistro}"
+														mask="true" required="true" size="12"
+														requiredMessage="La Fecha es obligatoria">
+													</p:calendar>
+
+													<p:outputLabel for="txtEquipoId_Equipo" value="Maquinaria "
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtEquipoId_Equipo" effect="fade"
+														filter="true" filterMatchMode="contains" autoWidth="false"
+														binding="#{datServRealizadosEquipoAbastCombustibleView.txtEquipoId_Equipo}"
+														style="width: 100px;font-size: 0.9em;" required="false"
+														requiredMessage="Seleccione un máquina">
+														<f:selectItem itemLabel="Seleccione un máquina"
+															itemValue="" />
+														<f:selectItems
+															value="#{datServRealizadosEquipoAbastCombustibleView.selectEquipo}" />
+														<p:ajax
+															listener="#{datServRealizadosEquipoAbastCombustibleView.action_selectMedidorEquipo}"
+															process="@this, txtEquipoId_Equipo, txtFechaRegistro"
+															update=":formDialog:msg,  txtConsecutivo,txtAlmacenId_Almacen2,
+												 txtCantidadCombustible, txtHorometroAbastecimiento,txtCentCostId_CentCost" />
+													</p:selectOneMenu>
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel value="#Consecutivo:" style="font-size: 0.9em;" />
+													<p:inputText id="txtConsecutivo" disabled="false"
+														style="font-size: 0.9em;"
+														binding="#{datServRealizadosEquipoAbastCombustibleView.txtConsecutivo}"
+														size="12">
+													</p:inputText>
+
+	
+													<p:outputLabel for="txtCentCostId_CentCost" value="CeCos" />
+												<p:selectOneMenu id="txtCentCostId_CentCost" effect="fade"
+													filter="true" filterMatchMode="contains" autoWidth="false"
+													style="width:160px;"
+													binding="#{datServRealizadosEquipoAbastCombustibleView.txtCentCostId_CentCost}"
+													required="false" requiredMessage="Seleccione un centro de Costo">
+													<f:selectItem itemLabel="Seleccione un centro de Costo"
+														itemValue="" />
+													<f:selectItems value="#{datServRealizadosEquipoAbastCombustibleView.selectCentCost}" />
+												</p:selectOneMenu>
+												
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+												
+												
+												<p:outputLabel value="Consec. RDL" style="font-size: 0.9em;" />
+													<p:spinner id="txtNumFactura" 
+														style="font-size: 0.9em;" required="false"
+														requiredMessage="Indique el número"
+														binding="#{datServRealizadosEquipoAbastCombustibleView.txtNumFactura}"
+														size="16">
+													</p:spinner>
+														
+													<p:outputLabel for="txtAlmacenId_Almacen2"
+														value="Bodega: " style="font-size: 0.9em; " />
+													<p:selectOneMenu id="txtAlmacenId_Almacen2" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.8em; width: 180px;"
+														binding="#{datServRealizadosEquipoAbastCombustibleView.txtAlmacenId_Almacen2}"
+														autoWidth="false" required="false"
+														requiredMessage="Seleccione una bodega">
+														<f:selectItem itemLabel="Seleccione una bodega"
+															itemValue="" />
+														<f:selectItems
+															value="#{datServRealizadosEquipoAbastCombustibleView.selectAlmacen2}" />
+														
+													</p:selectOneMenu>
+													
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+												
+												<p:outputLabel value="ACPM:" style="font-size: 0.9em;" />
+													<p:spinner id="txtCantidadCombustible" 
+														style="font-size: 0.9em;" max="600" stepFactor="0.25"
+														required="false" min="0"
+														requiredMessage="Indique la cantidad de combustible"
+														binding="#{datServRealizadosEquipoAbastCombustibleView.txtCantidadCombustible}"
+														size="6">
+													</p:spinner>
+												
+												
+												<p:outputLabel value="Hórometro abastecimiento" style="font-size: 0.9em;" />
+													<p:inputText id="txtHorometroAbastecimiento" 
+														style="font-size: 0.9em;" required="false"
+														requiredMessage="Indique el número"
+														binding="#{datServRealizadosEquipoAbastCombustibleView.txtHorometroAbastecimiento}"
+														size="10">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+													
+												<p:outputLabel for="txtConceptoKardex" value="Concepto: "
+													style="font-size: 01em;" />
+												<p:selectOneMenu id="txtConceptoKardex" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="font-size: 01em; width:160px"
+													binding="#{datServRealizadosEquipoAbastCombustibleView.txtConceptoKardex}"
+													required="true" requiredMessage="Seleccione un concepto">
+													<f:selectItem itemLabel="Salida para Máquina" itemValue="8" />
+													<f:selectItems
+														value="#{datServRealizadosEquipoAbastCombustibleView.selectConceptoKardex}" />
+												</p:selectOneMenu>
+												
+												
+												</h:panelGrid>
+											</p:column>
+											
+											<p:column>
+												<h:panelGrid columns="1">
+												
+													<p:outputLabel value="Nota:" style="font-size: 0.9em;" />
+													<p:inputText id="txtInfoAdicionalCombustible" disabled="false"
+														style="font-size: 0.9em;"
+														binding="#{datServRealizadosEquipoAbastCombustibleView.txtInfoAdicionalCombustible}"
+														size="25">
+													</p:inputText>
+													
+													<p:selectOneMenu id="txtOrigenDatos"
+														binding="#{datServRealizadosEquipoAbastCombustibleView.txtOrigenDatos}"
+														style="visibility:hidden" required="true"
+														requiredMessage="Seleccione una opción">
+														<f:selectItem itemLabel="Modulo_TallerAgricola"
+															itemValue="Modulo_TallerAgricola" />
+													</p:selectOneMenu>
+
+													<!-- id auto incrementable -->
+													<p:inputText style="visibility:hidden"
+														id="txtDatServRealizadosEquipoId"
+														binding="#{datServRealizadosEquipoAbastCombustibleView.txtDatServRealizadosEquipoId}">
+													</p:inputText>
+
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									
+									</p:panelGrid>
+
+
+
+
+									<p:messages id="msgMQ" closable="true" showDetail="true" />
+
+									
+									<h:panelGrid columns="2">
+										<p:commandButton id="btnAgregarMaquinaria"
+											style="margin:10px;" icon="ui-icon-plusthick" process="@all"
+											binding="#{datServRealizadosEquipoAbastCombustibleView.btnAgregarMaquinaria}"
+											value="Agregar"
+											action="#{datServRealizadosEquipoAbastCombustibleView.action_agregarCombustible}"
+											ajax="true"
+											update="tablaDatServRealizadosEquipoDet, msgMQ, txtCantidadCombustible, txtHorometroAbastecimiento, txtInfoAdicionalCombustible" />
+
+
+									</h:panelGrid>
+
+								</p:panel>
+							</p:tab>
+
+							<p:tab title="Registros adicionados">
+								
+
+								<p:scrollPanel mode="native" style="width:1100px;height:270px">
+									<p:outputPanel id="dataTableServRealizadosEquipoDet">
+										<p:dataTable id="tablaDatServRealizadosEquipoDet"
+											value="#{datServRealizadosEquipoAbastCombustibleView.dataDetPrecioProductos}"
+											resizableColumns="true" style="margin-bottom:20px"
+											var="listaCombustible" paginator="true" rows="5"
+											reflow="true">
+
+											<p:column headerText="Almacen" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaCombustible.codAlmacen}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaCombustible.codAlmacen}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="Cent. Costo" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaCombustible.nombreCentCost}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaCombustible.nombreCentCost}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Producto" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaCombustible.nomProducto}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaCombustible.nomProducto}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+												<p:column headerText="Hórometro abast." style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaCombustible.horometro_abastecimiento}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaCombustible.horometro_abastecimiento}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="Cantidad" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaCombustible.cantidadCompra}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaCombustible.cantidadCompra}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="VL. Unitario($)" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaCombustible.valorUnitario}" >
+															<f:convertNumber pattern="#0.00" />
+															</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaCombustible.valorUnitario}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="VLR. Total($)"
+												style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaCombustible.costoTotal}" >
+															<f:convertNumber pattern="#0.00" />
+															</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaCombustible.costoTotal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											
+											<p:column headerText="InfoAdicional" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaCombustible.infoAdicional}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaCombustible.infoAdicional}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datServRealizadosEquipoAbastCombustibleView.actionDeleteDatServRealizadosEquipoProducto}"
+														title="Borrar"  value="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaDatServRealizadosEquipoDet :dialogDatServRealizadosEquipo">
+														<f:attribute name="selectedataDetPrecioProductos"
+															value="#{listaCombustible}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								</p:scrollPanel>
+
+							
+
+								<p:panel id="panelBotones">
+									<div align="center">
+										<p:commandButton id="btnSave" icon="ui-icon-disk"
+											binding="#{datServRealizadosEquipoAbastCombustibleView.btnSave}"
+											value="Grabar" process="@all"
+											action="#{datServRealizadosEquipoAbastCombustibleView.action_save()}"
+											update=":dialogDatServRealizadosEquipo :frm:panelDataTableDatServRealizadosEquipo" />
+										<p:commandButton id="btnClear" icon="ui-icon-trash"
+											value="Limpiar"
+											action="#{datServRealizadosEquipoAbastCombustibleView.action_clear()}"
+											process="@this" update=":dialogDatServRealizadosEquipo" />
+									</div>
+								</p:panel>
+							</p:tab>
+
+						</p:tabView>
+
+					</h:form>
+				</p:dialog>
+
+				<!-- Formulario anulacion -->
+
+			
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,131 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Informe: Consulta caja menor por periodos">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+
+						<h:panelGrid columns="2" id="panelGrid" width="500">
+
+
+							<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+							<p:calendar id="msgFechaInicial" showOn="button"
+								navigator="false" locale="es" pattern="dd/MM/yyyy" mask="true"
+								binding="#{informeSRConsultaCajaMenorView.txtFechaInicial}"
+								required="true" requiredMessage="La Fecha   es obligatoria">
+							</p:calendar>
+							
+							<p:outputLabel for="msgFechaFinal" value="Fecha Final: " />
+							<p:calendar id="msgFechaFinal" showOn="button" navigator="false"
+								locale="es" pattern="dd/MM/yyyy" mask="true"
+								binding="#{informeSRConsultaCajaMenorView.txtFechaFinal}"
+								required="true" requiredMessage="La Fecha   es obligatoria">
+							</p:calendar>
+							
+							<p:outputLabel for="cajas" value="Caja menor: " />
+							<p:selectCheckboxMenu id="cajas"
+								value="#{informeSRConsultaCajaMenorView.selectedCajas}"
+								filter="true" filterMatchMode="contains" showCheckbox="true"
+								required="false" requiredMessage="Seleccione al menos una caja">
+								<f:selectItems value="#{informeSRConsultaCajaMenorView.cajas}"
+									var="cajas" itemLabel=" #{cajas.nombre}"
+									itemValue="#{cajas.cajaMenorId}" />
+							</p:selectCheckboxMenu>
+							
+
+							<p:outputLabel for="equipos" value="Equipo: " />
+							<p:selectCheckboxMenu id="equipos"
+								value="#{informeSRConsultaCajaMenorView.selectedEquipo}"
+								filter="true" filterMatchMode="contains" showCheckbox="true"
+								required="false" requiredMessage="Seleccione al menos un equipo">
+								<f:selectItems value="#{informeSRConsultaCajaMenorView.equipos}"
+									var="equipos" itemLabel=" #{equipos.codigo}"
+									itemValue="#{equipos.equipoId}" />
+							</p:selectCheckboxMenu>
+							
+
+							<p:outputLabel for="labores" value="Labor: " />
+							<p:selectCheckboxMenu id="labores"
+								value="#{informeSRConsultaCajaMenorView.selectedLabor}"
+								filter="true" filterMatchMode="contains" showCheckbox="true"
+								required="false" requiredMessage="Seleccione al menos una labor">
+								<f:selectItems value="#{informeSRConsultaCajaMenorView.labores}"
+									var="labores" itemLabel=" #{labores.nombre}"
+									itemValue="#{labores.laborId}" />
+							</p:selectCheckboxMenu>
+							
+							<p:outputLabel value="Documento:" />
+							<p:inputText id="txtDocumento"
+								binding="#{informeSRConsultaCajaMenorView.txtDocumento}"
+								disable="true">
+							</p:inputText>
+
+
+
+							<!--Filtros del reporte  -->
+						</h:panelGrid>
+
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+
+							<p:commandButton id="btnConsultar" value="Generar reporte"
+								icon="ui-icon-newwin"
+								action="#{informeSRConsultaCajaMenorView.consultaCajaMenor}"
+								update="growl, frm" process="@all" partialSubmit="true" />
+
+							<p:commandButton
+								disabled="#{informeSRConsultaCajaMenorView.disableButton}"
+								icon="ui-icon-arrowthick-1-s" value="Descargar" ajax="false">
+								<p:fileDownload value="#{informeSRConsultaCajaMenorView.file}" />
+							</p:commandButton>
+
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" process="@all" partialSubmit="true"
+									resetValues="true" />
+							</p:commandButton>
+
+						</div>
+					</p:panel>
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

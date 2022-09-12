@@ -1,0 +1,326 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTable"
+						header="Informe: Proyección de labores por lote">
+
+						<p:panelGrid styleClass="form-inline">
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: "
+											style="font-size: 0.8em;" />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											style="font-size: 0.8em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true"
+											binding="#{informeProyeccionLaboresLoteView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFinal" value="Fecha Final: "
+											style="font-size: 0.8em;" />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true" style="font-size: 0.8em;"
+											binding="#{informeProyeccionLaboresLoteView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="cronogramasLabores" value="Cronograma: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="cronogramasLabores"
+											style="font-size: 0.8em;"
+											value="#{informeProyeccionLaboresLoteView.selectedCronogramaLabores}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un cronograma">
+											<f:selectItems
+												value="#{informeProyeccionLaboresLoteView.cronogramasLabores}"
+												var="cronogramasLabores"
+												itemLabel=" #{cronogramasLabores.nombre}"
+												itemValue="#{cronogramasLabores.cronogramaLaboresId}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="cultivos" value="Cultivos: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="cultivos" style="font-size: 0.8em;"
+											value="#{informeProyeccionLaboresLoteView.selectCultivo}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un cultivo">
+											<f:selectItems
+												value="#{informeProyeccionLaboresLoteView.cultivos}"
+												var="cultivos" itemLabel=" #{cultivos.nombre}"
+												itemValue="#{cultivos.cultivoId}" />
+										</p:selectCheckboxMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="zonas" value="Zonas: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="zonas" style="font-size: 0.8em;"
+											value="#{informeProyeccionLaboresLoteView.selectedNivel1}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una zona">
+											<f:selectItems
+												value="#{informeProyeccionLaboresLoteView.zonas}"
+												var="zonas" itemLabel=" #{zonas.nombre}"
+												itemValue="#{zonas.nivel1Id}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="fincas" value="Fincas: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="fincas" style="font-size: 0.8em;"
+											value="#{informeProyeccionLaboresLoteView.selectedNivel2}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una finca">
+											<f:selectItems
+												value="#{informeProyeccionLaboresLoteView.fincas}"
+												var="fincas" itemLabel=" #{fincas.nombre}"
+												itemValue="#{fincas.nivel2Id}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="bloques" value="Bloques: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="bloques" style="font-size: 0.8em;"
+											value="#{informeProyeccionLaboresLoteView.selectedNivel3}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un bloque">
+											<f:selectItems
+												value="#{informeProyeccionLaboresLoteView.bloques}"
+												var="bloques" itemLabel=" #{bloques.nombre}"
+												itemValue="#{bloques.nivel3Id}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="lotes" value="Lote: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="lotes" style="font-size: 0.8em;"
+											value="#{informeProyeccionLaboresLoteView.selectedNivel4}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un lote">
+											<f:selectItems
+												value="#{informeProyeccionLaboresLoteView.lotes}"
+												var="lotes" itemLabel=" #{lotes.nombre}"
+												itemValue="#{lotes.nivel4Id}" />
+										</p:selectCheckboxMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="tenencias" value="Tenencia: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="tenencias" style="font-size: 0.8em;"
+											value="#{informeProyeccionLaboresLoteView.selectedTenencia}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una tenencia">
+											<f:selectItems
+												value="#{informeProyeccionLaboresLoteView.tenencias}"
+												var="tenencias" itemLabel=" #{tenencias.nombre}"
+												itemValue="#{tenencias.tenenId}" />
+										</p:selectCheckboxMenu>
+
+
+										<p:outputLabel for="grupoLabores" value="Grupos de labor: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="grupoLabores"
+											style="font-size: 0.8em;"
+											value="#{informeProyeccionLaboresLoteView.selectedGrupoLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un grupo">
+											<f:selectItems
+												value="#{informeProyeccionLaboresLoteView.grupoLabores}"
+												var="grupoLabores" itemLabel=" #{grupoLabores.nombre}"
+												itemValue="#{grupoLabores.grpLaborId}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="labores" value="Labor: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="labores" style="font-size: 0.8em;"
+											value="#{informeProyeccionLaboresLoteView.selectedLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una labor">
+											<f:selectItems
+												value="#{informeProyeccionLaboresLoteView.labores}"
+												var="labores" itemLabel=" #{labores.nombre}"
+												itemValue="#{labores.laborId}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="unidadesMedida" value="Unidad de medida: "
+											style="font-size: 0.8em;" />
+										<p:selectCheckboxMenu id="unidadesMedida"
+											style="font-size: 0.8em;"
+											value="#{informeProyeccionLaboresLoteView.selectedUdadMed}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una Udad. de medida">
+											<f:selectItems
+												value="#{informeProyeccionLaboresLoteView.unidadesMedida}"
+												var="unidadesMedida" itemLabel=" #{unidadesMedida.nombre}"
+												itemValue="#{unidadesMedida.udadMedId}" />
+										</p:selectCheckboxMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+										<p:commandButton id="btnConsultar" value="Consultar"
+											icon="ui-icon-newwin"
+											action="#{informeProyeccionLaboresLoteView.action_informe1()}"
+											update="frm:dialog, :frm:tbl, :frm:programadorSchedule"
+											process="@all" partialSubmit="true" />
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+
+					<p:dialog id="dialog" appendTo="@(body)" draggable="true"
+						closable="true"
+						visible="#{informeProyeccionLaboresLoteView.showDialog}"
+						modal="true" showEffect="fade" width="1200" responsive="true"
+						resizable="false" styleClass="dialogFix">
+
+						<p:dataTable id="tbl"
+							value="#{informeProyeccionLaboresLoteView.data}"
+							var="informeCosG" paginator="true" rows="10"
+							rowsPerPageTemplate="5,10,15" reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Reporte" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column style="width: 10% ">
+								<f:facet name="header">
+									<h:outputText value="Compañia" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.nombreCompania}" />
+							</p:column>
+
+							<p:column style="width: 30% ">
+								<f:facet name="header">
+									<h:outputText value="Descripción" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.descripcion}" />
+							</p:column>
+
+							<p:column style="width: 5% ">
+								<f:facet name="header">
+									<h:outputText value="F. Inicial" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.fechaInicial}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column style="width: 5% ">
+								<f:facet name="header">
+									<h:outputText value="F. Final" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.fechaFinal}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+
+							<p:column style="width: 5% ">
+								<f:facet name="header">
+									<h:outputText value="Duración" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.duracion}" />
+							</p:column>
+						</p:dataTable>
+
+
+					</p:dialog>
+
+					<p:panel id="programadorSchedule">
+						<p:schedule id="schedule"
+							value="#{informeProyeccionLaboresLoteView.eventModel}"
+							widgetVar="myschedule" timeZone="GMT+2" locale="tr">
+						</p:schedule>
+					</p:panel>
+
+
+
+				</h:form>
+
+				<script type="text/javascript">
+					PrimeFaces.locales['tr'] = {
+						closeText : 'Cierre',
+						prevText : 'Anterior',
+						nextText : 'Siguiente',
+						currentText : 'Fecha actual',
+						monthNames : [ 'Enero', 'Febrero', 'Marzo', 'Abril',
+								'Mayo', 'Junio', 'Julio', 'Agosto',
+								'Septiembre', 'Octubre', 'Noviembre',
+								'Diciembre' ],
+						monthNamesShort : [ 'Ene', 'Feb', 'Mar', 'Abr', 'May',
+								'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic' ],
+						dayNames : [ 'Domingo', 'Lunes', 'Martes', 'Miércoles',
+								'Jueves', 'Viernes', 'Sábado' ],
+						dayNamesShort : [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue',
+								'Vie', 'Sab' ],
+						dayNamesMin : [ 'Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi',
+								'Sa' ],
+						weekHeader : 'Hf',
+						firstDay : 1,
+						isRTL : false,
+						showMonthAfterYear : false,
+						yearSuffix : '',
+						month : 'Mes',
+						week : 'Semana',
+						day : 'Día',
+						allDayText : 'Todos los días'
+					};
+				</script>
+				<style type="text/css">
+.value {
+	width: 1000px;
+}
+</style>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

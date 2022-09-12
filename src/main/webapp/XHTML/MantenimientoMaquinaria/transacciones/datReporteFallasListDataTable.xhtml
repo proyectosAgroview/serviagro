@@ -1,0 +1,327 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 20000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatReporteFallas"
+						header="Reporte de fallas">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datReporteFallasView.data}"
+							var="datReporteFallas" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datReporteFallas" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datReporteFallas.estado}"
+								sortBy="#{datReporteFallas.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datReporteFallas.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datReporteFallas.consecutivo}"
+								sortBy="#{datReporteFallas.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="#Planilla" />
+								</f:facet>
+								<h:outputText value="#{datReporteFallas.consecutivo}" />
+							</p:column>
+
+
+							<p:column filterBy="#{datReporteFallas.fechaRegistro}"
+								sortBy="#{datReporteFallas.fechaRegistro}">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datReporteFallas.fechaRegistro}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column filterBy="#{datReporteFallas.equipoNombre}"
+								sortBy="#{datReporteFallas.equipoNombre}">
+								<f:facet name="header">
+									<h:outputText value="Equipo" />
+								</f:facet>
+								<h:outputText value="#{datReporteFallas.equipoNombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogDatReporteFallas"
+										actionListener="#{datReporteFallasView.action_edit}">
+										<f:attribute name="selectedDatReporteFallas"
+											value="#{datReporteFallas}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datReporteFallasView.action_new()}"
+								update=":dialogDatReporteFallas" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatReporteFallas" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datReporteFallasView.showDialog}" resizable="false"
+					modal="true" width="900" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatReporteFallas"
+							header="Reporte de fallas">
+
+							<p:tabView>
+
+								<p:tab title="General">
+									<p:panel>
+
+										<h:panelGrid columns="2">
+
+											<p:outputLabel value="#Planilla:" style="font-size: 0.9em;" />
+											<p:inputText id="txtConsecutivo" disabled="false"
+												style="font-size: 0.9em;"
+												binding="#{datReporteFallasView.txtConsecutivo}"
+												placeholder="Buscar o crear registro" size="12">
+											</p:inputText>
+
+
+											<p:outputLabel for="txtFechaRegistro" value="Fecha: "
+												style="font-size: 0.9em" />
+											<p:calendar id="txtFechaRegistro" showOn="button"
+												navigator="false" locale="es" pattern="dd/MM/yyyy"
+												style="font-size: 0.9em;"
+												binding="#{datReporteFallasView.txtFechaRegistro}"
+												mask="true" required="true" size="12"
+												requiredMessage="La Fecha  final  es obligatoria">
+											</p:calendar>
+
+
+											<p:outputLabel for="txtSupervisorId" value="Supervisor: "
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtSupervisorId" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width: 100%;font-size: 0.9em;"
+												binding="#{datReporteFallasView.txtSupervisorId}"
+												required="true" requiredMessage="Seleccione un supervisor">
+												<f:selectItem itemLabel="Seleccione un supervisor"
+													itemValue="" />
+												<f:selectItems
+													value="#{datReporteFallasView.selectSupervisor}" />
+											</p:selectOneMenu>
+
+
+
+											<p:outputLabel for="txtEquipoId_Equipo" value="Equipo: "
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtEquipoId_Equipo" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												binding="#{datReporteFallasView.txtEquipoId_Equipo}"
+												style="width: 100%;font-size: 0.9em;" required="false"
+												requiredMessage="Seleccione un equipo">
+												<f:selectItem itemLabel="Seleccione un equipo" itemValue="" />
+												<f:selectItems value="#{datReporteFallasView.selectEquipo}" />
+												<p:ajax process="@this,txtFechaRegistro"
+													listener="#{datReporteFallasView.action_selecctMedidorEquipo}"
+													update="txtOdometroActual,txtHorometroActual" />
+											</p:selectOneMenu>
+
+
+											<p:outputLabel for="txtTrabId" value="Operario del equipo: "
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtTrabId" effect="fade" filter="true"
+												filterMatchMode="contains" autoWidth="false"
+												style="width: 100%;font-size: 0.9em;"
+												binding="#{datReporteFallasView.txtTrabId}" required="true"
+												requiredMessage="Seleccione un operario">
+												<f:selectItem itemLabel="Seleccione un operario"
+													itemValue="" />
+												<f:selectItems
+													value="#{datReporteFallasView.selectTrabajador}" />
+											</p:selectOneMenu>
+
+
+											<p:outputLabel for="txtHorometroActual" value="Horas hoy: "
+												style="font-size: 0.9em; " />
+											<p:inputText id="txtHorometroActual" size="12"
+												style="font-size: 0.9em;"
+												binding="#{datReporteFallasView.txtHorometroActual}"
+												requiredMessage="El valor es Obligatorio">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+
+											<p:outputLabel for="txtOdometroActual" value="KM hoy: "
+												style="font-size: 0.9em; " />
+											<p:inputText id="txtOdometroActual" size="12"
+												style="font-size: 0.9em;"
+												binding="#{datReporteFallasView.txtOdometroActual}"
+												requiredMessage="El valor es Obligatorio">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+
+
+											<p:outputLabel for="txtOrigenDatos" value="Origen de datos: " />
+											<p:selectOneMenu id="txtOrigenDatos"
+												binding="#{datReporteFallasView.txtOrigenDatos}"
+												required="true" requiredMessage="Seleccione una opción">
+												<f:selectItem itemLabel="Modulo_TallerAgricola"
+													itemValue="Modulo_TallerAgricola" />
+											</p:selectOneMenu>
+										</h:panelGrid>
+									</p:panel>
+								</p:tab>
+								<p:tab title="Descripción de la falla">
+									<p:panel>
+
+										<h:panelGrid columns="2">
+											<p:outputLabel
+												for="txtMotivosEntradaTallerId_MotivosEntradaTaller"
+												value="Tipo de falla: " style="font-size: 0.9em;" />
+											<p:selectOneMenu
+												id="txtMotivosEntradaTallerId_MotivosEntradaTaller"
+												effect="fade" filter="true" filterMatchMode="contains"
+												autoWidth="false"
+												binding="#{datReporteFallasView.txtMotivosEntradaTallerId_MotivosEntradaTaller}"
+												style="width: 100%;font-size: 0.9em;" required="false"
+												requiredMessage="Seleccione un motivo">
+												<f:selectItem itemLabel="Seleccione un motivo" itemValue="" />
+												<f:selectItems
+													value="#{datReporteFallasView.selectMotivoEntradaTaller}" />
+											</p:selectOneMenu>
+
+											<p:outputLabel
+												for="txtAgenteCausadorParadaId_AgenteCausadorParada"
+												value="Causa de falla " style="font-size: 0.9em;" />
+											<p:selectOneMenu
+												id="txtAgenteCausadorParadaId_AgenteCausadorParada"
+												effect="fade" filter="true" filterMatchMode="contains"
+												autoWidth="false"
+												binding="#{datReporteFallasView.txtAgenteCausadorParadaId_AgenteCausadorParada}"
+												style="width: 100%;font-size: 0.9em;" required="false"
+												requiredMessage="Seleccione un equipo">
+												<f:selectItem itemLabel="Seleccione un agente" itemValue="" />
+												<f:selectItems
+													value="#{datReporteFallasView.selectAgenteCausador}" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtDescripcionFalla"
+												value="Descripción de la falla: " style="font-size: 0.9em;" />
+											<p:inputTextarea id="txtDescripcionFalla"
+												style="font-size: 0.9em;"
+												binding="#{datReporteFallasView.txtDescripcionFalla}"
+												rows="2" cols="50" maxlength="3900" autoResize="true" />
+
+											<p:outputLabel for="txtEsParada"
+												value="¿Ocasiona la parada del equipo?:"
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtEsParada" disabled="false"
+												binding="#{datReporteFallasView.txtEsParada}"
+												required="false" style="width: 30%;font-size: 0.9em;"
+												requiredMessage="El campo condición es obligatorio">
+												<f:selectItem itemLabel="NO" itemValue="NO" />
+												<f:selectItem itemLabel="SI" itemValue="SI" />
+												<p:ajax listener="#{datReporteFallasView.action_parada}"
+													update="txtHoraInicialParada, txtHoraFinalParada" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtHoraInicialParada"
+												value="Hora ini parada:" style="font-size: 0.9em" />
+											<p:calendar id="txtHoraInicialParada" showOn="button"
+												navigator="false" pattern="HH:mm" style="font-size: 0.9em;"
+												binding="#{datReporteFallasView.txtHoraInicialParada}"
+												mask="true" required="true" size="8"
+												timeZone="America/Bogota" timeOnly="true" locale="es"
+												requiredMessage="La hora inicial es obligatoria">
+											</p:calendar>
+
+											<p:outputLabel for="txtHoraFinalParada"
+												value="Hora fin parada:" style="font-size: 0.9em" />
+											<p:calendar id="txtHoraFinalParada" showOn="button"
+												navigator="false" pattern="HH:mm" timeZone="America/Bogota"
+												timeOnly="true" locale="es" style="font-size: 0.9em;"
+												binding="#{datReporteFallasView.txtHoraFinalParada}"
+												mask="true" required="true" size="8"
+												requiredMessage="La hora final es obligatoria">
+											</p:calendar>
+
+
+											<!-- id auto incrementable -->
+											<p:inputText style="visibility:hidden"
+												id="txtDatReporteFallasId"
+												binding="#{datReporteFallasView.txtDatReporteFallasId}">
+											</p:inputText>
+
+										</h:panelGrid>
+									</p:panel>
+								</p:tab>
+
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datReporteFallasView.btnSave}" value="Grabar"
+									action="#{datReporteFallasView.action_save()}"
+									update=":dialogDatReporteFallas :frm:panelDataTableDatReporteFallas" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datReporteFallasView.action_clear()}"
+									process="@this" update=":dialogDatReporteFallas" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

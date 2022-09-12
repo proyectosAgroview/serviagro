@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.TarifaLaborRendimiento" table="tarifa_labor_rendimiento" >
+        <id name="tarifaLaborId" type="java.lang.Long">
+            <column name="tarifa_labor_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" />
+        </many-to-one>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaInicial" type="java.util.Date">
+            <column name="fecha_inicial" length="19" />
+        </property>
+        <property name="fechaFinal" type="java.util.Date">
+            <column name="fecha_final" length="19" />
+        </property>
+        <property name="contratistaId" type="java.lang.Long">
+            <column name="contratista_id" />
+        </property>
+        <many-to-one name="udadMedId" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <property name="nivel2Id" type="java.lang.Long">
+            <column name="nivel2_id" />
+        </property>
+        <property name="rendimiento" type="java.lang.Double">
+            <column name="rendimiento" precision="12" scale="4" />
+        </property>
+        <property name="tarifa" type="java.lang.Double">
+            <column name="tarifa" precision="12" scale="4" />
+        </property>
+        <property name="bonificacion" type="java.lang.Double">
+            <column name="bonificacion" precision="12" scale="4" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        
+        <property name="rendimientoMax" type="java.lang.Double">
+            <column name="rendimiento_max" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

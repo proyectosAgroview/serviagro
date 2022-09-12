@@ -1,0 +1,250 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+					<p:panel id="panelDataTableVariedad" header="Variedad">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{variedadView.data}" var="variedad"
+							paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Variedad" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{variedad.estado}"
+								sortBy="#{variedad.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{variedad.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{variedad.codigo}"
+								sortBy="#{variedad.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{variedad.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{variedad.nombre}"
+								sortBy="#{variedad.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{variedad.nombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogVariedad"
+										actionListener="#{variedadView.action_edit}">
+										<f:attribute name="selectedVariedad" value="#{variedad}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{variedadView.action_new()}" update=":dialogVariedad" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogVariedad" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{variedadView.showDialog}"  enctype="multipart/form-data"
+					resizable="false" modal="true" width="750" showEffect="fade" fitViewport="true"
+					 responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelVariedad" header="Variedad">
+							<p:tabView id="tabMapa" activeIndex="#{variedadView.activeTapIndex}">
+							<p:tab title ="General">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{variedadView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+
+														<p:outputLabel value="Código: " />
+											<p:inputText id="txtCodigo" disabled="false"
+												binding="#{variedadView.txtCodigo}"
+												placeholder="Buscar o crear registro" size="23">
+												<p:ajax
+													update=":formDialog:panelVariedad,:formDialog:msg,:formDialog:panelBotones"
+													listener="#{variedadView.listener_txtCodigo}" />
+											</p:inputText>
+											<p:outputLabel />
+											
+								<p:outputLabel for="txtNombre" value="Nombre: " />
+								<p:inputText id="txtNombre" disabled="true"
+									binding="#{variedadView.txtNombre}" required="true"
+									requiredMessage="El Nombre es Obligatorio" />
+								<p:message for="txtNombre" />
+
+								<p:outputLabel for="txtCultivoId_Cultivo" value="Cultivo" />
+								<p:selectOneMenu id="txtCultivoId_Cultivo"
+									binding="#{variedadView.txtCultivoId_Cultivo}" required="true"
+									requiredMessage="Seleccione un cultivo">
+									<f:selectItem itemLabel="Seleccione un cultivo" itemValue="" />
+									<f:selectItems value="#{variedadView.selectCultivo}" />
+								</p:selectOneMenu>
+								<p:message for="txtCultivoId_Cultivo" />
+
+
+								<p:outputLabel for="txtTipoMaduracion"
+									value="Tipo de Maduración: " />
+								<p:selectOneRadio id="txtTipoMaduracion" disabled="true"
+									binding="#{variedadView.txtTipoMaduracion}" required="true"
+									requiredMessage="Seleccione un tipo de Maduración">
+									<f:selectItem itemLabel="Prematura" itemValue="Prematura" />
+									<f:selectItem itemLabel="Promedio" itemValue="Promedio" />
+									<f:selectItem itemLabel="Tardía" itemValue="Tardía" />
+								</p:selectOneRadio>
+								<p:message for="txtTipoMaduracion" />
+
+								<p:outputLabel for="txtEdadCosecha" value="Edad de Cosecha: " />
+								<p:inputText id="txtEdadCosecha" disabled="true"
+									binding="#{variedadView.txtEdadCosecha}">
+									<f:converter converterId="javax.faces.Double" />
+								</p:inputText>
+								<p:outputLabel />
+									
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional" scrollHeight="25"
+									binding="#{variedadView.txtInfoAdicional}" rows="2" cols="30"
+									counter="display" maxlength="100"
+									counterTemplate="{0} Caracteres" autoResize="false" />
+								<h:outputText id="display" />
+
+								<p:outputLabel for="txtInfoAdicional2"
+									value="Información Adicional 2:" />
+								<p:inputTextarea id="txtInfoAdicional2" scrollHeight="25"
+									binding="#{variedadView.txtInfoAdicional2}" rows="2" cols="30"
+									counter="display2" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="false" />
+								<h:outputText id="display2" />
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden" id="txtVariedId"
+									binding="#{variedadView.txtVariedId}">
+									<p:ajax update=":dialogVariedad"
+										listener="#{variedadView.listener_txtId}" />
+								</p:inputText>
+
+							</h:panelGrid>
+							</p:tab>
+								
+								<p:tab title ="Parametros de aceptación">
+								 <h:panelGrid columns ="3">
+									<p:outputLabel for="txtPeso"
+									value="Peso: " />
+								<p:inputTextarea id="txtPeso" scrollHeight="25"
+									binding="#{variedadView.txtPeso}" rows="2" cols="30"
+									counter="display4" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="false" />
+								<h:outputText id="display4" />
+								
+								
+									<p:outputLabel for="txtDiametro"
+									value="Diametro: " />
+								<p:inputTextarea id="txtDiametro" scrollHeight="25"
+									binding="#{variedadView.txtDiametro}" rows="2" cols="30"
+									counter="display6" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="false" />
+								<h:outputText id="display6" />
+								
+									<p:outputLabel for="txtForma"
+									value="Forma: " />
+								<p:inputTextarea id="txtForma" scrollHeight="25"
+									binding="#{variedadView.txtForma}" rows="2" cols="30"
+									counter="display7" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="false" />
+								<h:outputText id="display7" />
+								
+								
+								<p:outputLabel for="txtColor"
+									value="Color: " />
+								<p:inputTextarea id="txtColor" scrollHeight="25"
+									binding="#{variedadView.txtColor}" rows="2" cols="30"
+									counter="display5" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="false" />
+								<h:outputText id="display5" />
+								
+									<p:outputLabel for="txtLimpieza"
+									value="Limpieza: " />
+								<p:inputTextarea id="txtLimpieza" scrollHeight="25"
+									binding="#{variedadView.txtLimpieza}" rows="2" cols="30"
+									counter="display8" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="false" />
+								<h:outputText id="display8" />
+								
+									<p:outputLabel for="txtRecepcion"
+									value="Recepción: " />
+								<p:inputTextarea id="txtRecepcion" scrollHeight="15"
+									binding="#{variedadView.txtRecepcion}" rows="2" cols="30"
+									counter="display9" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="false" />
+								<h:outputText id="display9" />
+								
+									<p:outputLabel for="txtCondicionesRechazo"
+									value="Condiciones de rechazo:" />
+								<p:inputTextarea id="txtCondicionesRechazo" scrollHeight="15"
+									binding="#{variedadView.txtCondicionesRechazo}" rows="2" cols="30"
+									counter="display10" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="false" />
+								<h:outputText id="display10" />
+								
+								
+								</h:panelGrid>
+								</p:tab>
+							</p:tabView>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{variedadView.btnSave}" value="Grabar"
+									action="#{variedadView.action_save()}"
+									update=":dialogVariedad :frm:panelDataTableVariedad" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{variedadView.action_clear()}"
+									process="@this" update=":dialogVariedad" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

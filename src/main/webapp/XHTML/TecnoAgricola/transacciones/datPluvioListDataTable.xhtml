@@ -1,0 +1,258 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatPluvio" header="Pluviómetros">
+						<!-- <p:growl id="men"/> -->
+						<p:dataTable id="tbl" value="#{datPluvioView.data}"
+							var="datPluvio" lazy="true" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+							reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Registros Climáticos" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datPluvio.estado}"
+								sortBy="#{datPluvio.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datPluvio.estado}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Estación" />
+								</f:facet>
+								<h:outputText value="#{datPluvio.estacionPluvio}" />
+							</p:column>
+
+							<p:column filterBy="#{datPluvio.fechaPrecipitacion}"
+								sortBy="#{datPluvio.fechaPrecipitacion}">
+								<f:facet name="header">
+									<h:outputText value="Día" />
+								</f:facet>
+								<h:outputText value="#{datPluvio.fechaPrecipitacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datPluvio.precipitacion}"
+								sortBy="#{datPluvio.precipitacion}">
+								<f:facet name="header">
+									<h:outputText value="Precipitación" />
+								</f:facet>
+								<h:outputText value="#{datPluvio.precipitacion}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+										update=":dialogDatPluvio" disabled="#{datPluvio.estadoTrue}"
+										actionListener="#{datPluvioView.action_edit}">
+										<f:attribute name="selectedDatPluvio" value="#{datPluvio}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete" title="Anular Registro"
+										disabled="#{datPluvio.estadoTrue}"
+										actionListener="#{datPluvioView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatPluvio" value="#{datPluvio}" />
+									</p:commandButton>
+
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datPluvioView.action_new()}" update=":dialogDatPluvio" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatPluvio" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{datPluvioView.showDialog}"
+					resizable="false" modal="true" width="600" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatPluvio" header="Registro Pluviométrico">
+							<h:panelGrid columns="5" id="panelGrid">
+
+								<p:outputLabel for="txtEstPluvioId_EstPluvio"
+									value=" Estación pluviométrica" />
+								<p:selectOneMenu id="txtEstPluvioId_EstPluvio"
+									binding="#{datPluvioView.txtEstPluvioId_EstPluvio}"
+									required="true" requiredMessage="Seleccione una estación"
+									filter="true" filterMatchMode="contains">
+									<f:selectItem itemLabel="Seleccione una estación" itemValue="" />
+									<f:selectItems value="#{datPluvioView.selectEstPluvio}" />
+								</p:selectOneMenu>
+								<p:message for="txtEstPluvioId_EstPluvio" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+
+								<h:outputText id="msgFechaPrecipitacion" value="Día" />
+								<p:calendar showOn="button" navigator="false" locale="es"
+									pattern="dd/MM/yyyy HH:mm:ss" mask="true" required="true"
+									requiredMessage="La Fecha y Hora es Obligatoria"
+									binding="#{datPluvioView.txtFechaPrecipitacion}">
+									<p:ajax event="dateSelect"
+										listener="#{datPluvioView.listener_txtFechaPrecipitacion}" />
+								</p:calendar>
+								<p:message for="msgFechaPrecipitacion" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+
+
+								<p:outputLabel for="txtPrecipitacion" value=" Precipitación(mm)" />
+								<p:inputText id="txtPrecipitacion"
+									binding="#{datPluvioView.txtPrecipitacion}" required="true"
+									requiredMessage="La Precipitación es Obligatorio">
+									
+								</p:inputText>
+								<p:message for="txtPrecipitacion" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtTemperaturaMaxima"
+									value=" Temperatura Máxima" />
+								<p:inputText id="txtTemperaturaMaxima"
+									binding="#{datPluvioView.txtTemperaturaMaxima}">
+									
+								</p:inputText>
+								<p:message for="txtTemperaturaMaxima" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+
+								<p:outputLabel for="txtTemperaturaMinima"
+									value=" Temperatura Mínima" />
+								<p:inputText id="txtTemperaturaMinima"
+									binding="#{datPluvioView.txtTemperaturaMinima}">
+									
+								</p:inputText>
+								<p:message for="txtTemperaturaMinima" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtTemperaturaMedia"
+									value=" Temperatura Media" />
+								<p:panelGrid columns="2">
+									<p:inputText id="txtTemperaturaMedia"
+										binding="#{datPluvioView.txtTemperaturaMedia}" />
+									<p:commandButton id="iconOnly" icon="ui-icon-calculator"  value="Calcular">
+										<p:ajax
+											process="@this,txtTemperaturaMaxima,txtTemperaturaMinima "
+											update="txtTemperaturaMedia"
+											listener="#{datPluvioView.listener_calculartempMedia}" />
+									</p:commandButton>
+								</p:panelGrid>
+								<p:outputLabel />
+								<p:message for="txtTemperaturaMedia" />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtObservacion" value="Observación:" />
+								<p:inputTextarea id="txtObservacion"
+									binding="#{datPluvioView.txtObservacion}" rows="5" cols="30"
+									counter="display3" maxlength="500"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText id="display3" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+
+								<p:inputText style="visibility:hidden" id="txtDatPluvioId"
+									binding="#{datPluvioView.txtDatPluvioId}">
+									<p:ajax update=":dialogDatPluvio"
+										listener="#{datPluvioView.listener_txtId}" />
+								</p:inputText>
+
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datPluvioView.btnSave}" value="Grabar"
+									action="#{datPluvioView.action_save()}"
+									update=":dialogDatPluvio :frm:panelDataTableDatPluvio" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datPluvioView.action_clear()}"
+									process="@this" update=":dialogDatPluvio" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{datPluvioView.showDialog}"
+					resizable="flase" modal="true" width="500" 
+					responsive="true">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datPluvioView.txtObservacionAnularReg}" rows="5"
+									cols="30" counter="display4" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display4" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datPluvioView.btnDelete}"
+									value="Grabar" action="#{datPluvioView.action_saveAnularReg()}"
+									update=":frm :dialogAnularReg :formDialogAnularReg:panelAnularReg" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datPluvioView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

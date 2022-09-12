@@ -1,0 +1,564 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 20000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm" enctype="multipart/form-data"
+					acceptcharset="ISO-8859-1">
+					<p:panel id="panelDataTable" header="Filtros">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+
+										<p:outputLabel for="msgFechaIni" value="F. Ini: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaIni" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{datOtrosCostosMqGeneralView.txtFechaIni}"
+											required="false" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFin" value="F. Fin: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" style="font-size: 0.9em;"
+											mask="true" size="12"
+											binding="#{datOtrosCostosMqGeneralView.txtFechaFin}"
+											required="false" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:commandButton id="btnConsultar" value="Consultar"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{datOtrosCostosMqGeneralView.listarOtrosCostosMq}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+									</h:panelGrid>
+								</p:column>
+
+								
+
+							</p:row>
+
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="panelDataTableDatOtrosCostosMq"
+						header="Gastos de operación">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datOtrosCostosMqGeneralView.data2}"
+							var="datOtrosCostosMq" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datOtrosCostosMq" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datOtrosCostosMq.estado}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datOtrosCostosMq.consecutivo}" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Num. Factura" />
+								</f:facet>
+								<h:outputText value="#{datOtrosCostosMq.numFactura}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Observación" />
+								</f:facet>
+								<h:outputText value="#{datOtrosCostosMq.observacion}" />
+							</p:column>
+
+
+
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogDatOtrosCostosMq"
+										actionListener="#{datOtrosCostosMqGeneralView.action_edit}">
+										<f:attribute name="selectedDatOtrosCostos2"
+											value="#{datOtrosCostosMq}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete1" icon="ui-icon-trash"
+										actionListener="#{datOtrosCostosMqGeneralView.actionDeleteMovimiento}"
+										required="false" title="Borrar"
+										onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+										update="tbl">
+										<f:attribute name="selectedDatOtrosCostos2"
+											value="#{datOtrosCostosMq}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datOtrosCostosMqGeneralView.action_new()}"
+								update=":dialogDatOtrosCostosMq" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatOtrosCostosMq" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datOtrosCostosMqGeneralView.showDialog}"
+					resizable="false" modal="true" width="900" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data"
+						acceptcharset="ISO-8859-1">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatOtrosCostosMq"
+							header="Gastos de operación generales">
+
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{datOtrosCostosMqGeneralView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel value="#Planilla:" style="font-size: 0.9em;" />
+													<p:inputText id="txtConsecutivo" disabled="false"
+														style="font-size: 0.9em;"
+														binding="#{datOtrosCostosMqGeneralView.txtConsecutivo}"
+														size="10">
+													</p:inputText>
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel for="msgFechaRegistro" value="Fecha: "
+														style="font-size: 0.9em" />
+													<p:calendar id="msgFechaRegistro" showOn="button"
+														navigator="false" locale="es" pattern="dd/MM/yyyy"
+														style="font-size: 0.9em;"
+														binding="#{datOtrosCostosMqGeneralView.txtFechaRegistro}"
+														mask="true" required="false" size="12"
+														requiredMessage="La Fecha  final  es obligatoria">
+													</p:calendar>
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel value="Factura No.: "
+														style="font-size: 0.9em;" />
+													<p:inputText id="txtNumFactura" disabled="false"
+														style="font-size: 0.9em; "
+														binding="#{datOtrosCostosMqGeneralView.txtNumFactura}"
+														size="12">
+													</p:inputText>
+												</h:panelGrid>
+											</p:column>
+
+
+
+
+										</p:row>
+									</p:panelGrid>
+
+
+									<h:panelGrid columns="2" id="panelGrid1">
+										<p:outputLabel style="font-size: 0.9em; "
+											value="Observación general: " />
+										<p:inputTextarea id="txtObservacion" style="font-size: 0.9em;"
+											binding="#{datOtrosCostosMqGeneralView.txtObservacion}"
+											rows="2" cols="50" maxlength="3900" autoResize="true" />
+
+										<p:outputLabel for="txtTipoTransaccion"
+											value="Tipo de distribucción:" style="font-size: 0.9em; " />
+										<p:selectOneMenu id="txtTipoTransaccion"
+											binding="#{datOtrosCostosMqGeneralView.txtTipoTransaccion}"
+											required="false" style="font-size: 0.9em; "
+											requiredMessage="Seleccione una transacción">
+
+											<f:selectItem itemLabel="Distribuir según categoria"
+												itemValue="distri_categorias" />
+											<f:selectItem itemLabel="Distribuir en múltiples equipos"
+												itemValue="distri_multiples_equipos" />
+											<p:ajax
+												listener="#{datOtrosCostosMqGeneralView.listener_TipoDistribuccion}"
+												process="@this,txtTipoTransaccion"
+												update="txtCategEquipId_CategoriaEquipo,txtEquipoId" />
+
+										</p:selectOneMenu>
+
+
+										<p:outputLabel for="txtCategEquipId_CategoriaEquipo"
+											value="Categoría: " style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtCategEquipId_CategoriaEquipo"
+											effect="fade" filter="true" filterMatchMode="contains"
+											autoWidth="false"
+											binding="#{datOtrosCostosMqGeneralView.txtCategEquipId_CategoriaEquipo}"
+											style="font-size: 0.9em; width: 150px;" required="false"
+											requiredMessage="Seleccione una categoria">
+											<f:selectItem itemLabel="Seleccione una categoria"
+												itemValue="" />
+											<f:selectItems
+												value="#{datOtrosCostosMqGeneralView.selectCategoriaEquipo}" />
+										</p:selectOneMenu>
+
+
+										<p:outputLabel for="txtLaborId_Labor" value="Concepto gasto: "
+											style="font-size: 0.9em; " />
+										<p:selectOneMenu id="txtLaborId_Labor" autoWidth="false"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{datOtrosCostosMqGeneralView.txtLaborId_Labor}"
+											style="font-size: 0.9em; width: 150px;" required="false"
+											requiredMessage="Seleccione una labor">
+											<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+											<f:selectItems
+												value="#{datOtrosCostosMqGeneralView.selectLaborId}" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+
+
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel value="Cantidad:" style="font-size: 0.9em; " />
+													<p:inputNumber id="txtCantidad" style="font-size: 0.9em;"
+														binding="#{datOtrosCostosMqGeneralView.txtCantidad}"
+														decimalSeparator="." thousandSeparator=","
+														decimalPlaces="2" minValue="0" maxValue="100000"
+														disable="true">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputNumber>
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel value="VLR. Factura: "
+														style="font-size: 0.9em;" />
+													<p:inputNumber id="txtCostoTotal"
+														binding="#{datOtrosCostosMqGeneralView.txtCostoTotal}"
+														decimalSeparator="." thousandSeparator=","
+														decimalPlaces="2" disable="true">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputNumber>
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+
+									<h:panelGrid columns="2">
+
+
+										<p:outputLabel style="font-size: 0.9em; "
+											value="Descripción por item: " />
+										<p:inputTextarea id="txtDescripcion" style="font-size: 0.9em;"
+											binding="#{datOtrosCostosMqGeneralView.txtDescripcion}"
+											rows="2" cols="50" maxlength="3900" autoResize="true" />
+
+
+										<p:selectOneMenu id="txtOrigenDatos" style="visibility:hidden"
+											binding="#{datOtrosCostosMqGeneralView.txtOrigenDatos}"
+											required="false" requiredMessage="Seleccione una opción">
+											<f:selectItem itemLabel="Modulo_TallerAgricola"
+												itemValue="Modulo_TallerAgricola" />
+										</p:selectOneMenu>
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden"
+											id="txtDatOtrosCostosMqId"
+											binding="#{datOtrosCostosMqGeneralView.txtDatOtrosCostosMqId}">
+										</p:inputText>
+
+									</h:panelGrid>
+
+
+									<h:panelGrid columns="2">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregargastos"
+												icon="ui-icon-plusthick" process="@all"
+												binding="#{datOtrosCostosMqGeneralView.btnAgregar}"
+												value="Agregar gastos"
+												action="#{datOtrosCostosMqGeneralView.action_agregarDatOtrosCostosMqdet}"
+												update="tablaMqdet,msg2,txtValorTotalAcumulado, equipos,
+															txtDescripcion,
+															txtCantidad,
+															txtCostoTotal,
+															txtLaborId_Labor" />
+										</f:facet>
+									</h:panelGrid>
+
+								</p:tab>
+
+
+								<p:tab title="Gastos agregados">
+
+
+									<p:messages id="msg2" autoUpdate="true" closable="true"
+										showDetail="true" />
+
+
+									<p:outputPanel>
+										<p:dataTable id="tablaMqdet"
+											sortBy="#{listaDatOtrosCostosMqdet.costoTotal}"
+											value="#{datOtrosCostosMqGeneralView.dataMqdet}"
+											var="listaDatOtrosCostosMqdet" paginator="true" rows="3"
+											reflow="true" scrollable="true" scrollWidth="100%"
+											style="margin-bottom:20px" editable="true" editMode="cell"
+											widgetVar="cellEventos">
+
+											<p:ajax event="cellEdit"
+												listener="#{datOtrosCostosMqGeneralView.onCellEditEventos}" />
+
+
+
+											<p:column headerText="Gasto">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="laborData"
+															value="#{listaDatOtrosCostosMqdet.nombreLabor}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															value="#{listaDatOtrosCostosMqdet.labor.laborId}">
+															<f:selectItems
+																value="#{datOtrosCostosMqGeneralView.selectLaborId}"
+																var="var1" itemValue="#{var1}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="VR. Total" style="font-size: 0.9em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDatOtrosCostosMqdet.costoTotal}" >
+															<f:convertNumber pattern="#0.00" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputNumber decimalSeparator="." thousandSeparator=","
+															decimalPlaces="2"
+															value="#{listaDatOtrosCostosMqdet.costoTotal}">
+
+														</p:inputNumber>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Detalle" style="font-size: 0.9em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDatOtrosCostosMqdet.descripcion}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDatOtrosCostosMqdet.descripcion}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<f:attribute name="selectedDatOtrosCostosMqdet"
+												value="#{listaDatOtrosCostosMqdet}" />
+
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datOtrosCostosMqGeneralView.actionDeleteOtrosCostosMqdet}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaMqdet">
+														<f:attribute name="selectedDatOtrosCostosMqdet"
+															value="#{listaDatOtrosCostosMqdet}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+									<h:panelGrid columns="2">
+										<p:outputLabel value="VLR. TOTAL: " style="font-size: 0.9em;" />
+										<p:inputNumber id="txtValorTotalAcumulado" size="12"
+											binding="#{datOtrosCostosMqGeneralView.txtValorTotalAcumulado}"
+											decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+											disable="true">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputNumber>
+									</h:panelGrid>
+								</p:tab>
+
+
+
+
+								<p:tab title="Equipos/maquinaria agregados">
+
+
+									<p:messages id="msg3" autoUpdate="true" closable="true"
+										showDetail="true" />
+
+									<h:panelGrid columns="2">
+
+
+										<p:outputLabel for="txtEquipoId" value="Equipo: "
+											style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtEquipoId" effect="fade" filter="true"
+											filterMatchMode="contains" autoWidth="false"
+											binding="#{datOtrosCostosMqGeneralView.txtEquipoId}"
+											style="font-size: 0.9em; width: 150px;" required="false"
+											requiredMessage="Seleccione un equipo">
+											<f:selectItem itemLabel="Seleccione un equipo" itemValue="" />
+											<f:selectItems
+												value="#{datOtrosCostosMqGeneralView.selectEquipo}" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+
+									<h:panelGrid columns="2">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregarmaquina"
+												icon="ui-icon-plusthick" process="@all"
+												binding="#{datOtrosCostosMqGeneralView.btnAgregarEquipo}"
+												value="Agregar máquina"
+												action="#{datOtrosCostosMqGeneralView.action_agregarDatOtrosCostosDistr}"
+												update="tablaMqDistr,msg3,txtEquipoId" />
+										</f:facet>
+									</h:panelGrid>
+
+									<p:outputPanel>
+										<p:dataTable id="tablaMqDistr"
+											value="#{datOtrosCostosMqGeneralView.dataDistr}"
+											var="listaDatOtrosCostosMqDistr" paginator="true" rows="3"
+											reflow="true" scrollable="true" scrollWidth="100%"
+											style="margin-bottom:20px" editable="true" editMode="cell"
+											widgetVar="cellEventos2">
+
+											<p:ajax event="cellEdit"
+												listener="#{datOtrosCostosMqGeneralView.onCellEditEventosEquipos}" />
+
+
+											<p:column headerText="Máquina" style="font-size: 0.9em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDatOtrosCostosMqDistr.codigoEquipo}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDatOtrosCostosMqDistr.codigoEquipo}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<f:attribute name="selectedDatOtrosCostosMqDistr"
+												value="#{listaDatOtrosCostosMqDistr}" />
+
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datOtrosCostosMqGeneralView.actionDeleteOtrosCostosDistr}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaMqDistr">
+														<f:attribute name="selectedDatOtrosCostosMqDistr"
+															value="#{listaDatOtrosCostosMqDistr}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+
+								</p:tab>
+
+
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datOtrosCostosMqGeneralView.btnSave}" value="Grabar"
+									action="#{datOtrosCostosMqGeneralView.action_save()}"
+									update=":dialogDatOtrosCostosMq :frm:panelDataTableDatOtrosCostosMq" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datOtrosCostosMqGeneralView.action_clear()}"
+									process="@this" update=":dialogDatOtrosCostosMq" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

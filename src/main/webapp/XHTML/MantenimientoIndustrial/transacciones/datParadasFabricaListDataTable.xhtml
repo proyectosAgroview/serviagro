@@ -1,0 +1,286 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatParadasFabrica"
+						header="Reporte de paradas de fábrica">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datParadasFabricaView.data}"
+							var="datParadasFabrica" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datParadasFabrica" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datParadasFabrica.estado}"
+								sortBy="#{datParadasFabrica.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datParadasFabrica.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datParadasFabrica.consecutivo}"
+								sortBy="#{datParadasFabrica.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="#Planilla" />
+								</f:facet>
+								<h:outputText value="#{datParadasFabrica.consecutivo}" />
+							</p:column>
+
+
+							<p:column filterBy="#{datParadasFabrica.nombreTag}"
+								sortBy="#{datParadasFabrica.nombreTag}">
+								<f:facet name="header">
+									<h:outputText value="Tag" />
+								</f:facet>
+								<h:outputText value="#{datParadasFabrica.nombreTag}" />
+							</p:column>
+							
+							<p:column filterBy="#{datParadasFabrica.nombreEquipo}"
+								sortBy="#{datParadasFabrica.nombreEquipo}">
+								<f:facet name="header">
+									<h:outputText value="Equipo" />
+								</f:facet>
+								<h:outputText value="#{datParadasFabrica.nombreEquipo}" />
+							</p:column>
+							
+
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Fecha Ini. Parada" />
+								</f:facet>
+								<h:outputText value="#{datParadasFabrica.fechapInicial}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Fecha Fin Parada" />
+								</f:facet>
+								<h:outputText value="#{datParadasFabrica.fechapFinal}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatParadasFabrica"
+										actionListener="#{datParadasFabricaView.action_edit}">
+										<f:attribute name="selectedDatParadasFabrica"
+											value="#{datParadasFabrica}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datParadasFabricaView.action_new()}"
+								update=":dialogDatParadasFabrica" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatParadasFabrica" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datParadasFabricaView.showDialog}" resizable="false"
+					modal="true" width="900" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatParadasFabrica" header="Reporte de paradas de fábrica">
+
+
+								
+													<h:panelGrid columns="2">
+														<p:outputLabel value="#Planilla:"
+															style="font-size: 0.9em;" />
+														<p:inputText id="txtConsecutivo" disabled="false"
+															style="font-size: 0.9em;"
+															binding="#{datParadasFabricaView.txtConsecutivo}"
+															placeholder="Buscar o crear registro" size="12">
+														</p:inputText>
+
+														
+														<p:outputLabel for="txtAreaTrabajoId"
+															value="Departamento origen  parada: "
+															style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtAreaTrabajoId" effect="fade"
+															filter="true" filterMatchMode="contains"
+															autoWidth="false"
+															binding="#{datParadasFabricaView.txtAreaTrabajoId}"
+															style="width: 100%;font-size: 0.9em;"  required="true"
+															requiredMessage="Seleccione un departamento">
+															<f:selectItem itemLabel="Seleccione un departamento"
+																itemValue="" />
+															<f:selectItems
+																value="#{datParadasFabricaView.selectAreaTrabajo}" />
+														</p:selectOneMenu>
+
+
+														<p:outputLabel for="txtEquipoId" value="Equipo: "
+															style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtEquipoId" effect="fade"
+															filter="true" filterMatchMode="contains"
+															autoWidth="false"
+															binding="#{datParadasFabricaView.txtEquipoId}"
+															style="width: 100%;font-size: 0.9em;"  required="true"
+															requiredMessage="Seleccione un equipo">
+															<f:selectItem itemLabel="Seleccione un equipo"
+																itemValue="" />
+															<f:selectItems
+																value="#{datParadasFabricaView.selectEquipo}" />
+														<p:ajax process="@this, txtEquipoId"
+															listener="#{datParadasFabricaView.listener_ConsultaTag}"
+															update="txtTagId" />
+													
+														</p:selectOneMenu>
+
+
+														<p:outputLabel for="txtTagId" value="Tag: "
+															style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtTagId" effect="fade" filter="true"
+															filterMatchMode="contains" autoWidth="false"
+															binding="#{datParadasFabricaView.txtTagId}"
+															style="width: 100%;font-size: 0.9em;"  required="true"
+															requiredMessage="Seleccione un tag">
+															<f:selectItem itemLabel="Seleccione un tag" itemValue="" />
+															<f:selectItems value="#{datParadasFabricaView.selectTag}" />
+														</p:selectOneMenu>
+														
+
+
+														<p:outputLabel for="txtParadaCritica"
+															value="¿Es una parada critica?:"
+															style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtParadaCritica" disabled="false"
+															binding="#{datParadasFabricaView.txtParadaCritica}"
+															 required="true" style="width: 30%;font-size: 0.9em;"
+															requiredMessage="El campo condición es obligatorio">
+															<f:selectItem itemLabel="NO" itemValue="NO" />
+															<f:selectItem itemLabel="SI" itemValue="SI" />
+														</p:selectOneMenu>
+
+														<p:outputLabel for="txtFechapInicial"
+															value="Fecha y hora inicial de parada:"
+															style="font-size: 0.9em" />
+														<p:calendar id="txtFechapInicial" showOn="button"
+															navigator="false" pattern="dd/mm/yyyy HH:mm"
+															style="font-size: 0.9em;"
+															binding="#{datParadasFabricaView.txtFechapInicial}"
+															mask="true" required="true" size="16"
+															timeZone="America/Bogota"  locale="es"
+															requiredMessage="La hora inicial es obligatoria">
+														</p:calendar>
+
+														<p:outputLabel for="txtFechapFinal"
+															value="Fecha y hora final de parada:"
+															style="font-size: 0.9em" />
+														<p:calendar id="txtFechapFinal" showOn="button"
+															navigator="false" pattern="dd/mm/yyyy HH:mm"
+															timeZone="America/Bogota"  locale="es"
+															style="font-size: 0.9em;"
+															binding="#{datParadasFabricaView.txtFechapFinal}"
+															mask="true" required="true" size="16"
+															requiredMessage="La hora final es obligatoria">
+														</p:calendar>
+
+														<p:outputLabel for="txtDescripcionParada"
+															value="Descripción de la parada "
+															style="font-size: 0.9em;" />
+														<p:inputTextarea id="txtDescripcionParada"
+															style="font-size: 0.9em;"  required="true"
+															binding="#{datParadasFabricaView.txtDescripcionParada}"
+															rows="2" cols="60" maxlength="3900" autoResize="true" />
+
+
+														<p:outputLabel for="txtMotivosParadaId"
+															value="Tipo de falla: " style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtMotivosParadaId" effect="fade"
+															filter="true" filterMatchMode="contains"
+															autoWidth="false"
+															binding="#{datParadasFabricaView.txtMotivosParadaId}"
+															style="width: 100%;font-size: 0.9em;"  required="true"
+															requiredMessage="Seleccione un motivo">
+															<f:selectItem itemLabel="Seleccione un motivo"
+																itemValue="" />
+															<f:selectItems
+																value="#{datParadasFabricaView.selectMotivoEntradaTaller}" />
+														</p:selectOneMenu>
+
+														<p:outputLabel for="txtAgenteCausadorParadaId"
+															value="Causa de falla " style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtAgenteCausadorParadaId"
+															effect="fade" filter="true" filterMatchMode="contains"
+															autoWidth="false"
+															binding="#{datParadasFabricaView.txtAgenteCausadorParadaId}"
+															style="width: 100%;font-size: 0.9em;"  required="true"
+															requiredMessage="Seleccione un equipo">
+															<f:selectItem itemLabel="Seleccione un agente"
+																itemValue="" />
+															<f:selectItems
+																value="#{datParadasFabricaView.selectAgenteCausador}" />
+														</p:selectOneMenu>
+
+
+														<!-- id auto incrementable -->
+														<p:inputText style="visibility:hidden"
+															id="txtDatParadasFabricaId"
+															binding="#{datParadasFabricaView.txtDatParadasFabricaId}">
+														</p:inputText>
+
+													</h:panelGrid>
+									
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datParadasFabricaView.btnSave}" value="Grabar"
+									action="#{datParadasFabricaView.action_save()}"
+									update=":dialogDatParadasFabrica :frm:panelDataTableDatParadasFabrica" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datParadasFabricaView.action_clear()}"
+									process="@this" update=":dialogDatParadasFabrica" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

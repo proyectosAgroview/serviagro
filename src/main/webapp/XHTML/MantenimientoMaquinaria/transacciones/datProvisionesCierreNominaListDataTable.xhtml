@@ -1,0 +1,269 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+				
+					<p:panelGrid columns="3">
+						<p:column>
+							<h:panelGrid columns="2">
+							
+								<h:outputText for="txtFechaInicialFiltro" value=" Fecha inicial" />
+								<p:calendar showOn="button" navigator="true" locale="es"
+									pattern="dd/MM/yyyy" mask="true" id="txtFechaInicialFiltro"
+									binding="#{datProvicionesCierreNominaMqView.txtFechaInicialFiltro}"/>
+							
+								<h:outputText for="txtFechaFinalFiltro" value=" Fecha final" />
+								<p:calendar showOn="button" navigator="true" locale="es"
+									pattern="dd/MM/yyyy" mask="true" id="txtFechaFinalFiltro"
+									binding="#{datProvicionesCierreNominaMqView.txtFechaFinalFiltro}"/>
+							
+							</h:panelGrid>
+						</p:column>
+						
+						<p:column>
+							<h:panelGrid columns="2">
+									
+								<h:outputText for="txtTrabajadorFiltro" value=" Trabajador" />
+								<p:selectOneMenu id="txtTrabajadorFiltro"
+									binding="#{datProvicionesCierreNominaMqView.txtTrabajadorFiltro}"
+									style="width:140px" autoWidth="false">
+									<f:selectItem itemLabel="Seleccione" itemValue="" />
+									<f:selectItems value="#{datProvicionesCierreNominaMqView.selectTrabajadorFiltro}" />
+								</p:selectOneMenu>							
+							
+							</h:panelGrid>
+						</p:column>		
+						
+						<p:column>
+							<h:panelGrid>
+							
+								<p:commandButton id="btnConsultar" update="tbl" value="Consultar"
+									action="#{datProvicionesCierreNominaMqView.consultar}" />
+							
+							</h:panelGrid>
+						</p:column>				
+					</p:panelGrid>
+
+					<p:panel id="panelDataTableDatProvicionesCierreNominaMq" header="Cierre de provisiones nomina">
+						<p:growl id="men" />
+						<p:dataTable value="#{datProvicionesCierreNominaMqView.dataFiltro}" id="tbl"
+							var="datProvicionesCierreNominaMq" paginator="true" rows="5">
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fecha registro" />
+								</f:facet>
+								<h:outputText value="#{datProvicionesCierreNominaMq.fechaRegistro}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Costo total" />
+								</f:facet>
+								<h:outputText value="#{datProvicionesCierreNominaMq.devengos}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Periodo" />
+								</f:facet>
+								<h:outputText value="#{datProvicionesCierreNominaMq.periodoLiquidacion}" />
+							</p:column>
+
+					
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Trabajador" />
+								</f:facet>
+								<h:outputText
+									value="#{datProvicionesCierreNominaMq.nomTrabajador}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Concepto" />
+								</f:facet>
+								<h:outputText value="#{datProvicionesCierreNominaMq.nomCeptoNomina}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Gasto" />
+								</f:facet>
+								<h:outputText value="#{datProvicionesCierreNominaMq.nomLabor}" />
+							</p:column>
+
+							<p:column headerText="Opciones">
+								<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+									update=":dialogDatProvicionesCierreNominaMq" value="Editar"
+									actionListener="#{datProvicionesCierreNominaMqView.action_edit}">
+									<f:attribute name="selectedFiltro" value="#{datProvicionesCierreNominaMq}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo"
+								action="#{datProvicionesCierreNominaMqView.action_new()}"
+								update=":dialogDatProvicionesCierreNominaMq" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatProvicionesCierreNominaMq" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datProvicionesCierreNominaMqView.showDialog}"
+					resizable="false" modal="true" width="600">
+					<h:form id="formDialog">
+						<p:messages id="msg" />
+						<p:panel id="panelDatProvicionesCierreNominaMq" header="Cierre de provisiones nomina">
+						
+							<p:panelGrid columns="2">
+								<p:column>
+									<h:panelGrid columns="2" style="width:240px">
+								
+										<h:outputText for="txtFechaInicial" value=" Fecha inicial" />
+										<p:calendar showOn="button" navigator="true" locale="es"
+											mask="true" pattern="dd/MM/yyyy" size="10"
+											binding="#{datProvicionesCierreNominaMqView.txtFechaInicial}"/>
+										
+									</h:panelGrid>
+								</p:column>
+								
+								<p:column>
+									<h:panelGrid columns="2" style="width:240px">
+
+										<h:outputText for="txtFechaFinal" value=" Fecha final" />
+										<p:calendar showOn="button" navigator="true" locale="es"
+											mask="true" pattern="dd/MM/yyyy" size="10"
+											binding="#{datProvicionesCierreNominaMqView.txtFechaFinal}"/>
+									
+									</h:panelGrid>
+								</p:column>
+							</p:panelGrid>
+
+							<p:panelGrid columns="2">
+								<p:column>
+									<h:panelGrid columns="2" style="width:240px">
+									
+										<h:outputText for="txtTrabId_Trabajador" value=" Trabajador" />
+										<p:selectOneMenu id="txtTrabId_Trabajador" disabled="true"
+											binding="#{datProvicionesCierreNominaMqView.txtTrabId_Trabajador}" 
+											style="width:140px" autoWidth="false">
+											<f:selectItem itemLabel="Seleccione" itemValue="" />
+											<f:selectItems value="#{datProvicionesCierreNominaMqView.selectTrabajador}" />
+										</p:selectOneMenu>
+									
+										<h:outputText for="txtCeptoNominaId_ConceptoNomina" value=" Concepto" />
+										<p:selectOneMenu id="txtCeptoNominaId_ConceptoNomina"
+											style="width:140px" autoWidth="false" disabled="true"
+											binding="#{datProvicionesCierreNominaMqView.txtCeptoNominaId_ConceptoNomina}">
+											<f:selectItem itemLabel="Seleccione" itemValue="" />
+											<f:selectItems value="#{datProvicionesCierreNominaMqView.selectConceptoNomina}" />
+										</p:selectOneMenu>
+									
+										<h:outputText for="txtGastoId" value=" Gasto" />
+										<p:selectOneMenu id="txtGastoId" disabled="true"
+											binding="#{datProvicionesCierreNominaMqView.txtGastoId}"
+											style="width:140px" autoWidth="false">
+											<f:selectItem itemLabel="Seleccione" itemValue="" />
+											<f:selectItems value="#{datProvicionesCierreNominaMqView.selectLabor}" />
+										</p:selectOneMenu>
+										
+											<h:outputText for="txtCentCostId_CentCost" value=" Centro costo" />
+										<p:selectOneMenu id="txtCentCostId_CentCost"  
+											binding="#{datProvicionesCierreNominaMqView.txtCentCostId_CentCost}"
+											style="width:140px" autoWidth="false">
+											<f:selectItem itemLabel="Seleccione un centro de costo" itemValue="" />
+											<f:selectItems value="#{datProvicionesCierreNominaMqView.selectCentCost}" />
+										</p:selectOneMenu>
+
+										<h:outputText for="txtPeriodoLiquidacion" value=" Periodo liquidacion" />
+										<p:selectOneMenu id="txtPeriodoLiquidacion" disabled="true"
+											style="width:140px" autoWidth="false"
+											binding="#{datProvicionesCierreNominaMqView.txtPeriodoLiquidacion}">
+											<f:selectItem itemLabel="Seleccione" itemValue="" />
+											<f:selectItem itemValue="En cada periodo" itemLabel="En cada periodo"/>
+											<f:selectItem itemValue="Quincenal" itemLabel="Quincenal" />
+											<f:selectItem itemValue="Mensual" itemLabel="Mensual" />
+										</p:selectOneMenu>
+										
+									</h:panelGrid>
+								</p:column>
+								
+								<p:column>
+									<h:panelGrid columns="2" style="width:240px">
+									
+										<h:outputText for="txtTipoMovimiento" value=" Tipo movimiento" />
+										<p:selectOneMenu id="txtTipoMovimiento" disabled="true"
+											style="width:140px" autoWidth="false"
+											binding="#{datProvicionesCierreNominaMqView.txtTipoMovimiento}">
+											<f:selectItem itemLabel="Seleccione" itemValue="" />
+											<f:selectItem itemLabel="Devengo" itemValue="Devengo" />
+											<f:selectItem itemLabel="Deducción" itemValue="Deduccion" />
+											<p:ajax update="txtDevengos, txtValorDeduccion" 
+												listener="#{datProvicionesCierreNominaMqView.tipoMovimiento}"/>
+										</p:selectOneMenu>
+
+										<h:outputText for="txtDevengos" value=" Devengo" />
+										<p:inputNumber id="txtDevengos" disabled="true" size="15"
+											binding="#{datProvicionesCierreNominaMqView.txtDevengos}" />
+									
+										<h:outputText for="txtValorDeduccion" value=" Deducción" />
+										<p:inputNumber id="txtValorDeduccion" disabled="true" size="15"
+											binding="#{datProvicionesCierreNominaMqView.txtValorDeduccion}" />
+									
+									</h:panelGrid>
+								</p:column>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave"
+									binding="#{datProvicionesCierreNominaMqView.btnSave}" value="Grabar"
+									action="#{datProvicionesCierreNominaMqView.action_save()}"
+									update=":dialogDatProvicionesCierreNominaMq :frm:panelDataTableDatProvicionesCierreNominaMq" />
+								<p:commandButton id="btnClear" value="Limpiar"
+									action="#{datProvicionesCierreNominaMqView.action_clear()}"
+									update=":dialogDatProvicionesCierreNominaMq" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

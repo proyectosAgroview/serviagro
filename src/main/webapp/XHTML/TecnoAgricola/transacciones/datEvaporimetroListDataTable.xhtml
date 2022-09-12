@@ -1,0 +1,271 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatEvaporimetro" header="Evaporimetros">
+						<p:growl id="men" />
+						<p:dataTable id="tbl" value="#{datEvaporimetroView.data}"
+							var="datEvaporimetro" paginator="true" lazy="true" reflow="true" rowsPerPageTemplate="5,10,15"
+							rows="5">
+
+
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Evaporimetros" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datEvaporimetro.estado}"
+								sortBy="#{datEvaporimetro.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datEvaporimetro.estado}" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Estación" />
+								</f:facet>
+								<h:outputText value="#{datEvaporimetro.estacionEvaporimetro}" />
+							</p:column>
+
+							<p:column filterBy="#{datEvaporimetro.fechaEvaporacion}"
+								sortBy="#{datEvaporimetro.fechaEvaporacion}">
+								<f:facet name="header">
+									<h:outputText value="Fecha Evaporación" />
+								</f:facet>
+								<h:outputText value="#{datEvaporimetro.fechaEvaporacion}" />
+							</p:column>
+
+
+							<p:column filterBy="#{datEvaporimetro.evaporacion}"
+								sortBy="#{datEvaporimetro.evaporacion}">
+								<f:facet name="header">
+									<h:outputText value="Evaporación" />
+								</f:facet>
+								<h:outputText value="#{datEvaporimetro.evaporacion}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+										update=":dialogDatEvaporimetro"
+										disabled="#{datEvaporimetro.estadoTrue}"
+										actionListener="#{datEvaporimetroView.action_edit}">
+										<f:attribute name="selectedDatEvaporimetro"
+											value="#{datEvaporimetro}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete" title="Anular Registro"
+										update=":dialogAnularReg"
+										disabled="#{datEvaporimetro.estadoTrue}"
+										actionListener="#{datEvaporimetroView.action_anularReg}"
+										icon="ui-icon-circle-close">
+										<f:attribute name="selectedDatEvaporimetro"
+											value="#{datEvaporimetro}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datEvaporimetroView.action_new()}"
+								update=":dialogDatEvaporimetro" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatEvaporimetro" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datEvaporimetroView.showDialog}" resizable="true"
+					modal="true" width="600"  styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatEvaporimetro"
+							header="Registros de Evaporímetros">
+
+							<h:panelGrid columns="5" cellpadding="5" layout="grid"
+								styleClass="ui-panelgrid-blank"
+								columnClasses="ui-grid-col-5,ui-grid-col-9">
+
+
+								<p:outputLabel for="txtEstEvaporimetroId_EstEvaporimetro"
+									value="Estación Evaporimetro" />
+								<p:selectOneMenu id="txtEstEvaporimetroId_EstEvaporimetro"
+									binding="#{datEvaporimetroView.txtEstEvaporimetroId_EstEvaporimetro}"
+									required="true" requiredMessage="Seleccione una estación">
+									<f:selectItem itemLabel="Seleccione una estación" itemValue="" />
+									<f:selectItems value="#{datEvaporimetroView.evaporimetro}" />
+								</p:selectOneMenu>
+								<p:message for="txtEstEvaporimetroId_EstEvaporimetro" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="msgFechaEvaporacion"
+									value="Fecha Evaporación: " />
+								<p:calendar id="msgFechaEvaporacion" showOn="button"
+									navigator="false" locale="es"
+									binding="#{datEvaporimetroView.txtFechaEvaporacion}"
+									pattern="dd/MM/yyyy HH:mm:ss" mask="true" required="true"
+									requiredMessage="La Fecha y Hora es Obligatoria">
+									<p:ajax event="dateSelect"
+										listener="#{datEvaporimetroView.listener_txtFechaEvaporacion}" />
+								</p:calendar>
+								<p:message for="msgFechaEvaporacion" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtEvaporacion" value="Evaporación: " />
+								<p:inputText id="txtEvaporacion"
+									binding="#{datEvaporimetroView.txtEvaporacion}" required="true"
+									requiredMessage="La Evaporación es Obligatorio">
+								</p:inputText>
+								<p:message for="txtEvaporacion" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtTemperaturaMaxima"
+									value="Temperatura Máxima: " />
+								<p:inputText id="txtTemperaturaMaxima"
+									binding="#{datEvaporimetroView.txtTemperaturaMaxima}"
+									required="false"
+									requiredMessage="La Temperatura Máxima es Obligatoria">
+								</p:inputText>
+								<p:message for="txtTemperaturaMaxima" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtTemperaturaMinima"
+									value="Temperatura Minima: " />
+								<p:inputText id="txtTemperaturaMinima"
+									binding="#{datEvaporimetroView.txtTemperaturaMinima}"
+									required="false"
+									requiredMessage="La Temperatura Minima es Obligatoria">
+								</p:inputText>
+								<p:message for="txtTemperaturaMinima" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+
+								<p:outputLabel for="txtTemperaturaMedia"
+									value=" Temperatura Media" />
+								<p:panelGrid columns="2">
+									<p:inputText id="txtTemperaturaMedia"
+										binding="#{datEvaporimetroView.txtTemperaturaMedia}">
+									</p:inputText>
+									<p:commandButton id="iconOnly" icon="ui-icon-calculator"  value="Calcular"
+										ondblclick="true">
+										<p:ajax update="txtTemperaturaMedia"
+											listener="#{datEvaporimetroView.listener_calculartempMedia}" />
+									</p:commandButton>
+								</p:panelGrid>
+								<p:message for="txtTemperaturaMedia" />
+								<p:outputLabel></p:outputLabel>
+								<p:outputLabel></p:outputLabel>
+
+
+								<p:outputLabel for="txtObservacion" value="Observación:" />
+								<p:inputTextarea id="txtObservacion"
+									binding="#{datEvaporimetroView.txtObservacion}" rows="5"
+									cols="30" counter="display3" maxlength="500"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText id="display3" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+
+								<p:inputText id="txtDatEvaporimetroId" style="visibility:hidden"
+									binding="#{datEvaporimetroView.txtDatEvaporimetroId}">
+									<p:ajax update=":dialogDatEvaporimetro"
+										listener="#{datEvaporimetroView.listener_txtId}" />
+								</p:inputText>
+								<p:outputLabel />
+								<p:outputLabel />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datEvaporimetroView.btnSave}"
+									value="Grabar" action="#{datEvaporimetroView.action_save()}"
+									update=":dialogDatEvaporimetro :frm:panelDataTableDatEvaporimetro" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datEvaporimetroView.action_clear()}"
+									process="@this" update=":dialogDatEvaporimetro" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{datEvaporimetroView.showDialog}"
+					resizable="flase" modal="true" width="500" >
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datEvaporimetroView.txtObservacionAnularReg}"
+									rows="5" cols="30" counter="display4" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display4" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datEvaporimetroView.btnDelete}"
+									value="Grabar"
+									action="#{datEvaporimetroView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datEvaporimetroView.action_clear()}"
+									update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

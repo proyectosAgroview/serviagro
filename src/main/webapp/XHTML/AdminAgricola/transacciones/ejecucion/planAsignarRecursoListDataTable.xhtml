@@ -1,0 +1,319 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTablePlanAsignarRecurso"
+						header="PlanAsignarRecursoData">
+						<p:growl id="men" />
+						<p:dataTable value="#{planAsignarRecursoView.data}"
+							var="planAsignarRecurso" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15">
+							<p:column filterBy="#{planAsignarRecurso.planLaborId}"
+								sortBy="#{planAsignarRecurso.planLaborId}">
+								<f:facet name="header">
+									<h:outputText value="planLaborId" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.planLaborId}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.compania}"
+								sortBy="#{planAsignarRecurso.compania}">
+								<f:facet name="header">
+									<h:outputText value="compania" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.compania}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.tpRecursoId}"
+								sortBy="#{planAsignarRecurso.tpRecursoId}">
+								<f:facet name="header">
+									<h:outputText value="tpRecursoId" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.tpRecursoId}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.recursoId}"
+								sortBy="#{planAsignarRecurso.recursoId}">
+								<f:facet name="header">
+									<h:outputText value="recursoId" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.recursoId}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.udadMedRecurso}"
+								sortBy="#{planAsignarRecurso.udadMedRecurso}">
+								<f:facet name="header">
+									<h:outputText value="udadMedRecurso" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.udadMedRecurso}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.rendimiento}"
+								sortBy="#{planAsignarRecurso.rendimiento}">
+								<f:facet name="header">
+									<h:outputText value="rendimiento" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.rendimiento}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.cantidad}"
+								sortBy="#{planAsignarRecurso.cantidad}">
+								<f:facet name="header">
+									<h:outputText value="cantidad" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.cantidad}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.valorUnitEst}"
+								sortBy="#{planAsignarRecurso.valorUnitEst}">
+								<f:facet name="header">
+									<h:outputText value="valorUnitEst" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.valorUnitEst}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.costoTotalEstimado}"
+								sortBy="#{planAsignarRecurso.costoTotalEstimado}">
+								<f:facet name="header">
+									<h:outputText value="costoTotalEstimado" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.costoTotalEstimado}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.infoAdicional}"
+								sortBy="#{planAsignarRecurso.infoAdicional}">
+								<f:facet name="header">
+									<h:outputText value="infoAdicional" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.infoAdicional}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.infoAdicional2}"
+								sortBy="#{planAsignarRecurso.infoAdicional2}">
+								<f:facet name="header">
+									<h:outputText value="infoAdicional2" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.infoAdicional2}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.fechaCreacion}"
+								sortBy="#{planAsignarRecurso.fechaCreacion}">
+								<f:facet name="header">
+									<h:outputText value="fechaCreacion" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.fechaCreacion}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.fechaModificacion}"
+								sortBy="#{planAsignarRecurso.fechaModificacion}">
+								<f:facet name="header">
+									<h:outputText value="fechaModificacion" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.fechaModificacion}" />
+							</p:column>
+							<p:column filterBy="#{planAsignarRecurso.documetoErp}"
+								sortBy="#{planAsignarRecurso.documetoErp}">
+								<f:facet name="header">
+									<h:outputText value="documetoErp" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.documetoErp}" />
+							</p:column>
+
+							<p:column
+								filterBy="#{planAsignarRecurso.planLaborId_DatPlanLabor}"
+								sortBy="#{planAsignarRecurso.planLaborId_DatPlanLabor}">
+								<f:facet name="header">
+									<h:outputText value="PlanLaborId_DatPlanLabor" />
+								</f:facet>
+								<h:outputText
+									value="#{planAsignarRecurso.planLaborId_DatPlanLabor}" />
+							</p:column>
+
+							<p:column filterBy="#{planAsignarRecurso.recursoId_Recurso}"
+								sortBy="#{planAsignarRecurso.recursoId_Recurso}">
+								<f:facet name="header">
+									<h:outputText value="RecursoId_Recurso" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.recursoId_Recurso}" />
+							</p:column>
+
+							<p:column
+								filterBy="#{planAsignarRecurso.tpRecursoId_TipoRecurso}"
+								sortBy="#{planAsignarRecurso.tpRecursoId_TipoRecurso}">
+								<f:facet name="header">
+									<h:outputText value="TpRecursoId_TipoRecurso" />
+								</f:facet>
+								<h:outputText
+									value="#{planAsignarRecurso.tpRecursoId_TipoRecurso}" />
+							</p:column>
+
+							<p:column filterBy="#{planAsignarRecurso.udadMedId_UdadMed}"
+								sortBy="#{planAsignarRecurso.udadMedId_UdadMed}">
+								<f:facet name="header">
+									<h:outputText value="UdadMedId_UdadMed" />
+								</f:facet>
+								<h:outputText value="#{planAsignarRecurso.udadMedId_UdadMed}" />
+							</p:column>
+
+							<p:column headerText="Options">
+								<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+									update=":dialogPlanAsignarRecurso"
+									actionListener="#{planAsignarRecursoView.action_edit}">
+									<f:attribute name="selectedPlanAsignarRecurso"
+										value="#{planAsignarRecurso}" />
+								</p:commandButton>
+								<p:commandButton id="btnDelete" title="Delete"
+									actionListener="#{planAsignarRecursoView.action_delete_datatable}"
+									onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+									icon="ui-icon-trash" update="@form">
+									<f:attribute name="selectedPlanAsignarRecurso"
+										value="#{planAsignarRecurso}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="New"
+								action="#{planAsignarRecursoView.action_new()}"
+								update=":dialogPlanAsignarRecurso" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogPlanAsignarRecurso" appendTo="@(body)"
+					draggable="true" closable="false"
+					visible="#{planAsignarRecursoView.showDialog}" resizable="false"
+					modal="true" width="500">
+					<h:form id="formDialog">
+						<p:messages id="msg" />
+						<p:panel id="panelPlanAsignarRecurso" header="PlanAsignarRecurso">
+							<h:panelGrid columns="2" id="panelGrid">
+								<h:outputText id="msgPlanLaborId" value="PlanLaborId" />
+								<p:inputText id="txtPlanLaborId"
+									binding="#{planAsignarRecursoView.txtPlanLaborId}">
+									<p:ajax update=":dialogPlanAsignarRecurso"
+										listener="#{planAsignarRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgCompania" value="Compania" />
+								<p:inputText id="txtCompania"
+									binding="#{planAsignarRecursoView.txtCompania}">
+									<p:ajax update=":dialogPlanAsignarRecurso"
+										listener="#{planAsignarRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgTpRecursoId" value="TpRecursoId" />
+								<p:inputText id="txtTpRecursoId"
+									binding="#{planAsignarRecursoView.txtTpRecursoId}">
+									<p:ajax update=":dialogPlanAsignarRecurso"
+										listener="#{planAsignarRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgRecursoId" value="RecursoId" />
+								<p:inputText id="txtRecursoId"
+									binding="#{planAsignarRecursoView.txtRecursoId}">
+									<p:ajax update=":dialogPlanAsignarRecurso"
+										listener="#{planAsignarRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgUdadMedRecurso" value="UdadMedRecurso" />
+								<p:inputText id="txtUdadMedRecurso"
+									binding="#{planAsignarRecursoView.txtUdadMedRecurso}">
+									<p:ajax update=":dialogPlanAsignarRecurso"
+										listener="#{planAsignarRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgRendimiento" value="Rendimiento" />
+								<p:inputText id="txtRendimiento"
+									binding="#{planAsignarRecursoView.txtRendimiento}">
+									<p:ajax update=":dialogPlanAsignarRecurso"
+										listener="#{planAsignarRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgCantidad" value="Cantidad" />
+								<p:inputText id="txtCantidad"
+									binding="#{planAsignarRecursoView.txtCantidad}">
+									<p:ajax update=":dialogPlanAsignarRecurso"
+										listener="#{planAsignarRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgValorUnitEst" value="ValorUnitEst" />
+								<p:inputText id="txtValorUnitEst"
+									binding="#{planAsignarRecursoView.txtValorUnitEst}">
+									<p:ajax update=":dialogPlanAsignarRecurso"
+										listener="#{planAsignarRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgCostoTotalEstimado"
+									value="CostoTotalEstimado" />
+								<p:inputText id="txtCostoTotalEstimado"
+									binding="#{planAsignarRecursoView.txtCostoTotalEstimado}">
+									<p:ajax update=":dialogPlanAsignarRecurso"
+										listener="#{planAsignarRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgInfoAdicional" value="InfoAdicional" />
+								<p:inputText id="txtInfoAdicional"
+									binding="#{planAsignarRecursoView.txtInfoAdicional}">
+									<p:ajax update=":dialogPlanAsignarRecurso"
+										listener="#{planAsignarRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgInfoAdicional2" value="InfoAdicional2" />
+								<p:inputText id="txtInfoAdicional2"
+									binding="#{planAsignarRecursoView.txtInfoAdicional2}">
+									<p:ajax update=":dialogPlanAsignarRecurso"
+										listener="#{planAsignarRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgDocumetoErp" value="DocumetoErp" />
+								<p:inputText id="txtDocumetoErp"
+									binding="#{planAsignarRecursoView.txtDocumetoErp}">
+									<p:ajax update=":dialogPlanAsignarRecurso"
+										listener="#{planAsignarRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgEntity.getId().getFechaCreacion()"
+									value=" Entity.getId().getFechaCreacion()" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{planAsignarRecursoView.txtEntity.getId().getFechaCreacion()}">
+									<p:ajax event="dateSelect"
+										listener="#{planAsignarRecursoView.listener_txtEntity.getId().getFechaCreacion()}" />
+								</p:calendar>
+								<h:outputText id="msgEntity.getId().getFechaModificacion()"
+									value=" Entity.getId().getFechaModificacion()" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{planAsignarRecursoView.txtEntity.getId().getFechaModificacion()}">
+									<p:ajax event="dateSelect"
+										listener="#{planAsignarRecursoView.listener_txtEntity.getId().getFechaModificacion()}" />
+								</p:calendar>
+
+								<h:outputText id="msgPlanLaborId_DatPlanLabor"
+									value=" PlanLaborId_DatPlanLabor" />
+								<p:inputText id="txtPlanLaborId_DatPlanLabor" disabled="true"
+									binding="#{planAsignarRecursoView.txtPlanLaborId_DatPlanLabor}" />
+								<h:outputText id="msgRecursoId_Recurso"
+									value=" RecursoId_Recurso" />
+								<p:inputText id="txtRecursoId_Recurso" disabled="true"
+									binding="#{planAsignarRecursoView.txtRecursoId_Recurso}" />
+								<h:outputText id="msgTpRecursoId_TipoRecurso"
+									value=" TpRecursoId_TipoRecurso" />
+								<p:inputText id="txtTpRecursoId_TipoRecurso" disabled="true"
+									binding="#{planAsignarRecursoView.txtTpRecursoId_TipoRecurso}" />
+								<h:outputText id="msgUdadMedId_UdadMed"
+									value=" UdadMedId_UdadMed" />
+								<p:inputText id="txtUdadMedId_UdadMed" disabled="true"
+									binding="#{planAsignarRecursoView.txtUdadMedId_UdadMed}" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave"
+									binding="#{planAsignarRecursoView.btnSave}" value="Save"
+									action="#{planAsignarRecursoView.action_save()}"
+									update=":dialogPlanAsignarRecurso :frm:panelDataTablePlanAsignarRecurso" />
+								<p:commandButton id="btnClear" value="Clear"
+									action="#{planAsignarRecursoView.action_clear()}"
+									update=":dialogPlanAsignarRecurso" />
+								<p:commandButton id="btnExit" value="Exit"
+									action="#{planAsignarRecursoView.action_closeDialog()}"
+									update=":dialogPlanAsignarRecurso" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

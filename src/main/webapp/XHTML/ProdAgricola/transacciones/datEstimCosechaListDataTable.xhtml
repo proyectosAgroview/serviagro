@@ -1,0 +1,386 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatEstimCosecha"
+						header="Estimados de cosecha">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datEstimCosechaView.data}"
+							var="datEstimCosecha" paginator="true" lazy="true" rows="5"  rowsPerPageTemplate="5,10,15"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datEstimCosecha" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datEstimCosecha.estado}"
+								sortBy="#{datEstimCosecha.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datEstimCosecha.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datEstimCosecha.consecutivo}"
+								sortBy="#{datEstimCosecha.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="# Registro" />
+								</f:facet>
+								<h:outputText value="#{datEstimCosecha.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datEstimCosecha.fechaMuestra}"
+								sortBy="#{datEstimCosecha.fechaMuestra}">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datEstimCosecha.fechaMuestra}" />
+							</p:column>
+
+							<p:column filterBy="#{datEstimCosecha.nivel2Nombre}">
+								<f:facet name="header">
+									<h:outputText value="Finca" />
+								</f:facet>
+								<h:outputText value="#{datEstimCosecha.nivel2Nombre}" />
+							</p:column>
+
+							<p:column filterBy="#{datEstimCosecha.nivel4Nombre}">
+								<f:facet name="header">
+									<h:outputText value="Lote" />
+								</f:facet>
+								<h:outputText value="#{datEstimCosecha.nivel4Nombre}" />
+							</p:column>
+
+							<p:column filterBy="#{datEstimCosecha.trabajadorCodigo}">
+								<f:facet name="header">
+									<h:outputText value="Muestreador" />
+								</f:facet>
+								<h:outputText value="#{datEstimCosecha.trabajadorCodigo}" />
+							</p:column>
+
+							<!-- 	<p:column filterBy="#{datEstimCosecha.trabajadorNombre}"
+								sortBy="#{datEstimCosecha.trabajadorNombre}">
+								<f:facet name="header">
+									<h:outputText value="Súpervisor" />
+								</f:facet>
+								<h:outputText value="#{datEstimCosecha.trabajadorNombre}" />
+							</p:column> -->
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+									    disabled="#{datEstimCosecha.estadoTrue}" 
+										update=":dialogDatEstimCosecha"
+										actionListener="#{datEstimCosechaView.action_edit}">
+										<f:attribute name="selectedDatEstimCosecha"
+											value="#{datEstimCosecha}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"
+										disabled="#{datEstimCosecha.estadoTrue}" title="Anular Registro"
+										actionListener="#{datEstimCosechaView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatEstimCosecha" value="#{datEstimCosecha}" />
+								    </p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datEstimCosechaView.action_new()}"
+								update=":dialogDatEstimCosecha" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatEstimCosecha" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datEstimCosechaView.showDialog}" resizable="false"
+					modal="true" width="600" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatEstimCosecha" header="Estimados de cosecha">
+							
+							<h:panelGrid columns="5" id="panelGrid2">
+							
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{datEstimCosechaView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+								<p:outputLabel />
+								<p:outputLabel />
+								
+									
+								<p:outputLabel value="# Registro: " />
+								<p:inputText id="txtConsecutivo" disabled="false"
+									binding="#{datEstimCosechaView.txtConsecutivo}"
+									placeholder="Buscar o crear registro" size="23">
+									
+									
+								</p:inputText>
+								<p:outputLabel />
+								<p:outputLabel />
+								<p:outputLabel />
+								
+							<p:outputLabel for="msgFechaMuestra" value="Fecha de muestreo: " />
+								<p:calendar id="msgFechaMuestra" showOn="button"
+									navigator="false" locale="es"
+									binding="#{datEstimCosechaView.txtFechaMuestra}"
+									pattern="dd/MM/yyyy" required="true"
+									requiredMessage="La fecha   es obligatoria">
+								</p:calendar>
+								<p:message for="msgFechaMuestra" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtMotEstimId_MotEstim"
+									value="Motivo estimativa: " />
+								<p:selectOneMenu id="txtMotEstimId_MotEstim" effect="fade"
+									filter="true" filterMatchMode="startsWith"
+									style="width: 100%;"
+									binding="#{datEstimCosechaView.txtMotEstimId_MotEstim}"
+									required="true" requiredMessage="Seleccione un motivo">
+									<f:selectItem itemLabel="Seleccione un motivo" itemValue="" />
+									<f:selectItems value="#{datEstimCosechaView.selectMotEstim}" />
+								</p:selectOneMenu>
+								<p:message for="txtMotEstimId_MotEstim" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNivel1Id" value="Zona: " />
+								<p:selectOneMenu id="txtNivel1Id" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									style="width: 100%;"
+									binding="#{datEstimCosechaView.txtNivel1Id}" required="true"
+									requiredMessage="Seleccione una zona">
+									<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+									<f:selectItems value="#{datEstimCosechaView.selectNivel1}" />
+									<p:ajax update="txtNivel2Id" />
+								</p:selectOneMenu>
+								<p:message for="txtNivel1Id" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNivel2Id" value="Hacienda: " />
+								<p:selectOneMenu id="txtNivel2Id" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									style="width: 100%;"
+									binding="#{datEstimCosechaView.txtNivel2Id}" required="true"
+									requiredMessage="Seleccione una hacienda">
+									<f:selectItem itemLabel="Seleccione una hacienda" itemValue="" />
+									<f:selectItems value="#{datEstimCosechaView.selectNivel2}" />
+									<p:ajax update="txtNivel3Id" />
+								</p:selectOneMenu>
+								<p:message for="txtNivel2Id" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNivel3Id" value="Bloque: " />
+								<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									style="width: 100%;"
+									binding="#{datEstimCosechaView.txtNivel3Id}" required="true"
+									requiredMessage="Seleccione un bloque del cultivo">
+									<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+									<f:selectItems value="#{datEstimCosechaView.selectNivel3}" />
+									<p:ajax update="txtNivel4Id" />
+								</p:selectOneMenu>
+								<p:message for="txtNivel3Id" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNivel4Id" value="Lote: " />
+								<p:selectOneMenu id="txtNivel4Id" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									style="width: 100%;"
+									binding="#{datEstimCosechaView.txtNivel4Id}" required="true"
+									requiredMessage="Seleccione un lote">
+									<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+									<f:selectItems value="#{datEstimCosechaView.selectNivel4}" />
+								</p:selectOneMenu>
+								<p:message for="txtNivel4Id" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtTrabId_Trabajador" value="Muestreador: " />
+								<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+									filter="true" filterMatchMode="startsWith"
+									style="width: 100%;"
+									binding="#{datEstimCosechaView.txtTrabId_Trabajador}"
+									required="true" requiredMessage="Seleccione un trabajador">
+									<f:selectItem itemLabel="Seleccione un trabajador" itemValue="" />
+									<f:selectItems value="#{datEstimCosechaView.selectTrabajador}" />
+								</p:selectOneMenu>
+								<p:message for="txtTrabId_Trabajador" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+
+								<p:outputLabel for="txtAreaNeta" value="Área neta: " />
+								<p:inputText id="txtAreaNeta" disabled="true"
+									binding="#{datEstimCosechaView.txtAreaNeta}" required="true"
+									requiredMessage="Indique el área">
+									<f:converter converterId="javax.faces.Double" />
+								</p:inputText>
+								<p:message for="txtAreaNeta" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtThEstimado"
+									value="Ton. Estimadas por héctarea: " />
+								<p:inputText id="txtThEstimado" disabled="true"
+									binding="#{datEstimCosechaView.txtThEstimado}" required="true"
+									requiredMessage="Indique las toneladas estimadas">
+									<f:converter converterId="javax.faces.Double" />
+								</p:inputText>
+								<p:message for="txtThEstimado" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+								<p:outputLabel for="txtCantidadTotalEst"
+									value="Toneladas totales: " />
+								<p:panelGrid columns="2">
+									<p:inputText id="txtCantidadTotalEst"
+										binding="#{datEstimCosechaView.txtCantidadTotalEst}"
+										disable="true">
+										<f:converter converterId="javax.faces.Double" />
+									</p:inputText>
+									<p:commandButton icon="ui-icon-calculator" value="Calcular">
+										<p:ajax process="@this,txtAreaNeta,txtThEstimado"
+											update="txtCantidadTotalEst"
+											listener="#{datEstimCosechaView.listener_calcularCantidadTotalEst}" />
+									</p:commandButton>
+								</p:panelGrid>
+								<p:message for="txtCantidadTotalEst" />
+								<p:outputLabel />
+								<p:outputLabel />
+
+
+								<p:outputLabel for="txtObservacion" value="Observación:" />
+								<p:inputTextarea id="txtObservacion"
+									binding="#{datEstimCosechaView.txtObservacion}" rows="3"
+									cols="30" counter="display" maxlength="1000"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText id="display" />
+
+								<!--
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional"
+									binding="#{datEstimCosechaView.txtInfoAdicional}" rows="5"
+									cols="30" counter="display" maxlength="100"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText id="display" />
+
+								<p:outputLabel for="txtInfoAdicional2"
+									value="Información Adicional 2:" />
+								<p:inputTextarea id="txtInfoAdicional2"
+									binding="#{datEstimCosechaView.txtInfoAdicional2}" rows="5"
+									cols="30" counter="display2" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+								<h:outputText id="display2" />
+
+						  	<p:outputLabel for="txtObservacionAnularReg"
+									value="Motivo de anular el registro:" />
+								<p:inputTextarea id="txtObservacionAnularReg"
+									binding="#{datEstimCosechaView.txtObservacionAnularReg}" rows="5"
+									cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText id="display4" />  -->
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden" id="txtDatEstimCosechaId"
+									binding="#{datEstimCosechaView.txtDatEstimCosechaId}">
+									<p:ajax update=":dialogDatEstimCosecha"
+										listener="#{datEstimCosechaView.listener_txtId}" />
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datEstimCosechaView.btnSave}" value="Grabar"
+									action="#{datEstimCosechaView.action_save()}"
+									update=":dialogDatEstimCosecha :frm:panelDataTableDatEstimCosecha" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datEstimCosechaView.action_clear()}"
+									process="@this" update=":dialogDatEstimCosecha" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datEstimCosechaView.showDialog}" modal="true" width="500"
+					showEffect="fade">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datEstimCosechaView.txtObservacionAnularReg}" rows="5"
+									cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datEstimCosechaView.btnDelete}"
+									value="Grabar" action="#{datEstimCosechaView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatEstimCosecha" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datEstimCosechaView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

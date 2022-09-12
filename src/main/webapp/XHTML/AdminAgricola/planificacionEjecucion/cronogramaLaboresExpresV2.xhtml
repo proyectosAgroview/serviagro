@@ -1,0 +1,660 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableCronogramaLabores"
+						header="Presupuesto de labores expres">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{cronogramaLaboresExpresView.data}"
+							var="cronograma" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Presupuesto" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{cronograma.estado}"
+								sortBy="#{cronograma.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{cronograma.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{cronograma.codigo}"
+								sortBy="#{cronograma.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{cronograma.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{cronograma.nombre}"
+								sortBy="#{cronograma.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{cronograma.nombre}" />
+							</p:column>
+
+							<p:column filterBy="#{cronograma.periodoInicial}"
+								sortBy="#{cronograma.periodoInicial}">
+								<f:facet name="header">
+									<h:outputText value="P. Inicial" />
+								</f:facet>
+								<h:outputText value="#{cronograma.periodoInicial}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column filterBy="#{cronograma.periodoFinal}"
+								sortBy="#{cronograma.periodoFinal}">
+								<f:facet name="header">
+									<h:outputText value="P. Final" />
+								</f:facet>
+								<h:outputText value="#{cronograma.periodoFinal}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column filterBy="#{cronograma.esExpres}"
+								sortBy="#{cronograma.esExpres}">
+								<f:facet name="header">
+									<h:outputText value="Es expres?" />
+								</f:facet>
+								<h:outputText value="#{cronograma.esExpres}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogCronogramaLabores"
+										actionListener="#{cronogramaLaboresExpresView.action_edit}">
+										<f:attribute name="selectedCronogramaLabores"
+											value="#{cronograma}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{cronogramaLaboresExpresView.action_new()}"
+								update=":dialogCronogramaLabores" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogCronogramaLabores" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{cronogramaLaboresExpresView.showDialog}"
+					resizable="false" modal="true" width="900" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelCronogramaLabores"
+							header="Presupuesto de labores expres">
+
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{cronogramaLaboresExpresView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="2" id="panelGrid1">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{cronogramaLaboresExpresView.txtEstado}"
+											required="true" requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+
+										<p:outputLabel for="txtEsExpres"
+											value="Es presupuesto expres:? " />
+										<p:selectOneRadio id="txtEsExpres" disabled="true"
+											binding="#{cronogramaLaboresExpresView.txtEsExpres}"
+											required="true" requiredMessage="Seleccione una alternativa">
+											<f:selectItem itemLabel="SI" itemValue="SI" />
+											<f:selectItem itemLabel="NO" itemValue="NO" />
+										</p:selectOneRadio>
+
+
+										<p:outputLabel value="Código de secuencia: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{cronogramaLaboresExpresView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelCronogramaLabores,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{cronogramaLaboresExpresView.listener_txtCodigo}" />
+										</p:inputText>
+
+										<p:outputLabel for="txtNombre" value="Nombre de secuencia: " />
+										<p:inputText id="txtNombre" disabled="true"
+											binding="#{cronogramaLaboresExpresView.txtNombre}"
+											required="true" requiredMessage="El Nombre es Obligatorio" />
+
+										<p:outputLabel for="msgPeriodoInicial" value="Fecha: " />
+										<p:calendar id="msgPeriodoInicial" showOn="button"
+											navigator="msgPeriodoInicial" locale="es"
+											binding="#{cronogramaLaboresExpresView.txtPeriodoInicial}"
+											pattern="dd/MM/yyyy" mask="true" required="true" size="15"
+											requiredMessage="La fecha inicial es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgPeriodoFinal" value="Fecha: " />
+										<p:calendar id="msgPeriodoFinal" showOn="button"
+											navigator="msgPeriodoFinal" locale="es" size="15"
+											binding="#{cronogramaLaboresExpresView.txtPeriodoFinal}"
+											pattern="dd/MM/yyyy" mask="true" required="true"
+											requiredMessage="La fecha final es obligatoria">
+										</p:calendar>
+
+
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Info. Adicional: " />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{cronogramaLaboresExpresView.txtInfoAdicional}"
+											rows="5" cols="30" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Info. Adicional2: " />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{cronogramaLaboresExpresView.txtInfoAdicional2}"
+											rows="5" cols="30" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden"
+											id="txtCronogramaLaboresId"
+											binding="#{cronogramaLaboresExpresView.txtCronogramaLaboresId}">
+										</p:inputText>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Secuencia de labores">
+									<p:panel>
+
+										<p:messages id="msg1" autoUpdate="true" closable="true"
+											showDetail="true" />
+
+										<h:panelGrid id="gridCronogramaLaboresLabores" columns="2">
+
+
+											<h:outputText for="txtLaborId_Labor" value="Labor: "
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtLaborId_Labor" effect="fade"
+												filter="true" filterMatchMode="contains"
+												style="width: 10%; font-size: 0.9em;"
+												binding="#{cronogramaLaboresExpresView.txtLaborId_Labor}"
+												required="false" requiredMessage="Seleccione una labor">
+												<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+												<f:selectItems
+													value="#{cronogramaLaboresExpresView.selectLaborId}" />
+												<p:ajax
+													listener="#{cronogramaLaboresExpresView.listener_ConsultaNombreLabor}"
+													update="txtNombreLabor" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtPresupuestoBaseAreasPlantas"
+												value="Presupuestar con base a: " style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtPresupuestoBaseAreasPlantas"
+												style="font-size: 0.9em;"
+												binding="#{cronogramaLaboresExpresView.txtPresupuestoBaseAreasPlantas}"
+												required="false	" requiredMessage="Seleccione una clase">
+												<f:selectItem itemLabel="Seleccione un tipo" itemValue=""
+													noSelectionOption="true" />
+												<f:selectItem itemLabel="Área" itemValue="Area" />
+												<f:selectItem itemLabel="Plantas" itemValue="Plantas" />
+											</p:selectOneMenu>
+
+
+											<p:outputLabel for="txtTarifaLabor" value="Precio estimado: "
+												style="font-size: 0.9em;" />
+											<p:spinner id="txtTarifaLabor" stepFactor="0.25" prefix="$"
+												size="12"
+												binding="#{cronogramaLaboresExpresView.txtTarifaLabor}"
+												required="false">
+											</p:spinner>
+
+
+											<p:outputLabel for="txtNumeroDiasInicial"
+												value="# día inicial: " style="font-size: 0.9em;" />
+											<p:spinner id="txtNumeroDiasInicial" stepFactor="0.25"
+												size="12"
+												binding="#{cronogramaLaboresExpresView.txtNumeroDiasInicial}"
+												required="false" requiredMessage="Indique el #día">
+											</p:spinner>
+
+											<p:outputLabel for="txtNumeroDiasFin" value="# día final: "
+												style="font-size: 0.9em;" />
+											<p:spinner id="txtNumeroDiasFin" stepFactor="0.25"
+												binding="#{cronogramaLaboresExpresView.txtNumeroDiasFin}"
+												size="12" required="false"
+												requiredMessage="Indique el # día">
+
+											</p:spinner>
+
+
+
+											<p:inputText style="visibility:hidden" id="txtNombreLabor"
+												binding="#{cronogramaLaboresExpresView.txtNombreLabor}" />
+
+										</h:panelGrid>
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregar1" icon="ui-icon-plusthick"
+													process="@this, txtNombreLabor, txtLaborId_Labor,  txtNumeroDiasFin, txtNumeroDiasInicial,
+													txtPresupuestoBaseAreasPlantas,txtTarifaLabor
+													"
+													binding="#{cronogramaLaboresExpresView.btnAgregarCronogramaLaboresLabores}"
+													value="Agregar"
+													action="#{cronogramaLaboresExpresView.action_agregarCronogramaLaboresLabores}"
+													update="tablaLabores,msg1" />
+
+												<p:commandButton id="btnlimpiar" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridCronogramaLaboresLabores"
+														resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+										<p:scrollPanel mode="native" style="width:750px;height:250px">
+											<p:outputPanel>
+												<p:dataTable id="tablaLabores"
+													value="#{cronogramaLaboresExpresView.dataCronogramaLaboresLabores}"
+													var="listaCronogramaLaboresLabores" reflow="true"
+													scrollable="true" scrollHeight="200"
+													style="margin-bottom:20px" editable="true" editMode="cell"
+													widgetVar="cellLabor">
+
+													<p:ajax event="cellEdit"
+														listener="#{cronogramaLaboresExpresView.onCellEditLabor}" />
+
+													<p:column headerText="Labor">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresLabores.nombreLabor}">
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																	value="#{listaCronogramaLaboresLabores.laborId_Labor.laborId}">
+																	<f:selectItems
+																		value="#{cronogramaLaboresExpresView.selectLaborId}"
+																		var="var1" itemValue="#{var1}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="P. Básado en">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresLabores.presupuestoBaseAreaPlantas}">
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu>
+																	<f:selectItem itemLabel="Seleccione un tipo" itemValue="listaCronogramaLaboresLabores.presupuestoBaseAreaPlantas"
+																		noSelectionOption="true" />
+																	<f:selectItem itemLabel="Área" itemValue="Area" />
+																	<f:selectItem itemLabel="Plantas" itemValue="Plantas" />
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Precio Est">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresLabores.tarifaLabor}">
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaCronogramaLaboresLabores.tarifaLabor}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="#Días inicial">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresLabores.numeroDiasInicio}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaCronogramaLaboresLabores.numeroDiasInicio}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="#Días final">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresLabores.numeroDiasFin}">
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaCronogramaLaboresLabores.numeroDiasFin}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<f:attribute name="selectedCronogramaLaboresLabores"
+														value="#{listaCronogramaLaboresLabores}" />
+
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{cronogramaLaboresExpresView.actionDeleteCronogramaLaboresLabores}"
+																required="false" title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaLabores">
+																<f:attribute name="selectedCronogramaLaboresLabores"
+																	value="#{listaCronogramaLaboresLabores}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:scrollPanel>
+									</p:panel>
+
+								</p:tab>
+								<p:tab title="Asignación de Lotes">
+									<p:panel>
+
+										<p:messages id="msg2" autoUpdate="true" closable="true"
+											showDetail="true" />
+
+										<p:panelGrid id="gridCronogramaLaboresNivel4">
+											<p:row>
+												<p:column>
+													<h:panelGrid columns="2">
+
+														<p:outputLabel for="txtNivel1Id" value="Zona: "
+															style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtNivel1Id" effect="fade"
+															filter="true" filterMatchMode="contains"
+															style="width: 100%; font-size: 0.9em;" autoWidth="false"
+															binding="#{cronogramaLaboresExpresView.txtNivel1Id}"
+															required="false" requiredMessage="Seleccione una zona">
+															<f:selectItem itemLabel="Seleccione una zona"
+																itemValue="" />
+															<f:selectItems
+																value="#{cronogramaLaboresExpresView.selectNivel1}" />
+															<p:ajax update="txtNivel2Id" />
+														</p:selectOneMenu>
+
+														<p:outputLabel for="txtNivel2Id" value="Hacienda: "
+															style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtNivel2Id" effect="fade"
+															filter="true" filterMatchMode="contains"
+															style="width: 100%; font-size: 0.9em;" autoWidth="false"
+															binding="#{cronogramaLaboresExpresView.txtNivel2Id}"
+															required="false"
+															requiredMessage="Seleccione una hacienda">
+															<f:selectItem itemLabel="Seleccione una hacienda"
+																itemValue="" />
+															<f:selectItems
+																value="#{cronogramaLaboresExpresView.selectNivel2}" />
+															<p:ajax update="txtNivel3Id" />
+														</p:selectOneMenu>
+
+														<p:outputLabel for="txtNivel3Id" value="Bloque: "
+															style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtNivel3Id" effect="fade"
+															filter="true" filterMatchMode="contains"
+															style="width: 100%; font-size: 0.9em;" autoWidth="false"
+															binding="#{cronogramaLaboresExpresView.txtNivel3Id}"
+															required="false"
+															requiredMessage="Seleccione un bloque del cultivo">
+															<f:selectItem itemLabel="Seleccione un bloque"
+																itemValue="" />
+															<f:selectItems
+																value="#{cronogramaLaboresExpresView.selectNivel3}" />
+															<p:ajax update="txtNivel4Id_Nivel4" />
+														</p:selectOneMenu>
+
+
+														<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: "
+															style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+															filter="true" filterMatchMode="contains"
+															binding="#{cronogramaLaboresExpresView.txtNivel4Id_Nivel4}"
+															style="width: 100%; font-size: 0.9em;" autoWidth="false"
+															required="false" requiredMessage="Seleccione un lote">
+															<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+															<f:selectItems
+																value="#{cronogramaLaboresExpresView.selectNivel4}" />
+															<p:ajax
+																listener="#{cronogramaLaboresExpresView.listener_ConsultaNombreNivel4}"
+																update="txtNombreNivel4,txtNombreNivel2 , txtAreaNeta, txtNumeroPlantas" />
+														</p:selectOneMenu>
+
+													</h:panelGrid>
+												</p:column>
+
+												<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel for="txtAreaNeta" value="Área(HA): "
+															style="font-size: 0.9em;" />
+														<p:inputText id="txtAreaNeta"
+															binding="#{cronogramaLaboresExpresView.txtAreaNeta}"
+															size="12" required="false"
+															requiredMessage="Indique el área">
+														</p:inputText>
+
+														<p:outputLabel for="txtNumeroPlantas"
+															value="No. Plantas: " style="font-size: 0.9em;" />
+														<p:inputText id="txtNumeroPlantas"
+															binding="#{cronogramaLaboresExpresView.txtNumeroPlantas}"
+															size="12" required="false"
+															requiredMessage="Indique el número">
+														</p:inputText>
+
+
+
+														<p:outputLabel for="txtFechaStart" value="Fecha start: " />
+														<p:calendar id="txtFechaStart" showOn="button"
+															navigator="txtFechaStart" locale="es"
+															binding="#{cronogramaLaboresExpresView.txtFechaStart}"
+															pattern="dd/MM/yyyy" mask="true" required="false"
+															size="12" requiredMessage="La fecha start es obligatoria">
+														</p:calendar>
+
+														<p:inputText style="visibility:hidden"
+															id="txtNombreNivel4"
+															binding="#{cronogramaLaboresExpresView.txtNombreNivel4}" />
+
+														<p:inputText style="visibility:hidden"
+															id="txtNombreNivel2"
+															binding="#{cronogramaLaboresExpresView.txtNombreNivel2}" />
+													</h:panelGrid>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+													process="@this,txtNivel4Id_Nivel4, txtNivel2Id, txtNombreNivel4,
+													 txtNombreNivel4, txtAreaNeta, txtNumeroPlantas, txtFechaStart"
+													binding="#{cronogramaLaboresExpresView.btnAgregarCronogramaLaboresNivel4}"
+													value="Agregar"
+													action="#{cronogramaLaboresExpresView.action_agregarCronogramaLaboresNivel4}"
+													update="tablaNilvel4,msg2" />
+
+												<p:commandButton id="btnlimpiar1" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridCronogramaLaboresNivel4"
+														resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+
+										<p:scrollPanel mode="native" style="width:750px;height:250px">
+
+											<p:outputPanel>
+												<p:dataTable id="tablaNilvel4"
+													value="#{cronogramaLaboresExpresView.dataCronogramaLaboresNivel4}"
+													var="listaCronogramaLaboresNivel4" paginator="true"
+													rows="3" reflow="true" scrollable="true" scrollWidth="100%"
+													style="margin-bottom:20px" editable="true" editMode="cell"
+													widgetVar="cellLote">
+
+													<p:ajax event="cellEdit" listener="#{cronogramaLaboresExpresView.onCellEditLote}" />
+
+													<p:column headerText="Fecha">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresNivel4.fechaStart}">
+																	<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:calendar navigator="false" locale="es"
+																	value="#{listaCronogramaLaboresNivel4.fechaStart}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Hacienda">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresNivel4.nombreNivel2}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																	value="#{listaCronogramaLaboresNivel4.nivel2Id.nivel2Id}">
+																	<f:selectItems value="#{cronogramaLaboresExpresView.selectNivel2Edit}"
+																		var="var1" itemValue="#{var1}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Lote">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresNivel4.nombreNivel4}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																	value="#{listaCronogramaLaboresNivel4.nivel4Id_Nivel4.nivel4Id}">
+																	<f:selectItems value="#{cronogramaLaboresExpresView.selectNivel4Edit}"
+																		var="var1" itemValue="#{var1}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Área(Ha)">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresNivel4.areaNeta}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaCronogramaLaboresNivel4.areaNeta}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Plantas">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresNivel4.numeroPlantas}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaCronogramaLaboresNivel4.numeroPlantas}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<f:attribute name="selectedCronogramaLaboresNivel4"
+														value="#{listaCronogramaLaboresNivel4}" />
+
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{cronogramaLaboresExpresView.actionDeleteCronogramaLaboresNivel4}"
+																required="false" title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaNilvel4">
+																<f:attribute name="selectedCronogramaLaboresNivel4"
+																	value="#{listaCronogramaLaboresNivel4}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:scrollPanel>
+
+									</p:panel>
+								</p:tab>
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{cronogramaLaboresExpresView.btnSave}" value="Grabar"
+									action="#{cronogramaLaboresExpresView.action_save()}"
+									update=":dialogCronogramaLabores :frm:panelDataTableCronogramaLabores" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{cronogramaLaboresExpresView.action_clear()}"
+									process="@this" update=":dialogCronogramaLabores" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

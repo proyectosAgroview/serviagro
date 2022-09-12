@@ -1,0 +1,192 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableRecurso" header="RecursoData">
+						<p:growl id="men" />
+						<p:dataTable value="#{recursoView.data}" var="recurso"
+							paginator="true" rows="5"  rowsPerPageTemplate="5,10,15">
+							<p:column filterBy="#{recurso.recursoId}"
+								sortBy="#{recurso.recursoId}">
+								<f:facet name="header">
+									<h:outputText value="recursoId" />
+								</f:facet>
+								<h:outputText value="#{recurso.recursoId}" />
+							</p:column>
+
+							<p:column filterBy="#{recurso.codigo}" sortBy="#{recurso.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Codigo" />
+								</f:facet>
+								<h:outputText value="#{recurso.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{recurso.compania}"
+								sortBy="#{recurso.compania}">
+								<f:facet name="header">
+									<h:outputText value="Compania" />
+								</f:facet>
+								<h:outputText value="#{recurso.compania}" />
+							</p:column>
+
+							<p:column filterBy="#{recurso.estado}" sortBy="#{recurso.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{recurso.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{recurso.fechaCreacion}"
+								sortBy="#{recurso.fechaCreacion}">
+								<f:facet name="header">
+									<h:outputText value="FechaCreacion" />
+								</f:facet>
+								<h:outputText value="#{recurso.fechaCreacion}" />
+							</p:column>
+
+							<p:column filterBy="#{recurso.fechaModificacion}"
+								sortBy="#{recurso.fechaModificacion}">
+								<f:facet name="header">
+									<h:outputText value="FechaModificacion" />
+								</f:facet>
+								<h:outputText value="#{recurso.fechaModificacion}" />
+							</p:column>
+
+							<p:column filterBy="#{recurso.infoAdicional}"
+								sortBy="#{recurso.infoAdicional}">
+								<f:facet name="header">
+									<h:outputText value="InfoAdicional" />
+								</f:facet>
+								<h:outputText value="#{recurso.infoAdicional}" />
+							</p:column>
+
+							<p:column filterBy="#{recurso.infoAdicional2}"
+								sortBy="#{recurso.infoAdicional2}">
+								<f:facet name="header">
+									<h:outputText value="InfoAdicional2" />
+								</f:facet>
+								<h:outputText value="#{recurso.infoAdicional2}" />
+							</p:column>
+
+							<p:column filterBy="#{recurso.nombre}" sortBy="#{recurso.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{recurso.nombre}" />
+							</p:column>
+
+							<p:column filterBy="#{recurso.tpRecursoId_TipoRecurso}"
+								sortBy="#{recurso.tpRecursoId_TipoRecurso}">
+								<f:facet name="header">
+									<h:outputText value="TpRecursoId_TipoRecurso" />
+								</f:facet>
+								<h:outputText value="#{recurso.tpRecursoId_TipoRecurso}" />
+							</p:column>
+
+							<p:column headerText="Options">
+								<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+									update=":dialogRecurso"
+									actionListener="#{recursoView.action_edit}">
+									<f:attribute name="selectedRecurso" value="#{recurso}" />
+								</p:commandButton>
+								<p:commandButton id="btnDelete" title="Delete"
+									actionListener="#{recursoView.action_delete_datatable}"
+									onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+									icon="ui-icon-trash" update="@form">
+									<f:attribute name="selectedRecurso" value="#{recurso}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="New"
+								action="#{recursoView.action_new()}" update=":dialogRecurso" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogRecurso" appendTo="@(body)" draggable="true"
+					closable="false" visible="#{recursoView.showDialog}"
+					resizable="false" modal="true" width="500">
+					<h:form id="formDialog">
+						<p:messages id="msg" />
+						<p:panel id="panelRecurso" header="Recurso">
+							<h:panelGrid columns="2" id="panelGrid">
+								<h:outputText id="msgRecursoId" value="RecursoId" />
+								<p:inputText id="txtRecursoId"
+									binding="#{recursoView.txtRecursoId}">
+									<p:ajax update=":dialogRecurso"
+										listener="#{recursoView.listener_txtId}" />
+								</p:inputText>
+
+								<h:outputText id="msgCodigo" value=" Codigo" />
+								<p:inputText id="txtCodigo" disabled="true"
+									binding="#{recursoView.txtCodigo}" />
+								<h:outputText id="msgCompania" value=" Compania" />
+								<p:inputText id="txtCompania" disabled="true"
+									binding="#{recursoView.txtCompania}" />
+								<h:outputText id="msgEstado" value=" Estado" />
+								<p:inputText id="txtEstado" disabled="true"
+									binding="#{recursoView.txtEstado}" />
+								<h:outputText id="msgInfoAdicional" value=" InfoAdicional" />
+								<p:inputText id="txtInfoAdicional" disabled="true"
+									binding="#{recursoView.txtInfoAdicional}" />
+								<h:outputText id="msgInfoAdicional2" value=" InfoAdicional2" />
+								<p:inputText id="txtInfoAdicional2" disabled="true"
+									binding="#{recursoView.txtInfoAdicional2}" />
+								<h:outputText id="msgNombre" value=" Nombre" />
+								<p:inputText id="txtNombre" disabled="true"
+									binding="#{recursoView.txtNombre}" />
+								<h:outputText id="msgTpRecursoId_TipoRecurso"
+									value=" TpRecursoId_TipoRecurso" />
+								<p:inputText id="txtTpRecursoId_TipoRecurso" disabled="true"
+									binding="#{recursoView.txtTpRecursoId_TipoRecurso}" />
+
+								<h:outputText id="msgFechaCreacion" value=" FechaCreacion" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{recursoView.txtFechaCreacion}">
+									<p:ajax event="dateSelect"
+										listener="#{recursoView.listener_txtFechaCreacion}" />
+								</p:calendar>
+								<h:outputText id="msgFechaModificacion"
+									value=" FechaModificacion" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{recursoView.txtFechaModificacion}">
+									<p:ajax event="dateSelect"
+										listener="#{recursoView.listener_txtFechaModificacion}" />
+								</p:calendar>
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" binding="#{recursoView.btnSave}"
+									value="Save" action="#{recursoView.action_save()}"
+									update=":dialogRecurso :frm:panelDataTableRecurso" />
+								<p:commandButton id="btnClear" value="Clear"
+									action="#{recursoView.action_clear()}" update=":dialogRecurso" />
+								<p:commandButton id="btnExit" value="Exit"
+									action="#{recursoView.action_closeDialog()}"
+									update=":dialogRecurso" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

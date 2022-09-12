@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 27/12/2018 09:43:17 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatPlanServiciosMqdet" table="dat_plan_servicios_mqdet" >
+        <id name="datPlanServiciosMqdetId" type="java.lang.Long">
+            <column name="dat_plan_servicios_mqdet_id" />
+            <generator class="identity" />
+        </id>
+         <many-to-one name="operario" class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="operario_id" />
+        </many-to-one>
+       
+       
+        <many-to-one name="nivel2Clientesmq" class="co.com.arcosoft.modelo.Nivel2Clientesmq" fetch="select">
+            <column name="nivel2_clientesmq_id" />
+        </many-to-one>
+       
+        
+            <many-to-one name="nivel4ClientesmqId" class="co.com.arcosoft.modelo.Nivel4Clientesmq" fetch="select">
+            <column name="nivel4_clientesmq_id" />
+        </many-to-one>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_plan" />
+        </many-to-one>
+        <many-to-one name="datPlanServiciosMq" class="co.com.arcosoft.modelo.DatPlanServiciosMq" fetch="select">
+            <column name="dat_plan_servicios_mq_id" />
+        </many-to-one>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" />
+        </many-to-one>
+        <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="pers_empr_id" />
+        </many-to-one>
+        
+        <property name="nivel4mqTexto" type="java.lang.String">
+            <column name="nivel4mq_texto" length="1000" />
+        </property>
+        <property name="cantidadPlan" type="java.lang.Double">
+            <column name="cantidad_plan" precision="12" scale="4" />
+        </property>
+        <property name="concluido" type="java.lang.String">
+            <column name="concluido" length="20" />
+        </property>
+        <property name="valorEstUnitario" type="java.lang.Double">
+            <column name="valor_est_unitario" precision="12" scale="4" />
+        </property>
+        <property name="valorEstTotal" type="java.lang.Double">
+            <column name="valor_est_total" precision="12" scale="4" />
+        </property>
+        <property name="detalleNota" type="java.lang.String">
+            <column name="detalle_nota" length="1000" />
+        </property>
+         <property name="cantidadRealizada" type="java.lang.Double">
+            <column name="cantidad_realizada" precision="12" scale="4" />
+        </property>
+            <property name="cantidadPendiente" type="java.lang.Double">
+            <column name="cantidad_pendiente" precision="12" scale="4" />
+        </property>
+        <property name="facturado" type="java.lang.String">
+            <column name="facturado" length="10" />
+        </property>
+           <property name="numPases" type="java.lang.Long">
+            <column name="num_pases" />
+        </property>
+            <property name="periodoInicial" type="java.util.Date">
+            <column name="periodo_inicial" length="19" />
+        </property>
+             <property name="areaProgramada" type="java.lang.Double">
+            <column name="area_programada" precision="12" scale="4" />
+        </property>
+       
+             <property name="cantidadPresupuesto" type="java.lang.Double">
+            <column name="cantidad_presupuesto" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

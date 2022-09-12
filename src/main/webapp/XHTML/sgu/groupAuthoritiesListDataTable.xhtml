@@ -1,0 +1,113 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	</h:head>
+
+	<h:body>
+		  <ui:composition template="/WEB-INF/facelets/template.xhtml">	
+		 
+		 	<ui:define name="body">	
+				<f:view>
+					<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>               
+					<p:dialog modal="true" widgetVar="statusDialog" header="Loading"  draggable="false" closable="false">  
+   						<p:graphicImage value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />   
+					</p:dialog>
+					
+					<!-- Expired session -->
+					<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();" timeout="#{session.maxInactiveInterval * 1000}" />
+					<p:dialog modal="true" widgetVar="sessionTimeOutDialog" header="Expired session"  draggable="false" closable="false">  
+	   					<h:outputText value="The session is finished" />
+	                 	<input id="confirmBackToLogin" 
+	                 		type="button" 
+	                 		value="Sign in"
+	                    	onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />   
+					</p:dialog>
+					
+		  			<h:form id="frm">								  		
+						
+						<p:panel id="panelDataTableGroupAuthorities" header="GroupAuthoritiesData">
+							<p:growl id="men"/>				
+							<p:dataTable value="#{groupAuthoritiesView.data}" var="groupAuthorities"
+								paginator="true" rows="5"  rowsPerPageTemplate="5,10,15">
+																										<p:column filterBy="#{groupAuthorities.groupId}" sortBy="#{groupAuthorities.groupId}" >
+										 <f:facet name="header">
+										<h:outputText value="groupId"/>
+										</f:facet>
+										 <h:outputText value="#{groupAuthorities.groupId}"/>
+										 </p:column>
+			                    										<p:column filterBy="#{groupAuthorities.authority}" sortBy="#{groupAuthorities.authority}" >
+										 <f:facet name="header">
+										<h:outputText value="authority"/>
+										</f:facet>
+										 <h:outputText value="#{groupAuthorities.authority}"/>
+										 </p:column>
+			                    																									
+										<p:column filterBy="#{groupAuthorities.id_Groups}" sortBy="#{groupAuthorities.id_Groups}" >
+										 <f:facet name="header">
+										<h:outputText value="Id_Groups"/>
+										</f:facet>
+										 <h:outputText value="#{groupAuthorities.id_Groups}"/>
+										</p:column>   
+			                    			                    
+								<p:column headerText="Options">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogGroupAuthorities"
+										actionListener="#{groupAuthoritiesView.action_edit}">
+										<f:attribute name="selectedGroupAuthorities" value="#{groupAuthorities}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"									
+										title="Delete" actionListener="#{groupAuthoritiesView.action_delete_datatable}"
+										onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+										icon="ui-icon-trash" update="@form">
+										<f:attribute name="selectedGroupAuthorities" value="#{groupAuthorities}" />
+									</p:commandButton>
+								</p:column>									                    
+							</p:dataTable>	
+						</p:panel>
+						<p:panel id="panelBoton">
+							<div align="center">
+								<p:commandButton id="btnNew" value="New"
+									action="#{groupAuthoritiesView.action_new()}" update=":dialogGroupAuthorities" />
+							</div>
+						</p:panel>						
+		   			</h:form>
+					<p:dialog id="dialogGroupAuthorities" appendTo="@(body)" draggable="true"
+						closable="false" visible="#{groupAuthoritiesView.showDialog}" resizable="false"
+						modal="true" width="500">
+						<h:form id="formDialog">
+							<p:messages id="msg" />
+							<p:panel id="panelGroupAuthorities" header="GroupAuthorities">							
+							    <h:panelGrid columns="2" id="panelGrid" >
+																		 <h:outputText id="msgGroupId" value="GroupId"/>
+									 <p:inputText id="txtGroupId" binding="#{groupAuthoritiesView.txtGroupId}">
+									 <p:ajax update=":dialogGroupAuthorities" listener="#{groupAuthoritiesView.listener_txtId}"/>
+									 </p:inputText>	
+																		 <h:outputText id="msgAuthority" value="Authority"/>
+									 <p:inputText id="txtAuthority" binding="#{groupAuthoritiesView.txtAuthority}">
+									 <p:ajax update=":dialogGroupAuthorities" listener="#{groupAuthoritiesView.listener_txtId}"/>
+									 </p:inputText>	
+																											
+																		<h:outputText id="msgId_Groups" value=" Id_Groups"/>
+									<p:inputText id="txtId_Groups" disabled="true" binding="#{groupAuthoritiesView.txtId_Groups}"/>
+																		
+																    </h:panelGrid>
+							</p:panel>						   
+							<p:panel id="panelBotones">
+								<div align="center">					
+									<p:commandButton id="btnSave" binding="#{groupAuthoritiesView.btnSave}" value="Save" action="#{groupAuthoritiesView.action_save()}" update=":dialogGroupAuthorities :frm:panelDataTableGroupAuthorities" />
+									<p:commandButton id="btnClear" value="Clear" action="#{groupAuthoritiesView.action_clear()}" update=":dialogGroupAuthorities" />
+									<p:commandButton id="btnExit" value="Exit" action="#{groupAuthoritiesView.action_closeDialog()}" update=":dialogGroupAuthorities" />
+								</div>
+							</p:panel>					
+						</h:form>
+					</p:dialog>
+				</f:view>
+			</ui:define>		
+		</ui:composition>	
+	</h:body>	
+</html>	

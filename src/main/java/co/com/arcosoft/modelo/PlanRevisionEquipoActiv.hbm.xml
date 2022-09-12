@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.PlanRevisionEquipoActiv" table="plan_revision_equipo_activ" >
+         <id name="planRevisionEquipoActivId" type="java.lang.Long">
+            <column name="plan_revision_equipo_activ_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="plan_labor" />
+        </many-to-one>
+        <many-to-one name="planRevisionEquipo" class="co.com.arcosoft.modelo.PlanRevisionEquipo" fetch="select">
+            <column name="plan_revision_equipo_id" />
+        </many-to-one>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="secuencia" type="java.lang.Long">
+            <column name="secuencia" />
+        </property>
+        <property name="duracion" type="java.util.Date">
+            <column name="duracion" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

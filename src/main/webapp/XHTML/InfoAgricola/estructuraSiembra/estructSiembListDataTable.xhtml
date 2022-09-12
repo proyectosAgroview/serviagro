@@ -1,0 +1,250 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableEstructSiemb"
+						header="Estructura de Siembra">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{estructSiembView.data}"
+							var="estructSiemb" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="estructSiemb" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{estructSiemb.estado}"
+								sortBy="#{estructSiemb.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{estructSiemb.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{estructSiemb.codigo}"
+								sortBy="#{estructSiemb.codigo}">
+								<f:facet name="header">
+									<h:outputText value="ID Planta" />
+								</f:facet>
+								<h:outputText value="#{estructSiemb.codigo}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogEstructSiemb"
+										actionListener="#{estructSiembView.action_edit}">
+										<f:attribute name="selectedEstructSiemb"
+											value="#{estructSiemb}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{estructSiembView.action_new()}"
+								update=":dialogEstructSiemb" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogEstructSiemb" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{estructSiembView.showDialog}" resizable="false"
+					modal="true" width="600" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelEstructSiemb" header="Estructura de Siembra">
+
+							<p:tabView>
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="3" id="panelGrid">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{estructSiembView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+
+
+										<h:outputText for="txtNivel1Id" value="Zona: " />
+										<p:selectOneMenu id="txtNivel1Id" effect="fade" filter="true"
+											filterMatchMode="startsWith"
+											binding="#{estructSiembView.txtNivel1Id}" required="true"
+											requiredMessage="Seleccione una zona">
+											<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+											<f:selectItems value="#{estructSiembView.selectNivel1}" />
+											<p:ajax update="txtNivel2Id" />
+
+										</p:selectOneMenu>
+										<p:message for="txtNivel1Id" />
+
+										<h:outputText for="txtNivel2Id" value="Hacienda: " />
+										<p:selectOneMenu id="txtNivel2Id" effect="fade" filter="true"
+											filterMatchMode="startsWith"
+											binding="#{estructSiembView.txtNivel2Id}" required="true"
+											requiredMessage="Seleccione una hacienda">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems value="#{estructSiembView.selectNivel2}" />
+											<p:ajax update="txtNivel3Id" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel2Id" />
+
+										<h:outputText for="txtNivel3Id" value="Bloque: " />
+										<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+											filterMatchMode="startsWith"
+											binding="#{estructSiembView.txtNivel3Id}" required="true"
+											requiredMessage="Seleccione un bloque del cultivo">
+											<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+											<f:selectItems value="#{estructSiembView.selectNivel3}" />
+											<p:ajax update="txtNivel4Id_Nivel4" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel3Id" />
+
+										<h:outputText for="txtNivel4Id_Nivel4" value="Lote: " />
+										<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+											filter="true" filterMatchMode="startsWith"
+											binding="#{estructSiembView.txtNivel4Id_Nivel4}"
+											required="true" requiredMessage="Seleccione un lote">
+											<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+											<f:selectItems value="#{estructSiembView.selectNivel4}" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel4Id_Nivel4" />
+
+										<p:outputLabel value="Linea: " />
+										<p:spinner id="txtLinea" disabled="false"
+											binding="#{estructSiembView.txtLinea}" required="true"
+											requiredMessage="Seleccione una linea">
+											
+										</p:spinner>
+										<p:outputLabel />
+
+										<p:outputLabel value="Planta: " />
+										<p:spinner id="txtPlanta" disabled="false"
+											binding="#{estructSiembView.txtPlanta}" required="true"
+											requiredMessage="Seleccione una planta">
+											
+										</p:spinner>
+										<p:outputLabel />
+
+										
+									</h:panelGrid>
+								</p:tab>
+
+								<p:tab title="Ubicación(Maps)">
+									<h:panelGrid columns="3" cellpadding="5">
+										<p:outputLabel for="txtLatitud" value="Latitud: " />
+										<p:inputText id="txtLatitud" disabled="true"
+											binding="#{estructSiembView.txtLatitud}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtLatitud" />
+
+										<p:outputLabel for="txtLongitud" value="Longitud: " />
+										<p:inputText id="txtLongitud" disabled="true"
+											binding="#{estructSiembView.txtLongitud}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtLongitud" />
+
+										<p:outputLabel for="txtPrecision" value="Precision: " />
+										<p:inputText id="txtPrecision" disabled="true"
+											binding="#{estructSiembView.txtPrecision}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtPrecision" />
+									</h:panelGrid>
+									<p:growl id="growl" showDetail="true" />
+									<p:gmap id="gmap" center="3.6374489,-76.2900103" zoom="13"
+										type="HYBRID" model="#{estructSiembView.simpleModel}"
+										style="width:100%;height:400px">
+										<p:ajax event="overlaySelect"
+											listener="#{estructSiembView.onMarkerSelect}"
+											update="growl" />
+									</p:gmap>
+								</p:tab>
+								<p:tab title="Información Adicional">
+
+									<h:panelGrid columns="3" id="panelGrid3">
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1:" />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{estructSiembView.txtInfoAdicional}" rows="5"
+											cols="30" counter="display" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2:" />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{estructSiembView.txtInfoAdicional2}" rows="5"
+											cols="30" counter="display2" maxlength="100"
+											counterTemplate="{0} Caracteres." autoResize="true" />
+										<h:outputText id="display2" />
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtEstrSiembId"
+											binding="#{estructSiembView.txtEstrSiembId}">
+											<p:ajax update=":dialogEstructSiemb"
+												listener="#{estructSiembView.listener_txtId}" />
+										</p:inputText>
+
+									</h:panelGrid>
+
+								</p:tab>
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{estructSiembView.btnSave}" value="Grabar"
+									action="#{estructSiembView.action_save()}"
+									update=":dialogEstructSiemb :frm:panelDataTableEstructSiemb" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{estructSiembView.action_clear()}"
+									process="@this" update=":dialogEstructSiemb" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

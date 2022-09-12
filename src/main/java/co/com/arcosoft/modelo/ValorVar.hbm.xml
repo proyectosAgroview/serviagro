@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.ValorVar" table="valor_var" >
+        <id name="valorVarId" type="java.lang.Long">
+            <column name="valor_var_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="datSanVeg" class="co.com.arcosoft.modelo.DatSanVeg" fetch="select">
+            <column name="dat_san_veg_id" />
+        </many-to-one>
+        <many-to-one name="variable" class="co.com.arcosoft.modelo.Variable" fetch="select">
+            <column name="variable_id" />
+        </many-to-one>
+        <property name="valor" type="java.lang.String">
+            <column name="valor" length="60" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="variable1" type="java.lang.Double">
+            <column name="variable1" precision="12" scale="4" />
+        </property>
+        <property name="variable2" type="java.lang.Double">
+            <column name="variable2" precision="12" scale="4" />
+        </property>
+        <property name="variable3" type="java.lang.Double">
+            <column name="variable3" precision="12" scale="4" />
+        </property>
+        <property name="variable4" type="java.lang.Double">
+            <column name="variable4" precision="12" scale="4" />
+        </property>
+        <property name="variable5" type="java.lang.Double">
+            <column name="variable5" precision="12" scale="4" />
+        </property>
+        <property name="variable6" type="java.lang.Double">
+            <column name="variable6" precision="12" scale="4" />
+        </property>
+        <property name="variable7" type="java.lang.Double">
+            <column name="variable7" precision="12" scale="4" />
+        </property>
+        <property name="variable8" type="java.lang.Double">
+            <column name="variable8" precision="12" scale="4" />
+        </property>
+        <property name="variable9" type="java.lang.Double">
+            <column name="variable9" precision="12" scale="4" />
+        </property>
+        <property name="variable10" type="java.lang.Double">
+            <column name="variable10" precision="12" scale="4" />
+        </property>
+        <property name="variableText1" type="java.lang.String">
+            <column name="variable_text1" length="60" />
+        </property>
+        <property name="variableText2" type="java.lang.String">
+            <column name="variable_text2" length="60" />
+        </property>
+        <property name="variableText3" type="java.lang.String">
+            <column name="variable_text3" length="60" />
+        </property>
+        <property name="variableText4" type="java.lang.String">
+            <column name="variable_text4" length="60" />
+        </property>
+        <property name="variableText5" type="java.lang.String">
+            <column name="variable_text5" length="60" />
+        </property>
+        <property name="variableText6" type="java.lang.String">
+            <column name="variable_text6" length="60" />
+        </property>
+        <property name="variableText7" type="java.lang.String">
+            <column name="variable_text7" length="60" />
+        </property>
+        <property name="variableText8" type="java.lang.String">
+            <column name="variable_text8" length="60" />
+        </property>
+        <property name="variableText9" type="java.lang.String">
+            <column name="variable_text9" length="60" />
+        </property>
+        <property name="variableText10" type="java.lang.String">
+            <column name="variable_text10" length="60" />
+        </property>
+        <property name="variableDate1" type="java.util.Date">
+            <column name="variable_date1" length="19" />
+        </property>
+        <property name="fitosanidad" type="java.lang.Long">
+            <column name="fitosanidad" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,27 @@
+/* Main Layout Styles */
+body {
+    background: #0871a5 !important;
+    	background: url("../images/fondo.jpg") no-repeat center center
+		fixed !important;
+	 background-size: auto;
+	background-attachment: fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	
+}
+
+
+#contenido { 
+	max-width: 1336px !important;
+	padding: 0px ;
+	margin: 14px auto;
+	overflow: auto;
+   -moz-border-radius: 4px;
+   -webkit-border-radius: 4px;
+    border-radius: 4px;
+   -moz-box-shadow: 1px 0px 12px #000000 ;
+   -webkit-box-shadow: 1px 0px 12px #000000 ;
+    box-shadow: 1px 0px 12px #000000 ;
+}

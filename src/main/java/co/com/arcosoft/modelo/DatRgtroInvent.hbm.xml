@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatRgtroInvent" table="dat_rgtro_invent" >
+        <id name="datRgtroInventId" type="java.lang.Long">
+            <column name="dat_rgtro_invent_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="producto" class="co.com.arcosoft.modelo.Producto" fetch="select">
+            <column name="producto_id" />
+        </many-to-one>
+        <many-to-one name="almacen" class="co.com.arcosoft.modelo.Almacen" fetch="select">
+            <column name="almacen_id" />
+        </many-to-one>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="19" />
+        </property>
+        <property name="cantidadTotal" type="java.lang.Double">
+            <column name="cantidad_total" precision="12" scale="4" />
+        </property>
+        <property name="cantidadDisponible" type="java.lang.Double">
+            <column name="cantidad_disponible" precision="12" scale="4" />
+        </property>
+        <property name="cantidadReservada" type="java.lang.Double">
+            <column name="cantidad_reservada" precision="12" scale="4" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="documetoErp" type="java.lang.String">
+            <column name="documeto_erp" length="30" />
+        </property>
+    </class>
+</hibernate-mapping>

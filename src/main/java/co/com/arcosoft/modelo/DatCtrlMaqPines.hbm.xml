@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 19/12/2018 09:55:23 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatCtrlMaqPines" table="dat_ctrl_maq_pines" >
+        <id name="datCtrlMaqPinesId" type="java.lang.Long">
+            <column name="dat_ctrl_maq_pines_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        <property name="ultHoroOdoMetro" type="java.lang.Double">
+            <column name="ult_horo_odo_metro" precision="12" scale="4" />
+        </property>
+        <property name="boletaInicial" type="java.lang.Long">
+            <column name="boleta_inicial" />
+        </property>
+        <property name="boletaFinal" type="java.lang.Long">
+            <column name="boleta_final" />
+        </property>
+        <property name="consecutivoPin" type="java.lang.Long">
+            <column name="consecutivo_pin" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="3900" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+            <property name="indicador_vuelta_medidor" type="java.lang.Long">
+            <column name="indicador_vuelta_medidor" />
+        </property>
+        
+    </class>
+</hibernate-mapping>

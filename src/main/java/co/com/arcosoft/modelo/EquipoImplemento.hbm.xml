@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 5/04/2019 11:07:06 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.EquipoImplemento" table="equipo_implemento" >
+        <id name="equipoImplementoId" type="java.lang.Long">
+            <column name="equipo_implemento_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        <property name="implementoId" type="java.lang.Long">
+            <column name="implemento_id" />
+        </property>
+    </class>
+</hibernate-mapping>

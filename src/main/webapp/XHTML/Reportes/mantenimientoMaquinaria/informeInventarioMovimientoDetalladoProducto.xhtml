@@ -1,0 +1,624 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+					<p:tabView>
+
+						<p:tab title="Movimiento  por producto">
+
+							<p:panel id="panelDataTable" header="Filtros">
+								<p:growl id="growl" showDetail="true" sticky="true" />
+
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtTipoProducto" value="Tipo producto: "
+													style="font-size: 0.9em;" />
+												<p:selectOneMenu id="txtTipoProducto" effect="fade"
+													filter="true" filterMatchMode="contains"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtTipoProducto}"
+													autoWidth="false" style="width: 160; font-size: 0.9em;"
+													required="false"
+													requiredMessage="Seleccione un tipo de producto">
+													<f:selectItem itemLabel="Seleccione un tipo de producto"
+														itemValue="" />
+													<f:selectItems
+														value="#{informeInventarioMovimientoDetalladoProductoView.selectTipoProducto}" />
+													<p:ajax process="@this, txtTipoProducto "
+														update="txtProductoId_Producto" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtProductoId_Producto"
+													value="Producto: " style="font-size: 0.9em;" />
+												<p:selectOneMenu id="txtProductoId_Producto" effect="fade"
+													filter="true" filterMatchMode="contains"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtProductoId_Producto}"
+													autoWidth="false" style="width: 160; font-size: 0.9em;"
+													required="false" requiredMessage="Seleccione un producto">
+													<f:selectItem itemLabel="Seleccione un producto"
+														itemValue="" />
+													<f:selectItems
+														value="#{informeInventarioMovimientoDetalladoProductoView.selectProductoId}" />
+													<p:ajax process="@this, txtTipoProducto " />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtAlmacenId_Almacen2" value="Almacén: "
+													style="font-size: 0.9em;" />
+												<p:selectOneMenu id="txtAlmacenId_Almacen2" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="font-size: 0.9em;"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtAlmacenId_Almacen2}"
+													required="false" requiredMessage="Seleccione un almacén">
+													<f:selectItem itemLabel="Seleccione un almacén"
+														itemValue="" />
+													<f:selectItems
+														value="#{informeInventarioMovimientoDetalladoProductoView.selectAlmacen2}" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="msgFechaFinal1" value="F. Final: " />
+												<p:calendar id="msgFechaFinal1" showOn="button"
+													navigator="false" locale="es" pattern="dd/MM/yyyy"
+													mask="true" size="12"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtFechaFinalConsulta}"
+													required="false"
+													requiredMessage="La Fecha final  es obligatoria">
+												</p:calendar>
+
+												<p:commandButton id="btnConsultar" value="Generar reporte"
+													icon="ui-icon-newwin"
+													action="#{informeInventarioMovimientoDetalladoProductoView.consultaSaldoProducto}"
+													update="growl, frm, tbl" process="@all"
+													partialSubmit="true" />
+
+												<!--Filtros del reporte  -->
+											</h:panelGrid>
+										</p:column>
+
+
+									</p:row>
+								</p:panelGrid>
+							</p:panel>
+							<p:panel id="panelDataTablePrecioPromProd"
+								header="Saldo por producto">
+								<!-- <p:growl id="men"/>	 -->
+								<p:dataTable id="tbl"
+									value="#{informeInventarioMovimientoDetalladoProductoView.dataSaldoProducto}"
+									var="producto" paginator="true" rows="5"
+									resizableColumns="true" style="margin-bottom:20px"
+									rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+																<p:column>
+										<f:facet name="header">
+											<h:outputText value="Fecha" />
+										</f:facet>
+										<h:outputText value="#{producto.fecha_registro}">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</h:outputText>
+									</p:column>
+
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="T. Movimiento" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.tipo_movimiento}"
+											style="font-size: 0.9em;" />
+									</p:column>
+									
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Almacén" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.cod_almacen}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+
+
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Cod. Producto" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.cod_producto}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Producto" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.nom_producto}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="U.M." style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.cod_udad_med}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Ubicación" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.codUbicacionAlmacen}"
+											style="font-size: 0.9em;" />
+									</p:column>
+									
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Documento" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.documentoKardex}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Concepto" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.cod_concepto_kardex}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Máq." style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.cod_equipo}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Consec. Máq" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.consecutivoPin}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Consec. Rdl" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.consecutivoRdl}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Cantidad" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.cantidad_compra}"
+											style="font-size: 0.9em;">
+											<f:convertNumber pattern="#0.00" />
+										</h:outputText>
+									</p:column>
+									
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Hor/Odo" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.horometroAbastecimiento}"
+											style="font-size: 0.9em;">
+											<f:convertNumber pattern="#0.00" />
+										</h:outputText>
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="V. Unitario" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.valor_unitario}"
+											decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+											style="font-size: 0.9em;">
+											<f:convertNumber pattern="#0.00" />
+
+										</h:outputText>
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="SubTotal" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.costoTotal}"
+											style="font-size: 0.9em;">
+											<f:convertNumber pattern="#0.00" />
+										</h:outputText>
+									</p:column>
+									
+									
+								<p:column>
+										<f:facet name="header">
+											<h:outputText value="Implemento" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.implemento}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+								</p:dataTable>
+
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel value="ENTRADAS: " style="font-size: 0.9em;" />
+												<p:inputNumber id="txtCantidadEntrada" size="12"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtCantidadEntrada}"
+													decimalSeparator="." thousandSeparator=","
+													decimalPlaces="2" disable="true">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputNumber>
+
+												<p:outputLabel value="SALDO TOTAL: "
+													style="font-size: 0.9em;" />
+												<p:inputNumber id="txtSaldoTotal" size="12"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtSaldoTotal}"
+													decimalSeparator="." thousandSeparator=","
+													decimalPlaces="2" disable="true">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputNumber>
+											</h:panelGrid>
+										</p:column>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel value="SALIDAS: " style="font-size: 0.9em;" />
+												<p:inputNumber id="txtCantidadSalida" size="12"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtCantidadSalida}"
+													decimalSeparator="." thousandSeparator=","
+													decimalPlaces="2" disable="true">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputNumber>
+
+												<p:outputLabel value="VLR. SALDO TOTAL: "
+													style="font-size: 0.9em;" />
+												<p:inputNumber id="txtValorTotalAcumulado" size="12"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtValorTotalAcumulado}"
+													decimalSeparator="." thousandSeparator=","
+													decimalPlaces="2" disable="true">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputNumber>
+											</h:panelGrid>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+
+							</p:panel>
+						</p:tab>
+
+						<p:tab title="Movimiento de prductos por periodo ">
+
+							<p:panel header="Filtros">
+								<p:growl id="growl1" showDetail="true" sticky="true" />
+
+								<p:panelGrid>
+									<p:row>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel for="msgFechaInicial" value="F. Inicial: " />
+												<p:calendar id="msgFechaInicial" showOn="button"
+													navigator="false" locale="es" pattern="dd/MM/yyyy"
+													mask="true" size="12"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtFechaInicial}"
+													required="false"
+													requiredMessage="La Fecha  inicial es obligatoria">
+												</p:calendar>
+
+
+												<p:outputLabel for="msgFechaFinal" value="F. Final: " />
+												<p:calendar id="msgFechaFinal" showOn="button"
+													navigator="false" locale="es" pattern="dd/MM/yyyy"
+													mask="true" size="12"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtFechaFinal}"
+													required="false"
+													requiredMessage="La Fecha fecha  es obligatoria">
+												</p:calendar>
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtTipoProducto3" value="T. Producto: "
+													style="font-size: 0.9em;" />
+												<p:selectOneMenu id="txtTipoProducto3" effect="fade"
+													filter="true" filterMatchMode="contains"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtTipoProducto3}"
+													autoWidth="false" style="width: 160; font-size: 0.9em;"
+													required="false"
+													requiredMessage="Seleccione un tipo de producto">
+													<f:selectItem itemLabel="Seleccione un tipo de producto"
+														itemValue="" />
+													<f:selectItems
+														value="#{informeInventarioMovimientoDetalladoProductoView.selectTipoProducto3}" />
+													<p:ajax process="@this, txtTipoProducto3 "
+														update="txtProductoId_Producto3" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtProductoId_Producto3"
+													value="Producto: " style="font-size: 0.9em;" />
+												<p:selectOneMenu id="txtProductoId_Producto3" effect="fade"
+													filter="true" filterMatchMode="contains"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtProductoId_Producto3}"
+													autoWidth="false" style="width: 160; font-size: 0.9em;"
+													required="false" requiredMessage="Seleccione un producto">
+													<f:selectItem itemLabel="Seleccione un producto"
+														itemValue="" />
+													<f:selectItems
+														value="#{informeInventarioMovimientoDetalladoProductoView.selectProductoId3}" />
+													<p:ajax process="@this, txtTipoProducto3 " />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="conceptoKardexs"
+													value="Concepto Kardex: " />
+												<p:selectCheckboxMenu id="conceptoKardexs"
+													value="#{informeInventarioMovimientoDetalladoProductoView.selectedConceptoKardex}"
+													filter="true" filterMatchMode="contains"
+													showCheckbox="true" required="false"
+													requiredMessage="Seleccione un concepto">
+													<f:selectItems
+														value="#{informeInventarioMovimientoDetalladoProductoView.conceptoKardexs}"
+														var="conceptoKardexs"
+														itemLabel=" #{conceptoKardexs.codigo}"
+														itemValue="#{conceptoKardexs.conceptoKardexId}" />
+												</p:selectCheckboxMenu>
+
+												<p:outputLabel for="txtAlmacenId_Almacen3" value="Almacén: "
+													style="font-size: 0.9em;" />
+												<p:selectOneMenu id="txtAlmacenId_Almacen3" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="font-size: 0.9em;"
+													binding="#{informeInventarioMovimientoDetalladoProductoView.txtAlmacenId_Almacen3}"
+													required="false" requiredMessage="Seleccione un almacén">
+													<f:selectItem itemLabel="Seleccione un almacén"
+														itemValue="" />
+													<f:selectItems
+														value="#{informeInventarioMovimientoDetalladoProductoView.selectAlmacen3}" />
+												</p:selectOneMenu>
+
+
+
+												<p:commandButton id="btnConsultar2" value="Generar reporte"
+													icon="ui-icon-newwin"
+													action="#{informeInventarioMovimientoDetalladoProductoView.consultaProductoPorPeriodo}"
+													update="growl1, frm tbl1" process="@all"
+													partialSubmit="true" />
+
+												<!--Filtros del reporte  -->
+											</h:panelGrid>
+										</p:column>
+
+
+									</p:row>
+								</p:panelGrid>
+							</p:panel>
+							<p:panel header="Detalle de movimientos">
+								<!-- <p:growl id="men"/>	 -->
+								<p:dataTable id="tbl1"
+									value="#{informeInventarioMovimientoDetalladoProductoView.dataProductoPeriodo}"
+									var="productoPeriodo" paginator="true" rows="5"
+									resizableColumns="true" style="margin-bottom:20px"
+									rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+									<f:facet name="header">
+										<div align="right">
+
+											<h:commandLink id="excel" style=" margin-right:15px;">
+												<p:graphicImage
+													value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+													width="30" />
+												<p:dataExporter type="xls" target="tbl"
+													fileName="Precios por Productos" />
+											</h:commandLink>
+											<p:tooltip id="toolTipFade" for="excel"
+												value="Exportar todos los datos a Excel" />
+										</div>
+									</f:facet>
+
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Fecha" />
+										</f:facet>
+										<h:outputText value="#{productoPeriodo.fecha_registro}">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</h:outputText>
+									</p:column>
+
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Almacén" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{productoPeriodo.cod_almacen}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+
+
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Cod. Producto" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{productoPeriodo.cod_producto}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Producto" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{productoPeriodo.nom_producto}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="U.M." style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{productoPeriodo.cod_udad_med}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Documento" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.documentoKardex}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Concepto" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{productoPeriodo.cod_concepto_kardex}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Máq." style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{productoPeriodo.cod_equipo}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Consec. Máq" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.consecutivoPin}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Consec. Rdl" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{producto.consecutivoRdl}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Cantidad" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{productoPeriodo.cantidad_compra}"
+											style="font-size: 0.9em;">
+											<f:convertNumber pattern="#0.00" />
+										</h:outputText>
+									</p:column>
+									
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Hor/Odo" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{productoPeriodo.horometroAbastecimiento}"
+											style="font-size: 0.9em;">
+											<f:convertNumber pattern="#0.00" />
+										</h:outputText>
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="V. Unitario" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{productoPeriodo.valor_unitario}"
+											decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+											style="font-size: 0.9em;">
+											<f:convertNumber pattern="#0.00" />
+
+										</h:outputText>
+									</p:column>
+
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="SubTotal" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{productoPeriodo.costoTotal}"
+											style="font-size: 0.9em;">
+											<f:convertNumber pattern="#0.00" />
+										</h:outputText>
+									</p:column>
+									
+											<p:column>
+										<f:facet name="header">
+											<h:outputText value="Implemento" style="font-size: 0.9em;" />
+										</f:facet>
+										<h:outputText value="#{productoPeriodo.implemento}"
+											style="font-size: 0.9em;" />
+									</p:column>
+
+								</p:dataTable>
+
+
+
+							</p:panel>
+						</p:tab>
+					</p:tabView>
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

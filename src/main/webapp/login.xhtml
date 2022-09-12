@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>AgroView</title>
+	<meta name="content-type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1 maximum-scale=1, user-scalable=no" />
+	<link rel="SHORTCUT ICON"
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/icon_web_cultivo.ico" />
+
+	<link  href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/template/css/bootstrap.min.css"
+		rel="stylesheet"/>
+	
+	<link rel="stylesheet" type="text/css"
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/stylelogin.css" />
+	<link rel="stylesheet" type="text/css"
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/hover-min.css" />
+
+	<script type="text/javascript">
+		function forceHttpsOnSubmit(objForm) {
+			objForm.action = objForm.action.replace("http:", "https:").replace(
+					"localhost:8081", "localhost:8443");
+		}
+
+		/* onsubmit="forceHttpsOnSubmit(this) */
+	</script>
+</h:head>
+
+<h:body>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-8"></div>
+			<div class="col-sm">
+				<div align="center" class="contenedor67">
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-primary" data-toggle="modal"
+						data-target="#exampleModal">Ver AgroView Para Todos!!</button>
+					<div class="modal-dialog" role="document">
+						<div class="modal-content hvr-float-shadow"
+							style="max-width: 100%; min-width: 90;">
+
+							<div class="modal-header">
+								<div align="center">
+									<img
+										src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ic_login_agri.png"
+										class="img-fluid" alt="" />
+								</div>
+							</div>
+
+							<div class="modal-body">
+                              
+								<h:form id="loginForm" styleClass="form-signin">
+								   
+								     <p:growl id="msgGrowl" autoUpdate="true" showDetail="false"/>
+								
+									
+									<div class="form-group">
+										<p:inputText name="j_username" id="usernameField" styleClass="form-control"
+								value="#{loginView.userId}" placeholder="Usuario"  
+								 required="true" requiredMessage="El nombre de usaurio es obligatorio" autocomplete="off"/>
+									</div>
+									
+									<div class="form-group">
+										<p:password name="j_password" id="passwordField" type="Password" styleClass="form-control"
+								placeholder="Contraseña" value="#{loginView.password}" feedback="false" 
+								 required="true" requiredMessage="El password es obligatorio"/>
+	
+									</div>
+									<div class="form-group">
+										<p:commandButton  styleClass="btn btn-lg btn btn-primary btn-block"
+											value="Iniciar Sesión"  action="#{loginView.login}" update="msgGrowl" />
+									</div>
+								</h:form>
+
+							</div>
+
+							<div class="modal-footer">
+
+								<img width="150" height="150"
+									src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/codigoqr.fw.png"
+									class="img-fluid" alt="" />
+
+								<div class="contenido-qr">
+									<p:barcode width="160" height="160"
+										value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}"
+										type="qr" />
+								</div>
+
+
+							</div>
+
+						</div>
+
+					</div>
+					<!-- modal dialog -->
+				</div>
+			</div>
+
+		</div>
+
+		<!-- fondo -->
+	</div>
+
+	<!-- Container -->
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">AgroView Para
+						Todos!!</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body" align="center">
+					<iframe id="player" style="border: 0px" width="475" height="315"
+						src="https://www.youtube.com/embed/pCxQ8PVUAYs?autoplay=0&amp;controls=1&amp;autohide=1&amp;&amp;" />
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Salir</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+    <!--   Core JS Files   -->
+	<script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/core/bootstrap.min.js"></script>
+	
+
+</h:body>
+</html>

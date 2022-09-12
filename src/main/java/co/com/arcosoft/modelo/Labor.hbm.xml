@@ -1,0 +1,283 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+	<class name="co.com.arcosoft.modelo.Labor" table="labor">
+		<id name="laborId" type="java.lang.Long">
+			<column name="labor_id" />
+			<generator class="identity" />
+		</id>
+		<property name="udadMedByUdadMedProd" type="java.lang.Long">
+			<column name="udad_med_prod" />
+		</property>
+		<many-to-one name="udadMedByUdadMedPago" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+			<column name="udad_med_pago" />
+		</many-to-one>
+		<property name="udadMedByUdadMedPlan" type="java.lang.Long">
+			<column name="udad_med_plan" />
+		</property>
+		<many-to-one name="grpLabor" class="co.com.arcosoft.modelo.GrpLabor" fetch="select">
+			<column name="grp_labor_id" />
+		</many-to-one>
+		<property name="codigo" type="java.lang.String">
+			<column name="codigo" length="20" />
+		</property>
+		<property name="nombre" type="java.lang.String">
+			<column name="nombre" length="300" />
+		</property>
+		<property name="compania" type="java.lang.Long">
+			<column name="compania" />
+		</property>
+		<property name="color" type="java.lang.String">
+			<column name="color" length="30" />
+		</property>
+		<property name="tipoLabor" type="java.lang.String">
+			<column name="tipo_labor" length="30" />
+		</property>
+		<property name="claseLabor" type="java.lang.String">
+			<column name="clase_labor" length="30" />
+		</property>
+		<property name="restriSecuencia" type="java.lang.Long">
+			<column name="restri_secuencia" />
+		</property>
+		<property name="restriCicloCosecha" type="java.lang.Long">
+			<column name="restri_ciclo_cosecha" />
+		</property>
+		<property name="digitaLinea" type="java.lang.String">
+			<column name="digita_linea" length="1" />
+		</property>
+		<property name="infoAdicional" type="java.lang.String">
+			<column name="info_adicional" length="100" />
+		</property>
+		<property name="infoAdicional2" type="java.lang.String">
+			<column name="info_adicional2" length="100" />
+		</property>
+		<property name="fechaCreacion" type="java.util.Date">
+			<column name="fecha_creacion" length="19" />
+		</property>
+		<property name="fechaModificacion" type="java.util.Date">
+			<column name="fecha_modificacion" length="19" />
+		</property>
+		<property name="estado" type="java.lang.String">
+			<column name="estado" length="1" />
+		</property>
+		<property name="formaPago" type="java.lang.String">
+			<column name="forma_pago" length="30" />
+		</property>
+		<property name="rendimientoMo" type="java.lang.Double">
+			<column name="rendimiento_mo" precision="12" scale="4" />
+		</property>
+		<property name="rendimientoMq" type="java.lang.Double">
+			<column name="rendimiento_mq" precision="12" scale="4" />
+		</property>
+		<property name="consumoAcpm" type="java.lang.Double">
+			<column name="consumo_acmp_labor" precision="12" scale="4" />
+		</property>
+		<property name="trabajarConAreaPlantas" type="java.lang.String">
+			<column name="trabajar_con_area_plantas" length="30" />
+		</property>
+		<property name="cuentaContable" type="java.lang.Long">
+			<column name="cuenta_contable_id" length="20" />
+		</property>
+
+		<property name="tarifaEstandar" type="java.lang.Double">
+			<column name="tarifa_estandar" precision="12" scale="4" />
+		</property>
+		<property name="tarifaEstandar2" type="java.lang.Double">
+			<column name="tarifa_estandar_2" precision="12" scale="4" />
+		</property>
+		<property name="tarifaEstandar3" type="java.lang.Double">
+			<column name="tarifa_estandar_3" precision="12" scale="4" />
+		</property>
+		<property name="tarifaEstandar4" type="java.lang.Double">
+			<column name="tarifa_estandar_4" precision="12" scale="4" />
+		</property>
+		<property name="tarifaEstandar5" type="java.lang.Double">
+			<column name="tarifa_estandar_5" precision="12" scale="4" />
+		</property>
+		<property name="tarifaEstandar6" type="java.lang.Double">
+			<column name="tarifa_estandar_6" precision="12" scale="4" />
+		</property>
+		<property name="tarifaEstandar7" type="java.lang.Double">
+			<column name="tarifa_estandar_7" precision="12" scale="4" />
+		</property>
+		<property name="tarifaEstandar8" type="java.lang.Double">
+			<column name="tarifa_estandar_8" precision="12" scale="4" />
+		</property>
+		<property name="tarifaEstandar9" type="java.lang.Double">
+			<column name="tarifa_estandar_9" precision="12" scale="4" />
+		</property>
+		<property name="tarifaEstandar10" type="java.lang.Double">
+			<column name="tarifa_estandar_10" precision="12" scale="4" />
+		</property>
+
+		<property name="pagoPorArea" type="java.lang.Double">
+			<column name="pago_por_area" precision="12" scale="4" />
+		</property>
+
+		<property name="tipoParada" type="java.lang.String">
+			<column name="tipo_parada" length="30" />
+		</property>
+		<set name="tarifaLaborRendimientos"
+			table="tarifa_labor_rendimiento" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.TarifaLaborRendimiento" />
+		</set>
+		<set name="cronogramaLaboresLaboreses"
+			table="cronograma_labores_labores" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.CronogramaLaboresLabores" />
+		</set>
+		<set name="datServicios" table="dat_servicio" inverse="true"
+			lazy="true" fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatServicio" />
+		</set>
+		<set name="laborCcontables" table="labor_ccontable" inverse="true"
+			lazy="true" fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.LaborCcontable" />
+		</set>
+		<set name="tarifaEquipProps" table="tarifa_equip_prop"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.TarifaEquipProp" />
+		</set>
+		<set name="datPlanLabors" table="dat_plan_labor" inverse="true"
+			lazy="true" fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatPlanLabor" />
+		</set>
+		<set name="laborServicios" table="labor_servicio" inverse="true"
+			lazy="true" fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.LaborServicio" />
+		</set>
+		<set name="datMantenimientoEquipoMecs"
+			table="dat_mantenimiento_equipo_mec" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="tarea" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatMantenimientoEquipoMec" />
+		</set>
+		<set name="datAplicProductos" table="dat_aplic_producto"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatAplicProducto" />
+		</set>
+		<set name="planRevisionEquipoActivs"
+			table="plan_revision_equipo_activ" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="plan_labor" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.PlanRevisionEquipoActiv" />
+		</set>
+		<set name="datPlanillaNominaLabors"
+			table="dat_planilla_nomina_labor" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatPlanillaNominaLabor" />
+		</set>
+		<set name="datOtrosCostoses" table="dat_otros_costos"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatOtrosCostos" />
+		</set>
+		<set name="laborAsociadasForLaborId" table="labor_asociada"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.LaborAsociada" />
+		</set>
+		<set name="datTransProdTrabajadoreses"
+			table="dat_trans_prod_trabajadores" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatTransProdTrabajadores" />
+		</set>
+		<set name="laborRecursoses" table="labor_recursos" inverse="true"
+			lazy="true" fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.LaborRecursos" />
+		</set>
+		<set name="tarifaContratistas" table="tarifa_contratista"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.TarifaContratista" />
+		</set>
+		<set name="datRiegos" table="dat_riego" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatRiego" />
+		</set>
+		<set name="equipos" table="equipo" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="labor_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.Equipo" />
+		</set>
+		<set name="laborAsociadasForLaborAsocId" table="labor_asociada"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="labor_asoc_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.LaborAsociada" />
+		</set>
+		<set name="datServRealizadosEquipos"
+			table="dat_serv_realizados_equipo" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="equipo_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatServRealizadosEquipo" />
+		</set>
+
+	</class>
+</hibernate-mapping>

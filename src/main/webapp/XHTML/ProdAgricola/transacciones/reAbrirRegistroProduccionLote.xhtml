@@ -1,0 +1,524 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTablelistaDetPlanillaDet"
+						header="Edición de registros de  cosecha">
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtFechaIni" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaIni" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{listarRegistroProduccionView.txtFechaIni}"
+											required="false"
+											requiredMessage="La Fecha inicial es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="txtFechaFin" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{listarRegistroProduccionView.txtFechaFin}"
+											required="false"
+											requiredMessage="La Fecha  final  es obligatoria">
+										</p:calendar>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtPlanilla" value="n° Planilla "
+											style="font-size: 0.9em;" />
+										<p:inputNumber id="txtPlanilla" style="font-size: 0.9em;"
+											binding="#{listarRegistroProduccionView.txtPlanilla}"
+										 autoResize="true" size="15">
+											<f:convertNumber></f:convertNumber>
+										</p:inputNumber>
+
+										<p:outputLabel for="haciendas" value="Hacienda: " />
+										<p:selectCheckboxMenu id="haciendas"
+											value="#{listarRegistroProduccionView.selectedHacienda}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false" requiredMessage="Seleccione una hacienda">
+											<f:selectItems
+												value="#{listarRegistroProduccionView.haciendas}"
+												var="haciendas" itemLabel=" #{haciendas.nombre}"
+												itemValue="#{haciendas.nivel2Id}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="lotes" value="Lote: " />
+										<p:selectCheckboxMenu id="lotes"
+											value="#{listarRegistroProduccionView.selectedLote}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false" requiredMessage="Seleccione un lote">
+											<f:selectItems value="#{listarRegistroProduccionView.lotes}"
+												var="lotes" itemLabel=" #{lotes.nombre}"
+												itemValue="#{lotes.nivel4Id}" />
+										</p:selectCheckboxMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+										<p:commandButton id="btnCargarDatos" value="Consultar"
+											icon="ui-icon-newwin" style="font-size: 1em;"
+											action="#{listarRegistroProduccionView.listarProduccion}"
+											update=":frm:tbl " process="@all" />
+										<h:outputLabel></h:outputLabel>
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:dataTable id="tbl"
+						value="#{listarRegistroProduccionView.dataDetalle}"
+						var="listaDetPlanillaDet" paginator="true" rows="10"
+						resizableColumns="true" style="margin-bottom:20px"
+						rowsPerPageTemplate="10,15" reflow="true" editable="false"
+						scrollable="true" scrollWidth="99%">
+
+						<p:column headerText="Opciones" width="90"
+							style="font-size: 0.9em;">
+							<div align="center">
+								<p:commandButton id="btnReabrir" value="Re-abrir" icon="ui-icon-pencil"
+									style="font-size: 0.9em;" update=":dialogDatPlanillaNomina"
+									title="Re-abrir cosecha"
+									disabled="#{listaDetPlanillaDet.estadoEstrue2}"
+									actionListener="#{listarRegistroProduccionView.action_reabrirCosecha}">
+									<f:attribute name="selectDetalle"
+										value="#{listaDetPlanillaDet}" />
+								</p:commandButton>
+								
+
+							</div>
+						</p:column>
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Referencia" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.ref}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Tipo de transacción"
+									style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.tipoTransaccion}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Finca" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.nomFinca}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Lote" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.nomLote}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+								<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Inicio cosecha" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.iniCosecha}"
+								style="font-size: 0.9em;">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+							
+							
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Fin cosecha" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.fechaRegistro}"
+								style="font-size: 0.9em;">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Valor unitario" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.valorUnitario}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Ingreso bruto" style="font-size: 0.9em;" />
+							</f:facet>
+							<p:inputNumber value="#{listaDetPlanillaDet.ingresoBruto}"
+								style="font-size: 0.9em;" 
+								 readonly="true">
+								<f:converter converterId="javax.faces.Double" />
+							</p:inputNumber>
+						</p:column>
+					</p:dataTable>
+
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" process="@all" partialSubmit="true"
+									resetValues="true" />
+							</p:commandButton>
+						</div>
+					</p:panel>
+				</h:form>
+
+				<p:dialog id="dialogDatPlanillaNomina" appendTo="@(body)"
+					draggable="true" closable="false"
+					visible="#{listarRegistroProduccionView.showDialog}"
+					resizable="false" modal="true" width="1000" styleClass="dialogFix"
+					header="Edición labores manuales" responsive="true">
+					<h:form id="formDialog">
+
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+
+						<h:panelGrid columns="2">
+							<p:outputLabel value="#Planilla: " style="font-size: 0.8em;" />
+							<p:inputText id="txtConsecutivo" disabled="false"
+								binding="#{listarRegistroProduccionView.txtConsecutivo}"
+								placeholder="Buscar o crear registro" size="23">
+							</p:inputText>
+
+							<p:outputLabel value="Inicio de cosecha: "
+								style="font-size: 0.9em;" />
+							<p:calendar id="txtFechaIniCosecha" showOn="button"
+								navigator="false" locale="es" pattern="dd/MM/yyyy" mask="true"
+								binding="#{listarRegistroProduccionView.txtFechaIniCosecha}">
+							</p:calendar>
+
+							<p:outputLabel value="Fin de cosecha: " style="font-size: 0.9em;" />
+							<p:calendar id="txtFechaFinCosecha" showOn="button"
+								navigator="false" locale="es" pattern="dd/MM/yyyy" mask="true"
+								binding="#{listarRegistroProduccionView.txtFechaFinCosecha}">
+							</p:calendar>
+						</h:panelGrid>
+
+						<p:panelGrid>
+
+							<p:column>
+								<h:panelGrid columns="2" id="gridDetTransProdNivel4">
+
+									<p:outputLabel for="txtNivel2Id" value="Hacienda: "
+										style="font-size: 0.8em;" />
+									<p:selectOneMenu id="txtNivel2Id" effect="fade" filter="true"
+										filterMatchMode="contains" style="font-size: 0.8em;"
+										binding="#{listarRegistroProduccionView.txtNivel2Id}"
+										required="false" requiredMessage="Seleccione una hacienda">
+										<f:selectItem itemLabel="Seleccione una hacienda" itemValue="" />
+										<f:selectItems
+											value="#{listarRegistroProduccionView.selectNivel2}" />
+										<p:ajax update="txtNivel3Id" />
+									</p:selectOneMenu>
+
+									<p:outputLabel for="txtNivel3Id" value="Bloque: "
+										style="font-size: 0.8em;" />
+									<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+										filterMatchMode="contains" style="font-size: 0.8em;"
+										binding="#{listarRegistroProduccionView.txtNivel3Id}"
+										required="false"
+										requiredMessage="Seleccione un bloque del cultivo">
+										<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+										<f:selectItems
+											value="#{listarRegistroProduccionView.selectNivel3}" />
+										<p:ajax update="txtNivel4Id_Nivel4" />
+									</p:selectOneMenu>
+
+								</h:panelGrid>
+							</p:column>
+
+							<p:column>
+								<h:panelGrid columns="2">
+
+									<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: "
+										style="font-size: 0.8em;" />
+									<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+										filter="true" filterMatchMode="contains"
+										binding="#{listarRegistroProduccionView.txtNivel4Id_Nivel4}"
+										style="font-size: 0.8em;" required="false"
+										requiredMessage="Seleccione un lote">
+										<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+										<f:selectItems
+											value="#{listarRegistroProduccionView.selectNivel4}" />
+									</p:selectOneMenu>
+
+									<p:outputLabel for="txtVariedNivel4" value="Variedad: "
+										style="font-size: 0.8em;" />
+									<p:selectOneMenu id="txtVariedNivel4"
+										style="width: 80%;font-size: 0.8em;"
+										binding="#{listarRegistroProduccionView.txtVariedNivel4}"
+										filter="true" filterMatchMode="contains" required="false"
+										autoWidth="false" requiredMessage="Seleccione una variedad">
+										<f:selectItem itemLabel="Seleccione una variedad" itemValue="" />
+										<f:selectItems
+											value="#{listarRegistroProduccionView.selectItemVariedad}" />
+									</p:selectOneMenu>
+
+
+								</h:panelGrid>
+							</p:column>
+
+							<p:column>
+								<h:panelGrid columns="2">
+
+									<p:outputLabel for="txtEtapaNivel4" value="# Cosechas: "
+										style="font-size: 0.8em;" />
+									<p:selectOneMenu id="txtEtapaNivel4"
+										binding="#{listarRegistroProduccionView.txtEtapaNivel4}"
+										filter="true" filterMatchMode="contains" required="false"
+										style="font-size: 0.8em;"
+										requiredMessage="Seleccione una etapa">
+										<f:selectItem itemLabel="Seleccione una etapa" itemValue="" />
+										<f:selectItems
+											value="#{listarRegistroProduccionView.selectItemEtapa}" />
+									</p:selectOneMenu>
+
+									<p:outputLabel for="txtAreaCosechada" style="font-size: 0.8em;"
+										value="Área cosechada: " />
+									<p:inputText id="txtAreaCosechada" disabled="true"
+										binding="#{listarRegistroProduccionView.txtAreaCosechada}"
+										required="false" style="font-size: 0.8em;" size="8"
+										requiredMessage="Indique el área cosechada">
+										<f:converter converterId="javax.faces.Double" />
+									</p:inputText>
+								</h:panelGrid>
+							</p:column>
+
+						</p:panelGrid>
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtCantidadCosechada"
+											style="font-size: 0.8em;" value="Cant. cosechada(Ton): " />
+										<p:inputText id="txtCantidadCosechada" disabled="true"
+											binding="#{listarRegistroProduccionView.txtCantidadCosechada}"
+											required="false" style="font-size: 0.8em;" size="15"
+											requiredMessage="Indique el área cosechada">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax
+												listener="#{listarRegistroProduccionView.calcular_ingreso_bruto}"
+												update="txtIngresoBruto" />
+										</p:inputText>
+
+										<p:outputLabel for="txtKilogramosAzucarToneladas"
+											value="Kg. Az/TC: " style="font-size: 0.8em;" />
+										<p:inputText id="txtKilogramosAzucarToneladas" disabled="true"
+											binding="#{listarRegistroProduccionView.txtKilogramosAzucarToneladas}"
+											required="false" style="font-size: 0.8em;" size="15"
+											requiredMessage="Indique el área cosechada">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax
+												listener="#{listarRegistroProduccionView.calcular_valor_unitario}"
+												update="txtValorUnitarioCosecha, txtIngresoBruto" />
+										</p:inputText>
+
+										<p:outputLabel for="txtValorKilogramosAzucar"
+											style="font-size: 0.8em;" value="Valor Kg. Az: " />
+										<p:inputText id="txtValorKilogramosAzucar" disabled="true"
+											binding="#{listarRegistroProduccionView.txtValorKilogramosAzucar}"
+											required="false" style="font-size: 0.8em;" size="15"
+											requiredMessage="Indique el área cosechada">
+											<f:converter converterId="javax.faces.Double" />
+											<p:ajax
+												listener="#{listarRegistroProduccionView.calcular_valor_unitario}"
+												update="txtValorUnitarioCosecha, txtIngresoBruto" />
+										</p:inputText>
+
+										<p:outputLabel for="txtValorUnitarioCosecha"
+											style="font-size: 0.8em;" value="Val. Unitario " />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtValorUnitarioCosecha" disabled="true"
+												binding="#{listarRegistroProduccionView.txtValorUnitarioCosecha}"
+												required="false" style="font-size: 0.8em;" size="11"
+												requiredMessage="Indique el área cosechada">
+												<f:converter converterId="javax.faces.Double" />
+												<p:ajax
+													listener="#{listarRegistroProduccionView.calcular_ingreso_bruto}"
+													update="txtIngresoBruto" />
+											</p:inputText>
+
+											<p:inputNumber id="txtIngresoBruto" style="font-size: 0.9em;"
+												binding="#{listarRegistroProduccionView.txtIngresoBruto}"
+												disable="true">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputNumber>
+										</p:panelGrid>
+
+										<p:outputLabel for="txtPorcRendimiento"
+											style="font-size: 0.8em;" value="Rendimiento: " />
+										<p:inputText id="txtPorcRendimiento" disabled="true"
+											binding="#{listarRegistroProduccionView.txtPorcRendimiento}"
+											required="false" style="font-size: 0.8em;" size="15"
+											requiredMessage="Indique el rto">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtAjusteLiquidacion"
+											style="font-size: 0.8em;" value="Ajuste liquidación: " />
+										<p:inputNumber id="txtAjusteLiquidacion" disabled="true"
+											binding="#{listarRegistroProduccionView.txtAjusteLiquidacion}"
+											required="false" style="font-size: 0.8em;" size="15"
+											requiredMessage="Indique el %materia extraña">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputNumber>
+
+										<p:outputLabel for="txtBonificion" style="font-size: 0.8em;"
+											value="Bonificación: " />
+										<p:inputNumber id="txtBonificion" disabled="true"
+											binding="#{listarRegistroProduccionView.txtBonificion}"
+											required="false" style="font-size: 0.8em;" size="15"
+											requiredMessage="Indique el % sacarosa">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputNumber>
+
+										<p:outputLabel for="txtOtrosIngresos"
+											style="font-size: 0.8em;" value="Otros ingresos: " />
+										<p:inputNumber id="txtOtrosIngresos" disabled="true"
+											binding="#{listarRegistroProduccionView.txtOtrosIngresos}"
+											required="false" style="font-size: 0.8em;" size="15"
+											requiredMessage="Indique Kg/Ton">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputNumber>
+
+										<p:outputLabel for="txtRetenciones" style="font-size: 0.8em;"
+											value="Retenciones: " />
+										<p:inputNumber id="txtRetenciones" disabled="true"
+											binding="#{listarRegistroProduccionView.txtRetenciones}"
+											required="false" style="font-size: 0.8em;" size="15"
+											requiredMessage="Indique Kg/Ton">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputNumber>
+
+										<p:outputLabel for="txtDescuentos" style="font-size: 0.8em;"
+											value="Descuentos: " />
+										<p:inputNumber id="txtDescuentos" disabled="true"
+											binding="#{listarRegistroProduccionView.txtDescuentos}"
+											required="false" style="font-size: 0.8em;" size="15"
+											requiredMessage="Indique Kg/Ton">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputNumber>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtEdadNivel4" style="font-size: 0.8em;"
+											value="Edad cultivo: " />
+										<p:inputNumber id="txtEdadNivel4" disabled="true"
+											binding="#{listarRegistroProduccionView.txtEdadNivel4}"
+											required="false" style="font-size: 0.8em;" size="15"
+											requiredMessage="Indique Kg/Ton">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputNumber>
+
+										<p:outputLabel for="txtFinCosecha" value="Fin de cosecha: "
+											style="font-size: 0.8em;" />
+										<p:selectOneRadio id="txtFinCosecha" disabled="true"
+											style="font-size: 0.8em;"
+											binding="#{listarRegistroProduccionView.txtFinCosecha}"
+											required="false" requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Sí" itemValue="Si" />
+											<f:selectItem itemLabel="No" itemValue="No" />
+										</p:selectOneRadio>
+
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{listarRegistroProduccionView.btnSave}"
+									value="Grabar"
+									action="#{listarRegistroProduccionView.action_ActualizarDetalle()}"
+									update=":dialogDatPlanillaNomina :frm:panelDataTablelistaDetPlanillaDet" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{listarRegistroProduccionView.action_clear()}"
+									process="@this" update=":dialogDatPlanillaNomina" />
+								<p:commandButton id="btnCerrar" icon="ui-icon-closethick"
+									title="Cerrar" value="Cerrar"
+									onclick="if(!confirm('Realmente desea salir sin grabar? Sí ya lo hizo, omita este mensaje')){return false;}"
+									action="#{listarRegistroProduccionView.action_closeDialog}"
+									update=":dialogDatPlanillaNomina">
+								</p:commandButton>
+
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

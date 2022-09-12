@@ -1,0 +1,747 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableCronogramaLabores"
+						header="Plan anual de labores">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl"
+							value="#{cronogramaLaboresPorLaborMesView.data}" var="producto"
+							paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+							lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Productos" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{producto.estado}"
+								sortBy="#{producto.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{producto.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{producto.codigo}"
+								sortBy="#{producto.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{producto.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{producto.nombre}"
+								sortBy="#{producto.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{producto.nombre}" />
+							</p:column>
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogCronogramaLabores" value="Editar"
+										actionListener="#{cronogramaLaboresPorLaborMesView.action_edit}">
+										<f:attribute name="selectedCronogramaLabores"
+											value="#{producto}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{cronogramaLaboresPorLaborMesView.action_new()}"
+								update=":dialogCronogramaLabores" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogCronogramaLabores" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{cronogramaLaboresPorLaborMesView.showDialog}"
+					resizable="false" modal="true" width="1200" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelCronogramaLabores"
+							header="Plan anual de labores">
+
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{cronogramaLaboresPorLaborMesView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="2" id="panelGrid1">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{cronogramaLaboresPorLaborMesView.txtEstado}"
+											required="true" requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{cronogramaLaboresPorLaborMesView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelCronogramaLabores,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{cronogramaLaboresPorLaborMesView.listener_txtCodigo}" />
+										</p:inputText>
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true" size="40"
+											binding="#{cronogramaLaboresPorLaborMesView.txtNombre}"
+											required="true" requiredMessage="El Nombre es Obligatorio" />
+
+										<p:outputLabel for="msgPeriodoInicial" value="Fecha inicial: " />
+										<p:calendar id="msgPeriodoInicial" showOn="button"
+											navigator="msgPeriodoInicial" locale="es"
+											binding="#{cronogramaLaboresPorLaborMesView.txtPeriodoInicial}"
+											pattern="dd/MM/yyyy" mask="true" required="true" size="15"
+											requiredMessage="La fecha inicial es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgPeriodoFinal" value="Fecha final: " />
+										<p:calendar id="msgPeriodoFinal" showOn="button"
+											navigator="msgPeriodoFinal" locale="es" size="15"
+											binding="#{cronogramaLaboresPorLaborMesView.txtPeriodoFinal}"
+											pattern="dd/MM/yyyy" mask="true" required="true"
+											requiredMessage="La fecha final es obligatoria">
+										</p:calendar>
+
+
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Info. Adicional: " />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{cronogramaLaboresPorLaborMesView.txtInfoAdicional}"
+											rows="2" cols="30" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Info. Adicional2: " />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{cronogramaLaboresPorLaborMesView.txtInfoAdicional2}"
+											rows="2" cols="30" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+
+
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden"
+											id="txtCronogramaLaboresId"
+											binding="#{cronogramaLaboresPorLaborMesView.txtCronogramaLaboresId}">
+										</p:inputText>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Labores a presupuestar">
+
+									<p:messages id="msg1" autoUpdate="true" closable="true"
+										showDetail="true" />
+
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+
+												<h:panelGrid id="gridCronogramaLaboresLabores" columns="1">
+
+													<h:outputText for="txtLaborId_Labor" value="Labor: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtLaborId_Labor" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="width: 100%; font-size: 0.8em;"
+														binding="#{cronogramaLaboresPorLaborMesView.txtLaborId_Labor}"
+														required="false" requiredMessage="Seleccione una labor">
+														<f:selectItem itemLabel="Seleccione una labor"
+															itemValue="" />
+														<f:selectItems
+															value="#{cronogramaLaboresPorLaborMesView.selectLaborId}" />
+														<p:ajax
+															listener="#{cronogramaLaboresPorLaborMesView.listener_ConsultaNombreLabor}"
+															update="txtUdadMed" />
+													</p:selectOneMenu>
+
+
+
+												</h:panelGrid>
+
+
+											</p:column>
+
+											<p:column>
+
+												<h:panelGrid columns="1">
+
+
+													<h:outputText for="txtUdadMed" value="Unidad de médida: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtUdadMed" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="width: 100%; font-size: 0.8em;"
+														binding="#{cronogramaLaboresPorLaborMesView.txtUdadMed}"
+														required="false" requiredMessage="Seleccione una unidad">
+														<f:selectItem itemLabel="Seleccione una unidad"
+															itemValue="" />
+														<f:selectItems
+															value="#{cronogramaLaboresPorLaborMesView.selectUdadMed}" />
+													</p:selectOneMenu>
+
+												</h:panelGrid>
+
+
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+									<p:scrollPanel mode="native" style="width:1100px;height:250px">
+										<h:panelGrid columns="1">
+											<p:outputLabel value="COSTO ESTIMADOS POR MES"
+												style="font-size: 1em;" />
+
+										</h:panelGrid>
+										<p:panelGrid>
+											<p:row>
+
+												<p:column>
+													<h:panelGrid columns="1">
+														<p:outputLabel for="txtEnero" value="Ene"
+															style="font-size: 0.8em;" />
+														<p:spinner id="txtEnero" stepFactor="0.25" value="0"
+															binding="#{cronogramaLaboresPorLaborMesView.txtEnero}"
+															size="6" required="false" min="0" max="999999999" />
+
+
+													</h:panelGrid>
+												</p:column>
+
+
+												<p:column>
+													<h:panelGrid columns="1">
+														<p:outputLabel for="txtFebrero" value="Feb"
+															style="font-size: 0.8em;" />
+														<p:spinner id="txtFebrero" stepFactor="0.25" value="0"
+															binding="#{cronogramaLaboresPorLaborMesView.txtFebrero}"
+															size="6" required="false" min="0" max="999999999" />
+
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+														<p:outputLabel for="txtMarzo" value="Mar"
+															style="font-size: 0.8em;" />
+														<p:spinner id="txtMarzo" stepFactor="0.25" value="0"
+															binding="#{cronogramaLaboresPorLaborMesView.txtMarzo}"
+															size="6" required="false" min="0" max="999999999" />
+
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+														<p:outputLabel for="txtAbril" value="Abr"
+															style="font-size: 0.8em;" />
+														<p:spinner id="txtAbril" stepFactor="0.25" value="0"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAbril}"
+															size="6" required="false" min="0" max="999999999" />
+
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+														<p:outputLabel for="txtMayo" value="May"
+															style="font-size: 0.8em;" />
+														<p:spinner id="txtMayo" stepFactor="0.25" value="0"
+															binding="#{cronogramaLaboresPorLaborMesView.txtMayo}"
+															size="6" required="false" min="0" max="999999999" />
+
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+														<p:outputLabel for="txtJunio" value="Jun"
+															style="font-size: 0.8em;" />
+														<p:spinner id="txtJunio" stepFactor="0.25" value="0"
+															binding="#{cronogramaLaboresPorLaborMesView.txtJunio}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+														<p:outputLabel for="txtJulio" value="Jul"
+															style="font-size: 0.8em;" />
+														<p:spinner id="txtJulio" stepFactor="0.25" value="0"
+															binding="#{cronogramaLaboresPorLaborMesView.txtJulio}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+														<p:outputLabel for="txtAgosto" value="Ago"
+															style="font-size: 0.8em;" />
+														<p:spinner id="txtAgosto" stepFactor="0.25" value="0"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAgosto}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+														<p:outputLabel for="txtSeptiembre" value="Sep"
+															style="font-size: 0.8em;" />
+														<p:spinner id="txtSeptiembre" stepFactor="0.25" value="0"
+															binding="#{cronogramaLaboresPorLaborMesView.txtSeptiembre}"
+															size="6" required="false" min="0" max="999999999" />
+
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+														<p:outputLabel for="txtOctubre" value="Oct"
+															style="font-size: 0.8em;" />
+														<p:spinner id="txtOctubre" stepFactor="0.25" value="0"
+															binding="#{cronogramaLaboresPorLaborMesView.txtOctubre}"
+															size="6" required="false" min="0" max="999999999" />
+
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+														<p:outputLabel for="txtNoviembre" value="Nov"
+															style="font-size: 0.8em;" />
+														<p:spinner id="txtNoviembre" stepFactor="0.25" value="0"
+															binding="#{cronogramaLaboresPorLaborMesView.txtNoviembre}"
+															size="6" required="false" min="0" max="999999999" />
+
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+														<p:outputLabel for="txtDiciembre" value="Dic"
+															style="font-size: 0.8em;" />
+														<p:spinner id="txtDiciembre" stepFactor="0.25" value="0"
+															binding="#{cronogramaLaboresPorLaborMesView.txtDiciembre}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+
+											</p:row>
+
+											<h:panelGrid columns="1">
+
+												<p:outputLabel value="Costo total" style="font-size: 0.8em;" />
+
+												<p:panelGrid columns="2">
+													<p:spinner id="txtTarifaLabor" stepFactor="0.25" value="0"
+														binding="#{cronogramaLaboresPorLaborMesView.txtTarifaLabor}"
+														size="6" required="false" min="0" max="999999999" />
+													<p:commandButton icon="ui-icon-calculator" value="Calcular">
+														<p:ajax process="@all" update="txtTarifaLabor"
+															listener="#{cronogramaLaboresPorLaborMesView.calcularValorTotal}" />
+													</p:commandButton>
+
+												</p:panelGrid>
+
+											</h:panelGrid>
+
+										</p:panelGrid>
+
+
+										<h:panelGrid columns="1">
+											<p:outputLabel value="UNIDADES A TRABAJAR POR MES"
+												style="font-size: 1em;" />
+										</h:panelGrid>
+										<p:panelGrid>
+											<p:row>
+
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<p:spinner id="txtAreaEnero" stepFactor="0.25"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAreaEnero}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+
+
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<p:spinner id="txtAreaFebrero" stepFactor="0.25"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAreaFebrero}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<p:spinner id="txtAreaMarzo" stepFactor="0.25"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAreaMarzo}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<p:spinner id="txtAreaAbril" stepFactor="0.25"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAreaAbril}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<p:spinner id="txtAreaMayo" stepFactor="0.25"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAreaMayo}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<p:spinner id="txtAreaJunio" stepFactor="0.25"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAreaJunio}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<p:spinner id="txtAreaJulio" stepFactor="0.25"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAreaJulio}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<p:spinner id="txtAreaAgosto" stepFactor="0.25"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAreaAgosto}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<p:spinner id="txtAreaSeptiembre" stepFactor="0.25"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAreaSeptiembre}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<p:spinner id="txtAreaOctubre" stepFactor="0.25"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAreaOctubre}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<p:spinner id="txtAreaNoviembre" stepFactor="0.25"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAreaNoviembre}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="1">
+
+														<p:spinner id="txtAreaDiciembre" stepFactor="0.25"
+															binding="#{cronogramaLaboresPorLaborMesView.txtAreaDiciembre}"
+															size="6" required="false" min="0" max="999999999" />
+
+													</h:panelGrid>
+												</p:column>
+
+											</p:row>
+
+										</p:panelGrid>
+
+
+
+									</p:scrollPanel>
+
+
+
+									<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+
+										<f:facet name="header">
+											<p:commandButton id="btnAgregar1" icon="ui-icon-plusthick"
+												process="@all"
+												binding="#{cronogramaLaboresPorLaborMesView.btnAgregarCronogramaLaboresLabores}"
+												value="Agregar"
+												action="#{cronogramaLaboresPorLaborMesView.action_agregarCronogramaLaboresLabores}"
+												update="tablaLabores,msg1" />
+
+											<p:commandButton id="btnlimpiar" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="gridCronogramaLaboresLabores"
+													resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+									</h:panelGrid>
+									
+									<p:scrollPanel mode="native" style="width:1100px;height:200px">
+										<p:outputPanel>
+											<p:dataTable id="tablaLabores"
+												value="#{cronogramaLaboresPorLaborMesView.dataCronogramaLaboresLabores}"
+												var="listaCronogramaLaboresLabores" paginator="true"
+												rows="3" reflow="true" scrollable="true" scrollWidth="100%"
+												style="margin-bottom:20px" editable="true" editMode="cell"
+												widgetVar="cellLabor">
+												
+												<p:ajax event="cellEdit" listener="#{cronogramaLaboresPorLaborMesView.onCellEditLabor}" />
+
+												<p:column headerText="Labor">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaCronogramaLaboresLabores.nombreLabor}">
+															</h:outputText>
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaCronogramaLaboresLabores.laborId_Labor.laborId}">
+																<f:selectItems value="#{cronogramaLaboresPorLaborMesView.selectLaborId}"
+																	var="var1" itemValue="#{var1}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Unidad de medida">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaCronogramaLaboresLabores.nombreUdadMed}">
+															</h:outputText>
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaCronogramaLaboresLabores.udadMed.udadMedId}">
+																<f:selectItems value="#{cronogramaLaboresPorLaborMesView.selectUdadMed}"
+																	var="var2" itemValue="#{var2}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Costo Total Est.">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaCronogramaLaboresLabores.tarifaLabor}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText
+																value="#{listaCronogramaLaboresLabores.tarifaLabor}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<f:attribute name="selectedCronogramaLaboresLabores"
+																value="#{listaCronogramaLaboresLabores}" />
+																
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{cronogramaLaboresPorLaborMesView.actionDeleteCronogramaLaboresLabores}"
+															required="false" title="Borrar" value="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaLabores">
+															<f:attribute name="selectedCronogramaLaboresLabores"
+																value="#{listaCronogramaLaboresLabores}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:scrollPanel>
+
+
+								</p:tab>
+								<p:tab title="Asignación de haciendas">
+									<p:panel>
+
+										<p:messages id="msg2" autoUpdate="true" closable="true"
+											showDetail="true" />
+
+										<p:panelGrid id="gridCronogramaLaboresNivel4">
+											<p:row>
+												<p:column>
+													<h:panelGrid columns="2">
+
+														<p:outputLabel for="txtNivel1Id" value="Zona: "
+															style="font-size: 0.8em;" />
+														<p:selectOneMenu id="txtNivel1Id" effect="fade"
+															filter="true" filterMatchMode="contains"
+															style="width: 100%; font-size: 0.8em;" autoWidth="false"
+															binding="#{cronogramaLaboresPorLaborMesView.txtNivel1Id}"
+															required="false" requiredMessage="Seleccione una zona">
+															<f:selectItem itemLabel="Seleccione una zona"
+																itemValue="" />
+															<f:selectItems
+																value="#{cronogramaLaboresPorLaborMesView.selectNivel1}" />
+															<p:ajax update="txtNivel2Id" />
+														</p:selectOneMenu>
+
+														<p:outputLabel for="txtNivel2Id" value="Hacienda: "
+															style="font-size: 0.8em;" />
+														<p:selectOneMenu id="txtNivel2Id" effect="fade"
+															filter="true" filterMatchMode="contains"
+															style="width: 100%; font-size: 0.8em;" autoWidth="false"
+															binding="#{cronogramaLaboresPorLaborMesView.txtNivel2Id}"
+															required="false"
+															requiredMessage="Seleccione una hacienda">
+															<f:selectItem itemLabel="Seleccione una hacienda"
+																itemValue="" />
+															<f:selectItems
+																value="#{cronogramaLaboresPorLaborMesView.selectNivel2}" />
+														</p:selectOneMenu>
+
+
+													</h:panelGrid>
+												</p:column>
+
+
+											</p:row>
+										</p:panelGrid>
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+													process="@this,txtNivel2Id "
+													binding="#{cronogramaLaboresPorLaborMesView.btnAgregarCronogramaLaboresNivel4}"
+													value="Agregar"
+													action="#{cronogramaLaboresPorLaborMesView.action_agregarCronogramaLaboresNivel4}"
+													update="tablaNilvel4,msg2" />
+
+												<p:commandButton id="btnlimpiar1" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridCronogramaLaboresNivel4"
+														resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+
+										<p:scrollPanel mode="native" style="width:750px;height:250px">
+
+											<p:outputPanel>
+												<p:dataTable id="tablaNilvel4"
+													value="#{cronogramaLaboresPorLaborMesView.dataCronogramaLaboresNivel4}"
+													var="listaCronogramaLaboresNivel4" paginator="true"
+													rows="3" reflow="true" scrollable="true" scrollWidth="100%"
+													style="margin-bottom:20px" editable="true" editMode="cell"
+													widgetVar="cellNivel4">
+													
+													<p:ajax event="cellEdit" listener="#{cronogramaLaboresPorLaborMesView.onCellEditHacienda}" />
+
+													<p:column headerText="Hacienda">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaCronogramaLaboresNivel4.nombreNivel2}" />
+															</f:facet>
+															<f:facet name="input">
+																<h:selectOneMenu
+																		value="#{listaCronogramaLaboresNivel4.nivel2Id.nivel2Id}">
+																	<f:selectItems value="#{cronogramaLaboresPorLaborMesView.selectNivel2Edit}"
+																	var="var3" itemValue="#{var3}"></f:selectItems>
+																</h:selectOneMenu>
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													<f:attribute name="selectedCronogramaLaboresNivel4"
+												value="#{listaCronogramaLaboresNivel4}" />
+													
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{cronogramaLaboresPorLaborMesView.actionDeleteCronogramaLaboresNivel4}"
+																required="false" title="Borrar" value="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaNilvel4">
+																<f:attribute name="selectedCronogramaLaboresNivel4"
+																	value="#{listaCronogramaLaboresNivel4}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:scrollPanel>
+
+									</p:panel>
+								</p:tab>
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{cronogramaLaboresPorLaborMesView.btnSave}"
+									value="Grabar"
+									action="#{cronogramaLaboresPorLaborMesView.action_save()}"
+									update=":dialogCronogramaLabores :frm:panelDataTableCronogramaLabores" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{cronogramaLaboresPorLaborMesView.action_clear()}"
+									process="@this" update=":dialogCronogramaLabores" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

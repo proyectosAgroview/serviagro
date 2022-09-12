@@ -1,0 +1,435 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Consulta servicios por máquina">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+						<p:row>
+						<p:column>
+						<h:panelGrid columns="2" id="panelGrid" >
+									<p:outputLabel for="txtCompania" value="Compañía"  style="font-size: 0.9em;" />
+									<p:selectOneMenu id="txtCompania" style="font-size: 0.9em;"
+											binding="#{informeSRServiciosMaquinaView.txtCompania}"
+											required="true" requiredMessage="Seleccione una compañía">
+											<f:selectItem itemLabel="Seleccione una compañía"
+												itemValue="" />
+											<f:selectItems
+												value="#{informeSRServiciosMaquinaView.selectCompania}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="msgFechaInicial" value="F. Inicial: " style="font-size: 0.9em;"/>
+										<p:calendar id="msgFechaInicial" showOn="button" style="font-size: 0.9em;"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true" size="12"
+											binding="#{informeSRServiciosMaquinaView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+									
+										<p:outputLabel for="msgFechaFinal" value="F. Final: " style="font-size: 0.9em;"/>
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy" style="font-size: 0.9em;"
+											mask="true" size="12"
+											binding="#{informeSRServiciosMaquinaView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+									
+										
+											<p:outputLabel for="equipos" value="Equipo: " style="font-size: 0.9em;"/>
+										<p:selectCheckboxMenu id="equipos" style="font-size: 0.9em;"
+											value="#{informeSRServiciosMaquinaView.selectedEquipo}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un equipo">
+											<f:selectItems
+												value="#{informeSRServiciosMaquinaView.equipos}"
+												var="equipos" itemLabel=" #{equipos.codigo}"
+												itemValue="#{equipos.equipoId}" />
+										</p:selectCheckboxMenu>
+									
+										
+									
+										
+									
+							<!--Filtros del reporte  -->
+						</h:panelGrid>
+						</p:column>
+						
+						<p:column>
+						<h:panelGrid columns="2"  >
+						<p:outputLabel for="txtEstadoServicio" value="Estado del servicio: " style="font-size: 0.9em;" />
+							<p:selectOneMenu id="txtEstadoServicio" style="font-size: 0.9em;"
+											binding="#{informeSRServiciosMaquinaView.txtEstadoServicio}"
+											required="true" requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Todos"
+												itemValue="Todos" />
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="operadores" value="Operarario: " style="font-size: 0.9em;" />
+										<p:selectCheckboxMenu id="operadores" style="font-size: 0.9em;"
+											value="#{informeSRServiciosMaquinaView.selectedOperador}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un operador">
+											<f:selectItems
+												value="#{informeSRServiciosMaquinaView.operadores}"
+												var="operadores" itemLabel=" #{operadores.nombre}"
+												itemValue="#{operadores.trabId}" />
+										</p:selectCheckboxMenu>
+										
+										<p:outputLabel for="clientes" value="Clientes: " style="font-size: 0.9em;"/>
+										<p:selectCheckboxMenu id="clientes" style="font-size: 0.9em;"
+											value="#{informeSRServiciosMaquinaView.selectedCliente}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una cliente">
+											<f:selectItems
+												value="#{informeSRServiciosMaquinaView.clientes}"
+												var="clientes" itemLabel=" #{clientes.nombre}"
+												itemValue="#{clientes.persEmprId}" />
+										</p:selectCheckboxMenu>
+									
+										<p:outputLabel for="nivel2Clientesmq" value="Haciendas: " style="font-size: 0.9em;"/>
+										<p:selectCheckboxMenu id="nivel2Clientesmq" style="font-size: 0.9em;"
+											value="#{informeSRServiciosMaquinaView.selectedNivel2Clientesmq}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una hacienda">
+											<f:selectItems
+												value="#{informeSRServiciosMaquinaView.nivel2Clientesmq}"
+												var="nivel2Clientesmq" itemLabel=" #{nivel2Clientesmq.nombre}"
+												itemValue="#{nivel2Clientesmq.nivel2ClientesmqId}" />
+										</p:selectCheckboxMenu>
+						</h:panelGrid>
+						</p:column>
+									
+						<p:column>
+							<h:panelGrid columns="2"  >
+							<p:outputLabel for="grupoLabores" value="Grupos de labor: " style="font-size: 0.9em;"/>
+										<p:selectCheckboxMenu id="grupoLabores" style="font-size: 0.9em;"
+											value="#{informeSRServiciosMaquinaView.selectedGrupoLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un grupo">
+											<f:selectItems
+												value="#{informeSRServiciosMaquinaView.grupoLabores}"
+												var="grupoLabores" itemLabel=" #{grupoLabores.nombre}"
+												itemValue="#{grupoLabores.grpLaborId}" />
+										</p:selectCheckboxMenu>
+									
+										<p:outputLabel for="labores" value="Labor: " style="font-size: 0.9em;"/>
+										<p:selectCheckboxMenu id="labores"
+											value="#{informeSRServiciosMaquinaView.selectedLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una labor">
+											<f:selectItems
+												value="#{informeSRServiciosMaquinaView.labores}"
+												var="labores" itemLabel=" #{labores.nombre}"
+												itemValue="#{labores.laborId}" />
+										</p:selectCheckboxMenu>
+									
+										<p:outputLabel for="unidadesMedida" value="Unidad de medida: " style="font-size: 0.9em;"/>
+										<p:selectCheckboxMenu id="unidadesMedida"
+											value="#{informeSRServiciosMaquinaView.selectedUdadMed}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una Udad. de medida">
+											<f:selectItems
+												value="#{informeSRServiciosMaquinaView.unidadesMedida}"
+												var="unidadesMedida" itemLabel=" #{unidadesMedida.nombre}"
+												itemValue="#{unidadesMedida.udadMedId}" />
+										</p:selectCheckboxMenu>
+										
+							<p:commandButton id="btnConsultar" value="Generar reporte" style="font-size: 0.9em;"
+								icon="ui-icon-newwin" 
+								action="#{informeSRServiciosMaquinaView.consultaServiciosMaquina}" 
+								update="growl, frm, tbl" process="@all" partialSubmit="true"/>
+										
+							</h:panelGrid>
+						</p:column>
+						
+			  		</p:row>
+					 </p:panelGrid>
+					</p:panel>
+					
+					
+					<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{informeSRServiciosMaquinaView.data}"
+						scrollable="true" scrollWidth="99%" scrollHeight="150"
+							var="datServRealizadosEquipo"   resizableColumns="true" style="margin-bottom:20px"
+							lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datServRealizadosEquipo" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+												
+
+							<p:column width="100">
+								<f:facet name="header">
+									<h:outputText value="Fecha" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.fechaRegistro}" style="font-size: 0.8em;">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column  width="100">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.pin}" style="font-size: 0.8em;"/>
+							</p:column>
+							
+							<p:column  width="100">
+								<f:facet name="header">
+									<h:outputText value="Consec. Rdl" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.consecutivoRdl}" style="font-size: 0.8em;"/>
+							</p:column>
+							
+	
+							
+							<p:column width="100">
+								<f:facet name="header">
+									<h:outputText value="Cod. Máquina" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.codEquipo}" style="font-size: 0.8em;"/>
+							</p:column>
+							
+							<p:column width="100">
+								<f:facet name="header" >
+									<h:outputText value="Máquina" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.nomEquipo}" style="font-size: 0.8em;" />
+							</p:column>
+							
+							<p:column  width="100">
+								<f:facet name="header">
+									<h:outputText value="Labor" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.nomLabor}"  style="font-size: 0.8em;"/>
+							</p:column>
+							
+							
+							<p:column width="100">
+								<f:facet name="header" >
+									<h:outputText value="Hacienda" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.nomFinca}" style="font-size: 0.8em;" />
+							</p:column>
+							
+							
+							<p:column width="100">
+								<f:facet name="header" >
+									<h:outputText value="Suerte"  style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.codLote}" style="font-size: 0.8em;"/>
+							</p:column>
+							
+							
+							<p:column width="100">
+								<f:facet name="header" >
+									<h:outputText value="Cantidad"  style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.cantidadPago}" style="font-size: 0.8em;">
+								 <f:convertNumber pattern="#0.00" />
+								 </h:outputText>
+							</p:column>
+							
+							<p:column  width="100">
+								<f:facet name="header">
+									<h:outputText value="U.M" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.nomUdadMed}" style="font-size: 0.8em;"/>
+							</p:column>
+							
+							
+							<p:column  width="100">
+								<f:facet name="header">
+									<h:outputText value="VR. Total" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.costoTotal}" style="font-size: 0.8em;">
+								  <f:convertNumber type="currency" currencySymbol="$" />
+								  </h:outputText>
+							</p:column>
+							
+							
+							<p:column width="100">
+								<f:facet name="header" >
+									<h:outputText value="Cliente" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.nomCliente}" style="font-size: 0.8em;"/>
+							</p:column>
+							
+							
+							<p:column width="100">
+								<f:facet name="header" >
+									<h:outputText value="Operario" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.nom_operario}" style="font-size: 0.8em;"/>
+							</p:column>
+							
+							
+							<p:column width="100">
+								<f:facet name="header">
+									<h:outputText value="Horas" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.horas}" style="font-size: 0.8em;">
+								  <f:convertNumber pattern="#0.00" />	
+								 </h:outputText>
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="H.Inicial" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.horometroInicial}" style="font-size: 0.8em;"/>
+							</p:column>
+							
+							
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="H.Final" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.horometroFinal}" style="font-size: 0.8em;"/>
+							</p:column>
+							
+							
+							
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Implemento" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.nom_implemento}" style="font-size: 0.8em;"/>
+							</p:column>
+							
+							
+							
+							
+								<p:column width="100">
+								<f:facet name="header">
+									<h:outputText value="#ID REGISTRO" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.idRegistro}" style="font-size: 0.8em;"/>
+							</p:column>
+							
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Estado" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.estatusRegistro}" style="font-size: 0.8em;"/>
+							</p:column>
+
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Turno" style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.turno}" style="font-size: 0.8em;" />
+							</p:column>
+														
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Factura No." style="font-size: 0.8em;"/>
+								</f:facet>
+								<h:outputText value="#{datServRealizadosEquipo.docFactura}" style="font-size: 0.8em;"/>
+							</p:column>
+						
+						</p:dataTable>
+					
+					
+					<p:panelGrid >
+						
+						
+						<p:row>
+						<p:column style="text-align:right">
+							<h:panelGrid  columns="2">
+									<p:outputLabel  value="TOTALES:  " style="font-size: 1em;" />
+							</h:panelGrid>
+						</p:column>
+						<p:column style="text-align:right">
+							<h:panelGrid  columns="2">
+							<p:outputLabel for="txtHoras" value="Horas: " style="font-size: 0.9em;" />
+								<p:inputText id="txtHoras" style="font-size: 0.9em;" size="12"
+												binding="#{informeSRServiciosMaquinaView.txtHoras}"
+												required="false" >
+												<f:convertNumber pattern="#0.00" />
+											</p:inputText>
+							</h:panelGrid>
+						</p:column >
+						<p:column style="text-align:right">
+						<h:panelGrid  columns="2">
+						<p:outputLabel for="txtCantidad" value="Area: " style="font-size: 0.9em;" />
+								<p:inputText id="txtCantidad" style="font-size: 0.9em;" size="12"
+												binding="#{informeSRServiciosMaquinaView.txtCantidad}"
+												required="false" >
+												<f:convertNumber pattern="#0.00" />
+											</p:inputText>
+							</h:panelGrid>
+						</p:column>
+					
+					<p:column style="text-align:right">
+					<h:panelGrid  columns="2">
+						<p:outputLabel for="txtVlTotal" value="Ingreso Bruto: " style="font-size: 0.9em;" />
+								<p:inputText id="txtVlTotal" style="font-size: 0.9em;" size="12"
+												binding="#{informeSRServiciosMaquinaView.txtVlTotal}"
+												required="false" >
+												<f:convertNumber pattern="#0.00" />
+											</p:inputText>
+							</h:panelGrid>
+						</p:column>
+					</p:row>
+					</p:panelGrid>
+					
+					
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

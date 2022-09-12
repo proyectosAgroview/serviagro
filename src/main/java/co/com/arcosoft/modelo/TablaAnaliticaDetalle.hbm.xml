@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 9/04/2019 02:57:11 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.TablaAnaliticaDetalle" table="tabla_analitica_detalle">
+        <id name="tablaAnaliticaDetalleId" type="java.lang.Long">
+            <column name="tabla_analitica_detalle_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tablaAnalitica" class="co.com.arcosoft.modelo.TablaAnalitica" fetch="select">
+            <column name="tabla_analitica_id" />
+        </many-to-one>
+        <property name="valorVariableEntrada1" type="java.lang.Double">
+            <column name="valor_variable_entrada1" precision="12" scale="4" />
+        </property>
+        <property name="valorVariableEntrada2" type="java.lang.Double">
+            <column name="valor_variable_entrada2" precision="12" scale="4" />
+        </property>
+        <property name="valorVariableEntrada3" type="java.lang.Double">
+            <column name="valor_variable_entrada3" precision="12" scale="4" />
+        </property>
+        <property name="valorVariableSalida1" type="java.lang.Double">
+            <column name="valor_variable_salida1" precision="12" scale="4" />
+        </property>
+        <property name="valorVariableSalida2" type="java.lang.Double">
+            <column name="valor_variable_salida2" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

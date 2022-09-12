@@ -1,0 +1,361 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+					<p:panel id="panelDataTablaAnalitica" header="Tabla Analítica">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{tablaAnaliticaView.data}" var="tabAna"
+							paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="tabAna" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{tabAna.estado}" sortBy="#{tabAna.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{tabAna.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{tabAna.codigo}" sortBy="#{tabAna.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{tabAna.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{tabAna.nombre}" sortBy="#{tabAna.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{tabAna.nombre}" />
+							</p:column>
+							
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogTablaAnalitica"
+										actionListener="#{tablaAnaliticaView.action_edit}">
+										<f:attribute name="selectedTablaAnalitica" value="#{tabAna}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{tablaAnaliticaView.action_new()}" update=":dialogTablaAnalitica" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogTablaAnalitica" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{tablaAnaliticaView.showDialog}"
+					resizable="false" modal="true" width="900" showEffect="fade"
+					styleClass="dialogFix" responsive="true" >
+					<h:form id="formDialog">
+						<p:panel id="panelTablaAnalitica" header="Tabla Analitica" >
+						
+							<p:tabView id="tabMapa" activeIndex="#{tablaAnaliticaView.activeTapIndex}">
+							<p:messages id="msg" closable="true" />
+								
+								<p:tab title="General" id="tabGeneral" >
+									
+									<h:panelGrid columns="3" id="panelGrid">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{tablaAnaliticaView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+		
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{tablaAnaliticaView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax update="tabMapa, tabGeneral, formDialog:panelBotones, txtCodigo"
+												listener="#{tablaAnaliticaView.listener_txtCodigo}" />
+										</p:inputText>
+										<p:outputLabel />
+		
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true"
+											binding="#{tablaAnaliticaView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+										<p:message for="txtNombre" />
+										
+										<p:outputLabel for="txtVariableEntrada1" value="Variable entrada 1: " />
+										<p:inputText id="txtVariableEntrada1" disabled="true"
+											binding="#{tablaAnaliticaView.txtVariableEntrada1}" required="true"
+											requiredMessage="Las variables de entrada son obligatorias" />
+										<p:message for="txtVariableEntrada1" />
+										
+										<p:outputLabel for="txtVariableEntrada2" value="Variable entrada 2: " />
+										<p:inputText id="txtVariableEntrada2" disabled="true"
+											binding="#{tablaAnaliticaView.txtVariableEntrada2}" required="false"
+											requiredMessage="Las variables de entrada son obligatorias" />
+										<p:message for="txtVariableEntrada2" />
+										
+										<p:outputLabel for="txtVariableEntrada3" value="Variable entrada 3: " />
+										<p:inputText id="txtVariableEntrada3" disabled="true"
+											binding="#{tablaAnaliticaView.txtVariableEntrada3}" required="false"
+											requiredMessage="Las variables de entrada son obligatorias" />
+										<p:message for="txtVariableEntrada3" />
+										
+										<p:outputLabel for="txtVariableSalida1" value="Variable salida 1: " />
+										<p:inputText id="txtVariableSalida1" disabled="true"
+											binding="#{tablaAnaliticaView.txtVariableSalida1}" required="true"
+											requiredMessage="Las variables de salida son obligatorias" />
+										<p:message for="txtVariableSalida1" />
+										
+										<p:outputLabel for="txtVariableSalida2" value="Variable salida 2: " />
+										<p:inputText id="txtVariableSalida2" disabled="true"
+											binding="#{tablaAnaliticaView.txtVariableSalida2}" required="false"
+											requiredMessage="Las variables de salida son obligatorias" />
+										<p:message for="txtVariableSalida2" />
+		
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1:" />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{tablaAnaliticaView.txtInfoAdicional}" rows="5" cols="30"
+											counter="display" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+		
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2:" />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{tablaAnaliticaView.txtInfoAdicional2}" rows="5" cols="30"
+											counter="display2" maxlength="100"
+											counterTemplate="{0} Caracteres." autoResize="true" />
+										<h:outputText id="display2" />
+		
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtTablaAnaliticaId"
+											binding="#{tablaAnaliticaView.txtTablaAnaliticaId}"/>
+		
+									</h:panelGrid>
+								
+								</p:tab>
+								
+								<p:tab title="Variables">
+								
+									<p:panelGrid id="R1" columns="2">
+										<p:column>
+											<h:panelGrid columns="2">
+											
+												<p:outputLabel for="txtValorVariableEntrada1" value="Valor var. entrada 1: " />
+												<p:inputText id="txtValorVariableEntrada1" disabled="true"
+													binding="#{tablaAnaliticaView.txtValorVariableEntrada1}" required="false"
+													requiredMessage="Las variables de entrada son obligatorias" />
+												
+												<p:outputLabel for="txtValorVariableEntrada2" value="Valor var. entrada 2: " />
+												<p:inputText id="txtValorVariableEntrada2" disabled="true"
+													binding="#{tablaAnaliticaView.txtValorVariableEntrada2}" required="false"
+													requiredMessage="Las variables de entrada son obligatorias" />
+												
+												<p:outputLabel for="txtValorVariableEntrada3" value="Valor var. entrada 3: " />
+												<p:inputText id="txtValorVariableEntrada3" disabled="true"
+													binding="#{tablaAnaliticaView.txtValorVariableEntrada3}" required="false"
+													requiredMessage="Las variables de entrada son obligatorias" />
+													
+											</h:panelGrid>													
+										</p:column>		
+		
+										<p:column>
+											<h:panelGrid columns="2">														
+												
+												<p:outputLabel for="txtValorVariableSalida1" value="Valor var. salida 1: " />
+												<p:inputText id="txtValorVariableSalida1" disabled="true"
+													binding="#{tablaAnaliticaView.txtValorVariableSalida1}" required="false"
+													requiredMessage="Las variables de salida son obligatorias" />
+												
+												<p:outputLabel for="txtValorVariableSalida2" value="Valor var. salida 2: " />
+												<p:inputText id="txtValorVariableSalida2" disabled="true"
+													binding="#{tablaAnaliticaView.txtValorVariableSalida2}" required="false"
+													requiredMessage="Las variables de salida son obligatorias" />
+												
+												<br></br>
+														 
+											</h:panelGrid>	
+										</p:column>									
+									</p:panelGrid>
+		
+									<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregarVarAna" icon="ui-icon-plusthick"
+												binding="#{tablaAnaliticaView.btnAgregarVarAna}" value="Agregar"
+												action="#{tablaAnaliticaView.action_agregarVariableAnalitica}"
+												update="tablaVarAna :dialogTablaAnalitica" />
+		
+											<p:commandButton id="btnlimpiar3" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="R1" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+									</h:panelGrid>
+		
+		
+									<p:scrollPanel mode="native" style="width:800px;height:250px">
+										<p:outputPanel>
+											<p:dataTable id="tablaVarAna"
+												value="#{tablaAnaliticaView.dataTabAna}" var="listaTabAna"
+												paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+												editable="true" reflow="true" editMode="cell"
+												widgetVar="cell" width="600">
+												
+												<p:ajax event="cellEdit" listener="#{tablaAnaliticaView.onCellEdit}" />
+		
+												<p:column headerText="Valor var. entrada 1">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaTabAna.valorVariableEntrada1}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:inputText style="font-size: 0.8em;"
+																value="#{listaTabAna.valorVariableEntrada1}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+		
+												<p:column headerText="Valor var. entrada 2">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaTabAna.valorVariableEntrada2}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:inputText style="font-size: 0.8em;"
+																value="#{listaTabAna.valorVariableEntrada2}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<p:column headerText="Valor var. entrada 3">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaTabAna.valorVariableEntrada3}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:inputText style="font-size: 0.8em;"
+																value="#{listaTabAna.valorVariableEntrada3}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<p:column headerText="Valor var. salida 1">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaTabAna.valorVariableSalida1}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:inputText style="font-size: 0.8em;"
+																value="#{listaTabAna.valorVariableSalida1}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<p:column headerText="Valor var. salida 2">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText style="font-size: 0.8em;"
+																value="#{listaTabAna.valorVariableSalida2}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:inputText style="font-size: 0.8em;"
+																value="#{listaTabAna.valorVariableSalida2}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<f:attribute name="selectedTabAna"
+																value="#{listaTabAna}" />
+		
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{tablaAnaliticaView.actionDeleteTabAna}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaVarAna :dialogTablaAnalitica" >
+															<f:attribute name="selectedTabAna"
+																value="#{listaTabAna}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:scrollPanel>
+								
+								</p:tab>
+							
+							</p:tabView>
+						
+							
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{tablaAnaliticaView.btnSave}" value="Grabar"
+									action="#{tablaAnaliticaView.action_save()}"
+									update=":dialogTablaAnalitica :frm:panelDataTablaAnalitica" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{tablaAnaliticaView.action_clear()}"
+									process="@this" update=":dialogTablaAnalitica" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.PlanRevisionEquipo" table="plan_revision_equipo" >
+        <id name="planRevisionEquipoId" type="java.lang.Long">
+            <column name="plan_revision_equipo_id" />
+            <generator class="identity" />
+        </id>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="300" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="1000" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="tipoProcedimiento" type="java.lang.String">
+            <column name="tipo_procedimiento" length="60" />
+        </property>
+        <property name="tipoPlan" type="java.lang.String">
+            <column name="tipo_plan" length="30" />
+        </property>
+        <property name="origenDatos" type="java.lang.String">
+            <column name="origen_datos" length="30" />
+        </property>
+            <many-to-one name="medidorId" class="co.com.arcosoft.modelo.Medidor" fetch="select">
+            <column name="medidor_id" />
+        </many-to-one>
+        
+        <set name="datMantenimientoEquipos" table="dat_mantenimiento_equipo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="plan_revision_equipo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatMantenimientoEquipo" />
+        </set>
+        <set name="planRevisionEquipoActivs" table="plan_revision_equipo_activ" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="plan_revision_equipo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.PlanRevisionEquipoActiv" />
+        </set>
+        <set name="planRevisionEquipoDets" table="plan_revision_equipo_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="plan_revision_equipo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.PlanRevisionEquipoDet" />
+        </set>
+    </class>
+</hibernate-mapping>

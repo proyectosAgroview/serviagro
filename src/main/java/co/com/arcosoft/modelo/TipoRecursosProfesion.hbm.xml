@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.TipoRecursosProfesion" table="tipo_recursos_profesion" >
+        <id name="tipoRecursosProfesionId" type="java.lang.Long">
+            <column name="tipo_recursos_profesion_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="elementoCosto" class="co.com.arcosoft.modelo.ElementoCosto" fetch="select">
+            <column name="elem_costo_id" />
+        </many-to-one>
+        <many-to-one name="tipoRecurso" class="co.com.arcosoft.modelo.TipoRecurso" fetch="select">
+            <column name="tp_recurso_id" />
+        </many-to-one>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <many-to-one name="profesion" class="co.com.arcosoft.modelo.Profesion" fetch="select">
+            <column name="prof_id" />
+        </many-to-one>
+        <property name="fechaInicial" type="java.util.Date">
+            <column name="fecha_inicial" length="19" />
+        </property>
+        <property name="fechaFinal" type="java.util.Date">
+            <column name="fecha_final" length="19" />
+        </property>
+        <property name="valor" type="java.lang.Double">
+            <column name="valor" precision="16" scale="4" />
+        </property>
+        <property name="disponibilidadDia" type="java.lang.Double">
+            <column name="disponibilidad_dia" precision="12" scale="4" />
+        </property>
+        <property name="disponibilidadTotal" type="java.lang.Double">
+            <column name="disponibilidad_total" precision="12" scale="4" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

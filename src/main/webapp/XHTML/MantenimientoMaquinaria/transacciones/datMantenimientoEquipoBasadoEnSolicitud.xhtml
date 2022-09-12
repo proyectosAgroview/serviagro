@@ -1,0 +1,257 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frmConsultaSolicitud">
+
+					<p:panel id="panelDataTable" collapsed="false" toggleable="true"
+						header="Consulta de solicitudes de mantenimientos">
+						<!--  <p:growl id="growl" showDetail="true" sticky="true" />-->
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												 
+
+												<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: "
+																style="font-size: 0.9em;" />
+												<p:calendar id="msgFechaInicial" showOn="button"
+													navigator="false" locale="es" pattern="dd/MM/yyyy"
+													mask="true" size="12" style="font-size: 0.9em;"
+													binding="#{datMantenimientoEquipoView.txtFechaInicial}"
+													required="true" requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+
+												<p:outputLabel for="msgFechaFinal" value="Fecha Final: " 
+																style="font-size: 0.9em;"			/>
+												<p:calendar id="msgFechaFinal" showOn="button"
+													navigator="false" locale="es" pattern="dd/MM/yyyy"
+													mask="true" size="12" style="font-size: 0.9em;"
+													binding="#{datMantenimientoEquipoView.txtFechaFinal}"
+													required="true" requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="tipoMtto" value="Tipo de mantenimiento "
+															style="font-size: 0.9em;" />
+												<p:selectCheckboxMenu id="tipoMtto" style="font-size: 0.9em;"
+													value="#{datMantenimientoEquipoView.selectedTipoMtto}"
+													filter="true" filterMatchMode="contains"
+													showCheckbox="true" required="false"
+													requiredMessage="Seleccione al menos un tipo de mtto">
+													<f:selectItems value="#{datMantenimientoEquipoView.tipoMtto}"
+														var="tipoMtto" itemLabel=" #{tipoMtto.nombre}"
+														itemValue="#{tipoMtto.tipoMantenimientoId}" />
+												</p:selectCheckboxMenu>
+
+												<p:outputLabel for="equipos" value="Equipo: " 
+													style="font-size: 0.9em;" />
+												<p:selectCheckboxMenu id="equipos"
+													style="font-size: 0.9em;"
+													value="#{datMantenimientoEquipoView.selectedEquipo}"
+													filter="true" filterMatchMode="contains"
+													showCheckbox="true" required="false"
+													requiredMessage="Seleccione al menos un equipo">
+													<f:selectItems value="#{datMantenimientoEquipoView.equipos}"
+														var="equipos" itemLabel=" #{equipos.nombre}"
+														itemValue="#{equipos.equipoId}" />
+												</p:selectCheckboxMenu>
+
+
+												<p:outputLabel for="solicitante" value="Solicitante: " 
+														style="font-size: 0.9em;" />
+												<p:selectCheckboxMenu id="solicitante" style="font-size: 0.9em;"
+													value="#{datMantenimientoEquipoView.selectedSolicitante}"
+													filter="true" filterMatchMode="contains"
+													showCheckbox="true" required="false"
+													requiredMessage="Seleccione al menos un solicitante">
+													<f:selectItems
+														value="#{datMantenimientoEquipoView.solicitanteMtto}"
+														var="solicitante" itemLabel=" #{solicitante.nombre}"
+														itemValue="#{solicitante.trabId}" />
+												</p:selectCheckboxMenu>
+
+												<p:outputLabel for="nivelP" value="Nivel Prioridad: " style="font-size: 0.9em;"/>
+												<p:selectCheckboxMenu id="nivelP"  style="font-size: 0.9em;"
+													value="#{datMantenimientoEquipoView.selectedNivelPrioridad}"
+													filter="true" filterMatchMode="contains"
+													showCheckbox="true" required="false"
+													requiredMessage="Seleccione al menos un nivel de prioridad">
+													<f:selectItems
+														value="#{datMantenimientoEquipoView.nivelprioridadMtto}"
+														var="nivel" itemLabel=" #{nivel.nombre}"
+														itemValue="#{nivel.nivelPrioridadId}" />
+												</p:selectCheckboxMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:commandButton id="btnConsultar" value="Consultar"
+													icon="ui-icon-newwin"
+													action="#{datMantenimientoEquipoView.consultaSolicitudesMtto()}"
+													update="frmConsultaSolicitud frm :frm:tbl" process="@all" />
+												<p:outputLabel></p:outputLabel>
+												
+											</h:panelGrid>
+										</p:column>
+										<!--Filtros del reporte  -->
+									</p:row>
+								</p:panelGrid>
+							
+					</p:panel>
+				</h:form>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatSolicitudesMtto"
+						header="Solicitud de Manetenimiento">
+
+						<p:dataTable id="tbl" value="#{datMantenimientoEquipoView.dataSolicitudMtto}"
+							var="datSolicitudesMtto"  lazy="true" 
+							 reflow="true"
+							scrollable="true" scrollHeight="200"
+							>
+
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datSolicitudesMtto" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Estado"   style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{datSolicitudesMtto.estado}"  style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Consecutivo"   style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{datSolicitudesMtto.consecutivo}"  style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column style="width:45px">
+								<f:facet name="header">
+									<h:outputText value="" />
+								</f:facet>
+								<p:graphicImage
+									value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/#{datSolicitudesMtto.estadoSolicitudVencida}"
+									width="25">
+								</p:graphicImage>
+
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Atrasadas"  style="font-size: 0.9em;" />
+								</f:facet>
+
+								<h:outputText
+									value=" Hace #{datSolicitudesMtto.diasAtarso} días"  style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fecha solicitud"  style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{datSolicitudesMtto.fecha_registro}" style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Equipo/Maquinaria"  style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{datSolicitudesMtto.nom_equipo}"  style="font-size: 0.9em;"/>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Solicitud"  style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText
+									value="#{datSolicitudesMtto.descripcion_solicitud}"  style="font-size: 0.9em;"/>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Prioridad"  style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{datSolicitudesMtto.nom_nivel_prioridad}"  style="font-size: 0.9em;"/>
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									 
+								<p:column>								
+								<p:commandButton id="btnNew1" value="Crear O.T" icon="ui-icon-newwin"
+									actionListener="#{datMantenimientoEquipoView.action_create_ot_basado_solicitud}"
+									onclick="if(!confirm('Esta seguro de que desea crear una orden de mantenimeinto?')){return false;}"
+									update="dialogOrdenTrabajo">									
+									<f:attribute name="selectSolicitudMtto" value="#{datSolicitudesMtto}" />
+								</p:commandButton>
+							</p:column>
+									
+							 
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+				 
+				</h:form>
+				<ui:include src="/XHTML/MantenimientoMaquinaria/transacciones/dialogoOrdenTrabajoReparacion.xhtml" />		
+				 
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

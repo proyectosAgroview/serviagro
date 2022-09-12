@@ -1,0 +1,366 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTablelistaDetPlanillaDet"
+						header="Cierre / Liquidación de cosecha por lote">
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtHacienda" value="Hacienda: " />
+										<p:selectOneMenu id="txtHacienda" required="true"
+											binding="#{datCierreProduccionCosechaCanaView.txtHacienda}"
+											filter="true" filterMatchMode="contains" style="width:160px"
+											autoWidth="false" disabled="false">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems
+												value="#{datCierreProduccionCosechaCanaView.selectHacienda}" />
+											<p:ajax update="txtLote" />
+										</p:selectOneMenu>
+
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtLote" value="Lote: " />
+										<p:selectOneMenu id="txtLote"
+											binding="#{datCierreProduccionCosechaCanaView.txtLote}" required="true"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											disabled="false">
+											<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+											<f:selectItems
+												value="#{datCierreProduccionCosechaCanaView.selectLote}" />
+
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+										<p:commandButton id="btnCargarDatos" value="Consultar"
+											icon="ui-icon-newwin" style="font-size: 1em;"
+											action="#{datCierreProduccionCosechaCanaView.consultaLiquidacionLote}"
+											 process="@all"
+											update=":frm, txtAreaLote	,	txtAjusteLiquidacion	,	txtDescuentos	,
+													txtCantidadCosechada	,	txtAjusteLiquidacionHa	,	txtDescuentosHa	,
+													txtCantidadCosechadaHa	,	txtBonificacion	,	txtUtilidadNeta	,
+													txtValorUnitario	,	txtBonificacionHa	,	txtUtilidadNetaHa	,
+													txtIngresoBruto	,	txtOtrosIngresos	,	txtRentabilidad	,
+													txtIngresoBrutoHa	,	txtOtrosIngresosHa	,	txtRendimientoAzucar	,
+													txtCostoProduccion	,	txtTotalUtilidad	,		
+													txtCostoProduccionHa	,	txtTotalUtilidadHa	,		
+													txtUtilidadOperacional	,	txtRetenciones	,		
+													txtUtilidadOperacionalHa	,	txtRetencionesHa"	 />
+										<h:outputLabel></h:outputLabel>
+									</h:panelGrid>
+								</p:column>
+								<p:column>
+									<h:panelGrid columns="1">
+											<p:commandButton id="btnCerrarLote" value="Ejecutar cierre"
+										icon="ui-icon-newwin" style="font-size: 1em;"
+										action="#{datCierreProduccionCosechaCanaView.cerrarLote}"
+										update=":frm " process="@all" />
+									</h:panelGrid>
+									<h:outputLabel></h:outputLabel>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+
+					<p:messages id="msg" showDetail="true" autoUpdate="true"
+						closable="true">
+						<p:effect type="pulsate" event="load" delay="400" />
+					</p:messages>
+
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<h:panelGrid columns="4">
+									<p:outputLabel value="CONCEPTO: " style="font-size: 1em;" />
+									<p:outputLabel value="VALOR TOTAL" style="font-size: 1em;" />
+
+									<p:outputLabel value="" style="font-size: 1em;" />
+
+									<p:outputLabel value="VR/HECTAREA: " style="font-size: 1em;" />
+									
+									<p:outputLabel for="txtAreaLote"
+										value="AreaLote: " style="font-size: 0.9em;" />
+									<p:inputNumber id="txtAreaLote"
+										style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtAreaLote}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									
+									<p:outputLabel for="txtCantidadCosechada"
+										value="CantidadCosechada: " style="font-size: 0.9em;" />
+									<p:inputNumber id="txtCantidadCosechada"
+										style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtCantidadCosechada}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:inputNumber id="txtCantidadCosechadaHa"
+										style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtCantidadCosechadaHa}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+
+
+									<p:outputLabel for="txtValorUnitario" value="Valor unitario: "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtValorUnitario" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtValorUnitario}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+
+
+									<p:outputLabel for="txtIngresoBruto" value="Ingreso bruto "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtIngresoBruto" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtIngresoBruto}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:inputNumber id="txtIngresoBrutoHa" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtIngresoBrutoHa}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+
+									<p:outputLabel for="txtCostoProduccion"
+										value="Costo producción: " style="font-size: 0.9em;" />
+									<p:inputNumber id="txtCostoProduccion"
+										style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtCostoProduccion}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:inputNumber id="txtCostoProduccionHa"
+										style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtCostoProduccionHa}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+
+									<p:outputLabel for="txtUtilidadOperacional"
+										value="Utilidad operacional: " style="font-size: 0.9em;" />
+									<p:inputNumber id="txtUtilidadOperacional"
+										style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtUtilidadOperacional}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:inputNumber id="txtUtilidadOperacionalHa"
+										style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtUtilidadOperacionalHa}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+
+									<p:outputLabel for="txtAjusteLiquidacion"
+										value="Ajuste liquidación: " style="font-size: 0.9em;" />
+									<p:inputNumber id="txtAjusteLiquidacion"
+										style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtAjusteLiquidacion}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:inputNumber id="txtAjusteLiquidacionHa"
+										style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtAjusteLiquidacionHa}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+
+									<p:outputLabel for="txtBonificacion" value="Bonificación: "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtBonificacion" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtBonificacion}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:inputNumber id="txtBonificacionHa" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtBonificacionHa}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+
+									<p:outputLabel for="txtOtrosIngresos" value="Otros ingresos: "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtOtrosIngresos" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtOtrosIngresos}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:inputNumber id="txtOtrosIngresosHa"
+										style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtOtrosIngresosHa}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+
+									
+
+
+								</h:panelGrid>
+							</p:column>
+
+							<p:column>
+								<h:panelGrid columns="4">
+									<p:outputLabel value="CONCEPTO: " style="font-size: 1em;" />
+									<p:outputLabel value="VALOR TOTAL" style="font-size: 1em;" />
+
+									<p:outputLabel value="" style="font-size: 1em;" />
+
+									<p:outputLabel value="VR/HECTAREA: " style="font-size: 1em;" />
+
+									<p:outputLabel for="txtTotalUtilidad" value="TOTAL UTILIDAD: "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtTotalUtilidad" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtTotalUtilidad}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:inputNumber id="txtTotalUtilidadHa"
+										style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtTotalUtilidadHa}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									
+									<p:outputLabel for="txtRetenciones" value="Retenciones: "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtRetenciones" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtRetenciones}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:inputNumber id="txtRetencionesHa" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtRetencionesHa}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+
+									<p:outputLabel for="txtDescuentos" value="Descuentos: "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtDescuentos" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtDescuentos}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:inputNumber id="txtDescuentosHa" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtDescuentosHa}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+
+									<p:outputLabel for="txtUtilidadNeta" value="UTILIDAD NETA: "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtUtilidadNeta" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtUtilidadNeta}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:inputNumber id="txtUtilidadNetaHa" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtUtilidadNetaHa}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+
+									<p:outputLabel for="txtRentabilidad" value="Rentabilidad: "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtRentabilidad" style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtRentabilidad}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+
+									<p:outputLabel for="txtRendimientoAzucar"
+										value="Rendimiento azúcar: " style="font-size: 0.9em;" />
+									<p:inputNumber id="txtRendimientoAzucar"
+										style="font-size: 0.9em;"
+										binding="#{datCierreProduccionCosechaCanaView.txtRendimientoAzucar}"
+										autoResize="true" size="15">
+									</p:inputNumber>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									
+									
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									<p:outputLabel></p:outputLabel>
+									
+								
+	
+
+								</h:panelGrid>
+							</p:column>
+						</p:row>
+
+
+					</p:panelGrid>
+
+
+				</h:form>
+
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

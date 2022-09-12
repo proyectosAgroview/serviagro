@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.CronogramaLaboresLabores" table="cronograma_labores_labores" >
+        <id name="cronogramaLaboresLaboresId" type="java.lang.Long">
+            <column name="cronograma_labores_labores_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="cronogramaLabores" class="co.com.arcosoft.modelo.CronogramaLabores" fetch="select">
+            <column name="cronograma_labores_id" />
+        </many-to-one>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" />
+        </many-to-one>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        
+        <property name="numeroDiasInicio" type="java.lang.Double">
+            <column name="numero_dias_inicio" precision="12" scale="4" />
+        </property>
+        <property name="numeroDiasFin" type="java.lang.Double">
+            <column name="numero_dias_fin" precision="12" scale="4" />
+        </property>
+        <property name="duracion" type="java.lang.Double">
+            <column name="duracion" precision="12" scale="4" />
+        </property>
+        <property name="tarifaLabor" type="java.lang.Double">
+            <column name="tarifa" precision="12" scale="4" />
+        </property>
+        <property name="presupuestoBaseAreaPlantas"  type="java.lang.String">
+            <column name="presupuesto_base_area_plantas" length="20" />
+        </property>
+       
+       <property name="enero" type="java.lang.Double">
+            <column name="enero" precision="12" scale="4" />
+        </property>
+
+	<property name="febrero" type="java.lang.Double">
+            <column name="febrero" precision="12" scale="4" />
+        </property>
+
+	<property name="marzo" type="java.lang.Double">
+            <column name="marzo" precision="12" scale="4" />
+        </property>
+
+        <property name="abril" type="java.lang.Double">
+            <column name="abril" precision="12" scale="4" />
+        </property>
+        <property name="mayo" type="java.lang.Double">
+            <column name="mayo" precision="12" scale="4" />
+        </property>
+        <property name="junio" type="java.lang.Double">
+            <column name="junio" precision="12" scale="4" />
+        </property>
+        <property name="julio" type="java.lang.Double">
+            <column name="julio" precision="12" scale="4" />
+        </property>
+        <property name="agosto" type="java.lang.Double">
+            <column name="agosto" precision="12" scale="4" />
+        </property>
+        <property name="septiembre" type="java.lang.Double">
+            <column name="septiembre" precision="12" scale="4" />
+        </property>
+        <property name="octubre" type="java.lang.Double">
+            <column name="octubre" precision="12" scale="4" />
+        </property>
+        <property name="noviembre" type="java.lang.Double">
+            <column name="noviembre" precision="12" scale="4" />
+        </property>
+        <property name="diciembre" type="java.lang.Double">
+            <column name="diciembre" precision="12" scale="4" />
+        </property>
+        
+		
+		<property name="lotesEnero" type="java.lang.String">
+	            <column name="lotes_enero" length="3000" />
+	        </property>
+		<property name="lotesFebrero" type="java.lang.String">
+	            <column name="lotes_febrero" length="3000" />
+	        </property>
+			<property name="lotesMarzo" type="java.lang.String">
+	            <column name="lotes_marzo" length="3000" />
+	        </property>
+	
+	        <property name="lotesAbril" type="java.lang.String">
+	            <column name="lotes_abril" length="3000" />
+	        </property>
+	        <property name="lotesMayo" type="java.lang.String">
+	            <column name="lotes_mayo" length="3000" />
+	        </property>
+	        <property name="lotesJunio" type="java.lang.String">
+	            <column name="lotes_junio" length="3000" />
+	        </property>
+	        <property name="lotesJulio" type="java.lang.String">
+	            <column name="lotes_julio" length="3000" />
+	        </property>
+	        <property name="lotesAgosto" type="java.lang.String">
+	            <column name="lotes_agosto" length="3000" />
+	        </property>
+	        <property name="lotesSeptiembre" type="java.lang.String">
+	            <column name="lotes_septiembre" length="3000" />
+	        </property>
+	        <property name="lotesOctubre" type="java.lang.String">
+	            <column name="lotes_octubre" length="3000" />
+	        </property>
+	        <property name="lotesNoviembre" type="java.lang.String">
+	            <column name="lotes_noviembre" length="3000" />
+	        </property>
+	        <property name="lotesDiciembre" type="java.lang.String">
+	            <column name="lotes_diciembre" length="3000" />
+	        </property>
+	        
+	        	<property name="areaEnero" type="java.lang.Double">
+	            <column name="area_enero" precision="12" scale="4" />
+	        </property>
+		<property name="areaFebrero" type="java.lang.Double">
+	            <column name="area_febrero" precision="12" scale="4" />
+	        </property>
+			<property name="areaMarzo" type="java.lang.Double">
+	            <column name="area_marzo" precision="12" scale="4" />
+	        </property>
+	
+	        <property name="areaAbril" type="java.lang.Double">
+	            <column name="area_abril" precision="12" scale="4" />
+	        </property>
+	        <property name="areaMayo" type="java.lang.Double">
+	            <column name="area_mayo" precision="12" scale="4" />
+	        </property>
+	        <property name="areaJunio" type="java.lang.Double">
+	            <column name="area_junio" precision="12" scale="4" />
+	        </property>
+	        <property name="areaJulio" type="java.lang.Double">
+	            <column name="area_julio" precision="12" scale="4" />
+	        </property>
+	        <property name="areaAgosto" type="java.lang.Double">
+	            <column name="area_agosto" precision="12" scale="4" />
+	        </property>
+	        <property name="areaSeptiembre" type="java.lang.Double">
+	            <column name="area_septiembre" precision="12" scale="4" />
+	        </property>
+	        <property name="areaOctubre" type="java.lang.Double">
+	            <column name="area_octubre" precision="12" scale="4" />
+	        </property>	
+	        <property name="areaNoviembre" type="java.lang.Double">
+	            <column name="area_noviembre" precision="12" scale="4" />
+	        </property>
+	        <property name="areaDiciembre" type="java.lang.Double">
+	            <column name="area_diciembre" precision="12" scale="4" />
+	        </property>
+        
+    </class>
+</hibernate-mapping>

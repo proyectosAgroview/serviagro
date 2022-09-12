@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 15/07/2020 09:38:10 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.PrecioPromMateriaPrima" table="precio_prom_materia_prima" >
+        <id name="precioPromMateriaPrimaId" type="java.lang.Long">
+            <column name="precio_prom_materia_prima_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_id" />
+        </many-to-one>
+        <many-to-one name="trabajador" class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="trab_id" />
+        </many-to-one>
+        <many-to-one name="producto" class="co.com.arcosoft.modelo.Producto" fetch="select">
+            <column name="producto_id" />
+        </many-to-one>
+        <many-to-one name="datOtrosMovInventario" class="co.com.arcosoft.modelo.DatOtrosMovInventario" fetch="select">
+            <column name="dat_otros_mov_inventario_id" />
+        </many-to-one>
+        <many-to-one name="nivel2" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="nivel2_id" />
+        </many-to-one>
+        <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="pers_empr_id" />
+        </many-to-one>
+        <property name="almacenId" type="java.lang.Long">
+            <column name="almacen_id" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="valorUnitario" type="java.lang.Double">
+            <column name="valor_unitario" precision="16" scale="4" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="1000" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="1000" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="0" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="0" />
+        </property>
+        <property name="fechaInicial" type="java.util.Date">
+            <column name="fecha_inicial" length="0" />
+        </property>
+        <property name="fechaFinal" type="java.util.Date">
+            <column name="fecha_final" length="0" />
+        </property>
+        <property name="fechaVencimiento" type="java.util.Date">
+            <column name="fecha_vencimiento" length="0" />
+        </property>
+        <property name="unidadMedida" type="java.lang.Long">
+            <column name="unidad_medida" />
+        </property>
+        <property name="cantidadCompra" type="java.lang.Double">
+            <column name="cantidad_compra" precision="16" scale="4" />
+        </property>
+        <property name="loteCompraProducto" type="java.lang.String">
+            <column name="lote_compra_producto" length="90" />
+        </property>
+        <property name="registroIca" type="java.lang.String">
+            <column name="registro_ica" length="90" />
+        </property>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="conceptoKardexId" type="java.lang.Long">
+            <column name="concepto_kardex_id" />
+        </property>
+        <property name="tipoMovimiento" type="java.lang.String">
+            <column name="tipo_movimiento" length="20" />
+        </property>
+        <property name="numFacturaCompra" type="java.lang.Long">
+            <column name="num_factura_compra" />
+        </property>
+        <property name="costoTotal" type="java.lang.Double">
+            <column name="costo_total" precision="16" scale="4" />
+        </property>
+        <property name="equipoId" type="java.lang.Long">
+            <column name="equipo_id" />
+        </property>
+        <property name="datCompraMateriaPrimaId" type="java.lang.Long">
+            <column name="dat_compra_materia_prima_id" />
+        </property>
+        <property name="valorIva" type="java.lang.Double">
+            <column name="valor_iva" precision="16" scale="4" />
+        </property>
+        <property name="porcIva" type="java.lang.Double">
+            <column name="porc_iva" precision="16" scale="4" />
+        </property>
+        <property name="datServRealizadosEquipoId" type="java.lang.Long">
+            <column name="dat_serv_realizados_equipo_id" />
+        </property>
+        <property name="idalmacen" type="java.lang.String">
+            <column name="idalmacen" length="20" />
+        </property>
+        <property name="idInsumo" type="java.lang.String">
+            <column name="idInsumo" length="20" />
+        </property>
+        <property name="idMaquinaria" type="java.lang.String">
+            <column name="idMaquinaria" length="20" />
+        </property>
+        <property name="conceptoGastoId" type="java.lang.Long">
+            <column name="concepto_gasto_id" />
+        </property>
+        <property name="diferido" type="java.lang.String">
+            <column name="diferido" length="20" />
+        </property>
+        <property name="transportadoraFactura" type="java.lang.String">
+            <column name="transportadora_factura" length="300" />
+        </property>
+        <property name="transportadoraNguia" type="java.lang.String">
+            <column name="transportadora_nguia" length="300" />
+        </property>
+        <property name="origenDatos" type="java.lang.String">
+            <column name="origen_datos" length="60" />
+        </property>
+        <property name="transportadoraValorFlete" type="java.lang.Double">
+            <column name="transportadora_valor_flete" precision="12" scale="4" />
+        </property>
+        <property name="variedId" type="java.lang.Long">
+            <column name="varied_id" />
+        </property>
+        <property name="etapaId" type="java.lang.Long">
+            <column name="etapa_id" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="operarioEquipoId" type="java.lang.Long">
+            <column name="operario_equipo_id" />
+        </property>
+        <property name="nivel2ClientesmqId" type="java.lang.Long">
+            <column name="nivel2_clientesmq_id" />
+        </property>
+        <property name="nivel4ClientesmqId" type="java.lang.Long">
+            <column name="nivel4_clientesmq_id" />
+        </property>
+        <property name="horometroAbastecimiento" type="java.lang.Double">
+            <column name="horometro_abastecimiento" precision="12" scale="4" />
+        </property>
+        <property name="ubicacionAlmacen" type="java.lang.Long">
+            <column name="ubicacion_almacen" />
+        </property>
+        <property name="indicadorVueltaMedidor" type="java.lang.Long">
+            <column name="indicador_vuelta_medidor" />
+        </property>
+        <property name="ubicacionesAlmacenId" type="java.lang.Long">
+            <column name="ubicaciones_almacen_id" />
+        </property>
+    
+    </class>
+</hibernate-mapping>

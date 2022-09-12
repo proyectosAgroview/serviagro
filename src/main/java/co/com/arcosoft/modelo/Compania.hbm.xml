@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Compania" table="compania" >
+        <id name="companiaId" type="java.lang.Long">
+            <column name="compania_id" />
+            <generator class="identity" />
+        </id>
+        <property name="entBanc" type="java.lang.Long">
+            <column name="ent_banc_id" />
+        </property>
+        <property name="ciudad" type="java.lang.Long">
+            <column name="ciudad_id" />
+        </property>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="direccion" type="java.lang.String">
+            <column name="direccion" length="300" />
+        </property>
+        <property name="telefono" type="java.lang.String">
+            <column name="telefono" length="20" />
+        </property>
+        <property name="pbx" type="java.lang.String">
+            <column name="pbx" length="20" />
+        </property>
+        <property name="rut" type="java.lang.String">
+            <column name="rut" length="30" />
+        </property>
+        <property name="longitud" type="java.lang.Double">
+            <column name="longitud" precision="22" scale="0" />
+        </property>
+        <property name="latitud" type="java.lang.Double">
+            <column name="latitud" precision="22" scale="0" />
+        </property>
+        <property name="precision" type="java.lang.Double">
+            <column name="precision1" precision="22" scale="0" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="estadoKml" type="java.lang.String">
+            <column name="estado_kml" length="1" />
+        </property>
+        <property name="urlKml" type="java.lang.String">
+            <column name="url_kml" length="400" />
+        </property>        
+        <property name="nivelAutorizaLabor" type="java.lang.String">
+            <column name="nivel_autoriza_labor" length="20" />
+        </property>
+        
+        <property name="consecutivoEntradas" type="java.lang.Long">
+            <column name="consecutivo_entradas" />
+        </property>
+        <property name="consecutivoSalidas" type="java.lang.Long">
+            <column name="consecutivo_salidas" />
+        </property>
+        <property name="consecutivoFacturaCali" type="java.lang.Long">
+            <column name="consecutivo_factura_cali" />
+        </property>
+        <property name="email" type="java.lang.String">
+            <column name="email" length="100" />
+        </property>
+        <property name="desFiscal" type="java.lang.String">
+            <column name="des_Fiscal" length="300" />
+        </property>
+        <property name="subtitulo" type="java.lang.String">
+            <column name="subtitulo" length="300" />
+        </property>
+        <property name="prefijo" type="java.lang.String">
+            <column name="prefijo" length="100" />
+        </property>
+        <property name="resolucion" type="java.lang.String">
+            <column name="resolucion" length="300" />
+        </property>
+        <property name="imprimeFactura" type="java.lang.String">
+            <column name="imprime_factura" length="100" />
+        </property>
+        <property name="codigoGastoCmb"  type="java.lang.Long">
+            <column name="codigo_gasto_cmb" />
+        </property>
+        <property name="codigoGastoNomina" type="java.lang.Long">
+            <column name="codigo_gasto_nomina"  />
+        </property>
+        <property name="consecutivoCajaMenor" type="java.lang.Long">
+            <column name="consecutivo_caja_menor" />
+        </property>
+        <property name="consecutivoGastos" type="java.lang.Long">
+            <column name="consecutivo_gastos" />
+        </property>
+        <property name="consecutivoTraslados" type="java.lang.Long">
+            <column name="consecutivo_traslados" />
+        </property>
+        <property name="consecutivoOrdCompras" type="java.lang.Long">
+            <column name="consecutivo_ord_compras" />
+        </property>
+        <property name="codigoEntredas" type="java.lang.String">
+            <column name="codigo_entredas" length="100" />
+        </property>
+        <property name="consecutivoFacturaRozo" type="java.lang.Long">
+            <column name="consecutivo_factura_rozo" />
+        </property>
+        <property name="anioCurso" type="java.lang.Long">
+            <column name="anio_curso" />
+        </property>
+        <property name="consecutivoCotizacion" type="java.lang.Long">
+            <column name="consecutivo_cotizacion" />
+        </property>
+        <property name="auxilioMovilizacion" type="java.lang.Double">
+            <column name="auxilio_movilizacion" precision="12" scale="4" />
+        </property>
+        <property name="consecutivoGastosoperacion" type="java.lang.Long">
+            <column name="consecutivo_gastosoperacion" />
+        </property>
+        <property name="consecutivoPrefactura" type="java.lang.Long">
+            <column name="consecutivo_prefactura" />
+        </property>
+        <property name="conceptoAuxTransporte" type="java.lang.Long">
+            <column name="concepto_aux_transporte" />
+        </property>
+         <property name="kardexEntradaEstandar" type="java.lang.Long">
+            <column name="kardex_entrada_estandar" />
+        </property>
+         <property name="kardexSalidaEstandar" type="java.lang.Long">
+            <column name="kardex_salida_estandar" />
+        </property>
+         <property name="productoCombustibleId" type="java.lang.Long">
+            <column name="producto_combustible_id" />
+        </property>
+
+        <property name="valorUvt" type="java.lang.Double">
+            <column name="valor_uvt" precision="12" scale="4" />
+        </property>
+        <property name="salarioMinimoLegal" type="java.lang.Double">
+            <column name="salario_minimo_legal" precision="12" scale="4" />
+        </property>
+        <property name="topeSmlAuxTransporte" type="java.lang.Double">
+            <column name="tope_sml_aux_transporte" precision="12" scale="4" />
+        </property>
+        <property name="rentasExentasUvt" type="java.lang.Double">
+            <column name="rentas_exentas_uvt" precision="12" scale="4" />
+        </property>
+        <property name="porcMinContribucion" type="java.lang.Double">
+            <column name="porc_min_contribucion" precision="12" scale="4" />
+        </property>
+        <property name="ipc" type="java.lang.Double">
+            <column name="ipc" precision="12" scale="4" />
+        </property>
+        <property name="auxilioTransporte" type="java.lang.Double">
+            <column name="auxilio_transporte" precision="12" scale="4" />
+        </property>
+        <property name="porcRentasExternas" type="java.lang.Double">
+            <column name="porc_rentas_externas" precision="12" scale="4" />
+        </property>
+        <property name="porcLey1527" type="java.lang.Double">
+            <column name="porc_ley_1527" precision="12" scale="4" />
+        </property>
+        <property name="tarifaIvaRetenido" type="java.lang.Double">
+            <column name="tarifa_iva_retenido" precision="12" scale="4" />
+        </property>
+        <property name="porcProvisionCesantias" type="java.lang.Double">
+            <column name="porc_provision_cesantias" precision="12" scale="4" />
+        </property>
+        
+        <property name="porcProvisionPrimas" type="java.lang.Double">
+            <column name="porc_provision_primas" precision="12" scale="4" />
+        </property>
+        <property name="porcProvisionVacaciones" type="java.lang.Double">
+            <column name="porc_provision_vacaciones" precision="12" scale="4" />
+        </property>
+        
+        <property name="porcProvisionInteresesCesantias" type="java.lang.Double">
+            <column name="porc_provision_intereses_cesantias" precision="12" scale="4" />
+        </property>
+        <property name="porcAporteEpsEmpleador" type="java.lang.Double">
+            <column name="porc_aporte_eps_empleador" precision="12" scale="4" />
+        </property>
+        <property name="porcAporteAfpAltoRiesgoEmpleador" type="java.lang.Double">
+            <column name="porc_aporte_afp_alto_riesgo_empleador" precision="12" scale="4" />
+        </property>
+        <property name="porcAporteIcbfEmpleador" type="java.lang.Double">
+            <column name="porc_aporte_icbf_empleador" precision="12" scale="4" />
+        </property>
+        <property name="porcAporteAfpEmpleador" type="java.lang.Double">
+            <column name="porc_aporte_afp_empleador" precision="12" scale="4" />
+        </property>
+        <property name="porcAporteCcfEmpleador" type="java.lang.Double">
+            <column name="porc_aporte_ccf_empleador" precision="12" scale="4" />
+        </property>
+        <property name="porcAporteSenaEmpleador" type="java.lang.Double">
+            <column name="porc_aporte_sena_empleador" precision="12" scale="4" />
+        </property>
+        <property name="minimoSmlAporteSenaIcbf" type="java.lang.Double">
+            <column name="minimo_sml_aporte_sena_icbf" precision="12" scale="4" />
+        </property>
+        <property name="aportesNominaLiquidan" type="java.lang.String">
+            <column name="aportes_nomina_liquidan" />
+        </property>
+        <property name="topeSmlCotizarEps" type="java.lang.Double">
+            <column name="tope_sml_cotizar_eps" precision="12" scale="4" />
+        </property>
+        <property name="topeSmlCotizarAfp" type="java.lang.Double">
+            <column name="tope_sml_cotizar_afp" precision="12" scale="4" />
+        </property>
+        <property name="topeSmlCotizarArl" type="java.lang.Double">
+            <column name="tope_sml_cotizar_arl" precision="12" scale="4" />
+        </property>
+        <property name="auxilioTransporteLiquidan" type="java.lang.String">
+            <column name="auxilio_transporte_liquidan" />
+        </property>
+        <property name="porcAporteEpsTrabajador" type="java.lang.Double">
+            <column name="porc_aporte_eps_trabajador" precision="12" scale="4" />
+        </property>
+        <property name="porcAporteAfpTrabajador" type="java.lang.Double">
+            <column name="porc_aporte_afp_trabajador" precision="12" scale="4" />
+        </property>
+        <property name="porcAporteFspTrabajador" type="java.lang.Double">
+            <column name="porc_aporte_fsp_trabajador" precision="12" scale="4" />
+        </property>
+        <property name="minimoSmlAportaFSP" type="java.lang.Double">
+            <column name="minimo_sml_aporta_fSP" precision="12" scale="4" />
+        </property>
+           <property name="devengoMinimoDiario" type="java.lang.Double">
+            <column name="devengo_minimo_diario" precision="12" scale="4" />
+        </property>
+      
+      
+      
+        <set name="usuarioses" table="usuarios" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="compania_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Usuarios" />
+        </set>
+    </class>
+</hibernate-mapping>

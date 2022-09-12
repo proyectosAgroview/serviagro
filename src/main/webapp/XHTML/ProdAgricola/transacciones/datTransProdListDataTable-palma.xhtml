@@ -1,0 +1,879 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatTransProd"
+						header="Registros de producción">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datTransProdView.data}"
+							var="datTransProd" paginator="true" lazy="true" rows="5"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datTransProd" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{datTransProd.consecutivo}"
+								sortBy="#{datTransProd.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datTransProd.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datTransProd.fechaRegistro}"
+								sortBy="#{datTransProd.fechaRegistro}">
+								<f:facet name="header">
+									<h:outputText value="Fecha de registro" />
+								</f:facet>
+								<h:outputText value="#{datTransProd.fechaRegistro}" />
+							</p:column>
+
+							<p:column filterBy="#{datTransProd.tipoTransaccion}"
+								sortBy="#{datTransProd.tipoTransaccion}">
+								<f:facet name="header">
+									<h:outputText value="Tipo Transacción" />
+								</f:facet>
+								<h:outputText value="#{datTransProd.tipoTransaccion}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogDatTransProd"
+										disabled="#{datTransProd.estadoTrue}"
+										actionListener="#{datTransProdView.action_edit}">
+										<f:attribute name="selectedDatTransProd"
+											value="#{datTransProd}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"
+										disabled="#{datTransProd.estadoTrue}" title="Anular Registro"
+										actionListener="#{datTransProdView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatTransProd"
+											value="#{datTransProd}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datTransProdView.action_new()}"
+								update=":dialogDatTransProd" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatTransProd" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datTransProdView.showDialog}" resizable="false"
+					modal="true" width="800"  styleClass="dialogFix" header="Registros de producción"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatTransProd"
+							>
+
+							<p:tabView>
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="3" id="panelGrid2">
+										<p:outputLabel value="# Consecutivo: " />
+										<p:inputText id="txtConsecutivo" disabled="false"
+											binding="#{datTransProdView.txtConsecutivo}"
+											placeholder="Buscar o crear registro" size="23">
+										</p:inputText>
+										<p:outputLabel />
+									
+										<p:outputLabel for="msgFechaRegistro"
+											value="Fecha de ejecución: " />
+										<p:calendar id="msgFechaRegistro" showOn="button"
+											navigator="false" locale="es"
+											binding="#{datTransProdView.txtFechaRegistro}"
+											pattern="dd/MM/yyyy" mask="true" required="true"
+											requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaRegistro" />
+									
+
+										<p:outputLabel for="txtTipoTransaccion" value="Transacción:" />
+										<p:selectOneMenu id="txtTipoTransaccion" disabled="true"
+											binding="#{datTransProdView.selectTipoTransaccion}"
+											required="true" style="width: 10%;"
+											requiredMessage="Seleccione una transacción">
+											<f:selectItem itemLabel="Producción" itemValue="Producción" />
+										</p:selectOneMenu>
+										<p:message for="txtTipoTransaccion" />
+
+										<p:outputLabel for="txtTranspId_Transportadora"
+											value="Transportadora: " />
+										<p:selectOneMenu id="txtTranspId_Transportadora" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{datTransProdView.txtTranspId_Transportadora}"
+											style="width: 10%;" required="false"
+											requiredMessage="Seleccione una transportadora">
+											<f:selectItem itemLabel="Seleccione una transportadora"
+												itemValue="" />
+											<f:selectItems
+												value="#{datTransProdView.selectTransportadora}" />
+										</p:selectOneMenu>
+										<p:message for="txtTranspId_Transportadora" />
+
+										<p:outputLabel for="txtVehiTranspId_VehiculosTransp"
+											value="Vehiculo: " />
+										<p:selectOneMenu id="txtVehiTranspId_VehiculosTransp"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{datTransProdView.txtVehiTranspId_VehiculosTransp}"
+											style="width: 10%;" required="false"
+											requiredMessage="Seleccione un vehiculo">
+											<f:selectItem itemLabel="Seleccione un vehiculo" itemValue="" />
+											<f:selectItems
+												value="#{datTransProdView.selectVehiculosTransp}" />
+										</p:selectOneMenu>
+										<p:message for="txtVehiTranspId_VehiculosTransp" />
+
+										<p:outputLabel for="txtConductorId_Conductor"
+											value="Conductor: " />
+										<p:selectOneMenu id="txtConductorId_Conductor" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{datTransProdView.txtConductorId_Conductor}"
+											style="width: 10%;" required="false"
+											requiredMessage="Seleccione un conductor">
+											<f:selectItem itemLabel="Seleccione un conductor"
+												itemValue="" />
+											<f:selectItems value="#{datTransProdView.selectConductor}" />
+										</p:selectOneMenu>
+										<p:message for="txtConductorId_Conductor" />
+
+										<p:outputLabel for="txtObservacion" value="Observación:" />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{datTransProdView.txtObservacion}" rows="3"
+											cols="30"  maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText  />
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtDatTransProdId"
+											binding="#{datTransProdView.txtDatTransProdId}">
+											<p:ajax update=":dialogDatTransProd"
+												listener="#{datTransProdView.listener_txtId}" />
+										</p:inputText>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Producción">
+
+									<h:panelGrid columns="2" id="gridDetTransProdNivel4">
+
+										<p:outputLabel for="txtModalidadCosId_ModalidadCosecha"
+											value="Tipo de cosecha: " />
+										<p:selectOneMenu id="txtModalidadCosId_ModalidadCosecha"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{datTransProdView.txtModalidadCosId_ModalidadCosecha}"
+											style="width: 10%;" required="false"
+											requiredMessage="Seleccione un tipo">
+											<f:selectItem itemLabel="Seleccione un tipo" itemValue="" />
+											<f:selectItems
+												value="#{datTransProdView.selectModalidadCosecha}" />
+											<p:ajax
+												listener="#{datTransProdView.listener_ConsultaNombreModCos}"
+												update="txtNombreModCosecha" />
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtNivel1Id" value="Zona: " />
+										<p:selectOneMenu id="txtNivel1Id" effect="fade" filter="true"
+											filterMatchMode="contains" style="width: 10%;"
+											binding="#{datTransProdView.txtNivel1Id}" required="false"
+											requiredMessage="Seleccione una zona">
+											<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+											<f:selectItems value="#{datTransProdView.selectNivel1}" />
+											<p:ajax update="txtNivel2Id" />
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtNivel2Id" value="Hacienda: " />
+										<p:selectOneMenu id="txtNivel2Id" effect="fade" filter="true"
+											filterMatchMode="contains" style="width: 10%;"
+											binding="#{datTransProdView.txtNivel2Id}" required="false"
+											requiredMessage="Seleccione una hacienda">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems value="#{datTransProdView.selectNivel2}" />
+											<p:ajax 
+												listener="#{datTransProdView.listener_ConsultaNombreNivel2}"
+											update="txtNivel3Id, txtNombreNivel2, txtPesoPromedio" />
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtNivel3Id" value="Bloque: " />
+										<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+											filterMatchMode="contains" style="width: 10%;"
+											binding="#{datTransProdView.txtNivel3Id}" required="false"
+											requiredMessage="Seleccione un bloque del cultivo">
+											<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+											<f:selectItems value="#{datTransProdView.selectNivel3}" />
+											<p:ajax 
+												update="txtNivel4Id_Nivel4" />
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: " />
+										<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{datTransProdView.txtNivel4Id_Nivel4}"
+											style="width: 10%;" required="false"
+											requiredMessage="Seleccione un lote">
+											<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+											<f:selectItems value="#{datTransProdView.selectNivel4}" />
+											<p:ajax
+												listener="#{datTransProdView.listener_ConsultaAreaNivel4}"
+												update="txtAreaCosechada, txtCodigoNivel4, txtNombreNivel4" />
+										</p:selectOneMenu>
+										
+							
+											<p:outputLabel for="txtAreaCosechada"  
+													value="Área cosechada: " />
+										<p:inputText id="txtAreaCosechada" disabled="true"
+											binding="#{datTransProdView.txtAreaCosechada}" 
+											required="false" requiredMessage="Indique el área cosechada">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										
+										<p:outputLabel for="txtIndicadorDistribuccion" 
+											value="Indicador Distribucción: " />
+										<p:selectOneMenu id="txtIndicadorDistribuccion" 
+											binding="#{datTransProdView.txtIndicadorDistribuccion}" required="false"
+											requiredMessage="Indicador">
+
+											<f:selectItem itemLabel="0" itemValue="0" />
+											<f:selectItem itemLabel="1" itemValue="1" />
+											<f:selectItem itemLabel="2" itemValue="2" />
+											<f:selectItem itemLabel="3" itemValue="3" />
+											<f:selectItem itemLabel="4" itemValue="4" />
+											<f:selectItem itemLabel="5" itemValue="5" />
+										</p:selectOneMenu>
+								
+										<p:outputLabel for="txtPesoPromedio" value="Peso promedio: "  />
+										<p:inputText id="txtPesoPromedio" disabled="true" 
+											binding="#{datTransProdView.txtPesoPromedio}"
+											required="false" requiredMessage="Indique el peso">
+										</p:inputText>
+										
+											<p:outputLabel for="txtCantidadRacimos" value="# Racimos cortados: "  />
+										<p:inputText id="txtCantidadRacimos" disabled="true"
+											binding="#{datTransProdView.txtCantidadRacimos}"
+											required="false" requiredMessage="Indique el número de racimos">
+										</p:inputText>
+										
+								
+										<p:outputLabel for="txtFinCosecha" value="Fin de cosecha: " />
+										<p:selectOneRadio id="txtFinCosecha" disabled="true"
+											binding="#{datTransProdView.txtFinCosecha}" required="false"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Sí" itemValue="Si" />
+											<f:selectItem itemLabel="No" itemValue="No" />
+										</p:selectOneRadio>
+											
+											<p:inputText style="visibility:hidden" id="txtNombreModCosecha"
+												binding="#{datTransProdView.txtNombreModCosecha}"/>												
+											<p:inputText style="visibility:hidden" id="txtNombreNivel2"
+												binding="#{datTransProdView.txtNombreNivel2}" />
+												
+											<p:inputText style="visibility:hidden" id="txtCodigoNivel4"
+												binding="#{datTransProdView.txtCodigoNivel4}"/>												
+											<p:inputText style="visibility:hidden" id="txtNombreNivel4"
+												binding="#{datTransProdView.txtNombreNivel4}" />
+													
+									</h:panelGrid>
+
+									<h:panelGrid columns="2" id="PanelGrid6" style="margin:10px"
+										cellpadding="5">
+
+										<f:facet name="header">
+
+											<p:commandButton id="btnAgregarNivel4" icon="ui-icon-plusthick"
+												binding="#{datTransProdView.btnAgregarNivel4}" value="Agregar"
+												action="#{datTransProdView.action_agregarNivel4()}"
+												update="tablaDetTransNivel4 :dialogDatTransProd" />
+
+											<p:commandButton id="btnlimpiar1" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="gridDetTransProdNivel4" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+
+									</h:panelGrid>
+
+									<p:outputPanel>
+
+										<p:dataTable id="tablaDetTransNivel4"
+											value="#{datTransProdView.dataDetTransNivel4}"
+											var="listaDetTransNivel4" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+											editable="true">
+
+											<p:ajax event="rowEdit" update="@this " process="@this"
+												listener="#{datTransProdView.rowEventEditDetTransProdListener}" />
+
+											<p:column headerText="Hacienda">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransNivel4.nombreNivel2}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransNivel4.nombreNivel2}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Cod. Lote">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransNivel4.codigoNivel4}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransNivel4.codigoNivel4}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Lote">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransNivel4.nombreNivel4}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransNivel4.nombreNivel4}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="Área Cos">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransNivel4.areaCosechada}"  >
+									   <f:convertNumber pattern="#0" />
+							  		 </h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransNivel4.areaCosechada}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="P. Promedio">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransNivel4.pesoPromedio}"  >
+														   <f:convertNumber pattern="#0" />
+							  		 </h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransNivel4.pesoPromedio}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="Racimos">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransNivel4.cantidadRacimos}"  >
+									   <f:convertNumber pattern="#0" />
+							  		 </h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransNivel4.cantidadRacimos}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											
+											<p:column headerText="I. Distribucción">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransNivel4.indicadorDistribuccion}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransNivel4.indicadorDistribuccion}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											
+											
+											<p:column headerText="Fin cosecha">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransNivel4.finCosecha}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransNivel4.finCosecha}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datTransProdView.actionDeleteDatTransProdNivel4}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaDetTransNivel4 :dialogDatTransProd">
+														<f:attribute name="selectedDatTransNivel4"
+															value="#{listaDetTransNivel4}" />
+													</p:commandButton>
+
+												</div>
+											</p:column>
+
+										</p:dataTable>
+									</p:outputPanel>
+								</p:tab>
+
+
+								<p:tab title="Detalle de productos">
+
+									<h:panelGrid columns="3" id="gridDetTransProd">
+
+										<p:outputLabel for="txtDestinoProduccion"
+											value="Destino de la producción: " />
+										<p:selectOneMenu id="txtDestinoProduccion"
+											binding="#{datTransProdView.txtDestinoProduccion}"
+											style="width: 10%;" required="false"
+											requiredMessage="Seleccione un destino">
+											<f:selectItem itemLabel="Seleccione un destino" itemValue="" />
+											<f:selectItem itemLabel="Fábrica" itemValue="Fábrica" />
+											<f:selectItem itemLabel="Venta" itemValue="Venta" />
+											<f:selectItem itemLabel="Semilla" itemValue="Semilla" />
+											<f:selectItem itemLabel="Otros" itemValue="Otros" />
+										</p:selectOneMenu>
+										<p:message for="txtDestinoProduccion" />
+									
+										<p:outputLabel for="txtClienteDet" value="Cliente: " />
+										<p:selectOneMenu id="txtClienteDet" effect="fade"
+											filter="true" filterMatchMode="contains" style="width: 10%;"
+											binding="#{datTransProdView.txtClienteDet}" required="false"
+											requiredMessage="Seleccione un cliente">
+											<f:selectItem itemLabel="Seleccione un cliente" itemValue="" />
+											<f:selectItems value="#{datTransProdView.selectCliente}" />
+																					<p:ajax
+												listener="#{datTransProdView.listener_ConsultaCodCliente}"
+												update="txtCodCliente" />
+										
+										</p:selectOneMenu>
+										<p:message for="txtClienteDet" />
+									
+										<p:outputLabel for="txtCiudad" value="Ciudad: " />
+										<p:selectOneMenu id="txtCiudad" effect="fade" filter="true"
+											filterMatchMode="contains" style="width: 10%;"
+											binding="#{datTransProdView.txtCiudad}" required="false"
+											requiredMessage="Seleccione una ciudad">
+											<f:selectItem itemLabel="Seleccione una ciudad" itemValue="" />
+											<f:selectItems value="#{datTransProdView.selectCiudad}" />
+																					<p:ajax
+												listener="#{datTransProdView.listener_ConsultaNombreCiudad}"
+												update="txtNombreCiudad" />
+										
+										</p:selectOneMenu>
+										<p:message for="txtCiudad" />
+									
+										<p:outputLabel for="txtProducto" value="Producto: " />
+										<p:selectOneMenu id="txtProducto" effect="fade" filter="true"
+											filterMatchMode="contains" style="width: 10%;"
+											binding="#{datTransProdView.txtProducto}" required="false"
+											requiredMessage="Seleccione un producto">
+											<f:selectItem itemLabel="Seleccione un producto" itemValue="" />
+											<f:selectItems value="#{datTransProdView.selectProductoId}" />
+											<p:ajax
+												listener="#{datTransProdView.listener_ConsultaUmProducto}"
+												update="txtUdadMed, txtNombreProducto, txtNombreUdadMed" />
+
+										</p:selectOneMenu>
+										<p:message for="txtProducto" />
+									
+										<p:outputLabel for="txtUdadMed" value="Unidad de medida: " />
+										<p:selectOneMenu id="txtUdadMed" effect="fade" filter="true"
+											filterMatchMode="contains" style="width: 10%;"
+											binding="#{datTransProdView.txtUdadMed}" required="false"
+											requiredMessage="Seleccione una unidad de medida">
+											<f:selectItem itemLabel="Seleccione una unidad de medida"
+												itemValue="" />
+											<f:selectItems value="#{datTransProdView.selectUdadMed}" />
+											
+										</p:selectOneMenu>
+										<p:message for="txtUdadMed" />
+									
+										<p:outputLabel for="txtEmpaque" value="Empaque: " />
+										<p:selectOneMenu id="txtEmpaque" effect="fade" disabled="true"
+											filter="true" filterMatchMode="contains" style="width: 10%;"
+											binding="#{datTransProdView.txtEmpaque}" required="false"
+											requiredMessage="Seleccione un empaque">
+											<f:selectItem itemLabel="Seleccione un empaque" itemValue="" />
+											<f:selectItems value="#{datTransProdView.selectEmpaqueId}" />
+																				<p:ajax
+												listener="#{datTransProdView.listener_ConsultaCodEmpaque}"
+												update="txtCodEmpaque" />
+									
+										</p:selectOneMenu>
+										<p:message for="txtEmpaque" />
+									
+
+										<p:outputLabel for="txtCantidadSolicitada"
+											value="Cantidad estimada: " />
+										<p:inputText id="txtCantidadSolicitada" disabled="true"
+											binding="#{datTransProdView.txtCantidadSolicitada}"
+											required="false"
+											requiredMessage="Indique la cantidad solicitada">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtCantidadSolicitada" />
+									
+										<p:outputLabel for="txtCantidadReal" value="Cantidad real: " />
+										<p:inputText id="txtCantidadReal" disabled="true"
+											binding="#{datTransProdView.txtCantidadReal}"
+											required="false"
+											requiredMessage="Indique la cantidad (Producción/Recibida/Despachada) ">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtCantidadReal" />
+									
+										<p:outputLabel for="txtRendimiento" value="Rendimiento: " />
+										<p:inputText id="txtRendimiento" disabled="true"
+											binding="#{datTransProdView.txtRendimiento}" required="false"
+											requiredMessage="Indique el rendimiento">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtRendimiento" />
+									
+										<p:outputLabel for="txtValorUnitario" value="Valor unitario: " />
+										<p:inputText id="txtValorUnitario" disabled="true"
+											binding="#{datTransProdView.txtValorUnitario}"
+											required="false" requiredMessage="Indique el valor unitario">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtValorUnitario" />
+									
+										<p:outputLabel for="txtValorTotal" value="Costo total: " />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtValorTotal"
+												binding="#{datTransProdView.txtValorTotal}" disable="true">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											<p:commandButton icon="ui-icon-calculator" value="Calcular">
+												<p:ajax process="@this,txtValorUnitario,txtCantidadReal"
+													update="txtValorTotal"
+													listener="#{datTransProdView.listener_calcularCostoTotal}" />
+											</p:commandButton>
+										</p:panelGrid>
+										<p:message for="txtValorTotal" />
+									
+										
+											<p:inputText style="visibility:hidden" id="txtNombreProducto"
+												binding="#{datTransProdView.txtNombreProducto}"/>												
+											<p:inputText style="visibility:hidden" id="txtNombreUdadMed"
+												binding="#{datTransProdView.txtNombreUdadMed}" />
+												
+											<p:inputText style="visibility:hidden" id="txtNombreCiudad"
+												binding="#{datTransProdView.txtNombreCiudad}"/>												
+											<p:inputText style="visibility:hidden" id="txtCodCliente"
+												binding="#{datTransProdView.txtCodCliente}" />
+												
+											<p:inputText style="visibility:hidden" id="txtCodEmpaque"
+												binding="#{datTransProdView.txtCodEmpaque}"/>												
+											
+												
+
+									</h:panelGrid>
+
+									<h:panelGrid columns="2" id="PanelGrid5" style="margin:10px"
+										cellpadding="5">
+
+										<f:facet name="header">
+
+											<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+												binding="#{datTransProdView.btnAgregar}" value="Agregar"
+												action="#{datTransProdView.action_agregarProductos()}"
+												update="tablaDetTransProductos :dialogDatTransProd" />
+
+											<p:commandButton id="btnlimpiar" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="gridDetTransProd" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+
+									</h:panelGrid>
+
+									<p:outputPanel>
+
+										<p:dataTable id="tablaDetTransProductos"
+											value="#{datTransProdView.dataDetTransProductos}"
+											var="listaDetTransProductos" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+											editable="true">
+
+											<p:ajax event="rowEdit" update="@this " process="@this"
+												listener="#{datTransProdView.rowEventEditDetTransProdListener}" />
+
+											<p:column headerText="Clientes">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransProductos.nombreCliente}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransProductos.nombreCliente}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Ciudad">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransProductos.nombreCiudad}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransProductos.nombreCiudad}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Producto">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransProductos.nombreProducto}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransProductos.nombreProducto}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Unidad de medida">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransProductos.nombreUdadeMed}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransProductos.nombreUdadeMed}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Empaque">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransProductos.codigoEmpaque}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransProductos.codigoEmpaque}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Cantidad solicitada">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransProductos.cantidadSolicitada}"  >
+									   <f:convertNumber pattern="#0" />
+							  		 </h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransProductos.cantidadSolicitada}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Cantidad real">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransProductos.cantidadReal}"  >
+									   <f:convertNumber pattern="#0" />
+							  		 </h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransProductos.cantidadReal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Rto">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransProductos.rendimiento}"  >
+									   <f:convertNumber pattern="#0" />
+							  		 </h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetTransProductos.rendimiento}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Valor unitario">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetTransProductos.valorUnitario}"  >
+									   <f:convertNumber pattern="#0" />
+							  		 </h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetTransProductos.valorUnitario}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Costo total">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetTransProductos.valorTotal}"  >
+									   <f:convertNumber pattern="#0" />
+							  		 </h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetTransProductos.valorTotal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datTransProdView.actionDeleteDatTransProdDet}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaDetTransProductos :dialogDatTransProd">
+														<f:attribute name="selectedDatTransProdDet"
+															value="#{listaDetTransProductos}" />
+													</p:commandButton>
+
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								</p:tab>
+
+
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datTransProdView.btnSave}" value="Grabar"
+									action="#{datTransProdView.action_save()}"
+									update=":dialogDatTransProd :frm:panelDataTableDatTransProd" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datTransProdView.action_clear()}"
+									process="@this" update=":dialogDatTransProd " />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datTransProdView.showDialog}" modal="true" width="500"
+					>
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datTransProdView.txtObservacionAnularReg}" rows="5"
+									cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datTransProdView.btnDelete}"
+									value="Grabar"
+									action="#{datTransProdView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatTransProd" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datTransProdView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

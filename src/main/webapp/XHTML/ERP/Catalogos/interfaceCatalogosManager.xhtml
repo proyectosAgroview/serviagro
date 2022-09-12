@@ -1,0 +1,109 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+
+				<h:form id="frm">
+
+                   <p:growl id="growl" />
+
+					<p:panel id="panelDataTable"
+						header="Interface: Importar catalogos Manager">
+
+						<p:progressBar widgetVar="pbAjax" ajax="true"
+							value="#{interfaceCatalogosManagerView.progress}"
+							labelTemplate="{value}%" styleClass="animated"  global="false">
+							<p:ajax event="complete"
+								update="growl" oncomplete="PF('startButton2').enable();PF('startButton3').enable();PF('startButton4').enable();PF('startButton5').enable();PF('startButton6').enable();PF('startButton7').enable();" />
+						</p:progressBar>
+                        
+                        <div align="center">
+						<p:panelGrid styleClass="ui-panelgrid-blank" >
+							
+								    <p:row>
+										<p:column>
+                                          <p:panelGrid columns="2">
+											<p:commandButton id="btn1A" value="Importar Almacen"
+												icon="ui-icon-newwin"
+												onclick="PF('pbAjax').cancel();PF('pbAjax').start();PF('startButton2').disable();"
+												widgetVar="startButton2"
+												action="#{interfaceCatalogosManagerView.cargarAlmacenErp()}" />
+
+											<p:commandButton id="btn1"  
+											    value="Importar Unidad de Medida"
+												icon="ui-icon-newwin"
+												onclick="PF('pbAjax').cancel();PF('pbAjax').start();PF('startButton3').disable();"
+												widgetVar="startButton3"
+												action="#{interfaceCatalogosManagerView.cargarUnidadMedidaErp()}" />
+
+											<p:commandButton id="btn2" value="Importar Centro de Costo"
+												icon="ui-icon-newwin"
+												onclick="PF('pbAjax').cancel();PF('pbAjax').start();PF('startButton4').disable();"
+												widgetVar="startButton4"
+												action="#{interfaceCatalogosManagerView.cargarCentroCostoErp()}" />
+
+											<p:commandButton id="btn3" value="Importar Tipo Producto"
+												icon="ui-icon-newwin"
+												onclick="PF('pbAjax').cancel();PF('pbAjax').start();PF('startButton5').disable();"
+												widgetVar="startButton5"
+												action="#{interfaceCatalogosManagerView.cargarTipoProductoErp()}" />
+												
+											<p:commandButton id="btn4" value="Importar Producto"
+												icon="ui-icon-newwin"
+												onclick="PF('pbAjax').cancel();PF('pbAjax').start();PF('startButton6').disable();"
+												widgetVar="startButton6"
+												action="#{interfaceCatalogosManagerView.cargarProductoErp()}" />
+
+											<p:commandButton id="btn5" value="Importar Empresas"
+												icon="ui-icon-newwin"
+												onclick="PF('pbAjax').cancel();PF('pbAjax').start();PF('startButton7').disable();"
+												widgetVar="startButton7"
+												action="#{interfaceCatalogosManagerView.cargarEmpresasErp()}" />
+                                          </p:panelGrid>
+										</p:column>
+
+								
+
+									</p:row>
+ 						
+						</p:panelGrid>
+							  </div>
+						<p:panel>
+						  <div align="center">
+						  
+						        <p:commandButton id="btn6" value="Importar todo"
+												icon="ui-icon-newwin" disabled="true"
+												action="#{interfaceCatalogosManagerView.cargarCatalogos()}" />
+						  
+						    	<p:commandButton value="Cancelar importanción"
+												actionListener="#{interfaceCatalogosManagerView.cancel}"
+												oncomplete="PF('pbAjax').cancel();PF('startButton2').enable();PF('startButton3').enable();PF('startButton4').enable();PF('startButton5').enable();PF('startButton6').enable();PF('startButton7').enable();" />
+						  </div>
+						  
+						
+						</p:panel>
+
+					</p:panel>
+
+				</h:form>
+				<style  type="text/css" >
+				    .animated .ui-progressbar-value { 
+				        background-image: url("#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/Pbar2.gif"); 
+				    }
+				</style>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

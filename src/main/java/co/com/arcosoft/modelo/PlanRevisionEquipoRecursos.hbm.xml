@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 24-mar-2018 15:52:14 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.PlanRevisionEquipoRecursos" table="plan_revision_equipo_recursos" >
+        <id name="planRevisionEquipoRecursosId" type="java.lang.Long">
+            <column name="plan_revision_equipo_recursos_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="planRevisionEquipo" class="co.com.arcosoft.modelo.PlanRevisionEquipo" fetch="select">
+            <column name="plan_revision_equipo_id" />
+        </many-to-one>
+        <many-to-one name="tpRecursoId" class="co.com.arcosoft.modelo.TipoRecurso" fetch="select">
+            <column name="tp_recurso_id" />
+        </many-to-one>
+        <property name="recursoId" type="java.lang.Long">
+            <column name="recurso_id" />
+        </property>
+        <many-to-one name="udadMedId" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <property name="rendimientoRecurso" type="java.lang.Double">
+            <column name="rendimiento_recurso" precision="12" scale="4" />
+        </property>
+        <property name="nombreRecurso" type="java.lang.String">
+            <column name="nombre_recurso" length="100" />
+        </property>
+    </class>
+</hibernate-mapping>

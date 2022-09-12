@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.CronogramaLaboresNivel4" table="cronograma_labores_nivel4" >
+        <id name="cronogramaLaboresNivel4Id" type="java.lang.Long">
+            <column name="cronograma_labores_nivel4_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_id" />
+        </many-to-one>
+        <many-to-one name="nivel2Id" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="nivel2_id" />
+        </many-to-one>
+        <many-to-one name="cronogramaLabores" class="co.com.arcosoft.modelo.CronogramaLabores" fetch="select">
+            <column name="cronograma_labores_id" />
+        </many-to-one>
+        <property name="areaNeta" type="java.lang.Double">
+            <column name="area_neta" precision="12" scale="4" />
+        </property>
+        <property name="numeroPlantas" type="java.lang.Double">
+            <column name="numero_plantas" precision="12" scale="4" />
+        </property>
+        <property name="fechaStart" type="java.util.Date">
+            <column name="fecha_start" length="19" />
+        </property>
+        
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,801 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 100}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+				<p:panel id="panelDataTableDatTransProd"
+						header="Registros de de cosecha(Producción)">
+				<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtFechaIni" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaIni" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{datTransProdView.txtFechaIni}"
+											required="false"
+											requiredMessage="La Fecha inicial es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="txtFechaFin" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{datTransProdView.txtFechaFin}"
+											required="false"
+											requiredMessage="La Fecha  final  es obligatoria">
+										</p:calendar>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtPlanilla" value="n° Planilla "
+											style="font-size: 0.9em;" />
+										<p:inputNumber id="txtPlanilla" style="font-size: 0.9em;"
+											binding="#{datTransProdView.txtPlanilla}"
+										 autoResize="true" size="15">
+											<f:convertNumber></f:convertNumber>
+										</p:inputNumber>
+
+										<p:outputLabel for="haciendas" value="Hacienda: " />
+										<p:selectCheckboxMenu id="haciendas"
+											value="#{datTransProdView.selectedHacienda}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false" requiredMessage="Seleccione una hacienda">
+											<f:selectItems
+												value="#{datTransProdView.haciendas}"
+												var="haciendas" itemLabel=" #{haciendas.nombre}"
+												itemValue="#{haciendas.nivel2Id}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel for="lotes" value="Lote: " />
+										<p:selectCheckboxMenu id="lotes"
+											value="#{datTransProdView.selectedLote}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false" requiredMessage="Seleccione un lote">
+											<f:selectItems value="#{datTransProdView.lotes}"
+												var="lotes" itemLabel=" #{lotes.nombre}"
+												itemValue="#{lotes.nivel4Id}" />
+										</p:selectCheckboxMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+										<p:commandButton id="btnCargarDatos" value="Consultar"
+											icon="ui-icon-newwin" style="font-size: 1em;"
+											action="#{datTransProdView.listarProduccion}"
+											update=":frm:tbl " process="@all" />
+										<h:outputLabel></h:outputLabel>
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:dataTable id="tbl"
+						value="#{datTransProdView.dataDetalle}"
+						var="listaDetPlanillaDet" paginator="true" rows="10"
+						resizableColumns="true" style="margin-bottom:20px"
+						rowsPerPageTemplate="10,15" reflow="true" editable="false"
+						scrollable="true" scrollWidth="99%">
+
+						<p:column headerText="Opciones" width="90"
+							style="font-size: 0.9em;">
+							<div align="center">
+								<p:commandButton id="btnDelete" value="Anular"
+										disabled="#{listaDetPlanillaDet.estadoEstrue}" title="Anular Registro"
+										actionListener="#{datTransProdView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectDetalle"
+											value="#{listaDetPlanillaDet}" />
+									</p:commandButton>
+
+							</div>
+						</p:column>
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Referencia" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.ref}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Tipo de transacción"
+									style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.tipoTransaccion}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Finca" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.nomFinca}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Lote" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.nomLote}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+								<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Inicio cosecha" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.iniCosecha}"
+								style="font-size: 0.9em;">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+							
+							
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Fin cosecha" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.fechaRegistro}"
+								style="font-size: 0.9em;">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Valor unitario" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.valorUnitario}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Ingreso bruto" style="font-size: 0.9em;" />
+							</f:facet>
+							<p:inputNumber value="#{listaDetPlanillaDet.ingresoBruto}"
+								style="font-size: 0.9em;" 
+								 readonly="true">
+								<f:converter converterId="javax.faces.Double" />
+							</p:inputNumber>
+						</p:column>
+						
+					</p:dataTable>
+					
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" process="@all" partialSubmit="true"
+									resetValues="true" />
+							</p:commandButton>
+								<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datTransProdView.action_new()}"
+								update=":dialogDatTransProd" />
+						</div>
+					</p:panel>
+
+				</h:form>
+				<p:dialog id="dialogDatTransProd" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datTransProdView.showDialog}" resizable="false"
+					modal="true" width="1100" styleClass="dialogFix"
+					header="Registros de producción" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatTransProd">
+
+									<p:panelGrid >
+										<p:row>
+										<p:column>
+											<h:panelGrid columns="2" id="panelGrid2" >
+		
+												<p:outputLabel value="# Consecutivo: "
+													style="font-size: 0.8em;" />
+												<p:inputText id="txtConsecutivo" disabled="false"
+													binding="#{datTransProdView.txtConsecutivo}"
+													style="font-size: 0.8em;"
+													placeholder="Buscar o crear registro" size="23">
+												</p:inputText>
+		
+												<p:outputLabel for="msgInicial" value="Fecha Ini Cosecha: "
+													style="font-size: 0.8em;" />
+												<p:calendar id="msgInicial" showOn="button" navigator="false"
+													style="font-size: 0.8em;" locale="es"
+													binding="#{datTransProdView.txtFechaInicial}"
+													pattern="dd/MM/yyyy" mask="true" required="true"
+													requiredMessage="La Fecha inicial  es obligatoria">
+												</p:calendar>
+		
+												<p:outputLabel for="txtFechaRegistro" value="Fecha Fin Cosecha: "
+													style="font-size: 0.8em;" />
+												<p:calendar id="txtFechaRegistro" showOn="button"
+													style="font-size: 0.8em;" navigator="false" locale="es"
+													binding="#{datTransProdView.txtFechaRegistro}"
+													pattern="dd/MM/yyyy" mask="true" required="true"
+													requiredMessage="La Fecha  final es obligatoria">
+												</p:calendar>
+		
+												<p:outputLabel for="txtTipoTransaccion" value="Transacción:"
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtTipoTransaccion" disabled="true"
+													style="font-size: 0.8em;"
+													binding="#{datTransProdView.selectTipoTransaccion}"
+													required="true" requiredMessage="Seleccione una transacción">
+													<f:selectItem itemLabel="Producción" itemValue="Producción" />
+												</p:selectOneMenu>
+		
+											</h:panelGrid>											
+										</p:column>
+										
+										
+										<p:column>		
+											<h:panelGrid columns="1">
+											
+												<p:outputLabel for="txtObservacion" value="Observación:" />
+												<p:inputTextarea id="txtObservacion"
+													binding="#{datTransProdView.txtObservacion}" rows="1"
+													cols="30" 
+													autoResize="true" />				
+											
+		
+												<p:inputText style="visibility:hidden" id="txtDatTransProdId"
+													binding="#{datTransProdView.txtDatTransProdId}">
+												</p:inputText> 
+												
+											</h:panelGrid>												
+										</p:column>		
+										
+										</p:row>
+									
+										<p:row>
+										<p:column width="100">
+											<h:panelGrid columns="2" id="gridDetTransProdNivel4">
+
+												<p:outputLabel for="txtNivel2Id" value="Hacienda: "
+													style="font-size: 0.8em; " />
+												<p:selectOneMenu id="txtNivel2Id" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="font-size: 0.8em;" 
+													binding="#{datTransProdView.txtNivel2Id}" required="false"
+													requiredMessage="Seleccione una hacienda">
+													<f:selectItem itemLabel="Seleccione una hacienda" itemValue="" />
+													<f:selectItems value="#{datTransProdView.selectNivel2}" />
+													<p:ajax update="txtNivel4Id_Nivel4" />
+												</p:selectOneMenu>
+												
+												<p:outputLabel/>
+												<p:outputLabel/>
+												
+											</h:panelGrid>
+										</p:column>
+
+										<p:column width="100">
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+													filter="true" filterMatchMode="contains" 
+													binding="#{datTransProdView.txtNivel4Id_Nivel4}"
+													style="font-size: 0.8em;" required="false"
+													requiredMessage="Seleccione un lote">
+													<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+													<f:selectItems value="#{datTransProdView.selectLote}" />
+													<p:ajax listener="#{datTransProdView.listener_ConsultaAreaNivel4Cosecha}"
+													     process="@this,txtNivel4Id_Nivel4, txtFechaRegistro, txtNivel2Id"
+														update="txtEdadNivel4, txtAreaCosechada,txtVariedNivel4,txtEtapaNivel4,txtKilogramosAzucarToneladas,txtValorKilogramosAzucar, txtValorUnitarioCosecha"
+													/>
+												
+												</p:selectOneMenu>
+												
+													<p:outputLabel for="txtAreaCosechada"
+														style="font-size: 0.8em;" value="Área cosechada: " />
+													<p:inputText id="txtAreaCosechada" disabled="true"
+														binding="#{datTransProdView.txtAreaCosechada}"
+														required="false" style="font-size: 0.8em;" size="8"
+														requiredMessage="Indique el área cosechada">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+													
+												</h:panelGrid>
+										</p:column>
+												
+											<p:column width="100">
+											<h:panelGrid columns="2">
+												<p:outputLabel for="txtVariedNivel4" value="Variedad: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtVariedNivel4"
+														style="width: 80%;font-size: 0.8em;"
+														binding="#{datTransProdView.txtVariedNivel4}"
+														filter="true" filterMatchMode="contains" required="false"
+														autoWidth="false"
+														requiredMessage="Seleccione una variedad">
+														<f:selectItem itemLabel="Seleccione una variedad"
+															itemValue="" />
+														<f:selectItems
+															value="#{datTransProdView.selectItemVariedad}" />
+														</p:selectOneMenu>
+													
+													<p:outputLabel for="txtEtapaNivel4" value="# Cosechas: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtEtapaNivel4"
+														binding="#{datTransProdView.txtEtapaNivel4}" filter="true"
+														filterMatchMode="contains" required="false"
+														style="font-size: 0.8em;" autoWidth="false"
+														requiredMessage="Seleccione una etapa">
+														<f:selectItem itemLabel="Seleccione una etapa"
+															itemValue="" />
+														<f:selectItems value="#{datTransProdView.selectItemEtapa}" />
+													</p:selectOneMenu>
+													
+													
+											</h:panelGrid>
+											</p:column>
+											
+
+										</p:row>
+									</p:panelGrid>
+
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtCantidadCosechada"
+														style="font-size: 0.8em;"
+														value="Cant. cosechada(Ton): " />
+													<p:inputText id="txtCantidadCosechada" disabled="true"
+														binding="#{datTransProdView.txtCantidadCosechada}"
+														required="false" style="font-size: 0.8em;" size="15"
+														requiredMessage="Indique el área cosechada">
+														<f:converter converterId="javax.faces.Double" />
+														<p:ajax listener="#{datTransProdView.calcular_ingreso_bruto}"
+															update="txtIngresoBruto" />
+													</p:inputText>
+
+													<p:outputLabel for="txtKilogramosAzucarToneladas" value="Kg. Az/TC: "
+														style="font-size: 0.8em;" />
+													<p:inputText id="txtKilogramosAzucarToneladas" disabled="true"
+														binding="#{datTransProdView.txtKilogramosAzucarToneladas}"
+														required="false" style="font-size: 0.8em;" size="15"
+														requiredMessage="Indique el área cosechada">
+														<f:converter converterId="javax.faces.Double" />
+														<p:ajax listener="#{datTransProdView.calcular_valor_unitario}"
+															update="txtValorUnitarioCosecha, txtIngresoBruto" />
+													</p:inputText>
+
+													<p:outputLabel for="txtValorKilogramosAzucar"
+														style="font-size: 0.8em;" value="Valor Kg. Az: " />
+													<p:inputText id="txtValorKilogramosAzucar" disabled="true"
+														binding="#{datTransProdView.txtValorKilogramosAzucar}"
+														required="false" style="font-size: 0.8em;" size="15"
+														requiredMessage="Indique el área cosechada">
+														<f:converter converterId="javax.faces.Double" />
+														<p:ajax listener="#{datTransProdView.calcular_valor_unitario}"
+															update="txtValorUnitarioCosecha, txtIngresoBruto" />
+													</p:inputText>
+
+													<p:outputLabel for="txtValorUnitarioCosecha"
+														style="font-size: 0.8em;" value="Val. Unitario " />
+													<p:panelGrid columns="2">
+														<p:inputText id="txtValorUnitarioCosecha" disabled="true"
+															binding="#{datTransProdView.txtValorUnitarioCosecha}"
+															required="false" style="font-size: 0.8em;" size="11"
+															requiredMessage="Indique el área cosechada">
+															<f:converter converterId="javax.faces.Double" />
+															<p:ajax listener="#{datTransProdView.calcular_ingreso_bruto}"
+																update="txtIngresoBruto" />
+														</p:inputText>
+														
+														<p:inputNumber id="txtIngresoBruto" style="font-size: 0.9em;"
+															binding="#{datTransProdView.txtIngresoBruto}"
+															
+															disable="false">
+															
+														</p:inputNumber>
+													</p:panelGrid>
+														
+													<p:outputLabel for="txtPorcRendimiento"
+														style="font-size: 0.8em;" value="Rendimiento: " />
+													<p:inputText id="txtPorcRendimiento" disabled="true"
+														binding="#{datTransProdView.txtPorcRendimiento}"
+														required="false" style="font-size: 0.8em;" size="15"
+														requiredMessage="Indique el rto">
+														<f:converter converterId="javax.faces.Double" />
+														<p:ajax listener="#{datTransProdView.calcular_bonificacion_descuentos}"
+																process="@this,txtIngresoBruto, txtPorcRendimiento"
+																update="txtBonificion,txtRetenciones,txtDescuentos, txtFondoAgroIndustria, txtDescuentoAdicional" />
+													</p:inputText>
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtAjusteLiquidacion"
+														style="font-size: 0.8em;" value="Ajuste liquidación: " />
+													<p:inputNumber id="txtAjusteLiquidacion" disabled="true"
+														binding="#{datTransProdView.txtAjusteLiquidacion}"
+														required="false" style="font-size: 0.8em;" size="15"
+														requiredMessage="Indique el %materia extraña">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputNumber>
+
+													<p:outputLabel for="txtBonificion"
+														style="font-size: 0.8em;" value="Bonificación: " />
+													<p:inputNumber id="txtBonificion" disabled="true"
+														binding="#{datTransProdView.txtBonificion}"
+														required="false" style="font-size: 0.8em;" size="15"
+														requiredMessage="Indique el % sacarosa">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputNumber>
+
+													<p:outputLabel for="txtOtrosIngresos"
+														style="font-size: 0.8em;" value="Otros ingresos: " />
+													<p:inputNumber id="txtOtrosIngresos" disabled="true"
+														binding="#{datTransProdView.txtOtrosIngresos}"
+														required="false" style="font-size: 0.8em;" size="15"
+														requiredMessage="Indique Kg/Ton">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputNumber>
+													
+													<p:outputLabel for="txtRetenciones"
+														style="font-size: 0.8em;" value="Retenciones: " />
+													<p:inputNumber id="txtRetenciones" disabled="true"
+														binding="#{datTransProdView.txtRetenciones}"
+														required="false" style="font-size: 0.8em;" size="15"
+														requiredMessage="Indique Kg/Ton">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputNumber>
+
+													<p:outputLabel for="txtDescuentos"
+														style="font-size: 0.8em;" value="Descuentos: " />
+													<p:inputNumber id="txtDescuentos" disabled="true"
+														binding="#{datTransProdView.txtDescuentos}"
+														required="false" style="font-size: 0.8em;" size="15"
+														requiredMessage="Indique descuento">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputNumber>
+
+												</h:panelGrid>
+											</p:column>
+											
+											<p:column>
+												<h:panelGrid columns="2">
+													
+													<p:outputLabel for="txtFondoAgroIndustria"
+														style="font-size: 0.8em;" value="FONDO SOCIAL DE LA AGROINDUSTRIA: " />
+													<p:inputNumber id="txtFondoAgroIndustria" disabled="true"
+														binding="#{datTransProdView.txtFondoAgroIndustria}"
+														required="false" style="font-size: 0.8em;" size="15"
+														requiredMessage="Indique Kg/Ton">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputNumber>
+													
+													<p:outputLabel for="txtDescuentoAdicional"
+														style="font-size: 0.8em;" value="Descuento adicional " />
+													<p:inputNumber id="txtDescuentos" disabled="true"
+														binding="#{datTransProdView.txtDescuentoAdicional}"
+														required="false" style="font-size: 0.8em;" size="15"
+														requiredMessage="Indique descuento adicional">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputNumber>
+													
+												
+													<p:outputLabel for="txtEdadNivel4"
+														style="font-size: 0.8em;" value="Edad cultivo: " />
+													<p:inputText id="txtEdadNivel4" disabled="true"
+														binding="#{datTransProdView.txtEdadNivel4}"
+														required="false" style="font-size: 0.8em;" size="15"
+														requiredMessage="Indique Kg/Ton">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+												
+													<p:outputLabel for="txtFinCosecha" value="Fin de cosecha: "
+														style="font-size: 0.8em;" />
+													<p:selectOneRadio id="txtFinCosecha" disabled="true"
+														style="font-size: 0.8em;"
+														binding="#{datTransProdView.txtFinCosecha}" required="false"
+														requiredMessage="Seleccione un estado">
+														<f:selectItem itemLabel="Sí" itemValue="Si" />
+														<f:selectItem itemLabel="No" itemValue="No" />
+													</p:selectOneRadio>
+			
+												</h:panelGrid>												
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+									<h:panelGrid columns="2" id="PanelGrid6" cellpadding="5">
+
+										<f:facet name="header">
+											<p:commandButton id="btnAgregarNivel4"
+												icon="ui-icon-plusthick"
+												binding="#{datTransProdView.btnAgregarNivel4}"
+												value="Agregar" process="@all"
+												action="#{datTransProdView.action_agregarNivel4_cosecha()}"
+												update="tablaDetTransNivel4 :dialogDatTransProd" />
+
+											<p:commandButton id="btnlimpiar1" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="gridDetTransProdNivel4" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+
+									</h:panelGrid>
+
+									<p:scrollPanel mode="native" style="width:900px;height:150px">
+										<p:outputPanel>
+
+											<p:dataTable id="tablaDetTransNivel4"
+												value="#{datTransProdView.dataDetTransNivel4}"
+												var="listaDetTransNivel4" paginator="true" rows="2"
+												rowsPerPageTemplate="5,10,15" editable="true"
+												editMode="cell" widgetVar="cellProd" reflow="true">
+
+												<p:ajax event="cellEdit" listener="#{datTransProdView.onCellEditProdCosecha}" />
+
+												<p:column headerText="Hacienda" style="font-size: 0.9em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetTransNivel4.nombreNivel2}"
+																style="font-size: 0.9em;" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaDetTransNivel4.nivel2Id_Nivel2.nivel2Id}">
+																<f:selectItems
+																	value="#{datTransProdView.selectNivel2Edit}" var="var1"
+																	itemValue="#{var1}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Lote" style="font-size: 0.9em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetTransNivel4.nombreNivel4}"
+																style="font-size: 0.9em;" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaDetTransNivel4.nivel4Id_Nivel4.nivel4Id}">
+																<f:selectItems
+																	value="#{datTransProdView.selectNivel4Edit}" var="var2"
+																	itemValue="#{var2}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Cant. cosechada" style="font-size: 0.9em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetTransNivel4.cantidadCosechada}"
+																style="font-size: 0.9em;" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetTransNivel4.cantidadCosechada}"
+																style="font-size: 0.9em;" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Kg. Az/TC" style="font-size: 0.9em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetTransNivel4.kilogramosAzucarTonelada}"
+																style="font-size: 0.9em;" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetTransNivel4.kilogramosAzucarTonelada}"
+																style="font-size: 0.9em;" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Valor Kg. Az" style="font-size: 0.9em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetTransNivel4.valorKilogramosAzucar}"
+																style="font-size: 0.9em;"/>
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetTransNivel4.valorKilogramosAzucar}"
+																style="font-size: 0.9em;"/>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Val. Unitario" style="font-size: 0.9em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetTransNivel4.valorUnitario}"
+																style="font-size: 0.9em;"/>
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetTransNivel4.valorUnitario}"
+																style="font-size: 0.9em;"/>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Ingreso bruto" style="font-size: 0.9em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetTransNivel4.ingresoBruto}"
+																style="font-size: 0.9em;"/>
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetTransNivel4.ingresoBruto}"
+																style="font-size: 0.9em;"/>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Rendimiento" style="font-size: 0.9em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetTransNivel4.porcRendimiento}"
+																style="font-size: 0.9em;"/>
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetTransNivel4.porcRendimiento}"
+																style="font-size: 0.9em;"/>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Bonificación" style="font-size: 0.9em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetTransNivel4.bonificacion}"
+																style="font-size: 0.9em;"/>
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetTransNivel4.bonificacion}"
+																style="font-size: 0.9em;"/>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Fin cosecha" style="font-size: 0.9em;">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetTransNivel4.finCosecha}"
+																style="font-size: 0.9em;"/>
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu value="#{listaDetTransNivel4.finCosecha}">
+																<f:selectItem itemLabel="Sí" itemValue="Si" />
+																<f:selectItem itemLabel="No" itemValue="No" />
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<f:attribute name="selectedDatTransNivel4"
+													value="#{listaDetTransNivel4}" />
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{datTransProdView.actionDeleteDatTransProdNivel4}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaDetTransNivel4 :dialogDatTransProd">
+															<f:attribute name="selectedDatTransNivel4"
+																value="#{listaDetTransNivel4}" />
+														</p:commandButton>
+
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:scrollPanel>
+						
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datTransProdView.btnSave}" value="Grabar"
+									action="#{datTransProdView.action_save()}"
+									update=":dialogDatTransProd :frm:tbl" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datTransProdView.action_clear()}"
+									process="@this" update=":dialogDatTransProd " />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datTransProdView.showDialog}" modal="true" width="500">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datTransProdView.txtObservacionAnularReg}" rows="5"
+									cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datTransProdView.btnDelete}"
+									value="Grabar"
+									action="#{datTransProdView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatTransProd" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datTransProdView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

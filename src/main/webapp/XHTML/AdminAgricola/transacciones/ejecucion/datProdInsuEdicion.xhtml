@@ -1,0 +1,479 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTablelistaDetPlanillaDet"
+						header="Edición labores por producto">
+						<!-- <p:growl id="men"/>	 -->
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtFechaIni" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaIni" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{listarInsumosAgricolasView.txtFechaIni}"
+											required="false"
+											requiredMessage="La Fecha inicial es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="txtFechaFin" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{listarInsumosAgricolasView.txtFechaFin}"
+											required="false"
+											requiredMessage="La Fecha  final  es obligatoria">
+										</p:calendar>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtPlanilla" value="n° Planilla "
+											style="font-size: 0.9em;" />
+										<p:inputText id="txtPlanilla" style="font-size: 0.9em;"
+											binding="#{listarInsumosAgricolasView.txtPlanilla}"
+											maxlength="1000" autoResize="true" size="15">
+											<f:convertNumber></f:convertNumber>
+										</p:inputText>
+									</h:panelGrid>
+								</p:column>
+								<p:column>
+									<h:panelGrid columns="1">
+										<p:commandButton id="btnCargarDatos" value="Consultar"
+											icon="ui-icon-newwin" style="font-size: 1em;"
+											action="#{listarInsumosAgricolasView.listarInsumosAgricolas}"
+											update=":frm:tbl, txtValorTotalAcumulado,txtCantidadAcumulado "
+											process="@all" />
+										<h:outputLabel></h:outputLabel>
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:dataTable id="tbl"
+						value="#{listarInsumosAgricolasView.dataDetalleInsumos}"
+						var="listaDetalleInsumos" paginator="true" rows="10"
+						resizableColumns="true" style="margin-bottom:20px"
+						rowsPerPageTemplate="10,15" reflow="true" editable="false"
+						scrollable="true" scrollWidth="99%">
+
+						<p:column headerText="Opciones" width="90"
+							style="font-size: 0.9em;">
+							<div align="center">
+								<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+									style="font-size: 0.9em;" update=":dialogDatPlanillaNomina"
+									title="Editar"
+									actionListener="#{listarInsumosAgricolasView.action_editInsumos}">
+									<f:attribute name="selectDetalleInsumos"
+										value="#{listaDetalleInsumos}" />
+								</p:commandButton>
+								<p:commandButton id="btnDelete" icon="ui-icon-trash"
+									actionListener="#{listarInsumosAgricolasView.actionDeleteDatAplicProdDet}"
+									title="Borrar" style="font-size: 0.9em;"
+									onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+									update="tbl :dialogDatPlanillaNomina">
+									<f:attribute name="selectDetalleInsumos"
+										value="#{listaDetalleInsumos}" />
+								</p:commandButton>
+							</div>
+						</p:column>
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="#Plan" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetalleInsumos.consecutivo}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Id" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetalleInsumos.idInsumos}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Fecha" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetalleInsumos.fecha}"
+								style="font-size: 0.9em;">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Producto" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetalleInsumos.nomProducto}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Hda" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetalleInsumos.nomFinca}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Lote" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetalleInsumos.nomLote}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Labor" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetalleInsumos.nombreLabor}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Cantidad" style="font-size: 0.9em;" />
+							</f:facet>
+							<p:inputNumber value="#{listaDetalleInsumos.cantidadAplicada}"
+								style="font-size: 0.9em;" decimalSeparator="."
+								thousandSeparator="," size="6" decimalPlaces="1" minValue="0"
+								maxValue="100000" readonly="true">
+								<f:converter converterId="javax.faces.Double" />
+							</p:inputNumber>
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="V. Unitario" style="font-size: 0.9em;" />
+							</f:facet>
+							<p:inputNumber value="#{listaDetalleInsumos.valorUnit}"
+								style="font-size: 0.9em;" decimalSeparator="."
+								thousandSeparator="," size="6" decimalPlaces="1" minValue="0"
+								maxValue="100000" readonly="true">
+								<f:converter converterId="javax.faces.Double" />
+							</p:inputNumber>
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="V. Total" style="font-size: 0.9em;" />
+							</f:facet>
+							<p:inputNumber value="#{listaDetalleInsumos.costoTotal}"
+								style="font-size: 0.9em;" decimalSeparator="."
+								thousandSeparator="," size="6" decimalPlaces="1" minValue="0"
+								maxValue="100000" readonly="true">
+								<f:converter converterId="javax.faces.Double" />
+							</p:inputNumber>
+						</p:column>
+					</p:dataTable>
+
+					<p:panelGrid>
+						<p:row>
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel value="TOTALES:  " style="font-size: 1em;" />
+								</h:panelGrid>
+							</p:column>
+
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtValorTotalAcumulado"
+										value="Costo total($): " style="font-size: 1em;" />
+									<p:inputNumber id="txtValorTotalAcumulado"
+										style="font-size: 1em;" size="12"
+										binding="#{listarInsumosAgricolasView.txtValorTotalAcumulado}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+										required="false">
+									</p:inputNumber>
+								</h:panelGrid>
+							</p:column>
+
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtCantidadAcumulado"
+										value="Unidades trabajadas: " style="font-size: 1em;" />
+									<p:inputNumber id="txtCantidadAcumulado"
+										style="font-size: 1em;" size="12"
+										binding="#{listarInsumosAgricolasView.txtCantidadAcumulado}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+										required="false">
+									</p:inputNumber>
+								</h:panelGrid>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<p:panel id="panelBoton">
+						<div align="center">
+
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" process="@all" partialSubmit="true"
+									resetValues="true" />
+							</p:commandButton>
+						</div>
+					</p:panel>
+
+				</h:form>
+
+				<p:dialog id="dialogDatPlanillaNomina" appendTo="@(body)"
+					draggable="true" closable="false"
+					visible="#{listarInsumosAgricolasView.showDialog}"
+					resizable="false" modal="true" width="1000" styleClass="dialogFix"
+					header="Edición labores de insumos" responsive="true">
+					<h:form id="formDialog">
+
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+
+						<h:panelGrid columns="2">
+							<p:outputLabel value="#Planilla: " style="font-size: 0.8em;" />
+							<p:inputText id="txtConsecutivo" disabled="false"
+								binding="#{listarInsumosAgricolasView.txtConsecutivo}"
+								placeholder="Buscar o crear registro" size="23">
+							</p:inputText>
+
+							<p:outputLabel for="msgFechaRegistro" value="Fecha: "
+								style="font-size: 0.8em;" />
+							<p:calendar id="msgFechaRegistro" showOn="button"
+								navigator="false" locale="es"
+								binding="#{listarInsumosAgricolasView.txtFechaRegistro}"
+								pattern="dd/MM/yyyy" mask="true" required="true"
+								requiredMessage="La  fecha  es obligatoria">
+							</p:calendar>
+						</h:panelGrid>
+
+						<h:panelGrid columns="2">
+							<p:outputLabel for="txtOrdenTrabajo" value="O.T: "
+								style="font-size: 0.8em;" />
+							<p:selectOneMenu id="txtOrdenTrabajo" effect="fade" filter="true"
+								filterMatchMode="contains"
+								binding="#{listarInsumosAgricolasView.txtOrdenTrabajo}"
+								required="false" requiredMessage="O.T(Ot, labor, Hda, Lote): ">
+								<f:selectItem itemLabel="O.T(Ot, labor, Hda, Lote): "
+									itemValue="" noSelectionOption="true" />
+								<f:selectItems
+									value="#{listarInsumosAgricolasView.selectOrdenTrabajo}" />
+								<p:ajax
+									listener="#{listarInsumosAgricolasView.listener_ConsultaOrdenTrabajo}"
+									update="txtLaborId_Labor,txtNivel2Id,txtNivel3Id,txtNivel4Id_Nivel4
+											txtUdadMedPago, txtCantidadAplicada" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtLaborId_Labor" value="Labor: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtLaborId_Labor" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;font-size: 0.8em;" autoWidth="false"
+											binding="#{listarInsumosAgricolasView.txtLaborId_Labor}"
+											required="false" requiredMessage="Seleccione una labor">
+											<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+											<f:selectItems
+												value="#{listarInsumosAgricolasView.selectLaborId}" />
+											<p:ajax
+												listener="#{listarInsumosAgricolasView.listener_ConsultaNombreLaborMo}"
+												update="txtUdadMedPago" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtNivel2Id" value="Hacienda: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtNivel2Id" effect="fade" filter="true"
+											filterMatchMode="contains"
+											style="width: 100%;font-size: 0.8em;" autoWidth="false"
+											binding="#{listarInsumosAgricolasView.txtNivel2Id}"
+											required="false" requiredMessage="Seleccione una hacienda">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems
+												value="#{listarInsumosAgricolasView.selectNivel2}" />
+											<p:ajax update="txtNivel3Id" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtNivel3Id" value="Bloque: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+											filterMatchMode="contains"
+											style="width: 100%;font-size: 0.8em;" autoWidth="false"
+											binding="#{listarInsumosAgricolasView.txtNivel3Id}"
+											required="false"
+											requiredMessage="Seleccione un bloque del cultivo">
+											<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+											<f:selectItems
+												value="#{listarInsumosAgricolasView.selectNivel3}" />
+											<p:ajax update=" txtNivel4Id_Nivel4" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote:"
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;font-size: 0.8em;" autoWidth="false"
+											binding="#{listarInsumosAgricolasView.txtNivel4Id_Nivel4}"
+											required="false" requiredMessage="Seleccione un código">
+											<f:selectItem itemLabel="Seleccione un código" itemValue="" />
+											<f:selectItems
+												value="#{listarInsumosAgricolasView.selectNivel4}" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+						<p:panelGrid id="gridlistaDetPlanillaDetDet">
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtProducto" value="Producto: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtProducto" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{listarInsumosAgricolasView.txtProducto}"
+											style="width: 100%;font-size: 0.8em;" required="false"
+											requiredMessage="Seleccione un producto">
+											<f:selectItem itemLabel="Seleccione un producto" itemValue="" />
+											<f:selectItems value="#{listarInsumosAgricolasView.selectProducto}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtAlmacen"
+											value="Almacen: " style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtAlmacen"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{listarInsumosAgricolasView.txtAlmacenId}"
+											style="width: 100%; font-size: 0.8em;" required="false"
+											requiredMessage="Seleccione un almacen">
+											<f:selectItem itemLabel="Seleccione un almacen" itemValue="" />
+											<f:selectItems value="#{listarInsumosAgricolasView.selectAlmacen}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtUdadMedPago" value="Unidad de Pago: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtUdadMedPago" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;font-size: 0.8em;"
+											binding="#{listarInsumosAgricolasView.txtUdadMedPago}"
+											required="false"
+											requiredMessage="Seleccione una unidad de pago">
+											<f:selectItem itemLabel="Seleccione una  unidad de pago" itemValue="" />
+											<f:selectItems value="#{listarInsumosAgricolasView.selectUdadMedPago}" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtCantidadAplicada" value="Cantidad aplicada: "
+											style="font-size: 0.8em;" />
+										<p:inputText id="txtCantidadAplicada" disabled="false" size="10"
+											binding="#{listarInsumosAgricolasView.txtCantidadAplicada}"
+											required="false"
+											requiredMessage="Indique la cantidad a pagar">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+
+										<p:outputLabel for="txtValorUnitario" value="Tarifa: "
+											style="font-size: 0.8em;" />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtValorUnitario" disabled="false" size="10"
+												binding="#{listarInsumosAgricolasView.txtValorUnitario}"
+												required="false" requiredMessage="Indique el valor unitario">
+												<f:convertNumber></f:convertNumber>
+											</p:inputText>
+
+										</p:panelGrid>
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{listarInsumosAgricolasView.btnSave}" value="Grabar"
+									action="#{listarInsumosAgricolasView.action_ActualizarInsumos()}"
+									update=":dialogDatPlanillaNomina :frm:panelDataTablelistaDetPlanillaDet" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{listarInsumosAgricolasView.action_clear()}"
+									process="@this" update=":dialogDatPlanillaNomina" />
+								<p:commandButton id="btnCerrar" icon="ui-icon-closethick"
+									title="Cerrar" value="Cerrar"
+									onclick="if(!confirm('Realmente desea salir sin grabar? Sí ya lo hizo, omita este mensaje')){return false;}"
+									action="#{listarInsumosAgricolasView.action_closeDialog}"
+									update=":dialogDatPlanillaNomina">
+								</p:commandButton>
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

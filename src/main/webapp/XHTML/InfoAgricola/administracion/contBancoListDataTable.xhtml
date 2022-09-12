@@ -1,0 +1,180 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+					<p:panel id="panelDataTableContBanco" header="Contactos bancarios">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{contBancoView.data}"
+							var="contBanco" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Contactos bancarios" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{contBanco.estado}"
+								sortBy="#{contBanco.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{contBanco.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{contBanco.codigo}"
+								sortBy="#{contBanco.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{contBanco.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{contBanco.nombre}"
+								sortBy="#{contBanco.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{contBanco.nombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogContBanco"
+										actionListener="#{contBancoView.action_edit}">
+										<f:attribute name="selectedContBanco" value="#{contBanco}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{contBancoView.action_new()}" update=":dialogContBanco" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogContBanco" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{contBancoView.showDialog}"
+					resizable="false" modal="true" width="500" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelContBanco" header="Contactos bancarios">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{contBancoView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+
+								<p:outputLabel value="Código: " />
+								<p:inputText id="txtCodigo" disabled="false"
+									binding="#{contBancoView.txtCodigo}"
+									placeholder="Buscar o crear registro" size="23">
+									<p:ajax update="panelContBanco,msg,panelBotones"
+										listener="#{contBancoView.listener_txtCodigo}" />
+								</p:inputText>
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNombre" value="Nombre: " />
+								<p:inputText id="txtNombre" disabled="true"
+									binding="#{contBancoView.txtNombre}" required="true"
+									requiredMessage="El Nombre es Obligatorio" />
+								<p:message for="txtNombre" />
+
+								<p:outputLabel for="txtEntBancId_EntBanc"
+									value="Entidad Bancaria" />
+								<p:selectOneMenu id="txtEntBancId_EntBanc"
+									binding="#{contBancoView.txtEntBancId_EntBanc}" required="true"
+									requiredMessage="Seleccione un Banco">
+									<f:selectItem itemLabel="Seleccione un Banco" itemValue="" />
+									<f:selectItems value="#{contBancoView.selectEntBanc}" />
+								</p:selectOneMenu>
+								<p:message for="txtEntBancId_EntBanc" />
+
+								<p:outputLabel for="txtEmail" value="Email: " />
+								<p:inputText id="txtEmail" disabled="true"
+									binding="#{contBancoView.txtEmail}" />
+								<p:message for="txtEmail" />
+
+
+								<p:outputLabel for="txtTelefono" value="Teléfono fijo: " />
+								<p:inputText id="txtTelefono" disabled="true"
+									binding="#{contBancoView.txtTelefono}" />
+								<p:message for="txtTelefono" />
+
+								<p:outputLabel for="txtTelefono2" value="Teléfono móvil: " />
+								<p:inputText id="txtTelefono2" disabled="true"
+									binding="#{contBancoView.txtTelefono2}" />
+								<p:message for="txtTelefono2" />
+
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional"
+									binding="#{contBancoView.txtInfoAdicional}" rows="5" cols="30"
+									counter="display" maxlength="100"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText id="display" />
+
+								<p:outputLabel for="txtInfoAdicional2"
+									value="Información Adicional 2:" />
+								<p:inputTextarea id="txtInfoAdicional2"
+									binding="#{contBancoView.txtInfoAdicional2}" rows="5" cols="30"
+									counter="display2" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+								<h:outputText id="display2" />
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden" id="txtContBancId"
+									binding="#{contBancoView.txtContBancId}">
+									<p:ajax update=":dialogContBanco"
+										listener="#{contBancoView.listener_txtId}" />
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{contBancoView.btnSave}" value="Grabar"
+									action="#{contBancoView.action_save()}"
+									update=":dialogContBanco :frm:panelDataTableContBanco" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{contBancoView.action_clear()}"
+									process="@this" update=":dialogContBanco" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

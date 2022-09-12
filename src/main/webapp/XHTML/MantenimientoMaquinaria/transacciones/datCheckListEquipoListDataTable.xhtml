@@ -1,0 +1,235 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatCheckListEquipo"
+						header="DatCheckListEquipoData">
+						<p:growl id="men" />
+						<p:dataTable value="#{datCheckListEquipoView.data}"
+							var="datCheckListEquipo" paginator="true" rows="5">
+							<p:column filterBy="#{datCheckListEquipo.datCheckListEquipoId}"
+								sortBy="#{datCheckListEquipo.datCheckListEquipoId}">
+								<f:facet name="header">
+									<h:outputText value="datCheckListEquipoId" />
+								</f:facet>
+								<h:outputText value="#{datCheckListEquipo.datCheckListEquipoId}" />
+							</p:column>
+
+							<p:column filterBy="#{datCheckListEquipo.compania}"
+								sortBy="#{datCheckListEquipo.compania}">
+								<f:facet name="header">
+									<h:outputText value="Compania" />
+								</f:facet>
+								<h:outputText value="#{datCheckListEquipo.compania}" />
+							</p:column>
+
+							<p:column filterBy="#{datCheckListEquipo.consecutivo}"
+								sortBy="#{datCheckListEquipo.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datCheckListEquipo.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datCheckListEquipo.estado}"
+								sortBy="#{datCheckListEquipo.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datCheckListEquipo.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datCheckListEquipo.fechaCreacion}"
+								sortBy="#{datCheckListEquipo.fechaCreacion}">
+								<f:facet name="header">
+									<h:outputText value="FechaCreacion" />
+								</f:facet>
+								<h:outputText value="#{datCheckListEquipo.fechaCreacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datCheckListEquipo.fechaModificacion}"
+								sortBy="#{datCheckListEquipo.fechaModificacion}">
+								<f:facet name="header">
+									<h:outputText value="FechaModificacion" />
+								</f:facet>
+								<h:outputText value="#{datCheckListEquipo.fechaModificacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datCheckListEquipo.observacion}"
+								sortBy="#{datCheckListEquipo.observacion}">
+								<f:facet name="header">
+									<h:outputText value="Observacion" />
+								</f:facet>
+								<h:outputText value="#{datCheckListEquipo.observacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datCheckListEquipo.origenDatos}"
+								sortBy="#{datCheckListEquipo.origenDatos}">
+								<f:facet name="header">
+									<h:outputText value="OrigenDatos" />
+								</f:facet>
+								<h:outputText value="#{datCheckListEquipo.origenDatos}" />
+							</p:column>
+
+							<p:column filterBy="#{datCheckListEquipo.supervisorId}"
+								sortBy="#{datCheckListEquipo.supervisorId}">
+								<f:facet name="header">
+									<h:outputText value="SupervisorId" />
+								</f:facet>
+								<h:outputText value="#{datCheckListEquipo.supervisorId}" />
+							</p:column>
+
+							<p:column filterBy="#{datCheckListEquipo.usuarioDigitacion}"
+								sortBy="#{datCheckListEquipo.usuarioDigitacion}">
+								<f:facet name="header">
+									<h:outputText value="UsuarioDigitacion" />
+								</f:facet>
+								<h:outputText value="#{datCheckListEquipo.usuarioDigitacion}" />
+							</p:column>
+
+							<p:column
+								filterBy="#{datCheckListEquipo.planRevisionEquipoId_PlanRevisionEquipo}"
+								sortBy="#{datCheckListEquipo.planRevisionEquipoId_PlanRevisionEquipo}">
+								<f:facet name="header">
+									<h:outputText value="PlanRevisionEquipoId_PlanRevisionEquipo" />
+								</f:facet>
+								<h:outputText
+									value="#{datCheckListEquipo.planRevisionEquipoId_PlanRevisionEquipo}" />
+							</p:column>
+
+							<p:column headerText="Options">
+								<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+									update=":dialogDatCheckListEquipo"
+									actionListener="#{datCheckListEquipoView.action_edit}">
+									<f:attribute name="selectedDatCheckListEquipo"
+										value="#{datCheckListEquipo}" />
+								</p:commandButton>
+								<p:commandButton id="btnDelete" title="Delete"
+									actionListener="#{datCheckListEquipoView.action_delete_datatable}"
+									onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+									icon="ui-icon-trash" update="@form">
+									<f:attribute name="selectedDatCheckListEquipo"
+										value="#{datCheckListEquipo}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="New"
+								action="#{datCheckListEquipoView.action_new()}"
+								update=":dialogDatCheckListEquipo" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatCheckListEquipo" appendTo="@(body)"
+					draggable="true" closable="false"
+					visible="#{datCheckListEquipoView.showDialog}" resizable="false"
+					modal="true" width="500">
+					<h:form id="formDialog">
+						<p:messages id="msg" />
+						<p:panel id="panelDatCheckListEquipo" header="DatCheckListEquipo">
+							<h:panelGrid columns="2" id="panelGrid">
+								<h:outputText id="msgDatCheckListEquipoId"
+									value="DatCheckListEquipoId" />
+								<p:inputText id="txtDatCheckListEquipoId"
+									binding="#{datCheckListEquipoView.txtDatCheckListEquipoId}">
+									<p:ajax update=":dialogDatCheckListEquipo"
+										listener="#{datCheckListEquipoView.listener_txtId}" />
+								</p:inputText>
+
+								<h:outputText id="msgCompania" value=" Compania" />
+								<p:inputText id="txtCompania" disabled="true"
+									binding="#{datCheckListEquipoView.txtCompania}" />
+								<h:outputText id="msgConsecutivo" value=" Consecutivo" />
+								<p:inputText id="txtConsecutivo" disabled="true"
+									binding="#{datCheckListEquipoView.txtConsecutivo}" />
+								<h:outputText id="msgEstado" value=" Estado" />
+								<p:inputText id="txtEstado" disabled="true"
+									binding="#{datCheckListEquipoView.txtEstado}" />
+								<h:outputText id="msgObservacion" value=" Observacion" />
+								<p:inputText id="txtObservacion" disabled="true"
+									binding="#{datCheckListEquipoView.txtObservacion}" />
+								<h:outputText id="msgOrigenDatos" value=" OrigenDatos" />
+								<p:inputText id="txtOrigenDatos" disabled="true"
+									binding="#{datCheckListEquipoView.txtOrigenDatos}" />
+								<h:outputText id="msgSupervisorId" value=" SupervisorId" />
+								<p:inputText id="txtSupervisorId" disabled="true"
+									binding="#{datCheckListEquipoView.txtSupervisorId}" />
+								<h:outputText id="msgUsuarioDigitacion"
+									value=" UsuarioDigitacion" />
+								<p:inputText id="txtUsuarioDigitacion" disabled="true"
+									binding="#{datCheckListEquipoView.txtUsuarioDigitacion}" />
+								<h:outputText id="msgPlanRevisionEquipoId_PlanRevisionEquipo"
+									value=" PlanRevisionEquipoId_PlanRevisionEquipo" />
+								<p:inputText id="txtPlanRevisionEquipoId_PlanRevisionEquipo"
+									disabled="true"
+									binding="#{datCheckListEquipoView.txtPlanRevisionEquipoId_PlanRevisionEquipo}" />
+
+								<h:outputText id="msgFechaCreacion" value=" FechaCreacion" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{datCheckListEquipoView.txtFechaCreacion}">
+									<p:ajax event="dateSelect"
+										listener="#{datCheckListEquipoView.listener_txtFechaCreacion}" />
+								</p:calendar>
+								<h:outputText id="msgFechaModificacion"
+									value=" FechaModificacion" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{datCheckListEquipoView.txtFechaModificacion}">
+									<p:ajax event="dateSelect"
+										listener="#{datCheckListEquipoView.listener_txtFechaModificacion}" />
+								</p:calendar>
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave"
+									binding="#{datCheckListEquipoView.btnSave}" value="Save"
+									action="#{datCheckListEquipoView.action_save()}"
+									update=":dialogDatCheckListEquipo :frm:panelDataTableDatCheckListEquipo" />
+								<p:commandButton id="btnClear" value="Clear"
+									action="#{datCheckListEquipoView.action_clear()}"
+									update=":dialogDatCheckListEquipo" />
+								<p:commandButton id="btnExit" value="Exit"
+									action="#{datCheckListEquipoView.action_closeDialog()}"
+									update=":dialogDatCheckListEquipo" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

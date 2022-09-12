@@ -1,0 +1,691 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatAnaLaboratorio"
+						header="Análisis del proceso industrial">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datAnaLaboratorioView.data}"
+							var="datAnaLaboratorio" paginator="true" lazy="true" rows="5"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Análisis del proceso industrial" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datAnaLaboratorio.estado}"
+								sortBy="#{datAnaLaboratorio.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaLaboratorio.consecutivo}"
+								sortBy="#{datAnaLaboratorio.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.consecutivo}" />
+							</p:column>
+
+
+							<p:column filterBy="#{datAnaLaboratorio.fechaAnalisis}"
+								sortBy="#{datAnaLaboratorio.fechaAnalisis}">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.fechaAnalisis}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Tipo Análisis" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.nombreAnalisis}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatAnaLaboratorio"
+										disabled="#{datAnaLaboratorio.estadoTrue}"
+										actionListener="#{datAnaLaboratorioView.action_edit}">
+										<f:attribute name="selectedDatAnaLaboratorio"
+											value="#{datAnaLaboratorio}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"
+										disabled="#{datAnaLaboratorio.estadoTrue}"
+										title="Anular Registro"
+										actionListener="#{datAnaLaboratorioView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatAnaLaboratorio"
+											value="#{datAnaLaboratorio}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datAnaLaboratorioView.action_new()}"
+								update=":dialogDatAnaLaboratorio" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatAnaLaboratorio" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datAnaLaboratorioView.showDialog}" resizable="false"
+					modal="true" width="1100" styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatAnaLaboratorio"
+							header="Análisis del proceso industrial">
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{datAnaLaboratorioView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="2" id="panelGrid1">
+
+										<p:outputLabel value="# Consecutivo: " />
+										<p:inputText id="txtConsecutivo" disabled="false"
+											binding="#{datAnaLaboratorioView.txtConsecutivo}"
+											placeholder="Buscar o crear registro" size="23">
+										</p:inputText>
+
+
+										<p:outputLabel for="msgFechaAnalisis" value="Fecha: "
+											style="font-size: 0.8em;" />
+										<p:calendar id="msgFechaAnalisis" showOn="button"
+											navigator="false" locale="es" size="14"
+											binding="#{datAnaLaboratorioView.txtFechaAnalisis}"
+											pattern="dd/MM/yyyy" mask="true" required="true"
+											requiredMessage="La fecha   es obligatoria">
+										</p:calendar>
+
+
+
+										<p:outputLabel for="txtAnaLaboratorioId_AnaLaboratorio"
+											value="Tipo de análisis: " />
+										<p:selectOneMenu id="txtAnaLaboratorioId_AnaLaboratorio"
+											effect="fade" filter="true" filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datAnaLaboratorioView.txtAnaLaboratorioId_AnaLaboratorio}"
+											required="true" requiredMessage="Seleccione un análisis">
+											<f:selectItems
+												value="#{datAnaLaboratorioView.selectTipoAnalisisLaboratorio}" />
+										</p:selectOneMenu>
+										
+											<p:outputLabel for="txtHoraDigitacion" value="Hora ánalisis:"
+											style="font-size: 0.8em;" />
+										<p:calendar id="txtHoraDigitacion" showOn="button"
+											navigator="false" locale="es" size="8"
+											binding="#{datAnaLaboratorioView.txtHoraDigitacion}"
+											pattern="HH:mm" timeOnly="true" locale="es"
+											 mask="true" required="true" 
+											requiredMessage="La hora  es obligatoria">
+										</p:calendar>
+										
+
+										<p:outputLabel for="txtObservacion" value="Observación:" />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{datAnaLaboratorioView.txtObservacion}" rows="3"
+											cols="30" maxlength="1000" counterTemplate="{0} Caracteres"
+											autoResize="true" />
+
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden"
+											id="txtDatAnaLaboratorioId"
+											binding="#{datAnaLaboratorioView.txtDatAnaLaboratorioId}">
+										</p:inputText>
+
+
+									</h:panelGrid>
+								</p:tab>
+								
+
+								<p:tab title="Variables del análisis">
+														
+					
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel>
+						<p:dataTable id="tablaValores"
+							value="#{datAnaLaboratorioView.dataValor}" var="listaValor"
+							scrollable="true" scrollHeight="200"  scrollWidth="950"
+							editable="true" editMode="cell" widgetVar="cellEventos">
+
+							<p:ajax event="cellEdit"
+								listener="#{datAnaLaboratorioView.onCellEditEventos}" />
+
+
+							<p:column headerText="Variable" style="width: 30%" >
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.9em;"
+											value="#{listaValor.codigoVariable}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.9em;"
+											value="#{listaValor.codigoVariable}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="Valor diario"  style="width: 20% ; font-size:: 0.8em" >
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.valorVariable}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.valorVariable}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="06" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0600}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0600}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="07" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0700}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0700}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="08" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0800}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0800}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="09" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0900}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0900}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="10" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1000}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1000}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="11" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1100}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1100}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="12" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1200}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1200}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="13" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1300}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1300}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="14" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1400}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1400}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="15" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1500}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1500}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="16" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1600}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1600}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+
+							<p:column headerText="17" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1700}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1700}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="18" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1800}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1800}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="19" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1900}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora1900}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="20" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora2000}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora2000}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="21" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora2100}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora2100}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="22" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora2200}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora2200}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="23" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora2300}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora2300}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="00" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0000}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0000}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="01" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0100}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0100}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="02" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0200}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0200}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="03" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0300}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0300}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="04" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0400}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0400}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="05" style="width: 12% ; font-size:: 0.8em">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0500}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.hora0500}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<f:attribute name="selectedValorAnalisis" value="#{listaValor}" />
+
+						</p:dataTable>
+						</p:panel>
+
+								</p:tab>
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datAnaLaboratorioView.btnSave}"
+									value="Grabar e Importar variables" process="@all"
+									action="#{datAnaLaboratorioView.action_save()}"
+									update=":dialogDatAnaLaboratorio :frm:panelDataTableDatAnaLaboratorio :formDialog" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datAnaLaboratorioView.action_clear()}"
+									process="@this" update=":dialogDatAnaLaboratorio" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+
+
+
+				<!-- Formulario anulacion -->
+
+
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="false"
+					visible="#{datAnaLaboratorioView.showDialog}" modal="true"
+					width="500">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datAnaLaboratorioView.txtObservacionAnularReg}"
+									rows="5" cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden"
+									id="txtDatAnaLaboratorioId2"
+									binding="#{datAnaLaboratorioView.txtDatAnaLaboratorioId}">
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datAnaLaboratorioView.btnDelete}"
+									value="Grabar"
+									action="#{datAnaLaboratorioView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatAnaLaboratorio" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datAnaLaboratorioView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

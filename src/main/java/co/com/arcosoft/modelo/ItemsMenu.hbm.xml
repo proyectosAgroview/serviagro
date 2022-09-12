@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.ItemsMenu" table="items_menu" >
+        <id name="id" type="java.lang.Long">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="nombreModulo" type="java.lang.String">
+            <column name="nombre_modulo" length="200" />
+        </property>
+        <property name="nombreItem" type="java.lang.String">
+            <column name="nombre_item" length="200" />
+        </property>
+        <property name="url" type="java.lang.String">
+            <column name="url" length="200" />
+        </property>
+        <property name="descripcion" type="java.lang.String">
+            <column name="descripcion" length="6000" />
+        </property>
+        <property name="nombreTabla" type="java.lang.String">
+            <column name="nombre_tabla" length="300" />
+        </property>
+    </class>
+</hibernate-mapping>

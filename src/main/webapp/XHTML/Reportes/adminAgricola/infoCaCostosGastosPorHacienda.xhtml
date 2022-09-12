@@ -1,0 +1,140 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Informe: Costos y gastos por hacienda">
+						<p:growl id="growl" showDetail="true" sticky="true" life="2000" />
+						<p:panelGrid styleClass="ui-panelgrid-blank">
+
+							<p:row>
+								<p:column style="font-weight: bold;">
+
+									<h:panelGrid columns="2" id="panelGrid" width="500">
+									
+											<p:outputLabel for="txtHacienda" value="Hacienda: " />
+										<p:selectOneMenu id="txtHacienda"
+											binding="#{informeCostosAgricolasParte2View.txtHacienda}"
+											filter="true" filterMatchMode="contains" style="width:160px"
+											autoWidth="false" disabled="false" >
+											<f:selectItem itemLabel="Seleccione una hacienda" itemValue=""/>
+											<f:selectItems value="#{informeCostosAgricolasParte2View.selectHacienda}"/>
+											<p:ajax update="txtLote"/>
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtLote" value="Lote: "  style="visibility:hidden" />
+										<p:selectOneMenu id="txtLote"
+											binding="#{informeCostosAgricolasParte2View.txtLote}"  style="visibility:hidden"
+											filter="true" filterMatchMode="contains" 
+											autoWidth="false" disabled="false" >
+											<f:selectItem itemLabel="Seleccione un lote" itemValue=""/>
+											<f:selectItems value="#{informeCostosAgricolasParte2View.selectLote}"/>
+											<p:ajax process="txtHacienda"/>
+										</p:selectOneMenu>
+										
+										
+										<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: "   style="visibility:hidden" />
+										<p:calendar id="msgFechaInicial" showOn="button"    style="visibility:hidden"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{informeCostosAgricolasParte2View.txtFechaInicial}"
+											required="false" requiredMessage="La Fecha inicial  es obligatoria">
+										</p:calendar>
+										
+
+										<p:outputLabel for="msgFechaFinal" value="Fecha Final: " />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{informeCostosAgricolasParte2View.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha  final es obligatoria">
+										</p:calendar>
+										
+										<p:outputLabel for="txtEtapa" value="Cortes:"   style="visibility:hidden"/>
+										<p:selectOneMenu id="txtEtapa"
+											binding="#{informeCostosAgricolasParte2View.txtEtapa}" style="visibility:hidden"
+											required="false" requiredMessage="Seleccione un corte">
+											<f:selectItem itemLabel="Seleccione un corte"
+												itemValue="" />
+											<f:selectItems
+												value="#{informeCostosAgricolasParte2View.selectEtapa}" />
+										</p:selectOneMenu>
+	
+	
+										<p:outputLabel for="grupoLabores" value="Grupos de labor: " />
+										<p:selectCheckboxMenu id="grupoLabores"
+											value="#{informeCostosAgricolasParte2View.selectedGrupoLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un grupo">
+											<f:selectItems
+												value="#{informeCostosAgricolasParte2View.grupoLabores}"
+												var="grupoLabores" itemLabel=" #{grupoLabores.nombre}"
+												itemValue="#{grupoLabores.grpLaborId}" />
+										</p:selectCheckboxMenu>
+										
+
+										<p:outputLabel for="labores" value="Labor: " />
+										<p:selectCheckboxMenu id="labores"
+											value="#{informeCostosAgricolasParte2View.selectedLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una labor">
+											<f:selectItems
+												value="#{informeCostosAgricolasParte2View.labores}"
+												var="labores" itemLabel=" #{labores.nombre}"
+												itemValue="#{labores.laborId}" />
+										</p:selectCheckboxMenu>
+										
+									
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+
+							<p:commandButton id="btnConsultar" value="Generar reporte"
+								icon="ui-icon-newwin"
+								action="#{informeCostosAgricolasParte2View.costosGastosPorHacienda}" update="growl, frm" />
+
+							<p:commandButton disabled="#{informeCostosAgricolasParte2View.disableButton}"
+								icon="ui-icon-arrowthick-1-s" value="Descargar" ajax="false">
+								<p:fileDownload value="#{informeCostosAgricolasParte2View.file}" />
+							</p:commandButton>
+
+						
+
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" resetValues="true" />
+							</p:commandButton>
+
+						</div>
+					</p:panel>
+				</h:form>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

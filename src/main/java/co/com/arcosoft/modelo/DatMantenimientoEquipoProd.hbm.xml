@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatMantenimientoEquipoProd" table="dat_mantenimiento_equipo_prod" >
+        <id name="datMantenimientoEquipoProdId" type="java.lang.Long">
+            <column name="dat_mantenimiento_equipo_prod_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="trabajador" class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="trab_id" />
+        </many-to-one>
+        <many-to-one name="producto" class="co.com.arcosoft.modelo.Producto" fetch="select">
+            <column name="producto_id" />
+        </many-to-one>
+        <many-to-one name="almacenId" class="co.com.arcosoft.modelo.Almacen" fetch="select">
+            <column name="almacen_id" />
+        </many-to-one>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <many-to-one name="ubicacionesAlmacen" class="co.com.arcosoft.modelo.UbicacionesAlmacen" fetch="select">
+            <column name="ubicaciones_almacen_id" />
+        </many-to-one>
+        <many-to-one name="datMantenimientoEquipo" class="co.com.arcosoft.modelo.DatMantenimientoEquipo" fetch="select">
+            <column name="dat_mantenimiento_equipo_id" />
+        </many-to-one>
+        <property name="cantidad" type="java.lang.Double">
+            <column name="cantidad" precision="12" scale="4" />
+        </property>
+        <property name="valorUnitario" type="java.lang.Double">
+            <column name="valor_unitario" precision="12" scale="4" />
+        </property>
+        <property name="costoTotal" type="java.lang.Double">
+            <column name="costo_total" precision="12" scale="4" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="tipoSuministro" type="java.lang.String">
+            <column name="tipo_suministro" length="60" />
+        </property>
+        <many-to-one name="compartimientosEquipo" class="co.com.arcosoft.modelo.CompartimientosEquipo" fetch="select">
+            <column name="compartimientos_equipo_id" />
+        </many-to-one>
+        <many-to-one name="sistemasEquipo" class="co.com.arcosoft.modelo.SistemasEquipo" fetch="select">
+            <column name="sistemas_equipo_id" />
+        </many-to-one>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="19" />
+        </property>
+            <many-to-one name="conceptoKardexId" class="co.com.arcosoft.modelo.ConceptoKardex" fetch="select">
+            <column name="concepto_kardex_id" />
+        </many-to-one>
+        
+       <property name="pendienteImportacion" type="java.lang.String">
+            <column name="pendiente_importacion" length="20" />
+        </property>
+        	<property name="descargaInventario" type="java.lang.String">
+			<column name="descarga_inventario" length="20" />
+		</property>
+    </class>
+</hibernate-mapping>

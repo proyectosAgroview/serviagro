@@ -1,0 +1,165 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableEstClimat"
+						header="Estación Climatológica">
+						<!--	<p:growl id="men"/>	-->
+						<p:dataTable id="tbl" value="#{estClimatView.data}"
+							var="estClimat" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Estación Climatológica" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{estClimat.estado}"
+								sortBy="#{estClimat.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{estClimat.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{estClimat.codigo}"
+								sortBy="#{estClimat.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{estClimat.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{estClimat.nombre}"
+								sortBy="#{estClimat.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{estClimat.nombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogEstClimat"
+										actionListener="#{estClimatView.action_edit}">
+										<f:attribute name="selectedEstClimat" value="#{estClimat}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{estClimatView.action_new()}" update=":dialogEstClimat" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogEstClimat" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{estClimatView.showDialog}"
+					resizable="false" modal="true" width="600" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelEstClimat" header="Estación Climatológica">
+							<h:panelGrid columns="3" id="panelGrid" layout="grid"
+								styleClass="ui-panelgrid-blank"
+								columnClasses="ui-grid-col-3,ui-grid-col-5">
+
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{estClimatView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+
+								<p:outputLabel value="Código: " />
+								<p:inputText id="txtCodigo" disabled="false"
+									binding="#{estClimatView.txtCodigo}"
+									placeholder="Buscar o crear registro" size="23">
+									<p:ajax update="panelEstClimat,msg,panelBotones"
+										listener="#{estClimatView.listener_txtCodigo}" />
+								</p:inputText>
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNombre" value="Nombre: " />
+								<p:inputText id="txtNombre" disabled="true"
+									binding="#{estClimatView.txtNombre}" required="true"
+									requiredMessage="El Nombre es Obligatorio" />
+								<p:message for="txtNombre" />
+
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional" disabled="true"
+									binding="#{estClimatView.txtInfoAdicional}" rows="5" cols="30"
+									counter="display" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+								<h:outputText id="display" />
+
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional2" disabled="true"
+									binding="#{estClimatView.txtInfoAdicional2}" rows="5" cols="30"
+									counter="display2" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+								<h:outputText id="display2" />
+
+								<p:inputText style="visibility:hidden" id="txtEstClimatId"
+									binding="#{estClimatView.txtEstClimatId}">
+									<p:ajax update=":dialogEstClimat"
+										listener="#{estClimatView.listener_txtId}" />
+								</p:inputText>
+
+
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{estClimatView.btnSave}"
+									value="Grabar" action="#{estClimatView.action_save()}"
+									update=":dialogEstClimat :frm:panelDataTableEstClimat" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" process="@this"
+									action="#{estClimatView.action_clear()}"
+									update=":dialogEstClimat" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
+

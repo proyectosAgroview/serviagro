@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatTransProdTrabajadores" table="dat_trans_prod_trabajadores" >
+        <id name="datTransProdTrabajadoresId" type="java.lang.Long">
+            <column name="dat_trans_prod_trabajadores_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_id" />
+        </many-to-one>
+        <many-to-one name="trabajador" class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="trab_id" />
+        </many-to-one>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_pago" />
+        </many-to-one>
+        <many-to-one name="nivel2" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="nivel2_id" />
+        </many-to-one>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" />
+        </many-to-one>
+        <many-to-one name="datTransProd" class="co.com.arcosoft.modelo.DatTransProd" fetch="select">
+            <column name="dat_trans_prod_id" />
+        </many-to-one>
+        <property name="contratistaId" type="java.lang.Long">
+            <column name="contratista_id" />
+        </property>
+        <many-to-one name="ceptoNominaId" class="co.com.arcosoft.modelo.ConceptoNomina" fetch="select">
+            <column name="cepto_nomina_id" />
+        </many-to-one>
+        <property name="cantidadPago" type="java.lang.Double">
+            <column name="cantidad_pago" precision="12" scale="4" />
+        </property>
+        <property name="udadMedProd" type="java.lang.Long">
+            <column name="udad_med_prod" />
+        </property>
+        <property name="cantidadProd" type="java.lang.Double">
+            <column name="cantidad_prod" precision="12" scale="4" />
+        </property>
+        <property name="malla1" type="java.lang.Double">
+            <column name="malla1" precision="12" scale="4" />
+        </property>
+        <property name="malla2" type="java.lang.Double">
+            <column name="malla2" precision="12" scale="4" />
+        </property>
+        <property name="malla3" type="java.lang.Double">
+            <column name="malla3" precision="12" scale="4" />
+        </property>
+        <property name="malla4" type="java.lang.Double">
+            <column name="malla4" precision="12" scale="4" />
+        </property>
+        <property name="valorUnitario" type="java.lang.Double">
+            <column name="valor_unitario" precision="12" scale="4" />
+        </property>
+        <property name="costoTotal" type="java.lang.Double">
+            <column name="costo_total" precision="12" scale="4" />
+        </property>
+        <property name="etapaId" type="java.lang.Long">
+            <column name="etapa_id" />
+        </property>
+        <property name="variedId" type="java.lang.Long">
+            <column name="varied_id" />
+        </property>
+        <property name="cierreCostos" type="java.lang.String">
+            <column name="cierre_costos" length="1" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="1000" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="cantidadDescontar" type="java.lang.Double">
+            <column name="cantidad_descontar" precision="12" scale="4" />
+        </property>
+        <property name="pesoPromedio" type="java.lang.Double">
+            <column name="peso_promedio" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

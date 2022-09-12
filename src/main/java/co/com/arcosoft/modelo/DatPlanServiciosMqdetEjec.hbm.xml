@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12/04/2019 03:26:29 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatPlanServiciosMqdetEjec" table="dat_plan_servicios_mqdet_ejec" >
+        <id name="datPlanServiciosMqdetEjecId" type="java.lang.Long">
+            <column name="dat_plan_servicios_mqdet_ejec_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+          <many-to-one name="operario" class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="operario_id" />
+        </many-to-one>
+       
+        
+        <many-to-one name="datPlanServiciosMqdet" class="co.com.arcosoft.modelo.DatPlanServiciosMqdet" fetch="select">
+            <column name="dat_plan_servicios_mqdet_id" />
+        </many-to-one>
+        <property name="cantidadRealizada" type="java.lang.Double">
+            <column name="cantidad_realizada" precision="12" scale="4" />
+        </property>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

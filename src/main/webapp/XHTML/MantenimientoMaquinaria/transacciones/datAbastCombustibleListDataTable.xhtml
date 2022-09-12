@@ -1,0 +1,410 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatAbastCombustible"
+						header="Salidas de consumibles por Maquinaria/Equipo">
+						<!-- <p:growl id="men" autoUpdate="true"/> -->
+						<p:dataTable id="tbl" value="#{datAbastCombustibleView.data}"
+							var="datAbastCombustible" paginator="true" lazy="true" rows="5"
+							rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datAbastCombustible" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datAbastCombustible.estado}"
+								sortBy="#{datAbastCombustible.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datAbastCombustible.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datAbastCombustible.consecutivo}"
+								sortBy="#{datAbastCombustible.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="# Registro" />
+								</f:facet>
+								<h:outputText value="#{datAbastCombustible.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datAbastCombustible.fechaRegistro}"
+								sortBy="#{datAbastCombustible.fechaRegistro}">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								
+								<h:outputText value="#{datAbastCombustible.fechaRegistro}" />
+
+								<p:column filterBy="#{datAbastCombustible.nombreEquipo}"
+									sortBy="#{datAbastCombustible.nombreEquipo}">
+									<f:facet name="header">
+										<h:outputText value="Equipo" />
+									</f:facet>
+									<h:outputText value="#{datAbastCombustible.nombreEquipo}" />
+								</p:column>
+							</p:column>
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogDatAbastCombustible"
+										disabled="#{datAbastCombustible.estadoTrue}"
+										actionListener="#{datAbastCombustibleView.action_edit}">
+										<f:attribute name="selectedDatAbastCombustible"
+											value="#{datAbastCombustible}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"
+										disabled="#{datAbastCombustible.estadoTrue}"
+										title="Anular Registro"
+										actionListener="#{datAbastCombustibleView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatAbastCombustible"
+											value="#{datAbastCombustible}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datAbastCombustibleView.action_new()}"
+								update=":dialogDatAbastCombustible" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatAbastCombustible" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datAbastCombustibleView.showDialog}" resizable="false"
+					modal="true" width="800" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelDatAbastCombustible"
+							header="Salidas de consumibles por Maquinaria/Equipo">
+
+							<p:panelGrid>
+								<p:row>
+									<p:column>
+										<h:panelGrid columns="2">
+
+											<p:outputLabel value="#Registro: " />
+											<p:inputText id="txtConsecutivo" disabled="false"
+												required="true" requiredMessage="Indique la cantidad"
+												binding="#{datAbastCombustibleView.txtConsecutivo}"
+												placeholder="Crear registro">
+											</p:inputText>
+
+										</h:panelGrid>
+									</p:column>
+
+									<p:column>
+										<h:panelGrid columns="2">
+											<p:outputLabel value="# Planilla fisica: " />
+											<p:spinner id="txtNumeroPlanillaFisica" disabled="false"
+												binding="#{datAbastCombustibleView.txtNumeroPlanillaFisica}">
+											</p:spinner>
+
+										</h:panelGrid>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<h:panelGrid columns="2" id="panelGrid2">
+
+								<p:outputLabel for="msgFechaRegistro"
+									value="Fecha de registro: " />
+								<p:calendar id="msgFechaRegistro" showOn="button"
+									navigator="false" locale="es" size="14"
+									binding="#{datAbastCombustibleView.txtFechaRegistro}"
+									pattern="dd/MM/yyyy" required="true" mask="true"
+									requiredMessage="La fecha es obligatoria">
+								</p:calendar>
+
+								<p:outputLabel for="txtTurnoCampoId" value="Turno: "
+									style="font-size: 0.9em; " />
+								<p:selectOneMenu id="txtTurnoCampoId" effect="fade"
+									filter="true" filterMatchMode="contains" autoWidth="false"
+									style="width: 100%;font-size: 0.9em;"
+									binding="#{datAbastCombustibleView.txtTurnoCampoId}"
+									required="true" requiredMessage="Seleccione un turno">
+									<f:selectItem itemLabel="Seleccione un turno" itemValue="" />
+									<f:selectItems
+										value="#{datAbastCombustibleView.selectTurnoCampoId}" />
+								</p:selectOneMenu>
+							</h:panelGrid>
+
+							<p:panelGrid>
+								<p:row>
+									<p:column>
+										<h:panelGrid columns="2">
+											<p:outputLabel
+												for="txtTipoAbastecimientoId_TipoAbastecimiento"
+												value="Tipo abastecimiento: " style="font-size: 0.9em; " />
+											<p:selectOneMenu autoWidth="false"
+												style="width: 100%;font-size: 0.9em;"
+												id="txtTipoAbastecimientoId_TipoAbastecimiento"
+												effect="fade" filter="true" filterMatchMode="contains"
+												binding="#{datAbastCombustibleView.txtTipoAbastecimientoId_TipoAbastecimiento}"
+												required="false" requiredMessage="Seleccione un tipo">
+												<f:selectItem itemLabel="Seleccione un tipo" itemValue="" />
+												<f:selectItems
+													value="#{datAbastCombustibleView.selectTipoAbastecimientoId}" />
+											</p:selectOneMenu>
+
+											<p:outputLabel style="font-size: 0.9em; "
+												for="txtBombaAbastecimientoId_BombaAbastecimiento"
+												value="Bomba: " />
+											<p:selectOneMenu autoWidth="false"
+												style="width: 100%;font-size: 0.9em;"
+												id="txtBombaAbastecimientoId_BombaAbastecimiento"
+												effect="fade" filter="true" filterMatchMode="contains"
+												binding="#{datAbastCombustibleView.txtBombaAbastecimientoId_BombaAbastecimiento}"
+												required="false" requiredMessage="Seleccione una bomba">
+												<f:selectItem itemLabel="Seleccione una bomba" itemValue="" />
+												<f:selectItems
+													value="#{datAbastCombustibleView.selectBombaAbastecimientoId}" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtTrabId_Trabajador"
+												style="font-size: 0.9em; " value="Despachador: " />
+											<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width: 100%;font-size: 0.9em;"
+												binding="#{datAbastCombustibleView.txtTrabId_Trabajador}"
+												required="true" requiredMessage="Seleccione un trabajador">
+												<f:selectItem itemLabel="Seleccione un trabajador"
+													itemValue="" />
+												<f:selectItems
+													value="#{datAbastCombustibleView.selectTrabajador}" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtEquipoId_Equipo" value="Equipo: "
+												style="font-size: 0.9em; " />
+											<p:selectOneMenu id="txtEquipoId_Equipo" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width: 100%;font-size: 0.9em;"
+												binding="#{datAbastCombustibleView.txtEquipoId_Equipo}"
+												required="true" requiredMessage="Seleccione un equipo">
+												<f:selectItem itemLabel="Seleccione un equipo" itemValue="" />
+												<f:selectItems
+													value="#{datAbastCombustibleView.selectEquipoId}" />
+												<p:ajax process="@this, txtEquipoId_Equipo"
+													listener= "#{datAbastCombustibleView.listener_ConsultaConductor}"
+													update="txtConductor" />
+											</p:selectOneMenu>
+
+
+											<p:outputLabel for="txtConductor" value="Operario: "
+												style="font-size: 0.9em; " />
+											<p:selectOneMenu id="txtConductor" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width: 100%;font-size: 0.9em;"
+												binding="#{datAbastCombustibleView.txtConductor}"
+												required="true" requiredMessage="Seleccione un conductor">
+												<f:selectItem itemLabel="Seleccione un conductor"
+													itemValue="" />
+												<f:selectItems
+													value="#{datAbastCombustibleView.selectConductor}" />
+											</p:selectOneMenu>
+
+
+										</h:panelGrid>
+									</p:column>
+
+									<p:column>
+										<h:panelGrid columns="2">
+
+											<p:outputLabel for="txtAlmacenId_Almacen" value="Almacén: "
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtAlmacenId_Almacen" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width: 100%;font-size: 0.9em;"
+												binding="#{datAbastCombustibleView.txtAlmacenId_Almacen}"
+												required="false" requiredMessage="Seleccione un almacén">
+												<f:selectItem itemLabel="Seleccione un almacén" itemValue="" />
+												<f:selectItems
+													value="#{datAbastCombustibleView.selectAlmacen}" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtProductoId_Producto"
+												style="font-size: 0.9em; " value="Producto: " />
+											<p:selectOneMenu id="txtProductoId_Producto" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width: 100%;font-size: 0.9em;"
+												binding="#{datAbastCombustibleView.txtProductoId_Producto}"
+												required="true" requiredMessage="Seleccione un producto">
+												<f:selectItem itemLabel="Seleccione un producto"
+													itemValue="" />
+												<f:selectItems
+													value="#{datAbastCombustibleView.selectProductoId}" />
+												<p:ajax process="@this, txtProductoId_Producto"
+													listener= "#{datAbastCombustibleView.listener_ConsultaCodUdadMed}"
+													update="txtUdadMedId_UdadMed" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtUdadMedId_UdadMed"
+												style="font-size: 0.9em; " value="Unidad de médida: " />
+											<p:selectOneMenu id="txtUdadMedId_UdadMed" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width: 100%;font-size: 0.9em;"
+												binding="#{datAbastCombustibleView.txtUdadMedId_UdadMed}"
+												required="true" requiredMessage="Seleccione una unidad">
+												<f:selectItem itemLabel="Seleccione una unidad" itemValue="" />
+												<f:selectItems
+													value="#{datAbastCombustibleView.selectUdadMedId}" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtCantidad" value="Cantidad: "
+												style="font-size: 0.9em; " />
+											<p:inputText id="txtCantidad" disabled="true"
+												style="font-size: 0.9em; "
+												binding="#{datAbastCombustibleView.txtCantidad}" size="12"
+												required="true" requiredMessage="Indique la cantidad">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+
+											<p:outputLabel for="txtValorUnitario" value="Precio: "
+												style="font-size: 0.9em; " />
+											<p:panelGrid columns="2">
+												<p:inputText id="txtValorUnitario" disabled="false"
+													style="font-size: 0.9em; " size="12"
+													binding="#{datAbastCombustibleView.txtValorUnitario}"
+													required="false"
+													requiredMessage="Indique el valor unitario">
+												</p:inputText>
+
+												<p:commandButton icon="ui-icon-calculator" value="Calcular"
+													style="font-size: 0.9em; ">
+													<p:ajax process="@all" update="txtValorUnitario"
+														listener="#{datAbastCombustibleView.ConsultarPrecioPromProductoDet()}" />
+												</p:commandButton>
+											</p:panelGrid>
+
+
+											<p:outputLabel for="txtCostoTotal" value="Costo total: "
+												style="font-size: 0.9em; " />
+											<p:panelGrid columns="2">
+												<p:inputText id="txtCostoTotal" size="12"
+													binding="#{datAbastCombustibleView.txtCostoTotal}"
+													disable="true">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+												<p:commandButton icon="ui-icon-calculator" value="Calcular"
+													style="font-size: 0.9em; ">
+													<p:ajax process="@all" update="txtCostoTotal"
+														listener="#{datAbastCombustibleView.listener_calcularCostoTotal}" />
+												</p:commandButton>
+											</p:panelGrid>
+
+										</h:panelGrid>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+
+							<h:panelGrid columns="2">
+								<p:outputLabel for="txtObservacion" value="Observación:"
+									style="font-size: 0.9em; " />
+								<p:inputTextarea id="txtObservacion" style="font-size: 0.9em; "
+									binding="#{datAbastCombustibleView.txtObservacion}" rows="3"
+									cols="30" maxlength="1000" autoResize="true" />
+
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden"
+									id="txtDatAbastCombustibleId"
+									binding="#{datAbastCombustibleView.txtDatAbastCombustibleId}">
+								</p:inputText>
+							</h:panelGrid>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datAbastCombustibleView.btnSave}" value="Grabar"
+									action="#{datAbastCombustibleView.action_save()}"
+									update=":dialogDatAbastCombustible :frm:panelDataTableDatAbastCombustible" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datAbastCombustibleView.action_clear()}"
+									process="@this" update=":dialogDatAbastCombustible" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datAbastCombustibleView.showDialog}" modal="true"
+					width="500" showEffect="fade">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datAbastCombustibleView.txtObservacionAnularReg}"
+									rows="5" cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datAbastCombustibleView.btnDelete}"
+									value="Grabar"
+									action="#{datAbastCombustibleView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatAbastCombustible" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datAbastCombustibleView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

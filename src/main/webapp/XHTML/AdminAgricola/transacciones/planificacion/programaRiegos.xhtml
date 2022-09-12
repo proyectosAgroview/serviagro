@@ -1,0 +1,494 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatPlanillaNomina"
+						header="Programa de riegos">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datProgramaRiegoView.data}"
+							var="datProgramaRiego" paginator="true" lazy="true" rows="5"
+							rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datProgramaRiego" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{datProgramaRiego.consecutivo}"
+								sortBy="#{datProgramaRiego.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="# Programa" />
+								</f:facet>
+								<h:outputText value="#{datProgramaRiego.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datProgramaRiego.anio}"
+								sortBy="#{datProgramaRiego.anio}">
+								<f:facet name="header">
+									<h:outputText value="Año" />
+								</f:facet>
+								<h:outputText value="#{datProgramaRiego.anio}" />
+							</p:column>
+
+
+							<p:column filterBy="#{datProgramaRiego.mes}"
+								sortBy="#{datProgramaRiego.mes}">
+								<f:facet name="header">
+									<h:outputText value="Mes" />
+								</f:facet>
+								<h:outputText value="#{datProgramaRiego.mes}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatProgramaRiego"
+										disabled="#{datProgramaRiego.estadoTrue}"
+										actionListener="#{datProgramaRiegoView.action_edit}">
+										<f:attribute name="selectedDatProgramaRiego"
+											value="#{datProgramaRiego}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"
+										disabled="#{datProgramaRiego.estadoTrue}"
+										title="Anular Registro"
+										actionListener="#{datProgramaRiegoView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatProgramaRiego"
+											value="#{datProgramaRiego}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datProgramaRiegoView.action_new()}"
+								update=":dialogDatProgramaRiego" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatProgramaRiego" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datProgramaRiegoView.showDialog}" resizable="false"
+					modal="true" width="1000" styleClass="dialogFix"
+					header="Programa de riegos" responsive="true">
+					<h:form id="formDialog">
+
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+
+						<p:tabView>
+							<p:tab title="Programa">
+
+								<h:panelGrid columns="2">
+									<p:outputLabel value="#Planilla: " style="font-size: 0.9em;" />
+									<p:inputText id="txtConsecutivo" disabled="false"
+										binding="#{datProgramaRiegoView.txtConsecutivo}"
+										placeholder="Buscar o crear registro" size="23">
+									</p:inputText>
+									
+
+									<p:outputLabel for="txtTrabId_Trabajador" value="Supervisor: "
+										style="font-size: 0.9em;" />
+									<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+										filter="false" filterMatchMode="contains"
+										binding="#{datProgramaRiegoView.txtTrabId_Trabajador}"
+										style="width: 10%;font-size: 0.8em;" required="true"
+										requiredMessage="Seleccione un trabajador">
+										<f:selectItem itemLabel="Seleccione un trabajador"
+											itemValue="" />
+										<f:selectItems
+											value="#{datProgramaRiegoView.selectTrabajador}" />
+									</p:selectOneMenu>
+
+
+									<p:outputLabel for="txtAnio" value="Año: "
+										style="font-size: 0.9em;" />
+									<p:spinner id="txtAnio"
+										binding="#{datProgramaRiegoView.txtAnio}" required="true"
+										requiredMessage="Indique un número" size="5">
+									</p:spinner>
+
+
+									<p:outputLabel for="txtMes" value="Mes: "
+										style="font-size: 0.9em;" />
+									<p:selectOneMenu id="txtMes" effect="fade" filter="true"
+										filterMatchMode="contains"
+										style="width: 10%;font-size: 0.9em;"
+										binding="#{datProgramaRiegoView.txtMes}" required="true"
+										requiredMessage="Seleccione un mes">
+										<f:selectItem itemLabel="Seleccione un mes" itemValue="" />
+
+										<f:selectItem itemLabel="Enero" itemValue="Enero" />
+										<f:selectItem itemLabel="Febrero" itemValue="Febrero" />
+										<f:selectItem itemLabel="Marzo" itemValue="Marzo" />
+										<f:selectItem itemLabel="Abril" itemValue="Abril" />
+										<f:selectItem itemLabel="Mayo" itemValue="Mayo" />
+										<f:selectItem itemLabel="Junio" itemValue="Junio" />
+										<f:selectItem itemLabel="Julio" itemValue="Julio" />
+										<f:selectItem itemLabel="Agosto" itemValue="Agosto" />
+										<f:selectItem itemLabel="Septiembre" itemValue="Septiembre" />
+										<f:selectItem itemLabel="Octubre" itemValue="Octubre" />
+										<f:selectItem itemLabel="Noviembre" itemValue="Noviembre" />
+										<f:selectItem itemLabel="Diciembre" itemValue="Diciembre" />
+									</p:selectOneMenu>
+
+									<p:outputLabel for="txtObservacion" value="Observación:"
+										style="font-size: 0.8em;" />
+									<p:inputTextarea id="txtObservacion"
+										binding="#{datProgramaRiegoView.txtObservacion}" rows="1"
+										cols="50" maxlength="1000" counterTemplate="{0} Caracteres"
+										autoResize="true" />
+									<h:outputText />
+										
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtDatProgramaRiegoId"
+											binding="#{datProgramaRiegoView.txtDatProgramaRiegoId}">
+
+										</p:inputText>
+
+								</h:panelGrid>
+
+
+							</p:tab>
+
+							<p:tab title="Detalle lotes">
+								<p:scrollPanel mode="native" style="width:850px;height:350px">
+
+									<h:panelGrid columns="2" id="gridProgramaRiegoDet">
+
+
+										<p:outputLabel for="txtFechaEstimadaRiego"
+											value="Fecha estimada de riego: " style="font-size: 0.8em;" />
+										<p:calendar id="txtFechaEstimadaRiego" showOn="button"
+											navigator="false" locale="es" style="font-size: 0.8em;"
+											binding="#{datProgramaRiegoView.txtFechaEstimadaRiego}"
+											pattern="dd/MM/yyyy" mask="true" required="false"
+											requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="txtInfraId_Infraestructura"
+											value="Fuente de agua: " style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtInfraId_Infraestructura" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{datProgramaRiegoView.txtInfraId_Infraestructura}"
+											style="width: 10%; font-size: 0.8em;" required="false"
+											requiredMessage="Seleccione una fuente de agua">
+											<f:selectItem itemLabel="Seleccione una infraestructura"
+												itemValue="" />
+											<f:selectItems
+												value="#{datProgramaRiegoView.selectInfraestructura}" />
+											<p:ajax
+												listener="#{datProgramaRiegoView.listener_ConsultaInfraestructura}"
+												update="txtInfraestructuraNombre" />
+
+										</p:selectOneMenu>
+
+
+										<p:outputLabel for="txtNivel1Id" value="Zona: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtNivel1Id" effect="fade" filter="true"
+											filterMatchMode="contains" style="font-size: 0.8em;"
+											binding="#{datProgramaRiegoView.txtNivel1Id}"
+											required="false" requiredMessage="Seleccione una zona">
+											<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+											<f:selectItems value="#{datProgramaRiegoView.selectNivel1}" />
+											<p:ajax update="txtNivel2Id_Nivel2" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtNivel2Id_Nivel2" value="Hacienda: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtNivel2Id_Nivel2" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="font-size: 0.8em;"
+											binding="#{datProgramaRiegoView.txtNivel2Id_Nivel2}"
+											required="false" requiredMessage="Seleccione una hacienda">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems value="#{datProgramaRiegoView.selectNivel2}" />
+											<p:ajax update="txtNivel3Id" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtNivel3Id" value="Bloque: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+											filterMatchMode="contains" style="font-size: 0.8em;"
+											binding="#{datProgramaRiegoView.txtNivel3Id}"
+											required="false"
+											requiredMessage="Seleccione un bloque del cultivo">
+											<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+											<f:selectItems value="#{datProgramaRiegoView.selectNivel3}" />
+											<p:ajax update="txtNivel4Id_Nivel4" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{datProgramaRiegoView.txtNivel4Id_Nivel4}"
+											style="font-size: 0.8em;" required="false"
+											requiredMessage="Seleccione un lote">
+											<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+											<f:selectItems value="#{datProgramaRiegoView.selectNivel4}" />
+											<p:ajax
+												listener="#{datProgramaRiegoView.listener_ConsultaNivel4}"
+												update="txtAreaRegada,  txtNivel4Nombre, txtNivel2Nombre
+												
+												" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtAreaRegada" value="Área: "
+														style="font-size: 0.8em;" />
+													<p:inputText id="txtAreaRegada" disabled="true"
+														style="font-size: 0.8em;" size="15"
+														binding="#{datProgramaRiegoView.txtAreaRegada}"
+														required="false" requiredMessage="Indique el área">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtCaudalNivel4"
+														style="font-size: 0.8em;" value="Caudal(L/Sg) " />
+													<p:inputText id="txtCaudalNivel4" disabled="true"
+														style="font-size: 0.8em;" size="15"
+														binding="#{datProgramaRiegoView.txtCaudalNivel4}"
+														required="false" requiredMessage="Indique el caudal">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+												</h:panelGrid>
+											</p:column>
+										
+									<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtHorasEstimadas"
+														style="font-size: 0.8em;"
+														value="Horas estimadas de riego: " />
+													<p:inputText id="txtHorasEstimadas" disabled="true"
+														style="font-size: 0.8em;" size="15"
+														binding="#{datProgramaRiegoView.txtHorasEstimadas}"
+														required="false"
+														requiredMessage="Indique las horas estimadas">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+												</h:panelGrid>
+											</p:column>
+
+										</p:row>
+									</p:panelGrid>
+
+
+
+									<p:inputText style="visibility:hidden;font-size: 0.0em;"
+										id="txtInfraestructuraNombre"
+										binding="#{datProgramaRiegoView.txtInfraestructuraNombre}" />
+									<p:inputText style="visibility:hidden;font-size: 0.0em;"
+										id="txtNivel2Nombre"
+										binding="#{datProgramaRiegoView.txtNivel2Nombre}" />
+
+									<p:inputText style="visibility:hidden;font-size: 0.0em;"
+										id="txtNivel4Nombre"
+										binding="#{datProgramaRiegoView.txtNivel4Nombre}" />
+
+
+
+									<h:panelGrid columns="2" id="PanelGrid6" style="margin:10px"
+										cellpadding="5">
+
+										<f:facet name="header">
+
+											<p:commandButton id="btnAgregarNivel4"
+												icon="ui-icon-plusthick"
+												binding="#{datProgramaRiegoView.btnAgregar}" value="Agregar"
+												action="#{datProgramaRiegoView.action_agregarProgramaRiego()}"
+												update="tablaProgramaRiegoDet dialogDatProgramaRiego" />
+
+											<p:commandButton id="btnlimpiar1" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="gridProgramaRiegoDet" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+
+									</h:panelGrid>
+
+									<p:outputPanel>
+
+										<p:dataTable id="tablaProgramaRiegoDet"
+											value="#{datProgramaRiegoView.dataProgramaRiegoDet}"
+											var="listProgramaRiegoDet" paginator="true" rows="5"
+											rowsPerPageTemplate="5,10,15" editable="true">
+
+											<p:column headerText="Fecha Est. riego">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listProgramaRiegoDet.fechaEstimadaRiego}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listProgramaRiegoDet.fechaEstimadaRiego}">
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Hacienda">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listProgramaRiegoDet.nilve2Nombre}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listProgramaRiegoDet.nilve2Nombre}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Lote">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listProgramaRiegoDet.nivel4Nombre}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listProgramaRiegoDet.nivel4Nombre}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Área regada">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listProgramaRiegoDet.areaRegada}">
+															<f:convertNumber pattern="#0.00" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listProgramaRiegoDet.areaRegada}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datProgramaRiegoView.actionDeleteProgramaRiegoDet}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaProgramaRiegoDet dialogDatProgramaRiego">
+														<f:attribute name="selectedDatProgramaRiegoDet"
+															value="#{listProgramaRiegoDet}" />
+													</p:commandButton>
+
+												</div>
+											</p:column>
+
+										</p:dataTable>
+									</p:outputPanel>
+								</p:scrollPanel>
+							</p:tab>
+
+						</p:tabView>
+
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datProgramaRiegoView.btnSave}" value="Grabar"
+									action="#{datProgramaRiegoView.action_save()}"
+									update=":dialogDatProgramaRiego :frm:panelDataTableDatPlanillaNomina" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datProgramaRiegoView.action_clear()}"
+									process="@this" update=":dialogDatProgramaRiego" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datProgramaRiegoView.showDialog}" modal="true"
+					width="500">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datProgramaRiegoView.txtObservacionAnularReg}"
+									rows="5" cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datProgramaRiegoView.btnDelete}"
+									value="Grabar"
+									action="#{datProgramaRiegoView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatPlanillaNomina" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datProgramaRiegoView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

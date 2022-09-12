@@ -1,0 +1,354 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28-ene-2017 9:38:14 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.ProgramaSiembraCosechaDet" table="PROGRAMA_SIEMBRA_COSECHA_DET">
+        <id name="programaSiembraCosechaDetId" type="java.lang.Long">
+            <column name="PROGRAMA_SIEMBRA_COSECHA_DET_ID" precision="18" scale="0" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="programaSiembraCosecha" class="co.com.arcosoft.modelo.ProgramaSiembraCosecha" fetch="select">
+            <column name="PROGRAMA_SIEMBRA_COSECHA_ID" precision="18" scale="0" />
+        </many-to-one>
+        <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="PERS_EMPR" precision="18" scale="0" />
+        </many-to-one>
+        <many-to-one name="variedad" class="co.com.arcosoft.modelo.Variedad" fetch="select">
+            <column name="VARIEDAD_ID" precision="18" scale="0" />
+        </many-to-one>
+        <property name="cosecha1" type="java.lang.Double">
+            <column name="COSECHA1" precision="12" scale="4" />
+        </property>
+        <property name="cosecha2" type="java.lang.Double">
+            <column name="COSECHA2" precision="12" scale="4" />
+        </property>
+        <property name="cosecha3" type="java.lang.Double">
+            <column name="COSECHA3" precision="12" scale="4" />
+        </property>
+        <property name="cosecha4" type="java.lang.Double">
+            <column name="COSECHA4" precision="12" scale="4" />
+        </property>
+        <property name="cosecha5" type="java.lang.Double">
+            <column name="COSECHA5" precision="12" scale="4" />
+        </property>
+        <property name="cosecha6" type="java.lang.Double">
+            <column name="COSECHA6" precision="12" scale="4" />
+        </property>
+        <property name="cosecha7" type="java.lang.Double">
+            <column name="COSECHA7" precision="12" scale="4" />
+        </property>
+        <property name="cosecha8" type="java.lang.Double">
+            <column name="COSECHA8" precision="12" scale="4" />
+        </property>
+        <property name="cosecha9" type="java.lang.Double">
+            <column name="COSECHA9" precision="12" scale="4" />
+        </property>
+        <property name="cosecha10" type="java.lang.Double">
+            <column name="COSECHA10" precision="12" scale="4" />
+        </property>
+        <property name="cosecha11" type="java.lang.Double">
+            <column name="COSECHA11" precision="12" scale="4" />
+        </property>
+        <property name="cosecha12" type="java.lang.Double">
+            <column name="COSECHA12" precision="12" scale="4" />
+        </property>
+        <property name="cosecha13" type="java.lang.Double">
+            <column name="COSECHA13" precision="12" scale="4" />
+        </property>
+        <property name="cosecha14" type="java.lang.Double">
+            <column name="COSECHA14" precision="12" scale="4" />
+        </property>
+        <property name="cosecha15" type="java.lang.Double">
+            <column name="COSECHA15" precision="12" scale="4" />
+        </property>
+        <property name="cosecha16" type="java.lang.Double">
+            <column name="COSECHA16" precision="12" scale="4" />
+        </property>
+        <property name="cosecha17" type="java.lang.Double">
+            <column name="COSECHA17" precision="12" scale="4" />
+        </property>
+        <property name="cosecha18" type="java.lang.Double">
+            <column name="COSECHA18" precision="12" scale="4" />
+        </property>
+        <property name="cosecha19" type="java.lang.Double">
+            <column name="COSECHA19" precision="12" scale="4" />
+        </property>
+        <property name="cosecha20" type="java.lang.Double">
+            <column name="COSECHA20" precision="12" scale="4" />
+        </property>
+        <property name="cosecha21" type="java.lang.Double">
+            <column name="COSECHA21" precision="12" scale="4" />
+        </property>
+        <property name="cosecha22" type="java.lang.Double">
+            <column name="COSECHA22" precision="12" scale="4" />
+        </property>
+        <property name="cosecha23" type="java.lang.Double">
+            <column name="COSECHA23" precision="12" scale="4" />
+        </property>
+        <property name="cosecha24" type="java.lang.Double">
+            <column name="COSECHA24" precision="12" scale="4" />
+        </property>
+        <property name="cosecha25" type="java.lang.Double">
+            <column name="COSECHA25" precision="12" scale="4" />
+        </property>
+        <property name="cosecha26" type="java.lang.Double">
+            <column name="COSECHA26" precision="12" scale="4" />
+        </property>
+        <property name="cosecha27" type="java.lang.Double">
+            <column name="COSECHA27" precision="12" scale="4" />
+        </property>
+        <property name="cosecha28" type="java.lang.Double">
+            <column name="COSECHA28" precision="12" scale="4" />
+        </property>
+        <property name="cosecha29" type="java.lang.Double">
+            <column name="COSECHA29" precision="12" scale="4" />
+        </property>
+        <property name="cosecha30" type="java.lang.Double">
+            <column name="COSECHA30" precision="12" scale="4" />
+        </property>
+        <property name="cosecha31" type="java.lang.Double">
+            <column name="COSECHA31" precision="12" scale="4" />
+        </property>
+        <property name="cosecha32" type="java.lang.Double">
+            <column name="COSECHA32" precision="12" scale="4" />
+        </property>
+        <property name="cosecha33" type="java.lang.Double">
+            <column name="COSECHA33" precision="12" scale="4" />
+        </property>
+        <property name="cosecha34" type="java.lang.Double">
+            <column name="COSECHA34" precision="12" scale="4" />
+        </property>
+        <property name="cosecha35" type="java.lang.Double">
+            <column name="COSECHA35" precision="12" scale="4" />
+        </property>
+        <property name="cosecha36" type="java.lang.Double">
+            <column name="COSECHA36" precision="12" scale="4" />
+        </property>
+        <property name="cosecha37" type="java.lang.Double">
+            <column name="COSECHA37" precision="12" scale="4" />
+        </property>
+        <property name="cosecha38" type="java.lang.Double">
+            <column name="COSECHA38" precision="12" scale="4" />
+        </property>
+        <property name="cosecha39" type="java.lang.Double">
+            <column name="COSECHA39" precision="12" scale="4" />
+        </property>
+        <property name="cosecha40" type="java.lang.Double">
+            <column name="COSECHA40" precision="12" scale="4" />
+        </property>
+        <property name="cosecha41" type="java.lang.Double">
+            <column name="COSECHA41" precision="12" scale="4" />
+        </property>
+        <property name="cosecha42" type="java.lang.Double">
+            <column name="COSECHA42" precision="12" scale="4" />
+        </property>
+        <property name="cosecha43" type="java.lang.Double">
+            <column name="COSECHA43" precision="12" scale="4" />
+        </property>
+        <property name="cosecha44" type="java.lang.Double">
+            <column name="COSECHA44" precision="12" scale="4" />
+        </property>
+        <property name="cosecha45" type="java.lang.Double">
+            <column name="COSECHA45" precision="12" scale="4" />
+        </property>
+        <property name="cosecha46" type="java.lang.Double">
+            <column name="COSECHA46" precision="12" scale="4" />
+        </property>
+        <property name="cosecha47" type="java.lang.Double">
+            <column name="COSECHA47" precision="12" scale="4" />
+        </property>
+        <property name="cosecha48" type="java.lang.Double">
+            <column name="COSECHA48" precision="12" scale="4" />
+        </property>
+        <property name="cosecha49" type="java.lang.Double">
+            <column name="COSECHA49" precision="12" scale="4" />
+        </property>
+        <property name="cosecha50" type="java.lang.Double">
+            <column name="COSECHA50" precision="12" scale="4" />
+        </property>
+        <property name="cosecha51" type="java.lang.Double">
+            <column name="COSECHA51" precision="12" scale="4" />
+        </property>
+        <property name="cosecha52" type="java.lang.Double">
+            <column name="COSECHA52" precision="12" scale="4" />
+        </property>
+        <property name="cosecha53" type="java.lang.Double">
+            <column name="COSECHA53" precision="12" scale="4" />
+        </property>
+        <property name="totalCosecha" type="java.lang.Double">
+            <column name="TOTAL_COSECHA" precision="12" scale="4" />
+        </property>
+        <property name="siembra1" type="java.lang.Double">
+            <column name="SIEMBRA1" precision="12" scale="4" />
+        </property>
+        <property name="siembra2" type="java.lang.Double">
+            <column name="SIEMBRA2" precision="12" scale="4" />
+        </property>
+        <property name="siembra3" type="java.lang.Double">
+            <column name="SIEMBRA3" precision="12" scale="4" />
+        </property>
+        <property name="siembra4" type="java.lang.Double">
+            <column name="SIEMBRA4" precision="12" scale="4" />
+        </property>
+        <property name="siembra5" type="java.lang.Double">
+            <column name="SIEMBRA5" precision="12" scale="4" />
+        </property>
+        <property name="siembra6" type="java.lang.Double">
+            <column name="SIEMBRA6" precision="12" scale="4" />
+        </property>
+        <property name="siembra7" type="java.lang.Double">
+            <column name="SIEMBRA7" precision="12" scale="4" />
+        </property>
+        <property name="siembra8" type="java.lang.Double">
+            <column name="SIEMBRA8" precision="12" scale="4" />
+        </property>
+        <property name="siembra9" type="java.lang.Double">
+            <column name="SIEMBRA9" precision="12" scale="4" />
+        </property>
+        <property name="siembra10" type="java.lang.Double">
+            <column name="SIEMBRA10" precision="12" scale="4" />
+        </property>
+        <property name="siembra11" type="java.lang.Double">
+            <column name="SIEMBRA11" precision="12" scale="4" />
+        </property>
+        <property name="siembra12" type="java.lang.Double">
+            <column name="SIEMBRA12" precision="12" scale="4" />
+        </property>
+        <property name="siembra13" type="java.lang.Double">
+            <column name="SIEMBRA13" precision="12" scale="4" />
+        </property>
+        <property name="siembra14" type="java.lang.Double">
+            <column name="SIEMBRA14" precision="12" scale="4" />
+        </property>
+        <property name="siembra15" type="java.lang.Double">
+            <column name="SIEMBRA15" precision="12" scale="4" />
+        </property>
+        <property name="siembra16" type="java.lang.Double">
+            <column name="SIEMBRA16" precision="12" scale="4" />
+        </property>
+        <property name="siembra17" type="java.lang.Double">
+            <column name="SIEMBRA17" precision="12" scale="4" />
+        </property>
+        <property name="siembra18" type="java.lang.Double">
+            <column name="SIEMBRA18" precision="12" scale="4" />
+        </property>
+        <property name="siembra19" type="java.lang.Double">
+            <column name="SIEMBRA19" precision="12" scale="4" />
+        </property>
+        <property name="siembra20" type="java.lang.Double">
+            <column name="SIEMBRA20" precision="12" scale="4" />
+        </property>
+        <property name="siembra21" type="java.lang.Double">
+            <column name="SIEMBRA21" precision="12" scale="4" />
+        </property>
+        <property name="siembra22" type="java.lang.Double">
+            <column name="SIEMBRA22" precision="12" scale="4" />
+        </property>
+        <property name="siembra23" type="java.lang.Double">
+            <column name="SIEMBRA23" precision="12" scale="4" />
+        </property>
+        <property name="siembra24" type="java.lang.Double">
+            <column name="SIEMBRA24" precision="12" scale="4" />
+        </property>
+        <property name="siembra25" type="java.lang.Double">
+            <column name="SIEMBRA25" precision="12" scale="4" />
+        </property>
+        <property name="siembra26" type="java.lang.Double">
+            <column name="SIEMBRA26" precision="12" scale="4" />
+        </property>
+        <property name="siembra27" type="java.lang.Double">
+            <column name="SIEMBRA27" precision="12" scale="4" />
+        </property>
+        <property name="siembra28" type="java.lang.Double">
+            <column name="SIEMBRA28" precision="12" scale="4" />
+        </property>
+        <property name="siembra29" type="java.lang.Double">
+            <column name="SIEMBRA29" precision="12" scale="4" />
+        </property>
+        <property name="siembra30" type="java.lang.Double">
+            <column name="SIEMBRA30" precision="12" scale="4" />
+        </property>
+        <property name="siembra31" type="java.lang.Double">
+            <column name="SIEMBRA31" precision="12" scale="4" />
+        </property>
+        <property name="siembra32" type="java.lang.Double">
+            <column name="SIEMBRA32" precision="12" scale="4" />
+        </property>
+        <property name="siembra33" type="java.lang.Double">
+            <column name="SIEMBRA33" precision="12" scale="4" />
+        </property>
+        <property name="siembra34" type="java.lang.Double">
+            <column name="SIEMBRA34" precision="12" scale="4" />
+        </property>
+        <property name="siembra35" type="java.lang.Double">
+            <column name="SIEMBRA35" precision="12" scale="4" />
+        </property>
+        <property name="siembra36" type="java.lang.Double">
+            <column name="SIEMBRA36" precision="12" scale="4" />
+        </property>
+        <property name="siembra37" type="java.lang.Double">
+            <column name="SIEMBRA37" precision="12" scale="4" />
+        </property>
+        <property name="siembra38" type="java.lang.Double">
+            <column name="SIEMBRA38" precision="12" scale="4" />
+        </property>
+        <property name="siembra39" type="java.lang.Double">
+            <column name="SIEMBRA39" precision="12" scale="4" />
+        </property>
+        <property name="siembra40" type="java.lang.Double">
+            <column name="SIEMBRA40" precision="12" scale="4" />
+        </property>
+        <property name="siembra41" type="java.lang.Double">
+            <column name="SIEMBRA41" precision="12" scale="4" />
+        </property>
+        <property name="siembra42" type="java.lang.Double">
+            <column name="SIEMBRA42" precision="12" scale="4" />
+        </property>
+        <property name="siembra43" type="java.lang.Double">
+            <column name="SIEMBRA43" precision="12" scale="4" />
+        </property>
+        <property name="siembra44" type="java.lang.Double">
+            <column name="SIEMBRA44" precision="12" scale="4" />
+        </property>
+        <property name="siembra45" type="java.lang.Double">
+            <column name="SIEMBRA45" precision="12" scale="4" />
+        </property>
+        <property name="siembra46" type="java.lang.Double">
+            <column name="SIEMBRA46" precision="12" scale="4" />
+        </property>
+        <property name="siembra47" type="java.lang.Double">
+            <column name="SIEMBRA47" precision="12" scale="4" />
+        </property>
+        <property name="siembra48" type="java.lang.Double">
+            <column name="SIEMBRA48" precision="12" scale="4" />
+        </property>
+        <property name="siembra49" type="java.lang.Double">
+            <column name="SIEMBRA49" precision="12" scale="4" />
+        </property>
+        <property name="siembra50" type="java.lang.Double">
+            <column name="SIEMBRA50" precision="12" scale="4" />
+        </property>
+        <property name="siembra51" type="java.lang.Double">
+            <column name="SIEMBRA51" precision="12" scale="4" />
+        </property>
+        <property name="siembra52" type="java.lang.Double">
+            <column name="SIEMBRA52" precision="12" scale="4" />
+        </property>
+        <property name="siembra53" type="java.lang.Double">
+            <column name="SIEMBRA53" precision="12" scale="4" />
+        </property>
+        <property name="totalSiembra" type="java.lang.Double">
+            <column name="TOTAL_SIEMBRA" precision="12" scale="4" />
+        </property>
+        <property name="fechaSiembra" type="java.util.Date">
+            <column name="FECHA_SIEMBRA" length="23" />
+        </property>
+        <property name="fechaCosecha" type="java.util.Date">
+            <column name="FECHA_COSECHA" length="23" />
+        </property>
+        <property name="rotacionCultivo" type="java.lang.String">
+            <column name="ROTACION_CULTIVO" length="10" />
+        </property>
+    </class>
+</hibernate-mapping>

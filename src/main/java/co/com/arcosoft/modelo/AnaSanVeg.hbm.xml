@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.AnaSanVeg" table="ana_san_veg" >
+        <id name="anaSanVegId" type="java.lang.Long">
+            <column name="ana_san_veg_id" />
+            <generator class="identity" />
+        </id>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="nivelRequerido" type="java.lang.Long">
+            <column name="nivel_requerido" />
+        </property>
+        <set name="variables" table="variable" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ana_san_veg_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Variable" />
+        </set>
+        <set name="anaCultivos" table="ana_cultivo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ana_san_veg_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.AnaCultivo" />
+        </set>
+        <set name="datSanVegs" table="dat_san_veg" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ana_san_veg_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatSanVeg" />
+        </set>
+    </class>
+</hibernate-mapping>

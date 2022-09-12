@@ -1,0 +1,448 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 20000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatReqProductos"
+						header="Requerimiento de productos/repuestos">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datReqProductosView.data}"
+							var="datCompraProductos" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Productos" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+									<p:column >
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datCompraProductos.fechaRegistro}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Documento" />
+								</f:facet>
+								<h:outputText value="#{datCompraProductos.consecutivo}" />
+							</p:column>
+							
+								
+							
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Observación" />
+								</f:facet>
+								<h:outputText value="#{datCompraProductos.observacion}" />
+							</p:column>
+							
+							
+							
+
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+										update=":dialogDatReqProductos"
+										actionListener="#{datReqProductosView.action_edit}">
+										<f:attribute name="selectedDatReqProductos"
+											value="#{datCompraProductos}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datReqProductosView.action_new()}"
+								update=":dialogDatReqProductos" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatReqProductos" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datReqProductosView.showDialog}" resizable="false"
+					modal="true" width="960" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+
+						<p:tabView id="tabMapa">
+
+							<p:tab title="Requerimiento de productos/repuestas">
+
+							
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+													<p:outputLabel value="#Registro " style="font-size: 0.9em;" />
+												<p:inputText id="txtConsecutivo" disabled="false"
+													style="font-size: 0.9em; "
+													binding="#{datReqProductosView.txtConsecutivo}"
+													size="14">
+												</p:inputText>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel for="txtFechaRegistro" value="Fecha: "
+													style="font-size: 0.9em;" />
+												<p:calendar id="txtFechaRegistro" showOn="button"
+													navigator="false" locale="es" size="14"
+													style="font-size: 0.9em;"
+													binding="#{datReqProductosView.txtFechaRegistro}"
+													pattern="dd/MM/yyyy" mask="true" required="true"
+													requiredMessage="La  fecha  es obligatoria" />
+											</h:panelGrid>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+								
+								<h:panelGrid columns="2">
+											
+														
+													<p:outputLabel for="txtTipoProducto" value="Tipo producto: "
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtTipoProducto" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.9em;"
+														binding="#{datReqProductosView.txtTipoProducto}"
+														required="false" requiredMessage="Seleccione un tipo de producto">
+														<f:selectItem itemLabel="Seleccione un tipo de producto" itemValue="" />
+														<f:selectItems
+															value="#{datReqProductosView.selectTipoProducto}" />
+														<p:ajax update="txtProductoId_Producto" > </p:ajax>	
+													</p:selectOneMenu>
+											</h:panelGrid>
+											
+								<p:panelGrid>
+									<p:row>
+									<p:column>
+											<h:panelGrid columns="2">
+												
+												<p:outputLabel for="txtProductoId_Producto" value="Producto: "
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtProductoId_Producto" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.9em;"
+														binding="#{datReqProductosView.txtProductoId_Producto}"
+														required="false" requiredMessage="Seleccione un producto">
+														<f:selectItem itemLabel="Seleccione un producto" itemValue="" />
+														<f:selectItems
+															value="#{datReqProductosView.selectProductoId}" />
+														<p:ajax update="txtUnidadMedida,txtSaldo " process="@this, txtTipoProducto"
+																listener="#{datReqProductosView.listener_ConsultaUmProducto}"> </p:ajax>
+													</p:selectOneMenu>
+											</h:panelGrid>
+										</p:column>
+										
+										<p:column>
+											<h:panelGrid columns="2">
+														<p:outputLabel for="txtUnidadMedida" value="Unidad de médida:"
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtUnidadMedida" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.9em;"
+														binding="#{datReqProductosView.txtUnidadMedida}"
+														required="false" requiredMessage="Seleccione una unidad de médida">
+														<f:selectItem itemLabel="Seleccione una unidad de médida" itemValue="" />
+														<f:selectItems
+															value="#{datReqProductosView.selectUdadMed}" />
+													</p:selectOneMenu>
+												
+											</h:panelGrid>
+										</p:column>
+										
+									</p:row>
+								</p:panelGrid>
+								
+								<p:panelGrid>
+									<p:row>
+									<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel value="Saldo total: " style="font-size: 0.9em;" />
+												<p:inputNumber id="txtSaldo" disabled="false"
+													style="font-size: 0.9em; " 
+													binding="#{datReqProductosView.txtSaldo}"
+													size="12">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputNumber>
+
+											</h:panelGrid>
+										</p:column>
+										
+										
+									</p:row>
+								</p:panelGrid>
+								
+								<p:panelGrid>
+									<p:row>
+									<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel for="txtCantidadUrgente" value="Req. Urgente: "
+													style="font-size: 0.9em;" />
+												<p:inputNumber id="txtCantidadUrgente"
+													style="font-size: 0.9em;" size="12"
+													binding="#{datReqProductosView.txtCantidadUrgente}"
+													required="false"
+													decimalSeparator="." thousandSeparator=","  decimalPlaces="2">
+												</p:inputNumber>
+
+											</h:panelGrid>
+										</p:column>
+										
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel for="txtCantidadNormal" value="Req. Normal: "
+													style="font-size: 0.9em;" />
+												<p:inputNumber id="txtCantidadNormal"
+													style="font-size: 0.9em;" size="12"
+													binding="#{datReqProductosView.txtCantidadNormal}"
+													required="false"
+													decimalSeparator="." thousandSeparator=","  decimalPlaces="2">
+												</p:inputNumber>
+												
+											</h:panelGrid>
+										</p:column>
+											
+										
+									</p:row>
+								</p:panelGrid>
+
+								<h:panelGrid columns="2">
+ 									<p:outputLabel for="txtObservacion" value="Detalle:"
+										style=" font-size: 0.9em;" />
+									<p:inputTextarea id="txtObservacion"
+										binding="#{datReqProductosView.txtObservacion}" rows="2"
+										cols="60" maxlength="3400" autoResize="true" required="false"
+										style="font-size: 0.9em;"
+										requiredMessage="La Observación es obligatoria" />
+										
+ 								<p:outputLabel style="visibility:hidden; font-size: 01em;" />
+									<p:inputText style="visibility:hidden"
+										id="txtDatReqProductosId"	binding="#{datReqProductosView.txtDatReqProductosId}">
+									</p:inputText>
+									
+								</h:panelGrid>
+
+							
+								<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+									<f:facet name="header">
+										<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+											process="@all" binding="#{datReqProductosView.btnAgregar}"
+											value="Agregar"
+											action="#{datReqProductosView.action_agregarPrecioProductos}"
+											update="tabla, txtCantidadNormal, txtCantidadUrgente, txtSaldo,
+											txtUnidadMedida, txtProductoId_Producto" />
+
+										<p:commandButton id="btnlimpiar" process="@this"
+											icon="ui-icon-trash" value="Limpiar">
+											<p:ajax resetValues="true" />
+										</p:commandButton>
+									</f:facet>
+								</h:panelGrid>
+
+							</p:tab>
+
+							<p:tab title="Detalle productos">
+
+								<p:messages id="msg1" autoUpdate="true" closable="true"
+									showDetail="true" />
+								<p:scrollPanel mode="native" style="width:800px;">
+
+									<p:outputPanel>
+
+										<p:dataTable id="tabla"
+											value="#{datReqProductosView.dataReq}"
+											var="listaDetPrecioProductos" scrollable="true"  rows="999999999"
+											scrollHeight="200" scrollWidth="800" editable="true"
+											editMode="cell" widgetVar="cellEventos">
+
+
+											<p:ajax event="cellEdit"
+												listener="#{datReqProductosView.onCellEditEventos}" />
+
+
+
+
+											<p:column headerText="Prod.">
+												<p:cellEditor>
+													<f:facet name="output"  >
+														<h:outputText id="prodData" style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.productoId_Producto.codigo}" />
+													</f:facet>
+													<f:facet name="input" >
+														<h:selectOneMenu filter="true" filterMatchMode="contains"  style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.productoId_Producto.productoId}">
+															<f:selectItems 
+																value="#{datReqProductosView.selectProducto2}"
+																var="var2" itemValue="#{var2}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="U.M.">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="umData"  style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.udadMedId_UdadMed.nombre}" />
+													</f:facet>
+													<f:facet name="input"  >
+														<h:selectOneMenu filter="true" filterMatchMode="contains" style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.udadMedId_UdadMed.udadMedId}">
+															<f:selectItems
+																value="#{datReqProductosView.selectUdadMed}"
+																var="var3" itemValue="#{var3}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+
+											<p:column headerText="Saldo">
+												<p:cellEditor>
+													<f:facet name="output" >
+														<h:outputText  style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.saldo}" />
+													</f:facet>
+													<f:facet name="input"  >
+														<p:inputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.saldo}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Req. Urgente">
+												<p:cellEditor>
+													<f:facet name="output"  >
+														<h:outputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.cantidadUrgente}" />
+													</f:facet>
+													<f:facet name="input"  >
+														<p:inputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.cantidadUrgente}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Req. Normal">
+												<p:cellEditor>
+													<f:facet name="output" >
+														<h:outputText value="#{listaDetPrecioProductos.cantidadNormal}"   style="font-size: 0.9em;">
+															<f:convertNumber pattern="#0.00" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input" >
+														<p:inputText value="#{listaDetPrecioProductos.cantidadNormal}"  style="font-size: 0.9em;"/>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Req. Faltante">
+												<p:cellEditor>
+													<f:facet name="output"  >
+														<h:outputText
+															value="#{listaDetPrecioProductos.cantidadUrgente}" style="font-size: 0.9em;">
+															<f:convertNumber pattern="#0.00" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input"  >
+														<p:inputText value="#{listaDetPrecioProductos.cantidadUrgente}" style="font-size: 0.9em;" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+
+											<f:attribute name="selectedDatReqProductosDet"
+												value="#{listaDetPrecioProductos}" />
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datReqProductosView.actionDeleteDatReqProductosDet}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tabla">
+														<f:attribute name="selectedDatReqProductosDet"
+															value="#{listaDetPrecioProductos}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								</p:scrollPanel>
+
+							</p:tab>
+						</p:tabView>
+
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datReqProductosView.btnSave}" value="Grabar"
+									action="#{datReqProductosView.action_save()}"
+									update=":dialogDatReqProductos :frm:panelDataTableDatReqProductos" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datReqProductosView.action_clear()}"
+									process="@this" update=":dialogDatReqProductos" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,130 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+<ui:composition>
+	<!-- Sidebar -->
+	<div class="sidebar sidebar-style-2" >
+		<div class="sidebar-wrapper scrollbar scrollbar-inner">
+			<div class="sidebar-content">
+				<div class="user">
+					<div class="avatar-sm float-left mr-2">
+						<i style="color: gray; font-size: 30px; margin: 8px"
+							class="fas fa-user-circle "></i>
+					</div>
+					<div class="info">
+						<a data-toggle="collapse" href="#collapseExample" aria-expanded="false">
+							<span>
+								#{initialMenuView.usuario} 								
+								<sec:authorize ifAnyGranted="Administrador">
+									<span class="user-level">Administrador</span>
+								</sec:authorize> 
+								<sec:authorize ifAnyGranted="Digitador">
+									<span class="user-level">Digitador</span>
+								</sec:authorize> 
+								<sec:authorize ifAnyGranted="Consultas">
+									<span class="user-level">Consultas</span>
+								</sec:authorize> <span class="caret"></span>
+							</span>
+						</a>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<ul class="nav nav-primary">
+
+					<li class="nav-section"><span class="sidebar-mini-icon">
+							<i class="fa fa-ellipsis-h"></i>
+					</span>
+						<h4 class="text-section">#{initialMenuView.tituloModulo}</h4></li>
+
+
+					<!-- AYUDA -->
+
+					<li class="nav-item"><a data-toggle="collapse" href="#base">
+							<i class="fas fa-book"></i>
+							<p><b>Glosario de Terminos</b></p> <span class="caret"></span>
+					</a>
+						<div class="collapse" id="base">
+							<ul class="nav nav-collapse">
+							
+								<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/glosario.xhtml">
+										<span class="sub-item"><b>Glosario</b></span>
+								</a></li>
+								
+							</ul>
+						</div>
+					</li>
+					
+					<!-- REPORTES    -->
+
+					<li class="nav-item"><a data-toggle="collapse"
+						href="#submenuReportes"> <i class="far fa-chart-bar"></i>
+							<p><b>Reportes</b></p> <span class="caret"></span>
+					</a>
+						<div class="collapse" id="submenuReportes">
+							<ul class="nav nav-collapse">
+								
+								<li>
+									<a data-toggle="collapse" href="#repCombustibles"> <span
+										class="sub-item"><b>Combustibles</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="repCombustibles">
+										<ul class="nav nav-collapse subnav">
+
+											<li>
+											<a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRConsumoCombustibleRDL.xhtml">
+												<span class="sub-item"><b>Consumo de ACPM por máquina detallado</b></span>
+											</a>
+											<a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRConsumoCombResMaq.xhtml">
+												<span class="sub-item"><b>Consumo de ACPM por máquina</b></span>
+											</a>
+											<a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRConsumoCombResMaqLabor.xhtml">
+												<span class="sub-item"><b>Consumo de ACPM por máquina-labor</b></span>
+											</a>
+											<a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRConsumoCombResLabor.xhtml">
+												<span class="sub-item"><b>Consumo de ACPM por labor</b></span>
+											</a>
+											<a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRConsumoCombResHda.xhtml">
+												<span class="sub-item"><b>Consumo de ACPM por hacienda</b></span>
+											</a>
+											
+											<a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRIngresoVsGastoMaq.xhtml">
+												<span class="sub-item"><b>Indicadores por máquina</b></span>
+											</a>
+											
+											
+											</li>
+
+										</ul>
+									</div>
+								</li>
+								
+								<li>
+									<a data-toggle="collapse" href="#repCostos"> <span
+										class="sub-item"><b>Costos</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="repCostos">
+										<ul class="nav nav-collapse subnav">
+
+											
+
+										</ul>
+									</div>
+								</li>
+								
+								</ul>
+								</div>
+								</li>
+
+								
+							</ul>
+						</div>
+				
+			</div>
+		</div>
+	
+</ui:composition>
+</html>

@@ -1,0 +1,366 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableCultivo" header="Cultivos">
+						<!--  <p:growl id="men"/> -->
+						<p:dataTable id="tbl" value="#{cultivoView.data}" var="cultivo"
+							paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+
+
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Cultivos" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{cultivo.estado}" sortBy="#{cultivo.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{cultivo.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{cultivo.codigo}" sortBy="#{cultivo.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{cultivo.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{cultivo.nombre}" sortBy="#{cultivo.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{cultivo.nombre}" />
+							</p:column>
+
+							<p:column filterBy="#{cultivo.nombreUdadMed}"
+								sortBy="#{cultivo.nombreUdadMed}">
+								<f:facet name="header">
+									<h:outputText value="UM de Cosecha" />
+								</f:facet>
+								<h:outputText value="#{cultivo.nombreUdadMed}" />
+							</p:column>
+
+							<p:column filterBy="#{cultivo.nombreUdadMed1}"
+								sortBy="#{cultivo.nombreUdadMed1}">
+								<f:facet name="header">
+									<h:outputText value="UM de producción" />
+								</f:facet>
+								<h:outputText value="#{cultivo.nombreUdadMed1}" />
+							</p:column>
+
+							<p:column filterBy="#{cultivo.logoCultivo}"
+								sortBy="#{cultivo.logoCultivo}">
+								<f:facet name="header">
+									<h:outputText value="LogoCultivo" />
+								</f:facet>
+								<p:lightBox styleClass="imagebox" id="lighbox2">
+									<h:outputLink
+										value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{cultivo.logoCultivo}">
+										<h:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{cultivo.logoCultivo}"
+											style="height: 50px; width: 50px" />
+									</h:outputLink>
+								</p:lightBox>
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogCultivo"
+										actionListener="#{cultivoView.action_edit}">
+										<f:attribute name="selectedCultivo" value="#{cultivo}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{cultivoView.action_new()}" update=":dialogCultivo" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogCultivo" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{cultivoView.showDialog}"
+					resizable="false" modal="true" width="750" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data" acceptcharset="ISO-8859-1">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelCultivo" header="Cultivo">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:tabView style="margin:1px;" id="tabMapa" activeIndex="#{cultivoView.activeTapIndex}">
+
+									<p:tab title="General">
+
+										<h:panelGrid columns="3">
+
+											<p:outputLabel for="txtEstado" value="Estado:" />
+											<p:selectOneRadio id="txtEstado" disabled="true"
+												binding="#{cultivoView.txtEstado}" required="true"
+												requiredMessage="Seleccione un estado">
+												<f:selectItem itemLabel="Activo" itemValue="A" />
+												<f:selectItem itemLabel="Inactivo" itemValue="I" />
+											</p:selectOneRadio>
+											<p:message for="txtEstado" />
+
+											<p:outputLabel value="Código: " />
+											<p:inputText id="txtCodigo" disabled="false"
+												binding="#{cultivoView.txtCodigo}"
+												placeholder="Buscar o crear registro" size="23">
+												<p:ajax
+													update=":formDialog:panelCultivo,:formDialog:msg,:formDialog:panelBotones"
+													listener="#{cultivoView.listener_txtCodigo}" />
+											</p:inputText>
+											<p:outputLabel />
+
+
+											<p:outputLabel for="txtNombre" value="Nombre: " />
+											<p:inputText id="txtNombre" disabled="true"
+												binding="#{cultivoView.txtNombre}" required="true"
+												requiredMessage="El Nombre es Obligatorio" />
+											<p:message for="txtNombre" />
+
+
+											<p:outputLabel for="txtCalcularArea" value="Calcular Área: " />
+											<p:selectOneRadio id="txtCalcularArea" disabled="true"
+												binding="#{cultivoView.txtCalcularArea}" required="true"
+												requiredMessage="Calcular Área es Obligatorio">
+												<f:selectItem itemLabel="Digitada" itemValue="d" />
+												<f:selectItem
+													itemLabel="Basada en las plantas de siembra y actuales"
+													itemValue="b" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+
+
+											<p:outputLabel for="txtEsPecuaria" value="Es Pecuaria?: " />
+											<p:selectOneRadio id="txtEsPecuaria" disabled="true"
+												binding="#{cultivoView.txtEsPecuaria}">
+												<f:selectItem itemLabel="Si" itemValue="s" />
+												<f:selectItem itemLabel="No" itemValue="n" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtEsAcuicultura"
+												value="Es Acuicultura?: "  />
+											<p:selectOneRadio id="txtEsAcuicultura" disabled="true"
+												binding="#{cultivoView.txtEsAcuicultura}">
+												<f:selectItem itemLabel="Si  " itemValue="s" />
+												<f:selectItem itemLabel="No  " itemValue="n" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtEsMineria" value="Es Minería?: " />
+											<p:selectOneRadio id="txtEsMineria" disabled="true"
+												binding="#{cultivoView.txtEsMineria}">
+												<f:selectItem itemLabel="Si  " itemValue="s" />
+												<f:selectItem itemLabel="No  " itemValue="n" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtCalcularEdad" value="Calcular edad: " />
+											<p:selectOneRadio id="txtCalcularEdad" disabled="true"
+												binding="#{cultivoView.txtCalcularEdad}" required="true"
+												requiredMessage="Seleccione calcular edad">
+												<f:selectItem itemLabel="Solo con la fecha de siembra"
+													itemValue="1" />
+												<f:selectItem
+													itemLabel="Contemplar la fecha de Siembra y Ult. Cosecha "
+													itemValue="2" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtMostrarEdad"
+												value="Expresar edad en: " />
+											<p:selectOneRadio id="txtMostrarEdad" disabled="true"
+												binding="#{cultivoView.txtMostrarEdad}" required="true"
+												requiredMessage="Seleccione la forma de expresar la edad">
+												<f:selectItem itemLabel="Años  " itemValue="a" />
+												<f:selectItem itemLabel="Meses  " itemValue="m" />
+												<f:selectItem itemLabel="Días  " itemValue="d" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtAplicaPolinizado"
+												value="Tiene Polinización?: " />
+											<p:selectOneRadio id="txtAplicaPolinizado" disabled="true"
+												binding="#{cultivoView.txtAplicaPolinizado}">
+												<f:selectItem itemLabel="Si  " itemValue="s" />
+												<f:selectItem itemLabel="No  " itemValue="n" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+
+											<p:outputLabel value="Foto: " />
+											<h:panelGroup>
+												<p:fileUpload value="#{cultivoView.file}" mode="simple"
+													auto="true" fileUploadListener="#{cultivoView.subirImagen}"
+													update="image" cancelLabel="Cancelar" sizeLimit="100000"
+													skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+													invalidFileMessage="Tipo de imagem inválido"
+													invalidSizeMessage="Ups!! El tamaño de la imagen es muy grande"
+													uploadLabel="Subir imagen" label="Elegir">
+												</p:fileUpload>
+												<p:lightBox styleClass="imagebox" id="lighbox1">
+													<h:outputLink
+														value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{cultivoView.imagenCultivo}">
+														<h:graphicImage
+															value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{cultivoView.imagenCultivo}"
+															id="image" style="height: 80px; width: 80px" />
+													</h:outputLink>
+												</p:lightBox>
+											</h:panelGroup>
+
+										</h:panelGrid>
+
+									</p:tab>
+
+									<p:tab title="Producción">
+
+										<h:panelGrid columns="3">
+
+											<p:outputLabel for="txtModeloPlanificacionCosecha"
+												value="Modelo de cosecha: " />
+											<p:selectOneRadio id="txtModeloPlanificacionCosecha"
+												disabled="true"
+												binding="#{cultivoView.txtModeloPlanificacionCosecha}">
+												<f:selectItem itemLabel="Planificación por meses"
+													itemValue="p" />
+												<f:selectItem
+													itemLabel="Planificación por ciclos de cosecha"
+													itemValue="c" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtControlProduccion"
+												value="Control producción: " />
+											<p:selectOneRadio id="txtControlProduccion" disabled="true"
+												binding="#{cultivoView.txtControlProduccion}">
+												<f:selectItem itemLabel="Registro de producción Manual"
+													itemValue="r" />
+												<f:selectItem itemLabel="Báscula de Materia prima"
+													itemValue="b" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtUdadMedId_UdadMed"
+												value="UM de Cosecha: " />
+											<p:selectOneMenu id="txtUdadMedId_UdadMed"
+												binding="#{cultivoView.txtUdadMedId_UdadMed}"
+												disabled="true" required="true" filter="true"
+												requiredMessage="Seleccione una UM de Cosecha">
+												<f:selectItem itemLabel="Seleccione" itemValue="" />
+												<f:selectItems value="#{cultivoView.selectItemUdadMed}" />
+											</p:selectOneMenu>
+											<p:message for="txtUdadMedId_UdadMed" />
+
+											<p:outputLabel for="txtUdadMedId_UdadMed1"
+												value="UM de Producción: " />
+											<p:selectOneMenu id="txtUdadMedId_UdadMed1"
+												binding="#{cultivoView.txtUdadMedId_UdadMed1}"
+												disabled="true" required="true" filter="true"
+												requiredMessage="Seleccione una UM de Producción">
+												<f:selectItem itemLabel="Seleccione" itemValue="" />
+												<f:selectItems value="#{cultivoView.selectItemUdadMed1}" />
+											</p:selectOneMenu>
+											<p:message for="txtUdadMedId_UdadMed1" />
+
+											<p:outputLabel for="txtAnalisisLaboratorio"
+												value="Tiene Análisis de Pre/post cosecha: " />
+											<p:selectOneRadio id="txtAnalisisLaboratorio" disabled="true"
+												binding="#{cultivoView.txtAnalisisLaboratorio}">
+												<f:selectItem itemLabel="Si " itemValue="s" />
+												<f:selectItem itemLabel="No " itemValue="n" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtControlSemillero"
+												value="Tiene Control Pre/Vivero: " />
+											<p:selectOneRadio id="txtControlSemillero" disabled="true"
+												binding="#{cultivoView.txtControlSemillero}">
+												<f:selectItem itemLabel="Si " itemValue="s" />
+												<f:selectItem itemLabel="No " itemValue="n" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtControlPlanta"
+												value="Control a nivel de Plantas: " />
+											<p:selectOneRadio id="txtControlPlanta" disabled="true"
+												binding="#{cultivoView.txtControlPlanta}" columns="2">
+												<f:selectItem itemLabel="Si " itemValue="s" />
+												<f:selectItem itemLabel="No " itemValue="n" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtInfoAdicional"
+												value="Información Adicional 1:" />
+											<p:inputTextarea id="txtInfoAdicional" scrollHeight="25"
+												binding="#{cultivoView.txtInfoAdicional}" rows="1" cols="30"
+												counter="display" maxlength="100"
+												counterTemplate="{0} Caracteres" autoResize="false" />
+											<h:outputText id="display" />
+
+											<p:outputLabel for="txtInfoAdicional2"
+												value="Información Adicional 2:" />
+											<p:inputTextarea id="txtInfoAdicional2"  scrollHeight="25"
+												binding="#{cultivoView.txtInfoAdicional2}" rows="1"
+												cols="30" counter="display2" maxlength="100"
+												counterTemplate="{0} Caracteres." autoResize="false" />
+											<h:outputText id="display2" />
+
+											<p:inputText id="txtCultivoId" style="visibility:hidden"
+												binding="#{cultivoView.txtCultivoId}">
+									
+											</p:inputText>
+										</h:panelGrid>
+
+									</p:tab>
+
+								</p:tabView>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{cultivoView.btnSave}" value="Grabar"
+									action="#{cultivoView.action_save()}" ajax="false"
+									update=":dialogCultivo :frm:panelDataTableCultivo" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{cultivoView.action_clear()}"
+									process="@this" update=":dialogCultivo" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

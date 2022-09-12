@@ -1,0 +1,201 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	</h:head>
+
+	<h:body>
+		  <ui:composition template="/XHTML/homedashboard.xhtml">	
+		 
+		 	<ui:define name="body">	
+				<f:view>
+					
+					
+		  			<h:form id="frm">								  		
+						
+						<p:panel id="panelDataTableTarifaLaborRendimiento" header="TarifaLaborRendimientoData">
+							<p:growl id="men"/>				
+							<p:dataTable value="#{tarifaLaborRendimientoView.data}" var="tarifaLaborRendimiento"
+								paginator="true" rows="5"  rowsPerPageTemplate="5,10,15">
+																										<p:column filterBy="#{tarifaLaborRendimiento.tarifaLaborId}" sortBy="#{tarifaLaborRendimiento.tarifaLaborId}" >
+										 <f:facet name="header">
+										<h:outputText value="tarifaLaborId"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.tarifaLaborId}"/>
+										 </p:column>
+			                    																									
+										<p:column filterBy="#{tarifaLaborRendimiento.bonificacion}" sortBy="#{tarifaLaborRendimiento.bonificacion}" >
+										 <f:facet name="header">
+										<h:outputText value="Bonificacion"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.bonificacion}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{tarifaLaborRendimiento.compania}" sortBy="#{tarifaLaborRendimiento.compania}" >
+										 <f:facet name="header">
+										<h:outputText value="Compania"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.compania}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{tarifaLaborRendimiento.contratistaId}" sortBy="#{tarifaLaborRendimiento.contratistaId}" >
+										 <f:facet name="header">
+										<h:outputText value="ContratistaId"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.contratistaId}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{tarifaLaborRendimiento.fechaCreacion}" sortBy="#{tarifaLaborRendimiento.fechaCreacion}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaCreacion"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.fechaCreacion}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{tarifaLaborRendimiento.fechaFinal}" sortBy="#{tarifaLaborRendimiento.fechaFinal}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaFinal"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.fechaFinal}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{tarifaLaborRendimiento.fechaInicial}" sortBy="#{tarifaLaborRendimiento.fechaInicial}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaInicial"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.fechaInicial}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{tarifaLaborRendimiento.fechaModificacion}" sortBy="#{tarifaLaborRendimiento.fechaModificacion}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaModificacion"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.fechaModificacion}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{tarifaLaborRendimiento.pesoPromedio}" sortBy="#{tarifaLaborRendimiento.pesoPromedio}" >
+										 <f:facet name="header">
+										<h:outputText value="PesoPromedio"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.pesoPromedio}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{tarifaLaborRendimiento.rendimiento}" sortBy="#{tarifaLaborRendimiento.rendimiento}" >
+										 <f:facet name="header">
+										<h:outputText value="Rendimiento"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.rendimiento}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{tarifaLaborRendimiento.tarifa}" sortBy="#{tarifaLaborRendimiento.tarifa}" >
+										 <f:facet name="header">
+										<h:outputText value="Tarifa"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.tarifa}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{tarifaLaborRendimiento.udadMedId}" sortBy="#{tarifaLaborRendimiento.udadMedId}" >
+										 <f:facet name="header">
+										<h:outputText value="UdadMedId"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.udadMedId}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{tarifaLaborRendimiento.laborId_Labor}" sortBy="#{tarifaLaborRendimiento.laborId_Labor}" >
+										 <f:facet name="header">
+										<h:outputText value="LaborId_Labor"/>
+										</f:facet>
+										 <h:outputText value="#{tarifaLaborRendimiento.laborId_Labor}"/>
+										</p:column>   
+			                    			                    
+								<p:column headerText="Options">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogTarifaLaborRendimiento"
+										actionListener="#{tarifaLaborRendimientoView.action_edit}">
+										<f:attribute name="selectedTarifaLaborRendimiento" value="#{tarifaLaborRendimiento}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"									
+										title="Delete" actionListener="#{tarifaLaborRendimientoView.action_delete_datatable}"
+										onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+										icon="ui-icon-trash" update="@form">
+										<f:attribute name="selectedTarifaLaborRendimiento" value="#{tarifaLaborRendimiento}" />
+									</p:commandButton>
+								</p:column>									                    
+							</p:dataTable>	
+						</p:panel>
+						<p:panel id="panelBoton">
+							<div align="center">
+								<p:commandButton id="btnNew" value="New"
+									action="#{tarifaLaborRendimientoView.action_new()}" update=":dialogTarifaLaborRendimiento" />
+							</div>
+						</p:panel>						
+		   			</h:form>
+					<p:dialog id="dialogTarifaLaborRendimiento" appendTo="@(body)" draggable="true"
+						closable="false" visible="#{tarifaLaborRendimientoView.showDialog}" resizable="false"
+						modal="true" width="500">
+						<h:form id="formDialog">
+							<p:messages id="msg" />
+							<p:panel id="panelTarifaLaborRendimiento" header="TarifaLaborRendimiento">							
+							    <h:panelGrid columns="2" id="panelGrid" >
+																		 <h:outputText id="msgTarifaLaborId" value="TarifaLaborId"/>
+									 <p:inputText id="txtTarifaLaborId" binding="#{tarifaLaborRendimientoView.txtTarifaLaborId}">
+									 <p:ajax update=":dialogTarifaLaborRendimiento" listener="#{tarifaLaborRendimientoView.listener_txtId}"/>
+									 </p:inputText>	
+																											
+																		<h:outputText id="msgBonificacion" value=" Bonificacion"/>
+									<p:inputText id="txtBonificacion" disabled="true" binding="#{tarifaLaborRendimientoView.txtBonificacion}"/>
+																		<h:outputText id="msgCompania" value=" Compania"/>
+									<p:inputText id="txtCompania" disabled="true" binding="#{tarifaLaborRendimientoView.txtCompania}"/>
+																		<h:outputText id="msgContratistaId" value=" ContratistaId"/>
+									<p:inputText id="txtContratistaId" disabled="true" binding="#{tarifaLaborRendimientoView.txtContratistaId}"/>
+																		<h:outputText id="msgPesoPromedio" value=" PesoPromedio"/>
+									<p:inputText id="txtPesoPromedio" disabled="true" binding="#{tarifaLaborRendimientoView.txtPesoPromedio}"/>
+																		<h:outputText id="msgRendimiento" value=" Rendimiento"/>
+									<p:inputText id="txtRendimiento" disabled="true" binding="#{tarifaLaborRendimientoView.txtRendimiento}"/>
+																		<h:outputText id="msgTarifa" value=" Tarifa"/>
+									<p:inputText id="txtTarifa" disabled="true" binding="#{tarifaLaborRendimientoView.txtTarifa}"/>
+																		<h:outputText id="msgUdadMedId" value=" UdadMedId"/>
+									<p:inputText id="txtUdadMedId" disabled="true" binding="#{tarifaLaborRendimientoView.txtUdadMedId}"/>
+																		<h:outputText id="msgLaborId_Labor" value=" LaborId_Labor"/>
+									<p:inputText id="txtLaborId_Labor" disabled="true" binding="#{tarifaLaborRendimientoView.txtLaborId_Labor}"/>
+																		
+																													<h:outputText id="msgFechaCreacion" value=" FechaCreacion"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{tarifaLaborRendimientoView.txtFechaCreacion}" >
+										<p:ajax event="dateSelect" listener="#{tarifaLaborRendimientoView.listener_txtFechaCreacion}" />
+										</p:calendar>
+																				<h:outputText id="msgFechaFinal" value=" FechaFinal"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{tarifaLaborRendimientoView.txtFechaFinal}" >
+										<p:ajax event="dateSelect" listener="#{tarifaLaborRendimientoView.listener_txtFechaFinal}" />
+										</p:calendar>
+																				<h:outputText id="msgFechaInicial" value=" FechaInicial"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{tarifaLaborRendimientoView.txtFechaInicial}" >
+										<p:ajax event="dateSelect" listener="#{tarifaLaborRendimientoView.listener_txtFechaInicial}" />
+										</p:calendar>
+																				<h:outputText id="msgFechaModificacion" value=" FechaModificacion"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{tarifaLaborRendimientoView.txtFechaModificacion}" >
+										<p:ajax event="dateSelect" listener="#{tarifaLaborRendimientoView.listener_txtFechaModificacion}" />
+										</p:calendar>
+																										    </h:panelGrid>
+							</p:panel>						   
+							<p:panel id="panelBotones">
+								<div align="center">					
+									<p:commandButton id="btnSave" binding="#{tarifaLaborRendimientoView.btnSave}" value="Save" action="#{tarifaLaborRendimientoView.action_save()}" update=":dialogTarifaLaborRendimiento :frm:panelDataTableTarifaLaborRendimiento" />
+									<p:commandButton id="btnClear" value="Clear" action="#{tarifaLaborRendimientoView.action_clear()}" update=":dialogTarifaLaborRendimiento" />
+									<p:commandButton id="btnExit" value="Exit" action="#{tarifaLaborRendimientoView.action_closeDialog()}" update=":dialogTarifaLaborRendimiento" />
+								</div>
+							</p:panel>					
+						</h:form>
+					</p:dialog>
+				</f:view>
+			</ui:define>		
+		</ui:composition>	
+	</h:body>	
+</html>	

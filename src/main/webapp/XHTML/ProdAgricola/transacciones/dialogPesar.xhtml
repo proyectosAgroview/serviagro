@@ -1,0 +1,221 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+	<p:dialog id="dialogP2" appendTo="@(body)" draggable="true"
+		closable="true" visible="#{datTransProdBasculaView.showDialog}"
+		resizable="false" modal="true" width="750" styleClass="dialogFix"
+		header="Pesaje" responsive="true">
+		<h:form id="formDialogPesar">
+			<p:messages id="msg4" closable="true" showDetail="true"/>
+			<p:panel header="Obtener peso">
+			 <p:panelGrid>
+					<p:row>
+						<p:column>
+							<h:panelGrid columns="1">
+								<p:outputLabel value="#Consecutivo:" />
+								<p:inputText id="txtTiquete" disabled="false" 
+									binding="#{datTransProdBasculaView.txtTiquete}"
+									placeholder="Buscar o crear registro" size="10">
+								</p:inputText>
+							</h:panelGrid>
+						</p:column>
+						<p:column>
+							<h:panelGrid columns="1">
+
+								<p:outputLabel for="txtFechaPesaje" value="Fecha: " />
+								<p:calendar id="txtFechaPesaje" pattern="dd/MM/yyyy HH:mm:ss"
+									binding="#{datTransProdBasculaView.txtFechaPesaje}"
+									required="true" disabled="true"
+									requiredMessage="La Fecha es obligatoria">
+								</p:calendar>
+
+							</h:panelGrid>
+						</p:column>
+
+						<p:column>
+							<h:panelGrid columns="1">
+								<p:outputLabel for="txtTipoTransaccionPesaje" value="Transacción:" />
+								<p:inputText id="txtTipoTransaccionPesaje" disabled="false"
+									binding="#{datTransProdBasculaView.txtTipoTransaccionPesaje}"
+									size="13" style="font-size: 1.2em;">
+								</p:inputText>
+							</h:panelGrid>
+						</p:column>
+						
+						<p:column>
+							<h:panelGrid columns="1">
+								<p:outputLabel for="txtVehiTranspId1" value="Vehiculo: " />
+								<p:inputText id="txtVehiTranspId1" disabled="false"
+									binding="#{datTransProdBasculaView.txtVehiTranspId}"
+									size="13">
+								</p:inputText>
+							</h:panelGrid>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				
+				<p:panelGrid>
+					<p:row>
+						<p:column>						
+							<h:panelGrid columns="2" style="width:320px;">
+								<p:outputLabel value="Tipo pesaje: " />
+								<p:selectOneMenu id="txtTipoPesoPes" 
+									binding="#{datTransProdBasculaView.txtTipoPesoPes}"
+									required="false" requiredMessage="Seleccione un tipo de pesaje"
+									style="font-size: 1.2em; width:220px;" effect="fade" 
+									filterMatchMode="contains" filter="true" autoWidth="false">
+									<f:selectItem itemLabel="Seleccione tipo pesaje" itemValue="" />
+									<f:selectItem itemLabel="PESAJE BRUTO" itemValue="1" />
+									<f:selectItem itemLabel="PESAJE TARA" itemValue="2"/>
+									<p:ajax listener="#{datTransProdBasculaView.tipoPesaje}"
+										update="txtTipoPesoPes, txtBasculaBrutoPes, txtPesarPesoBruto, txtPesarPesoTara" />
+								</p:selectOneMenu>	
+					    	</h:panelGrid> 
+					    </p:column>
+					    
+					    <p:column>					    	
+					    	<h:panelGrid columns="2" style="width:320px;">
+					  			<p:outputLabel for="txtBasculaBrutoPes" value="Báscula " />
+								<p:selectOneMenu id="txtBasculaBrutoPes"
+									binding="#{datTransProdBasculaView.txtBasculaBrutoPes}"
+									required="true" requiredMessage="Seleccione una báscula"
+									style="font-size: 1.2em; width:220px;" effect="fade" filter="true"
+									filterMatchMode="contains" autoWidth="false">
+									<f:selectItem itemLabel="Seleccione bascula" itemValue="" />
+									<f:selectItem itemLabel="BASCULA PRINCIPAL" itemValue="1" />
+									<sec:authorize ifAnyGranted="Administrador, Revisor">
+										<f:selectItem itemLabel="BASCULA CONTINGENCIA" itemValue="2" />
+									</sec:authorize>
+									
+									<p:ajax process="@this, txtBasculaBrutoPes" 
+										update="txtPesarPesoBruto, txtPesarPesoTara, btnProbar, txtFechaTara, txtFechaPesoBruto, txtFechaPesoBruto, txtFechaTara"
+										listener="#{datTransProdBasculaView.listener_basculaActiva()}" />
+								</p:selectOneMenu>							
+							</h:panelGrid>							
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+			    <p:panelGrid columns="6" layout="grid">			    	
+					
+					<p:outputLabel value="Peso bruto"/>		
+                    <p:inputNumber id="txtPesarPesoBruto"
+						binding="#{datTransProdBasculaView.txtPesarPesoBruto}"
+						decimalSeparator="." thousandSeparator="," decimalPlaces="1"
+						style="font-size: 1.3em;" size="12">
+						<p:ajax listener="#{datTransProdBasculaView.setPesoNeto}" update="txtPesarPesoNeto"/>
+						<f:converter converterId="javax.faces.Double" />
+					</p:inputNumber>	
+					
+					<p:outputLabel value="Peso" style="visibility:hidden"/>		
+					
+					<p:outputLabel value="Fecha Bruto " />
+					<p:calendar id="txtFechaPesoBruto" pattern="dd/MM/yyyy HH:mm:ss"
+						binding="#{datTransProdBasculaView.txtFechaPesoBruto}" size="17"
+						required="false" disabled="true" style="font-size: 1.2em;"
+						requiredMessage="La Fecha es obligatoria">
+					</p:calendar>
+					
+					<p:inputText id="valorPesaje"
+						binding="#{datTransProdBasculaView.valorPesaje}"
+						style="font-size: 0.9em; visibility:hidden" size="20">
+					</p:inputText>
+				</p:panelGrid>
+				
+				<p:panelGrid columns="6" layout="grid">
+
+                    <p:outputLabel value="Peso tara"/>
+					<p:inputNumber id="txtPesarPesoTara"
+						binding="#{datTransProdBasculaView.txtPesarPesoTara}" required="true"
+						decimalSeparator="." thousandSeparator="," decimalPlaces="1"
+						style="font-size: 1.3em;" size="12">
+						<p:ajax listener="#{datTransProdBasculaView.setPesoNeto}" update="txtPesarPesoNeto"/>
+						<f:converter converterId="javax.faces.Double" />
+					</p:inputNumber>	
+				
+			    	<p:outputLabel value="Peso" style="visibility:hidden"/>	
+					
+					<p:outputLabel value="Fecha tara " />
+					<p:calendar id="txtFechaTara" pattern="dd/MM/yyyy HH:mm:ss"
+						binding="#{datTransProdBasculaView.txtFechaTara}" size="17"
+						required="false" disabled="true" style="font-size: 1.2em;"
+						requiredMessage="La Fecha es obligatoria">
+					</p:calendar>
+                    
+                    <p:remoteCommand name="rc" update=":dialogP2, :formDialogPesar"
+						actionListener="#{datTransProdBasculaView.listener_calcularPesoBruto}" />
+				</p:panelGrid>
+				
+				<p:panelGrid columns="4" layout="grid">
+		    		<p:outputLabel value="Peso neto" style="visibility:hidden"/>
+
+                    <p:outputLabel value="Peso neto"/>
+					
+					<p:inputNumber id="txtPesarPesoNeto" readonly="true" 
+						binding="#{datTransProdBasculaView.txtPesarPesoNeto}"
+						decimalSeparator="." thousandSeparator="," decimalPlaces="1"
+						style="font-size: 1.3em;" size="12">
+						<!-- <p:ajax process="@this, txtPesarPesoTara" /> -->
+						<f:converter converterId="javax.faces.Double" />
+					</p:inputNumber>
+                    
+                   <p:outputLabel value="Peso neto" style="visibility:hidden"/>
+				</p:panelGrid>
+				
+				<p:panel>
+					<div align="center">
+					    <p:commandButton id="btnProbar"  icon="ui-icon-calculator"
+							binding="#{datTransProdBasculaView.btnCalcular}"
+					    	value="Obtener peso" onclick="rc()"  />
+					</div>
+				</p:panel>
+
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+
+				<p:dialog widgetVar="statusDialog" modal="false" fitViewport="true"
+					draggable="false" closable="false" resizable="false" showEffect="explode" hideEffect="bounce" 
+					showHeader="false">
+					<p:graphicImage width="80" height="80"  class="img-fluid"
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/loader-img.gif" />
+				</p:dialog>
+			</p:panel>
+
+			<p:panel id="panelBotones">
+				<div align="center">
+					<p:commandButton id="btnSavePesar" icon="ui-icon-disk" value="Grabar"
+						binding="#{datTransProdBasculaView.btnSavePes}"  style="font-size: 1.4em;"
+						update=":frm, :dialogP2, :formDialogPesar, msg4"
+						action="#{datTransProdBasculaView.action_savePesoBruto()}">
+					</p:commandButton>
+						
+					<p:commandButton id="btnImprimirTiquete" value="Imprimir(T)"
+						binding="#{datTransProdBasculaView.btnImprimir}"
+						icon="ui-icon-newwin" style="font-size: 1.4em;"
+						ajax="false" onclick="this.form.target='_blank'"
+						actionListener="#{datTransProdBasculaView.action_imprimir_tiquet}" >
+					</p:commandButton>
+				</div>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+	
+	<h:form id="reporte"> </h:form>
+	<div id="test"></div>
+	
+	<script type="text/javascript">
+	
+		function prueba(){
+	    	//alert("hola mundo");
+	    	this.form.target='_blank'
+	    	//document.getElementById("reporte").target = "_blank";
+	    }
+	</script>
+	
+</ui:composition>
+
+

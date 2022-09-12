@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26/04/2019 10:08:48 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.LogDatServRealizadosEquipo" table="log_dat_serv_realizados_equipo" >
+        <id name="logDatServRealizadosEquipoId" type="java.lang.Long">
+            <column name="log_dat_serv_realizados_equipo_id" />
+            <generator class="identity" />
+        </id>
+          <many-to-one name="equipoId" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        <property name="datServRealizadosEquipoId" type="java.lang.Long">
+            <column name="dat_serv_realizados_equipo_id" />
+        </property>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="usuarioModificacion" type="java.lang.Long">
+            <column name="usuario_modificacion" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="3900" />
+        </property>
+        <property name="fecha" type="java.util.Date">
+            <column name="fecha" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

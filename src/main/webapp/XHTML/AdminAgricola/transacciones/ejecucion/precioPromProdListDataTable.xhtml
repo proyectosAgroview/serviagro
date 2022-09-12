@@ -1,0 +1,319 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTablePrecioPromProd" header="Registro de entradas a almacén">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{precioPromProdView.data}" var="producto"
+							paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Precios por Productos" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+							
+							
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Fecha movimiento" style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{producto.fechaInicial}" style="font-size: 0.9em;">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+							
+							
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Tipo de producto"  style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{producto.nomTipoProducto}"  style="font-size: 0.9em;"/>
+							</p:column>
+							
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Almacén" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{producto.codAlmacen}"  style="font-size: 0.9em;"/>
+							</p:column>
+							
+							
+							
+							<p:column filterBy="#{producto.codProducto}"
+								sortBy="#{producto.codProducto}">
+								<f:facet name="header">
+									<h:outputText value="Cód. Producto" style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{producto.codProducto}"  style="font-size: 0.9em;"/>
+							</p:column>
+
+
+							<p:column filterBy="#{producto.nomProducto}"
+								sortBy="#{producto.nomProducto}">
+								<f:facet name="header">
+									<h:outputText value="Producto" style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{producto.nomProducto}" style="font-size: 0.9em;"/>
+							</p:column>
+							
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="U.M." style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{producto.nombreUnidadMedida}" style="font-size: 0.9em;" />
+							</p:column>
+							
+							
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Cant. Entrada" style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{producto.cantidadCompra}" style="font-size: 0.9em;"/>
+							</p:column>
+							
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Prec. Promedio($)" style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{producto.valorUnitario}" style="font-size: 0.9em;"/>
+							</p:column>
+							
+							
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+										update=":dialogPrecioPromProd"
+										actionListener="#{precioPromProdView.action_edit}">
+										<f:attribute name="selectedPrecioPromProd" value="#{producto}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{precioPromProdView.actionDeleteDataTableEditable}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tbl">
+															<f:attribute name="selectedPrecioPromProd"
+																value="#{producto}" />
+														</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{precioPromProdView.action_new()}" update=":dialogPrecioPromProd" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogPrecioPromProd" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{precioPromProdView.showDialog}"
+					resizable="false" modal="true" width="900" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelPrecioPromProd" header="Productos">
+
+
+							<p:tabView id="tabMapa" activeIndex="#{precioPromProdView.activeTapIndex}">
+
+								<p:tab title="Detalle por producto/material">
+
+										<p:messages id="msg1" autoUpdate="true" closable="true" showDetail="true" />
+										
+										<p:panelGrid id="gridDetPrecioProductos">
+										<p:column>
+										<h:panelGrid  columns="2">
+										    <p:outputLabel for="txtFechaInicial" value="Fecha Inicial: " 
+										    	style="font-size: 0.9em;" />
+											<p:calendar id="txtFechaInicial" showOn="button"
+												navigator="false" locale="es"
+												style="font-size: 0.9em;"
+												binding="#{precioPromProdView.txtFechaInicial}"
+												pattern="dd/MM/yyyy" mask="true" required="false"
+												requiredMessage="La Fecha es obligatoria">
+												
+											</p:calendar>
+											
+											<p:outputLabel for="txtAlmacenId" value="Almacén: " 
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtAlmacenId" effect="fade"
+												filter="true" filterMatchMode="contains"
+												style="font-size: 0.9em;"
+												binding="#{precioPromProdView.txtAlmacenId}"
+												required="false" requiredMessage="Seleccione un almacén">
+												<f:selectItem itemLabel="Seleccione un almacén" itemValue="" />
+												<f:selectItems value="#{precioPromProdView.selectAlmacen2}" />
+											</p:selectOneMenu>
+											
+											<p:outputLabel for="txtTipoProdId_TipoProducto" value="Tipo producto: " style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtTipoProdId_TipoProducto" effect="fade"
+												filter="true" filterMatchMode="contains" 
+												binding="#{precioPromProdView.txtTipoProdId_TipoProducto}"
+												autoWidth="false" style="width: 160; font-size: 0.9em;"
+												required="false" requiredMessage="Seleccione un tipo de producto">
+												<f:selectItem itemLabel="Seleccione un tipo de producto" itemValue="" />
+												<f:selectItems value="#{precioPromProdView.selectTipoProducto}" />
+												<p:ajax  process ="@this, txtTipoProdId_TipoProducto "
+												update="txtProductoId_Producto"
+												/>
+											</p:selectOneMenu>
+											
+											<p:outputLabel for="txtProductoId_Producto" value="Producto: " style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtProductoId_Producto" effect="fade"
+												filter="true" filterMatchMode="contains" 
+												binding="#{precioPromProdView.txtProductoId_Producto}"
+												autoWidth="false" style="width: 160; font-size: 0.9em;"
+												required="false" requiredMessage="Seleccione un producto">
+												<f:selectItem itemLabel="Seleccione un producto" itemValue="" />
+												<f:selectItems value="#{precioPromProdView.selectProductoId}" />
+												<p:ajax  process ="@this, txtTipoProdId_TipoProducto "
+												update="txtUnidadMedida"
+												listener="#{precioPromProdView.listener_ConsultaUmProducto}" />
+											</p:selectOneMenu>
+											
+											
+											
+											<p:outputLabel for="txtUnidadMedida" style="font-size: 0.9em;"
+												value="Unidad de medida: " />
+											<p:selectOneMenu id="txtUnidadMedida" effect="fade"
+												filter="true" filterMatchMode="contains" style="font-size: 0.9em;"
+												binding="#{precioPromProdView.txtUnidadMedida}"
+												required="false"
+												requiredMessage="Seleccione una unidad de medida">
+												<f:selectItem itemLabel="Seleccione  una unidad de medida"
+													itemValue="" />
+													<f:selectItem itemLabel="Litro"
+													itemValue="19" />
+													<f:selectItem itemLabel="Kilogramos"
+													itemValue="29" />
+													<f:selectItem itemLabel="Uniad"
+													itemValue="27" />
+												<f:selectItems value="#{precioPromProdView.selectUdadMed}" />
+											</p:selectOneMenu>
+											
+											<p:outputLabel for="txtPersEmpr" value="Proveedor: " style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtPersEmpr" effect="fade"
+												filter="true" filterMatchMode="contains" 
+												binding="#{precioPromProdView.txtPersEmpr}"
+												autoWidth="false" style="width: 160; font-size: 0.9em;"
+												required="false" requiredMessage="Seleccione un proveedor">
+												<f:selectItem itemLabel="Seleccione un proveedor" itemValue="" />
+												<f:selectItems value="#{precioPromProdView.selectContratista}" />
+											</p:selectOneMenu>
+											
+											</h:panelGrid>
+											</p:column>
+											
+											<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel for="cantidadCompra" style="font-size: 0.9em;"
+													value="Cantidad de compra: " />
+												<p:inputText id="cantidadCompra" disabled="true" style="font-size: 0.9em;"
+													binding="#{precioPromProdView.cantidadCompra}" required="false"
+													size = "12"
+													requiredMessage="Indique la cantidad de compra">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+	
+												<p:outputLabel for="txtValorUnitario" value="Precio unitario (Por Kg. y/o Lt.): " 
+													style="font-size: 0.9em;"/>
+												<p:inputText id="txtValorUnitario" disabled="true"
+													binding="#{precioPromProdView.txtValorUnitario}" required="false"
+													size = "12" style="font-size: 0.9em;"
+													requiredMessage="Indique el valor unitario">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+	
+												<p:outputLabel for="fechaVencimiento" style="font-size: 0.9em;"
+													value="Fecha vencimiento: " />
+												<p:calendar id="fechaVencimiento" showOn="button"
+													navigator="false" locale="es" size = "12" style="font-size: 0.9em;"
+													binding="#{precioPromProdView.fechaVencimiento}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha es obligatoria">
+												</p:calendar>
+	
+												<p:outputLabel for="loteCompraProducto" style="font-size: 0.9em;"
+													value="Lote de compra: " />
+												<p:inputText id="loteCompraProducto" disabled="true"
+													size = "12" style="font-size: 0.9em;"
+													binding="#{precioPromProdView.loteCompraProducto}"
+													required="false" requiredMessage="Indique el lote de compra">
+												</p:inputText>
+												
+												<p:outputLabel for="registroIca" style="font-size: 0.9em;"
+													value="Registro ICA: " />
+												<p:inputText id="registroIca" disabled="true"
+													size = "15" style="font-size: 0.9em;"
+													binding="#{precioPromProdView.registroIca}"
+													required="false" requiredMessage="Indique el registro ICA">
+												</p:inputText>
+											
+											</h:panelGrid>
+										</p:column>
+										
+								
+									</p:panelGrid>
+									
+									<h:panelGrid columns="2">
+									<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional"
+									binding="#{precioPromProdView.txtInfoAdicional}" rows="2" cols="30"
+									  maxlength="100"
+									  autoResize="true" />
+								<h:outputText  />
+								
+								
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtPrecioProdId"
+											binding="#{precioPromProdView.txtPrecioProdId}"/>
+											
+										
+									</h:panelGrid>
+										
+
+								</p:tab>
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{precioPromProdView.btnSave}" value="Grabar"
+									action="#{precioPromProdView.action_save()}"
+									update=":dialogPrecioPromProd :frm:panelDataTablePrecioPromProd" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{precioPromProdView.action_clear()}"
+									process="@this" update=":dialogPrecioPromProd" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

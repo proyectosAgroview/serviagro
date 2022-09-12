@@ -1,0 +1,394 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+		<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+				<h:form id="frm">
+
+
+					<p:panel id="panelDataTable" header="Filtros">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2" id="panelGrid">
+
+
+										<p:outputLabel for="txtAnaLaboratorioIdConsulta"
+											value="Tipo de análisis: " />
+										<p:selectOneMenu id="txtAnaLaboratorioIdConsulta"
+											effect="fade" filter="true" filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datAnaLaboratorioView.txtAnaLaboratorioIdConsulta}"
+											required="false" requiredMessage="Seleccione un análisis">
+											<f:selectItem itemLabel="Seleccione un análisis" itemValue=""
+												noSelectionOption="true" />
+											<f:selectItems
+												value="#{datAnaLaboratorioView.selectTipoAnalisisLaboratorioConsulta}" />
+										</p:selectOneMenu>
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:commandButton id="btnConsultar" value="Consultar"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{datAnaLaboratorioView.listarAnalisis}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+									</h:panelGrid>
+								</p:column>
+
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+
+					<p:panel id="panelDataTableDatAnaLaboratorio"
+						header="Análisis del proceso industrial">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datAnaLaboratorioView.data}"
+							var="datAnaLaboratorio" paginator="true" lazy="true" rows="5"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Análisis del proceso industrial" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.estado}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.consecutivo}" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.fechaAnalisis}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Tipo Análisis" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.nombreAnalisis}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatAnaLaboratorio"
+										disabled="#{datAnaLaboratorio.estadoTrue}"
+										actionListener="#{datAnaLaboratorioView.action_edit}">
+										<f:attribute name="selectedDatAnaLaboratorio"
+											value="#{datAnaLaboratorio}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"
+										disabled="#{datAnaLaboratorio.estadoTrue}"
+										title="Eliminar registro"
+										actionListener="#{datAnaLaboratorioView.actionDeleteMovimientos}"
+										icon="ui-icon-trash" update=":frm">
+										<f:attribute name="selectedDatAnaLaboratorio"
+											value="#{datAnaLaboratorio}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datAnaLaboratorioView.action_new()}"
+								update=":dialogDatAnaLaboratorio" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatAnaLaboratorio" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datAnaLaboratorioView.showDialog}" resizable="false"
+					modal="true" width="1100" styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatAnaLaboratorio"
+							header="Análisis del proceso industrial">
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{datAnaLaboratorioView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="2" id="panelGrid1">
+
+										<p:outputLabel value="# Consecutivo: " />
+										<p:inputText id="txtConsecutivo" disabled="false"
+											binding="#{datAnaLaboratorioView.txtConsecutivo}"
+											placeholder="Buscar o crear registro" size="23">
+										</p:inputText>
+
+
+										<p:outputLabel for="txtFechaAnalisis" value="Fecha: "
+											style="font-size: 0.8em;" />
+										<p:calendar id="txtFechaAnalisis" showOn="button"
+											navigator="false" locale="es" size="14"
+											binding="#{datAnaLaboratorioView.txtFechaAnalisis}"
+											pattern="dd/MM/yyyy" mask="true" required="true"
+											requiredMessage="La fecha   es obligatoria">
+										</p:calendar>
+
+
+
+										<p:outputLabel for="txtAnaLaboratorioId_AnaLaboratorio"
+											value="Tipo de análisis: " />
+										<p:selectOneMenu id="txtAnaLaboratorioId_AnaLaboratorio"
+											effect="fade" filter="true" filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datAnaLaboratorioView.txtAnaLaboratorioId_AnaLaboratorio}"
+											required="true" requiredMessage="Seleccione un análisis">
+											<f:selectItem itemLabel="Seleccione un análisis" itemValue=""
+												noSelectionOption="true" />
+											<f:selectItems
+												value="#{datAnaLaboratorioView.selectTipoAnalisisLaboratorio}" />
+											<p:ajax process="@this, txtAnaLaboratorioId_AnaLaboratorio"
+												update="txtHoraDigitacion"
+												listener="#{datAnaLaboratorioView.actionHoraDigitacion}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtHoraDigitacion" value="Hora ánalisis:" />
+										<p:selectOneMenu id="txtHoraDigitacion"
+											binding="#{datAnaLaboratorioView.txtHoraDigitacion}"
+											required="true" style="font-size: 0.9em; "
+											requiredMessage="Seleccione una transacción">
+											<f:selectItem itemLabel="06:00" itemValue="06:00" />
+											<f:selectItem itemLabel="07:00" itemValue="07:00" />
+											<f:selectItem itemLabel="08:00" itemValue="08:00" />
+											<f:selectItem itemLabel="09:00" itemValue="09:00" />
+											<f:selectItem itemLabel="10:00" itemValue="10:00" />
+											<f:selectItem itemLabel="11:00" itemValue="11:00" />
+											<f:selectItem itemLabel="12:00" itemValue="12:00" />
+											<f:selectItem itemLabel="13:00" itemValue="13:00" />
+											<f:selectItem itemLabel="14:00" itemValue="14:00" />
+											<f:selectItem itemLabel="15:00" itemValue="15:00" />
+											<f:selectItem itemLabel="16:00" itemValue="16:00" />
+											<f:selectItem itemLabel="17:00" itemValue="17:00" />
+											<f:selectItem itemLabel="18:00" itemValue="18:00" />
+											<f:selectItem itemLabel="19:00" itemValue="19:00" />
+											<f:selectItem itemLabel="20:00" itemValue="20:00" />
+											<f:selectItem itemLabel="21:00" itemValue="21:00" />
+											<f:selectItem itemLabel="22:00" itemValue="22:00" />
+											<f:selectItem itemLabel="23:00" itemValue="23:00" />
+											<f:selectItem itemLabel="00:00" itemValue="00:00" />
+											<f:selectItem itemLabel="01:00" itemValue="01:00" />
+											<f:selectItem itemLabel="02:00" itemValue="02:00" />
+											<f:selectItem itemLabel="03:00" itemValue="03:00" />
+											<f:selectItem itemLabel="04:00" itemValue="04:00" />
+											<f:selectItem itemLabel="05:00" itemValue="05:00" />
+										</p:selectOneMenu>
+
+
+
+										<p:outputLabel for="txtObservacion" value="Observación:" />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{datAnaLaboratorioView.txtObservacion}" rows="3"
+											cols="30" maxlength="1000" counterTemplate="{0} Caracteres"
+											autoResize="true" />
+
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden"
+											id="txtDatAnaLaboratorioId"
+											binding="#{datAnaLaboratorioView.txtDatAnaLaboratorioId}">
+										</p:inputText>
+
+
+									</h:panelGrid>
+								</p:tab>
+
+
+								<p:tab title="Variables del análisis">
+
+
+									<p:messages id="msg" showDetail="true" autoUpdate="true"
+										closable="true">
+										<p:effect type="pulsate" event="load" delay="400" />
+									</p:messages>
+
+									<p:panel>
+										<p:dataTable id="tablaValores"
+											value="#{datAnaLaboratorioView.dataValor}" var="listaValor"
+											scrollable="true" scrollHeight="200" scrollWidth="950"
+											editable="true" editMode="cell" widgetVar="cellEventos">
+
+											<p:ajax event="cellEdit"
+												listener="#{datAnaLaboratorioView.onCellEditEventos}" />
+
+
+											<p:column headerText="Variable" style="width: 30%">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText style="font-size: 0.9em;"
+															value="#{listaValor.codigoVariable}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText style="font-size: 0.9em;"
+															value="#{listaValor.codigoVariable}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Valor" style="width: 20% ; ">
+												<p:cellEditor>
+													<f:facet name="output">
+														<div
+															style="font-size: 0.9em; background-color: #{listaValor.color1}">
+															<h:outputText style="font-size: 0.9em;"
+																value="#{listaValor.valorVariable}" />
+														</div>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText style="font-size: 0.9em;"
+															value="#{listaValor.valorVariable}">
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<f:attribute name="selectedValorAnalisis"
+												value="#{listaValor}" />
+
+
+											<p:column headerText="Opciones" style="width: 20%">
+												<div align="center">
+
+													<p:commandButton id="btnCalcular" icon="ui-icon-play"
+														actionListener="#{datAnaLaboratorioView.actionCalcularVariable}"
+														style="display:#{listaValor.estadoTrue};"
+													    title="Calcular"
+														value="Calcular" process="@all"
+														update="tablaValores :dialogDatAnaLaboratorio">
+														<f:attribute name="selectedValorAnalisis"
+															value="#{listaValor}" />
+													</p:commandButton>
+													<p:commandButton id="btnFormula" icon="ui-icon-lightbulb"
+														actionListener="#{datAnaLaboratorioView.actionConsultarContenidoVariable}"
+														title="Ver Fórmula/Consulta sql"
+														style="display:#{listaValor.estadoTrue};" process="@all"
+														update="tablaValores :dialogDatAnaLaboratorio, :dialogVariable">
+														<f:attribute name="selectedValorAnalisis"
+															value="#{listaValor}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+
+
+
+										</p:dataTable>
+									</p:panel>
+									<p:panel id="panelBotonesVariables">
+										<div align="center">
+											<p:commandButton id="btnCalcular" icon="ui-icon-disk"
+												value="Calcular" process="@all"
+												action="#{datAnaLaboratorioView.action_calcularValoresVariables()}"
+												update=":dialogDatAnaLaboratorio :frm:panelDataTableDatAnaLaboratorio :formDialog" />
+										</div>
+									</p:panel>
+								</p:tab>
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datAnaLaboratorioView.btnSave}"
+									value="Grabar e Importar variables" process="@all"
+									action="#{datAnaLaboratorioView.action_save()}"
+									update=":dialogDatAnaLaboratorio :frm:panelDataTableDatAnaLaboratorio :formDialog" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datAnaLaboratorioView.action_clear()}"
+									process="@this" update=":dialogDatAnaLaboratorio" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+
+				<p:dialog id="dialogVariable" appendTo="@(body)" draggable="true"
+					closable="true" resizable="false"
+					visible="#{datAnaLaboratorioView.showDialog}" modal="true"
+					width="400">
+
+					<h:form id="formVarible">
+						<h:panelGrid columns="1" cellpadding="5">
+							<p:outputLabel for="txtContenidoVariable"
+								value="Fórmula /Consulta SQL: " />
+							<p:inputTextarea id="txtContenidoVariable"
+								binding="#{datAnaLaboratorioView.txtContenidoVariable}" rows="5"
+								cols="35" maxlength="2000" autoResize="false" required="false"
+								requiredMessage="La Observavión es Obligatoria" />
+						</h:panelGrid>
+					</h:form>
+				</p:dialog>
+
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

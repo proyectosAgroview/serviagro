@@ -1,0 +1,847 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatPlanillaNomina"
+						header="Ejecución de labores de maquina">
+						<!-- <p:growl id="men"/>	 -->
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtFechaIni" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaIni" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{datEjecucionLaboresUnificadaErpLoteView.txtFechaIni}"
+											required="false"
+											requiredMessage="La Fecha inicial es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="txtFechaFin" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{datEjecucionLaboresUnificadaErpLoteView.txtFechaFin}"
+											required="false"
+											requiredMessage="La Fecha  final  es obligatoria">
+										</p:calendar>
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtEstadoPlanilla"
+											value="Estado de planilla: " style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtEstadoPlanilla"
+											binding="#{datEjecucionLaboresUnificadaErpLoteView.txtEstadoPlanilla}"
+											required="true" requiredMessage="Seleccione un estado"
+											style="font-size: 0.9em;" effect="fade" filter="true"
+											filterMatchMode="contains">
+											<f:selectItem itemLabel="TODAS" itemValue="TODAS" />
+											<f:selectItem itemLabel="ABIERTA" itemValue="ABIERTA" />
+											<f:selectItem itemLabel="LIQUIDADA" itemValue="LIQUIDADA" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtPlanilla" value="n° Planilla "
+											style="font-size: 0.9em;" />
+										<p:inputText id="txtPlanilla" style="font-size: 0.9em;"
+											binding="#{datEjecucionLaboresUnificadaErpLoteView.txtPlanilla}"
+											maxlength="1000" autoResize="true" size="15">
+
+											<f:convertNumber></f:convertNumber>
+
+										</p:inputText>
+
+									</h:panelGrid>
+								</p:column>
+
+
+
+								<p:column>
+									<h:panelGrid columns="1">
+
+										<p:commandButton id="btnCargarDatos" value="Consultar"
+											icon="ui-icon-newwin" style="font-size: 1em;"
+											action="#{datEjecucionLaboresUnificadaErpLoteView.listarPlanillaNomina}"
+											update=":frm:tbl, txtValorTotalAcumulado " process="@all" />
+
+										<h:outputLabel></h:outputLabel>
+
+									</h:panelGrid>
+								</p:column>
+
+
+							</p:row>
+						</p:panelGrid>
+
+						<p:dataTable id="tbl"
+							value="#{datEjecucionLaboresUnificadaErpLoteView.data2}"
+							scrollable="true" scrollWidth="99%" scrollHeight="150"
+							var="datPlanillaNomina" paginator="true" lazy="true" rows="5"
+							rowsPerPageTemplate="5,10,15" reflow="true">
+
+							<p:column headerText="Opciones" exportable="false"
+								style="font-size: 0.9em;">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										style="font-size: 0.9em;" update=":dialogDatPlanillaNomina"
+										value="Editar"
+										disabled="#{datPlanillaNomina.estadoLiquidacionTrue}"
+										actionListener="#{datEjecucionLaboresUnificadaErpLoteView.action_edit}">
+										<f:attribute name="selectedDatPlanillaNominaLista"
+											value="#{datPlanillaNomina}" />
+									</p:commandButton>
+									<p:commandButton id="btnLiquidar" icon="ui-icon-pencil"
+										value="Liquidar" update=":frm:tbl, :frm"
+										style="font-size: 0.9em;"
+										disabled="#{datPlanillaNomina.estadoLiquidacionTrue}"
+										title="Liquidar"
+										onclick="if(!confirm('Realmente desea liquidar esta planilla?')){return false;}"
+										actionListener="#{datEjecucionLaboresUnificadaErpLoteView.action_liquidar}">
+										<f:attribute name="selectedDatPlanillaNominaLista"
+											value="#{datPlanillaNomina}" />
+									</p:commandButton>
+
+									<p:commandButton id="btnDelete"
+										disabled="#{datPlanillaNomina.estadoLiquidacionTrue}"
+										title="Anular Registro" style="font-size: 0.9em;"
+										value="Anular"
+										actionListener="#{datEjecucionLaboresUnificadaErpLoteView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatPlanillaNominaLista"
+											value="#{datPlanillaNomina}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="N° Planilla" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.consecutivo}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fecha" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.fechaRegistro}"
+									style="font-size: 0.9em;">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Observación" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.observacion}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Contiene registros de:?"
+										style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.tipoPlanilla}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Estado planilla" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.estadoPlanilla}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Costo total" style="font-size: 0.9em;" />
+								</f:facet>
+								<p:inputNumber style="font-size: 0.9em;" size="6"
+									decimalSeparator="." thousandSeparator="," decimalPlaces="1"
+									disabled="true" value="#{datPlanillaNomina.costoTotalPlanilla}">
+								</p:inputNumber>
+
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Usr. digitación" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.usuarioDigitacion}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Usr. cierre" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.usuarioCierrePlanilla}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="F. cierre" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.fechaCierrePlanilla}"
+									style="font-size: 0.9em;">
+
+								</h:outputText>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="F. re-abertura" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.fechaAberturaPlanilla}"
+									style="font-size: 0.9em;">
+
+								</h:outputText>
+							</p:column>
+
+
+
+						</p:dataTable>
+					</p:panel>
+
+					<p:panelGrid>
+
+
+						<p:row>
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel value="TOTALES:  " style="font-size: 1em;" />
+								</h:panelGrid>
+							</p:column>
+
+
+
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtValorTotalAcumulado"
+										value="Costo total($): " style="font-size: 0.9em;" />
+									<p:inputNumber id="txtValorTotalAcumulado"
+										style="font-size: 0.9em;" size="12"
+										binding="#{datEjecucionLaboresUnificadaErpLoteView.txtValorTotalAcumulado}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+										required="false">
+									</p:inputNumber>
+								</h:panelGrid>
+							</p:column>
+
+						</p:row>
+
+					</p:panelGrid>
+
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datEjecucionLaboresUnificadaErpLoteView.action_new()}"
+								update=":dialogDatPlanillaNomina" />
+
+							<p:commandButton id="btnConsultar" value="Generar reporte"
+								icon="ui-icon-newwin"
+								action="#{datEjecucionLaboresUnificadaErpLoteView.exportPlanillasNomina}"
+								update=" frm" process="@all" partialSubmit="true" />
+
+							<p:commandButton id="btnLiquidarRangoFechas"
+								value="Liquidar planillas rango de fechas" icon="ui-icon-newwin"
+								onclick="if(!confirm('Realmente desea liquidar las planillas en el rango de fechas definido?')){return false;}"
+								action="#{datEjecucionLaboresUnificadaErpLoteView.liquidarPlanillasRangoFechas}"
+								update=" frm, tbl" process="@all" partialSubmit="true" />
+
+
+							<p:commandButton
+								disabled="#{datEjecucionLaboresUnificadaErpLoteView.disableButton}"
+								icon="ui-icon-arrowthick-1-s" value="Descargar" ajax="false">
+								<p:fileDownload
+									value="#{datEjecucionLaboresUnificadaErpLoteView.file}" />
+							</p:commandButton>
+
+
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" process="@all" partialSubmit="true"
+									resetValues="true" />
+							</p:commandButton>
+						</div>
+					</p:panel>
+
+				</h:form>
+
+				<p:dialog id="dialogDatPlanillaNomina" appendTo="@(body)"
+					draggable="true" closable="false"
+					visible="#{datEjecucionLaboresUnificadaErpLoteView.showDialog}"
+					resizable="false" modal="true" width="1000" styleClass="dialogFix"
+					header="Ejecución de labores de maquina" responsive="true">
+					<h:form id="formDialog">
+
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+
+						<h:panelGrid columns="2">
+							<p:outputLabel value="#Planilla: " style="font-size: 0.8em;" />
+							<p:inputText id="txtConsecutivo" disabled="false"
+								binding="#{datEjecucionLaboresUnificadaErpLoteView.txtConsecutivo}"
+								placeholder="Buscar o crear registro" size="23">
+							</p:inputText>
+
+							<p:outputLabel for="msgFechaRegistro" value="Fecha: "
+								style="font-size: 0.8em;" />
+							<p:calendar id="msgFechaRegistro" showOn="button"
+								navigator="false" locale="es"
+								binding="#{datEjecucionLaboresUnificadaErpLoteView.txtFechaRegistro}"
+								pattern="dd/MM/yyyy" mask="true" required="true"
+								requiredMessage="La    es obligatoria">
+							</p:calendar>
+
+							<p:outputLabel for="txtObservacion" value="Observación:"
+								style="font-size: 0.8em;" />
+							<p:inputTextarea id="txtObservacion"
+								binding="#{datEjecucionLaboresUnificadaErpLoteView.txtObservacion}"
+								rows="1" cols="50" maxlength="1000"
+								counterTemplate="{0} Caracteres" autoResize="true" />
+							<h:outputText />
+
+							<p:inputText style="font-size: 0.8em; visibility:hidden"
+								id="txtPlanillaNominaId"
+								binding="#{datEjecucionLaboresUnificadaErpLoteView.txtPlanillaNominaId}">
+							</p:inputText>
+
+						</h:panelGrid>
+
+						<p:tabView id="tabMapa"
+							activeIndex="#{datEjecucionLaboresUnificadaErpLoteView.activeTapIndex}">
+
+							<p:tab title="Maquinaria">
+
+								<h:panelGrid columns="3">
+									<p:outputLabel for="txtOrdenTrabajoMaq" value="O.T: "
+										style="font-size: 0.8em;" />
+									<p:selectOneMenu id="txtOrdenTrabajoMaq" effect="fade"
+										filter="true" filterMatchMode="contains"
+										binding="#{datEjecucionLaboresUnificadaErpLoteView.txtOrdenTrabajoMaq}"
+										required="false" requiredMessage="O.T(Ot, labor, Hda, Lote): ">
+										<f:selectItem itemLabel="O.T(Ot, labor, Hda, Lote): " itemValue="" noSelectionOption="true" />
+										<f:selectItems value="#{datEjecucionLaboresUnificadaErpLoteView.selectOrdenTrabajoMaq}" />
+										<p:ajax listener="#{datEjecucionLaboresUnificadaErpLoteView.listener_ConsultaOrdenTrabajoMaq}"
+											update="txtLaborId_LaborMaq,txtNivel2IdMaq, txtTipoDistribucionMaq, bloquesMaq, lotesMaq" />
+									</p:selectOneMenu>
+									<p:selectOneMenu style="visibility:hidden" id="txtOrigenDatos"
+										binding="#{datEjecucionLaboresUnificadaErpLoteView.txtOrigenDatos}">
+										<f:selectItem itemLabel="Maquinaria" itemValue="Maquinaria" />
+									</p:selectOneMenu>
+								</h:panelGrid>
+
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtLaborId_LaborMaq" value="Labor: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtLaborId_LaborMaq" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresUnificadaErpLoteView.txtLaborId_LaborMaq}"
+													required="false" requiredMessage="Seleccione una labor">
+													<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresUnificadaErpLoteView.selectLaborIdMaq}" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="txtNivel2IdMaq" value="Hacienda: "
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel2IdMaq" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresUnificadaErpLoteView.txtNivel2IdMaq}"
+													required="false" requiredMessage="Seleccione una hacienda">
+													<f:selectItem itemLabel="Seleccione una hacienda"
+														itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresUnificadaErpLoteView.selectNivel2Maq}" />
+													<p:ajax update="bloquesMaq" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+
+												<p:outputLabel for="bloquesMaq" value="Bloque: " />
+												<p:selectCheckboxMenu id="bloquesMaq"
+													value="#{datEjecucionLaboresUnificadaErpLoteView.selectedNivel3Maq}"
+													filter="true" filterMatchMode="contains"
+													showCheckbox="true" required="false"
+													requiredMessage="Seleccione al menos un bloque">
+													<f:selectItems
+														value="#{datEjecucionLaboresUnificadaErpLoteView.bloquesMaq}"
+														var="bloques" itemLabel=" #{bloques.nombre}"
+														itemValue="#{bloques.nivel3Id}" />
+													<p:ajax update=" txtNivel4ErpMaq, lotesMaq"
+														process="txtNivel2IdMaq" />
+												</p:selectCheckboxMenu>
+
+
+												<p:outputLabel for="txtTipoDistribucionMaq"
+													value="Tipo distribución " style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtTipoDistribucionMaq" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresUnificadaErpLoteView.txtTipoDistribucionMaq}"
+													required="false" requiredMessage="Seleccione un lote">
+													<f:selectItem
+														itemLabel="Seleccione un tipo de distribucion"
+														itemValue="" />
+													<f:selectItem itemLabel="Código Erp" itemValue="codigoErp" />
+													<f:selectItem itemLabel="Lotes" itemValue="lote" />
+													<p:ajax
+														listener="#{datEjecucionLaboresUnificadaErpLoteView.tipoDistribucionMaq()}"
+														process="@this, bloquesMaq"
+														update="lotesMaq, txtNivel4ErpMaq" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtNivel4ErpMaq" value="Código ERP:"
+													style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtNivel4ErpMaq" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%;font-size: 0.8em;" autoWidth="false"
+													binding="#{datEjecucionLaboresUnificadaErpLoteView.txtNivel4ErpMaq}"
+													required="false" requiredMessage="Seleccione un código">
+													<f:selectItem itemLabel="Seleccione un código" itemValue="" />
+													<f:selectItems
+														value="#{datEjecucionLaboresUnificadaErpLoteView.selectNivel4ErpMaq}" />
+												</p:selectOneMenu>
+
+												<p:outputLabel for="lotesMaq" value="Lote: " />
+												<p:selectCheckboxMenu id="lotesMaq"
+													value="#{datEjecucionLaboresUnificadaErpLoteView.selectedNivel4Maq}"
+													filter="true" filterMatchMode="contains"
+													showCheckbox="true" required="false"
+													requiredMessage="Seleccione al menos un lote">
+													<f:selectItems
+														value="#{datEjecucionLaboresUnificadaErpLoteView.lotesMaq}"
+														var="lotes"
+														itemLabel=" #{lotes.nom_nivel4} Area: #{lotes.area_neta}"
+														itemValue="#{lotes.nivel4_id}" />
+												</p:selectCheckboxMenu>
+
+											</h:panelGrid>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+
+								<p:scrollPanel mode="native" style="width:950px;height:270px">
+
+									<p:messages id="msgMQ" closable="true" showDetail="true" />
+
+									<p:panelGrid id="gridDatMaquinariaDet">
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtEquipoId_Equipo" value="Equipo: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtEquipoId_Equipo" effect="fade"
+														filter="true" filterMatchMode="contains" autoWidth="false"
+														binding="#{datEjecucionLaboresUnificadaErpLoteView.txtEquipoId_Equipo}"
+														style="width: 100%;font-size: 0.8em;" required="false"
+														requiredMessage="Seleccione un equipo">
+														<f:selectItem itemLabel="Seleccione un equipo"
+															itemValue="" />
+														<f:selectItems
+															value="#{datEjecucionLaboresUnificadaErpLoteView.selectEquipo}" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtHorometroInicalMq"
+														value="Horómetro inicial: " style="font-size: 0.8em;" />
+													<p:inputText id="txtHorometroInicalMq" disabled="false"
+														size="10"
+														binding="#{datEjecucionLaboresUnificadaErpLoteView.txtHorometroInicalMq}">
+														<f:converter converterId="javax.faces.Number" />
+													</p:inputText>
+
+													<p:outputLabel for="txtHorometroFinalMq"
+														value="Horómetro final: " style="font-size: 0.8em;" />
+													<p:inputText id="txtHorometroFinalMq" disabled="false"
+														size="10"
+														binding="#{datEjecucionLaboresUnificadaErpLoteView.txtHorometroFinalMq}">
+														<f:converter converterId="javax.faces.Number" />
+													</p:inputText>
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+
+
+													<p:outputLabel for="txtUdadMaquinaria"
+														value="Unidad de Pago: " style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtUdadMaquinaria" effect="fade"
+														filter="true" filterMatchMode="contains" autoWidth="false"
+														binding="#{datEjecucionLaboresUnificadaErpLoteView.txtUdadMaquinaria}"
+														style="width: 80%;font-size: 0.8em;" required="false"
+														requiredMessage="Seleccione una unidad de pago">
+														<f:selectItem itemLabel="Unidad de pago" itemValue="" />
+														<f:selectItems
+															value="#{datEjecucionLaboresUnificadaErpLoteView.selectUdadMaquinaria}" />
+													</p:selectOneMenu>
+
+													<p:outputLabel for="txtCantidadMaq" value="Cantidad: "
+														style="font-size: 0.8em;" />
+													<p:inputText id="txtCantidadMaq" disabled="false" size="10"
+														binding="#{datEjecucionLaboresUnificadaErpLoteView.txtCantidadMaq}">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+
+													<p:outputLabel for="txtValorUnitMaquinaria"
+														value="Tarifa: " style="font-size: 0.8em;" />
+													<p:panelGrid columns="2">
+														<p:inputText id="txtValorUnitMaquinaria" disabled="false"
+															size="12" required="false" requiredMessage="Indique el valor unitario"
+															binding="#{datEjecucionLaboresUnificadaErpLoteView.txtValorUnitMaquinaria}" >
+														</p:inputText>
+													</p:panelGrid>
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<h:panelGrid columns="2">
+										<p:commandButton id="btnAgregarMaquinaria"
+											style="margin:10px;" icon="ui-icon-plusthick"
+											process="@this,txtOrdenTrabajoMaq, txtEquipoId_Equipo, txtUdadMaquinaria,
+													txtValorUnitMaquinaria,txtCantidadMaq, txtTipoDistribucionMaq,
+													txtLaborId_LaborMaq, txtHorometroInicalMq, txtHorometroFinalMq,
+													bloquesMaq, txtNivel2IdMaq, lotesMaq, txtNivel4ErpMaq"
+											binding="#{datEjecucionLaboresUnificadaErpLoteView.btnAgregarMaquinaria}"
+											value="Agregar"
+											action="#{datEjecucionLaboresUnificadaErpLoteView.action_agregarServicio}"
+											ajax="true"
+											update="tablaDetServicioDet, msgMQ, txtOrdenTrabajoMaq,	
+													txtEquipoId_Equipo, txtLaborId_LaborMaq, txtUdadMaquinaria,
+													txtCantidadMaq, txtValorUnitMaquinaria, txtTipoDistribucionMaq,
+													txtHorometroInicalMq, txtHorometroFinalMq,bloquesMaq, txtNivel2IdMaq,
+													lotesMaq, txtNivel4ErpMaq" />
+
+										<p:commandButton id="btnlimpiar2" icon="ui-icon-trash"
+											value="Limpiar">
+											<p:ajax update="gridDatMaquinariaDet" resetValues="true" />
+										</p:commandButton>
+									</h:panelGrid>
+
+									<p:outputPanel id="dataTableServicios">
+										<p:dataTable id="tablaDetServicioDet"
+											value="#{datEjecucionLaboresUnificadaErpLoteView.dataServicioDet}"
+											var="listaDetServicioDet" paginator="true" rows="5"
+											reflow="true" editable="true" editMode="cell"
+											widgetVar="cellMaquinaria">
+
+											<p:ajax event="cellEdit"
+												listener="#{datEjecucionLaboresUnificadaErpLoteView.onCellEditMaquinaria}" />
+
+											<p:column headerText="Hda" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.nombreNivel2}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetServicioDet.nivel2Id.nivel2Id}">
+															<f:selectItems
+																value="#{datEjecucionLaboresUnificadaErpLoteView.selectNivel2MaqEdit}"
+																var="var7" itemValue="#{var7}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Lote" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.nombreNivel4}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetServicioDet.nivel4.nivel4Id}">
+															<f:selectItems
+																value="#{datEjecucionLaboresUnificadaErpLoteView.selectNivel4MaqEdit}"
+																var="var8" itemValue="#{var8}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="labor" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.nombreLabor}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetServicioDet.laborId.laborId}">
+															<f:selectItems
+																value="#{datEjecucionLaboresUnificadaErpLoteView.selectLaborIdMaq}"
+																var="var9" itemValue="#{var9}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Equipo" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.codigoEquipo}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetServicioDet.equipoId_Equipo.equipoId}">
+															<f:selectItems
+																value="#{datEjecucionLaboresUnificadaErpLoteView.selectEquipo}"
+																var="var10" itemValue="#{va10}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="HorómetroInic"
+												style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetServicioDet.horometroInicial}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetServicioDet.horometroInicial}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="HorómetroFin" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetServicioDet.horometroFinal}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetServicioDet.horometroFinal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="U.M(Pago)" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.codigoUmPago}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDetServicioDet.udadMedPago.udadMedId}">
+															<f:selectItems
+																value="#{datEjecucionLaboresUnificadaErpLoteView.selectUdadMaquinaria}"
+																var="var11" itemValue="#{va11}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="C. Pago" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.cantidadPago}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetServicioDet.cantidadPago}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Horas" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.totalHoras}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetServicioDet.totalHoras}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Tarifa" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.valorUnit}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetServicioDet.valorUnit}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="C. Total" style="font-size: 0.8em;">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetServicioDet.costoTotal}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetServicioDet.costoTotal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<f:attribute name="selectedDatServicioDet"
+												value="#{listaDetServicioDet}" />
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datEjecucionLaboresUnificadaErpLoteView.actionDeleteDetServicioDet}"
+														title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaDetServicioDet :dialogDatPlanillaNomina">
+														<f:attribute name="selectedDatServicioDet"
+															value="#{listaDetServicioDet}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								</p:scrollPanel>
+							</p:tab>
+						</p:tabView>
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datEjecucionLaboresUnificadaErpLoteView.btnSave}"
+									value="Grabar"
+									action="#{datEjecucionLaboresUnificadaErpLoteView.action_save()}"
+									update=":dialogDatPlanillaNomina :frm:panelDataTableDatPlanillaNomina" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datEjecucionLaboresUnificadaErpLoteView.action_clear()}"
+									process="@this" update=":dialogDatPlanillaNomina" />
+								<p:commandButton id="btnCerrar" icon="ui-icon-closethick"
+									title="Cerrar" value="Cerrar"
+									onclick="if(!confirm('Realmente desea salir sin grabar? Sí ya lo hizo, omita este mensaje')){return false;}"
+									action="#{datEjecucionLaboresUnificadaErpLoteView.action_closeDialog}"
+									update=":dialogDatPlanillaNomina">
+								</p:commandButton>
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datEjecucionLaboresUnificadaErpLoteView.showDialog}"
+					modal="true" width="600">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datEjecucionLaboresUnificadaErpLoteView.txtObservacionAnularReg}"
+									rows="5" cols="26" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+
+								<p:inputText style="font-size: 0.8em; visibility:hidden"
+									id="txtPlanillaNominaId"
+									binding="#{datEjecucionLaboresUnificadaErpLoteView.txtPlanillaNominaId}">
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false"
+									binding="#{datEjecucionLaboresUnificadaErpLoteView.btnDelete}"
+									value="Grabar"
+									action="#{datEjecucionLaboresUnificadaErpLoteView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatPlanillaNomina" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datEjecucionLaboresUnificadaErpLoteView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,150 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+
+				<h:form id="frm" class="form-horizontal">
+					<p:panel id="panelDataTableEstEvaporimetro"
+						header="Estación evaporimétrica">
+						<!-- 	<p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{estEvaporimetroView.data}"
+							var="estEvaporimetro" paginator="true" reflow="true" rows="5" rowsPerPageTemplate="5,10,15">
+
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Estación evaporimétrica" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{estEvaporimetro.estado}"
+								sortBy="#{estEvaporimetro.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{estEvaporimetro.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{estEvaporimetro.codigo}"
+								sortBy="#{estEvaporimetro.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{estEvaporimetro.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{estEvaporimetro.nombre}"
+								sortBy="#{estEvaporimetro.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{estEvaporimetro.nombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogEstEvaporimetro"
+										actionListener="#{estEvaporimetroView.action_edit}">
+										<f:attribute name="selectedEstEvaporimetro"
+											value="#{estEvaporimetro}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{estEvaporimetroView.action_new()}"
+								update=":dialogEstEvaporimetro" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogEstEvaporimetro" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{estEvaporimetroView.showDialog}" resizable="false"
+					modal="true" width="500" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelEstEvaporimetro"
+							header="Estación evaporimétrica">
+							<h:panelGrid columns="3" id="panelGrid" layout="grid"
+								styleClass="ui-panelgrid-blank"
+								columnClasses="ui-grid-col-4,ui-grid-col-8">
+
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{estEvaporimetroView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+
+								<p:outputLabel value="Código: " />
+								<p:inputText id="txtCodigo" disabled="false"
+									binding="#{estEvaporimetroView.txtCodigo}"
+									placeholder="Buscar o crear registro" size="23">
+									<p:ajax update="panelEstEvaporimetro,msg,panelBotones"
+										listener="#{estEvaporimetroView.listener_txtCodigo}" />
+								</p:inputText>
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNombre" value="Nombre: " />
+								<p:inputText id="txtNombre" disabled="true"
+									binding="#{estEvaporimetroView.txtNombre}" required="true"
+									requiredMessage="El Nombre es Obligatorio" />
+								<p:message for="txtNombre" />
+
+
+								<p:inputText id="txtEstEvaporimetroId" style="visibility:hidden"
+									binding="#{estEvaporimetroView.txtEstEvaporimetroId}">
+									<p:ajax update=":dialogEstEvaporimetro"
+										listener="#{estEvaporimetroView.listener_txtId}" />
+								</p:inputText>
+
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="true" binding="#{estEvaporimetroView.btnSave}"
+									value="Grabar" action="#{estEvaporimetroView.action_save()}"
+									update=":dialogEstEvaporimetro :frm:panelDataTableEstEvaporimetro" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{estEvaporimetroView.action_clear()}"
+									update=":dialogEstEvaporimetro" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

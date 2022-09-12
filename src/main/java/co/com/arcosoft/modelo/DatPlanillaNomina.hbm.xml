@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+	<class name="co.com.arcosoft.modelo.DatPlanillaNomina"
+		table="dat_planilla_nomina">
+		<id name="planillaNominaId" type="java.lang.Long">
+			<column name="planilla_nomina_id" />
+			<generator class="identity" />
+		</id>
+		<many-to-one name="nivel4"
+			class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+			<column name="nivel4_id" />
+		</many-to-one>
+		<many-to-one name="trabajador"
+			class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+			<column name="trab_id" />
+		</many-to-one>
+		<many-to-one name="equipoTrabajo"
+			class="co.com.arcosoft.modelo.EquipoTrabajo" fetch="select">
+			<column name="eqp_trab_id" />
+		</many-to-one>
+		<many-to-one name="udadMed"
+			class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+			<column name="udad_med_prod" />
+		</many-to-one>
+		<many-to-one name="conceptoNomina"
+			class="co.com.arcosoft.modelo.ConceptoNomina" fetch="select">
+			<column name="cepto_nomina_id" />
+		</many-to-one>
+		<many-to-one name="nivel2Id"
+			class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+			<column name="nivel2_id" />
+		</many-to-one>
+
+		<many-to-one name="labor"
+			class="co.com.arcosoft.modelo.Labor" fetch="select">
+			<column name="labor_id" />
+		</many-to-one>
+
+		<many-to-one name="ordenTrabajo"
+			class="co.com.arcosoft.modelo.DatPlanLaborDet" fetch="select">
+			<column name="orden_trabajo" />
+		</many-to-one>
+
+		<property name="contratista" type="java.lang.Long">
+			<column name="contratista_id" />
+		</property>
+		<property name="consecutivo" type="java.lang.Long">
+			<column name="consecutivo" />
+		</property>
+		<property name="compania" type="java.lang.Long">
+			<column name="compania" />
+		</property>
+		<property name="anio" type="java.lang.Long">
+			<column name="anio" />
+		</property>
+		<property name="fechaRegistro" type="java.util.Date">
+			<column name="fecha_registro" length="19" />
+		</property>
+		<property name="NPases" type="java.lang.Long">
+			<column name="n_pases" />
+		</property>
+		<property name="nivel1Id" type="java.lang.Long">
+			<column name="nivel1_id" />
+		</property>
+		<property name="nivel3Id" type="java.lang.Long">
+			<column name="nivel3_id" />
+		</property>
+		<property name="edadEjecucion" type="java.lang.Double">
+			<column name="edad_ejecucion" precision="12" scale="4" />
+		</property>
+		<property name="udadMedPago" type="java.lang.Long">
+			<column name="udad_med_pago" />
+		</property>
+		<property name="cantidadPago" type="java.lang.Double">
+			<column name="cantidad_pago" precision="12" scale="4" />
+		</property>
+		<property name="cantidadProd" type="java.lang.Double">
+			<column name="cantidad_prod" precision="12" scale="4" />
+		</property>
+		<property name="valorUnitario" type="java.lang.Double">
+			<column name="valor_unitario" precision="12" scale="4" />
+		</property>
+		<property name="costoTotal" type="java.lang.Double">
+			<column name="costo_total" precision="12" scale="4" />
+		</property>
+		<property name="etapaId" type="java.lang.Long">
+			<column name="etapa_id" />
+		</property>
+		<property name="variedId" type="java.lang.Long">
+			<column name="varied_id" />
+		</property>
+		<property name="cierreCostos" type="java.lang.String">
+			<column name="cierre_costos" length="1" />
+		</property>
+		<property name="observacion" type="java.lang.String">
+			<column name="observacion" length="1000" />
+		</property>
+		<property name="idMobile" type="java.lang.String">
+			<column name="id_mobile" length="30" />
+		</property>
+		<property name="latitud" type="java.lang.Double">
+			<column name="latitud" precision="22" scale="0" />
+		</property>
+		<property name="longitud" type="java.lang.Double">
+			<column name="longitud" precision="22" scale="0" />
+		</property>
+		<property name="precision" type="java.lang.Double">
+			<column name="precision1" precision="22" scale="0" />
+		</property>
+		<property name="usuarioDigitacion" type="java.lang.Long">
+			<column name="usuario_digitacion" />
+		</property>
+		<property name="infoAdicional" type="java.lang.String">
+			<column name="info_adicional" length="100" />
+		</property>
+		<property name="infoAdicional2" type="java.lang.String">
+			<column name="info_adicional2" length="100" />
+		</property>
+		<property name="fechaCreacion" type="java.util.Date">
+			<column name="fecha_creacion" length="19" />
+		</property>
+		<property name="fechaModificacion" type="java.util.Date">
+			<column name="fecha_modificacion" length="19" />
+		</property>
+		<property name="estado" type="java.lang.String">
+			<column name="estado" length="1" />
+		</property>
+		<property name="observacionAnularReg" type="java.lang.String">
+			<column name="observacion_anular_reg" length="500" />
+		</property>
+		<property name="documetoErp" type="java.lang.String">
+			<column name="documeto_erp" length="30" />
+		</property>
+		<property name="fechaAnulacion" type="java.util.Date">
+			<column name="fecha_anulacion" length="19" />
+		</property>
+		<property name="colorIdentificador" type="java.lang.Long">
+			<column name="color_identificador" />
+		</property>
+		<property name="pesoPromedio" type="java.lang.Double">
+			<column name="peso_promedio" precision="12" scale="4" />
+		</property>
+		<property name="numeroTiquete" type="java.lang.Long">
+			<column name="numero_tiquete" />
+		</property>
+		<property name="tipoVisita" type="java.lang.String">
+			<column name="tipo_visita" length="60" />
+		</property>
+		<property name="estadoPlanilla" type="java.lang.String">
+			<column name="estado_planilla" length="20" />
+		</property>
+		<property name="fechaCierrePlanilla" type="java.util.Date">
+			<column name="fecha_cierre_planilla" length="19" />
+		</property>
+		<property name="fechaReAberturaPlanilla"
+			type="java.util.Date">
+			<column name="fecha_re_abertura_planilla" length="19" />
+		</property>
+		<property name="usuarioCierrePlanilla" type="java.lang.Long">
+			<column name="usuario_cierre_planilla" />
+		</property>		
+		<property name="origenDatos" type="java.lang.String">
+			<column name="origen_datos" length="50" />
+		</property>
+
+
+		<set name="datPlanillaNominaOnivel4s"
+			table="dat_planilla_nomina_onivel4" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="planilla_nomina_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatPlanillaNominaOnivel4" />
+		</set>
+		<set name="datRiegos" table="dat_riego" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="dat_planilla_nomina_id" />
+			</key>
+			<one-to-many class="co.com.arcosoft.modelo.DatRiego" />
+		</set>
+
+		<set name="datPlanillaNominaDets" table="dat_planilla_nomina_det"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="planilla_nomina_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatPlanillaNominaDet" />
+		</set>
+		<set name="datServicioDets" table="dat_servicio_det"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="dat_planilla_nomina_id" precision="18"
+					scale="0" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatServicioDet" />
+		</set>
+		<set name="datAplicProdDets" table="dat_aplic_prod_det"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="dat_planilla_nomina_id" precision="18"
+					scale="0" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatAplicProdDet" />
+		</set>
+	</class>
+</hibernate-mapping>

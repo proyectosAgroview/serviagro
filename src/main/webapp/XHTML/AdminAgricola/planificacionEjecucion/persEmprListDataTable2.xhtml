@@ -1,0 +1,635 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTablePersEmpr" header="Empresas">
+						<!--  <p:growl id="men"/>-->
+						<p:dataTable value="#{persEmpr2View.data}" var="persEmpr"
+							paginator="true" lazy="true" rows="5" id="tbl" reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Empresas" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{persEmpr.estado}"
+								sortBy="#{persEmpr.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{persEmpr.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{persEmpr.codigo}"
+								sortBy="#{persEmpr.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{persEmpr.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{persEmpr.identificacion}"
+								sortBy="#{persEmpr.identificacion}">
+								<f:facet name="header">
+									<h:outputText value="Identificación" />
+								</f:facet>
+								<h:outputText value="#{persEmpr.identificacion}" />
+							</p:column>
+
+							<p:column filterBy="#{persEmpr.nombre}"
+								sortBy="#{persEmpr.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{persEmpr.nombre}" />
+							</p:column>
+
+							<p:column filterBy="#{persEmpr.representanteLegal}"
+								sortBy="#{persEmpr.representanteLegal}">
+								<f:facet name="header">
+									<h:outputText value="Representante Legal" />
+								</f:facet>
+								<h:outputText value="#{persEmpr.representanteLegal}" />
+							</p:column>
+
+							<p:column filterBy="#{persEmpr.telefono}"
+								sortBy="#{persEmpr.telefono}">
+								<f:facet name="header">
+									<h:outputText value="Teléfono" />
+								</f:facet>
+								<h:outputText value="#{persEmpr.telefono}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogPersEmpr"
+										actionListener="#{persEmpr2View.action_edit}">
+										<f:attribute name="selectedPersEmpr" value="#{persEmpr}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{persEmpr2View.action_new()}" update=":dialogPersEmpr" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogPersEmpr" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{persEmpr2View.showDialog}"
+					resizable="false" modal="true" width="680" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelPersEmpr" header="Empresa">
+								<p:tabView>
+
+									<p:tab title="General">
+
+										<h:panelGrid columns="3">
+
+											<p:outputLabel for="txtEstado" value="Estado:" />
+											<p:selectOneRadio id="txtEstado" disabled="true"
+												binding="#{persEmpr2View.txtEstado}" required="true"
+												requiredMessage="Seleccione un estado">
+												<f:selectItem itemLabel="Activo" itemValue="A" />
+												<f:selectItem itemLabel="Inactivo" itemValue="I" />
+											</p:selectOneRadio>
+											<p:message for="txtEstado" />
+
+											<p:outputLabel value="Código: " />
+											<p:inputText id="txtCodigo" disabled="false"
+												binding="#{persEmpr2View.txtCodigo}"
+												placeholder="Buscar o crear registro" size="23">
+												<p:ajax
+													update=":formDialog:panelPersEmpr,:formDialog:msg,:formDialog:panelBotones"
+													listener="#{persEmpr2View.listener_txtCodigo}" />
+											</p:inputText>
+											<p:outputLabel />
+
+
+											<p:outputLabel for="txtNombre" value="Nombre: " />
+											<p:inputText id="txtNombre" disabled="true"
+												binding="#{persEmpr2View.txtNombre}" required="true"
+												requiredMessage="El Nombre es Obligatorio" />
+											<p:message for="txtNombre" />
+
+
+											<p:outputLabel for="txtTipoEmpresa" value="Tipo de empresa: " />
+											<p:selectOneRadio id="txtTipoEmpresa" disabled="true"
+												binding="#{persEmpr2View.txtTipoEmpresa}" required="true"
+												requiredMessage="El tipo de empresa es Obligatorio">
+												<f:selectItem itemLabel="Todas" itemValue="1" />
+												<f:selectItem itemLabel="Proveedor" itemValue="2" />
+												<f:selectItem itemLabel="Contratista" itemValue="3" />
+												<f:selectItem itemLabel="Clientes" itemValue="4" />
+												<f:selectItem itemLabel="Productor" itemValue="5" />
+											</p:selectOneRadio>
+											<p:message for="txtTipoEmpresa" />
+
+
+
+											<p:outputLabel for="txtTipoPersona" value="Tipo de persona: " />
+											<p:selectOneRadio id="txtTipoPersona" disabled="true"
+												binding="#{persEmpr2View.txtTipoPersona}" required="true"
+												requiredMessage="El tipo de persona es Obligatorio">
+												<f:selectItem itemLabel="Natural" itemValue="1" />
+												<f:selectItem itemLabel="Juridica" itemValue="2" />
+											</p:selectOneRadio>
+											<p:message for="txtTipoPersona" />
+
+
+											<p:outputLabel for="txtTipoIdentificacion"
+												value="Tipo de Indentificación: " />
+											<p:selectOneRadio id="txtTipoIdentificacion" disabled="true"
+												binding="#{persEmpr2View.txtTipoIdentificacion}"
+												required="true"
+												requiredMessage="El tipo de identificación es Obligatoria">
+												<f:selectItem itemLabel="Cédula de ciudadania" itemValue="1" />
+												<f:selectItem itemLabel="Pasaporte" itemValue="2" />
+												<f:selectItem itemLabel="Nit" itemValue="3" />
+												<f:selectItem itemLabel="Cédula de extranjeria"
+													itemValue="4" />
+												<f:selectItem itemLabel="Otros" itemValue="5" />
+											</p:selectOneRadio>
+											<p:message for="txtTipoIdentificacion" />
+
+
+											<p:outputLabel for="txtIdentificacion"
+												value="Identificación: " />
+											<p:inputText id="txtIdentificacion" disabled="true"
+												binding="#{persEmpr2View.txtIdentificacion}" required="true"
+												requiredMessage="La identificación es Obligatoria" />
+											<p:message for="txtIdentificacion" />
+
+
+											<p:outputLabel for="txtRepresentanteLegal"
+												value="Representante Legal: " />
+											<p:inputText id="txtRepresentanteLegal" disabled="true"
+												binding="#{persEmpr2View.txtRepresentanteLegal}"
+												required="false"
+												requiredMessage="El Representante Legal es Obligatorio" />
+											<p:outputLabel />
+
+											<p:outputLabel for="txtTelefono" value="Teléfono 1: " />
+											<p:inputText id="txtTelefono" disabled="true"
+												binding="#{persEmpr2View.txtTelefono}" required="true"
+												requiredMessage="El teléfono es Obligatorio" />
+											<p:message for="txtTelefono" />
+
+
+											<p:outputLabel for="txtTelefono2" value="Teléfono 2: " />
+											<p:inputText id="txtTelefono2" disabled="true"
+												binding="#{persEmpr2View.txtTelefono2}" required="false"
+												requiredMessage="El teléfono es Obligatorio" />
+											<p:message for="txtTelefono2" />
+
+
+										</h:panelGrid>
+
+									</p:tab>
+
+									<p:tab title="Características">
+
+										<h:panelGrid columns="3">
+
+											<p:outputLabel for="txtEstadoCivil" value="Estado Civil: " />
+											<p:selectOneRadio id="txtEstadoCivil" disabled="true"
+												binding="#{persEmpr2View.txtEstadoCivil}">
+												<f:selectItem itemLabel="Casado" itemValue="1" />
+												<f:selectItem itemLabel="Soltero" itemValue="2" />
+												<f:selectItem itemLabel="Unión libre" itemValue="3" />
+											</p:selectOneRadio>
+											<p:message for="txtEstadoCivil" />
+
+
+											<p:outputLabel for="txtEmail" value="Email: " />
+											<p:inputText id="txtEmail" disabled="true"
+												binding="#{persEmpr2View.txtEmail}"
+												validatorMessage="El Email es invalido">
+												<f:validateRegex
+													pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+											</p:inputText>
+											<p:outputLabel />
+
+
+											<p:outputLabel for="txtSitioWeb" value="Sitio web: " />
+											<p:inputText id="txtSitioWeb" disabled="true"
+												binding="#{persEmpr2View.txtSitioWeb}" />
+											<p:outputLabel />
+
+
+											<p:outputLabel for="txtDireccion" value="Dirección: " />
+											<p:inputText id="txtDireccion" disabled="true"
+												binding="#{persEmpr2View.txtDireccion}" />
+											<p:outputLabel />
+
+											<p:outputLabel for="txtCodigoPostal" value="Código postal: " />
+											<p:inputText id="txtCodigoPostal" disabled="true"
+												binding="#{persEmpr2View.txtCodigoPostal}" />
+											<p:outputLabel />
+
+											<p:outputLabel for="txtApartadoPostal"
+												value="Apartado postal: " />
+											<p:inputText id="txtApartadoPostal" disabled="true"
+												binding="#{persEmpr2View.txtApartadoPostal}" />
+											<p:outputLabel />
+
+											<p:outputLabel for="txtPbx" value="PBX: " />
+											<p:inputText id="txtPbx" disabled="true"
+												binding="#{persEmpr2View.txtPbx}" />
+											<p:outputLabel />
+
+											<p:outputLabel for="txtEntBancId_EntBanc"
+												value="Entidad Bancaria: " />
+											<p:selectOneMenu id="txtEntBancId_EntBanc" filter="true"
+												filterMatchMode="contains"
+												binding="#{persEmpr2View.txtEntBancId_EntBanc}"
+												disabled="true">
+												<f:selectItem itemLabel="Seleccione" itemValue="" />
+												<f:selectItems value="#{persEmpr2View.selectItemEntBanc}" />
+											</p:selectOneMenu>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtNumeroCuenta"
+												value="Número de cuenta: " />
+											<p:inputText id="txtNumeroCuenta" disabled="true"
+												binding="#{persEmpr2View.txtNumeroCuenta}" />
+											<p:outputLabel />
+
+
+											<p:outputLabel for="txtCiudadId_Ciudad" value="Ciudad: " />
+											<p:selectOneMenu id="txtCiudadId_Ciudad"
+												binding="#{persEmpr2View.txtCiudadId_Ciudad}" filter="true"
+												filterMatchMode="contains" disabled="true">
+												<f:selectItem itemLabel="Seleccione" itemValue="" />
+												<f:selectItems value="#{persEmpr2View.selectItemCiudad}" />
+											</p:selectOneMenu>
+											<p:outputLabel />
+
+
+											<p:outputLabel for="txtProfId_Profesion" value="Profesión: " />
+											<p:selectOneMenu id="txtProfId_Profesion"
+												binding="#{persEmpr2View.txtProfId_Profesion}" filter="true"
+												filterMatchMode="contains" disabled="true">
+												<f:selectItem itemLabel="Seleccione" itemValue="" />
+												<f:selectItems value="#{persEmpr2View.selectItemProfesion}" />
+											</p:selectOneMenu>
+											<p:outputLabel />
+
+											<p:outputLabel for="txtInfoAdicional"
+												value="Información Adicional 1:" />
+											<p:inputTextarea id="txtInfoAdicional"
+												binding="#{persEmpr2View.txtInfoAdicional}" rows="5"
+												cols="30" counter="display" maxlength="100"
+												counterTemplate="{0} Caracteres" autoResize="true" />
+											<h:outputText id="display" />
+
+											<p:outputLabel for="txtInfoAdicional2"
+												value="Información Adicional 2:" />
+											<p:inputTextarea id="txtInfoAdicional2"
+												binding="#{persEmpr2View.txtInfoAdicional2}" rows="5"
+												cols="30" counter="display2" maxlength="100"
+												counterTemplate="{0} Caracteres." autoResize="true" />
+											<h:outputText id="display2" />
+
+
+											<p:inputText style="visibility:hidden" id="txtPersEmprId"
+												binding="#{persEmpr2View.txtPersEmprId}">
+												<p:ajax update=":dialogPersEmpr"
+													listener="#{persEmpr2View.listener_txtId}" />
+											</p:inputText>
+
+										</h:panelGrid>
+
+									</p:tab>
+
+									<p:tab title="Información Contractual">
+
+										<h:panelGrid columns="3">
+
+											<p:outputLabel for="txtCodContrato" value="Código del contrato: " />
+											<p:inputText id="txtCodContrato" disabled="true"
+												binding="#{persEmpr2View.txtCodContrato}" />
+											<p:outputLabel />
+
+
+												<p:outputLabel for="msgFechaInicialC" value="F.Inicial del contrato: " />
+												<p:calendar id="msgFechaInicialC" showOn="button"
+													navigator="false" locale="es"
+													binding="#{persEmpr2View.txtFechaInicialContrato}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+												<p:message for="msgFechaInicialC" />
+
+												<p:outputLabel for="msgFechaFinalC" value="F.Final del contrato: " />
+												<p:calendar id="msgFechaFinalC" showOn="button"
+													navigator="false" locale="es"
+													binding="#{persEmpr2View.txtFechaFinContrato}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+												<p:message for="msgFechaFinalC" />
+
+
+
+											<p:outputLabel for="txtMontoContrato" value="Valor contratado: " />
+											<p:inputText id="txtMontoContrato" disabled="true"
+												binding="#{persEmpr2View.txtMontoContrato}" />
+											<p:outputLabel />
+
+											<p:outputLabel for="txtMontoLiquidado" value="Valor liquidado: " />
+											<p:inputText id="txtMontoLiquidado" disabled="true"
+												binding="#{persEmpr2View.txtMontoLiquidado}" />
+											<p:outputLabel />
+
+
+										<p:outputLabel for="txtSaldo" value="Saldo: "
+											 />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtSaldo" disabled="false"
+												binding="#{persEmpr2View.txtSaldo}"
+												required="false" requiredMessage="Indique el saldo">
+
+											</p:inputText>
+											<p:commandButton icon="ui-icon-calculator" value="Calcular">
+												<p:ajax process="@all" update="txtSaldo"
+													listener="#{persEmpr2View.listener_calcularSaldo}" />
+											</p:commandButton>
+
+										</p:panelGrid>
+									<p:outputLabel />
+
+											<p:outputLabel for="txtDescripcionContrato"
+												value="Descripción del contrato:" />
+											<p:inputTextarea id="txtDescripcionContrato"
+												binding="#{persEmpr2View.txtDescripcionContrato}" rows="5"
+												cols="50"  maxlength="400"
+												counterTemplate="{0} Caracteres." autoResize="true" />
+											<h:outputText />
+
+
+										</h:panelGrid>
+
+									</p:tab>
+
+
+									<p:tab title="Tarifas por contratista">
+										<p:panel id="toggleable" toggleable="true" widgetVar="panel">
+
+											<p:messages id="msg1" closable="true" showDetail="true" />
+
+											<h:panelGrid id="gridTarifaContratista" columns="3">
+
+
+												<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+												<p:calendar id="msgFechaInicial" showOn="button"
+													navigator="false" locale="es"
+													binding="#{persEmpr2View.txtFechaInicial}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+												<p:message for="msgFechaInicial" />
+
+												<p:outputLabel for="msgFechaFinal" value="Fecha final: " />
+												<p:calendar id="msgFechaFinal" showOn="button"
+													navigator="false" locale="es"
+													binding="#{persEmpr2View.txtFechaFinal}"
+													pattern="dd/MM/yyyy" mask="true" required="false"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+												<p:message for="msgFechaFinal" />
+
+												<p:outputLabel for="txtLaborId_Labor" value="Labor: " />
+												<p:selectOneMenu id="txtLaborId_Labor" effect="fade"
+													filter="true" filterMatchMode="startsWith"
+													binding="#{persEmpr2View.txtLaborId_Labor}" required="false"
+													requiredMessage="Seleccione la labor principal">
+													<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+													<f:selectItems value="#{persEmpr2View.selectLaborId}" />
+													<p:ajax
+												listener="#{persEmpr2View.listener_ConsultaCodLabor}"
+												update="txtCodLabor" />
+												</p:selectOneMenu>
+												<p:message for="txtLaborId_Labor" />
+				
+
+												<p:outputLabel for="txtServicioId_Servicio"
+													value="Concepto de pago: " />
+												<p:selectOneMenu id="txtServicioId_Servicio" effect="fade"
+													filter="true" filterMatchMode="startsWith"
+													binding="#{persEmpr2View.txtServicioId_Servicio}"
+													required="false" requiredMessage="Seleccione un concepto">
+													<f:selectItem itemLabel="Seleccione un concepto"
+														itemValue="" />
+													<f:selectItems value="#{persEmpr2View.selectServicioId}" />
+														<p:ajax
+												listener="#{persEmpr2View.listener_ConsultaCodServicio}"
+												update="txtCodServicio" />
+												</p:selectOneMenu>
+												<p:message for="txtServicioId_Servicio" />
+
+												<p:outputLabel for="txtUdadMedId_UdadMed"
+													value="Unidad de medida: " />
+												<p:selectOneMenu id="txtUdadMedId_UdadMed" effect="fade"
+													filter="true" filterMatchMode="startsWith"
+													binding="#{persEmpr2View.txtUdadMedId_UdadMed}"
+													required="false"
+													requiredMessage="Seleccione una unidad de medida">
+													<f:selectItem itemLabel="Seleccione  una unidad de medida"
+														itemValue="" />
+													<f:selectItems value="#{persEmpr2View.selectUdadMed}" />
+														<p:ajax
+												listener="#{persEmpr2View.listener_ConsultaCodUdadMed}"
+												update="txtCodUdadMed" />
+												</p:selectOneMenu>
+												<p:message for="txtUdadMedId_UdadMed" />
+
+												<p:outputLabel for="txtValorUnit" value="Tarifa: " />
+												<p:inputText id="txtValorUnit" disabled="true"
+													binding="#{persEmpr2View.txtValorUnit}" required="false"
+													requiredMessage="Indique el valor unitario">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+												<p:message for="txtValorUnit" />
+												
+												<p:inputText style="visibility:hidden" id="txtCodLabor"
+												binding="#{persEmpr2View.txtCodLabor}"/>
+												
+											<p:inputText style="visibility:hidden" id="txtCodServicio"
+												binding="#{persEmpr2View.txtCodServicio}"/>
+												
+											<p:inputText style="visibility:hidden" id="txtCodUdadMed"
+												binding="#{persEmpr2View.txtCodUdadMed}"/>												
+											
+
+											</h:panelGrid>
+
+											<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+												<f:facet name="header">
+													<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+														binding="#{persEmpr2View.btnAgregar}" value="Agregar"
+														action="#{persEmpr2View.action_agregarTarifaContratista}"
+														update="tablaDetTarifaContratista :dialogPersEmpr" />
+
+													<p:commandButton id="btnlimpiar" process="@this"
+														icon="ui-icon-trash" value="Limpiar">
+														<p:ajax update="gridTarifaContratista" resetValues="true" />
+													</p:commandButton>
+												</f:facet>
+											</h:panelGrid>
+
+											<p:outputPanel>
+												<p:dataTable id="tablaDetTarifaContratista"
+													value="#{persEmpr2View.dataTarifaContratista}"
+													var="listaDetTarifaContratista" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+													editable="true" reflow="true">
+
+													<p:column headerText="Fecha inicial">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDetTarifaContratista.fechaInicial}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDetTarifaContratista.fechaInicial}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Fecha final">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDetTarifaContratista.fechaFinal}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDetTarifaContratista.fechaFinal}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Labor">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDetTarifaContratista.codLabor}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDetTarifaContratista.codLabor}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Concepto">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDetTarifaContratista.codServicio}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDetTarifaContratista.codServicio}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Unidad de medida">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDetTarifaContratista.codUdadMed}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDetTarifaContratista.codUdadMed}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Tarifa">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDetTarifaContratista.tarifa}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaDetTarifaContratista.tarifa}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{persEmpr2View.actionDeleteTarifaContratista}"
+																required="false" title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaDetTarifaContratista :dialogPersEmpr">
+																<f:attribute name="selectedTarifaContratista"
+																	value="#{listaDetTarifaContratista}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:panel>
+									</p:tab>
+
+								</p:tabView>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{persEmpr2View.btnSave}" value="Grabar"
+									action="#{persEmpr2View.action_save()}"
+									update=":dialogPersEmpr :frm:panelDataTablePersEmpr" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{persEmpr2View.action_clear()}"
+									process="@this" update=":dialogPersEmpr" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

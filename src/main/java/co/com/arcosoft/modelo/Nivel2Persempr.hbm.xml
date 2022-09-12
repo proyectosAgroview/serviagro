@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Nivel2Persempr" table="nivel2_persempr" >
+        <id name="id" type="java.lang.Long">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="proveedorParticipacion" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="persempr_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="nivel2" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="nivel2_id" not-null="true" />
+        </many-to-one>
+        <property name="procentajeParticipacion" type="java.lang.Double">
+            <column name="procentaje_participacion" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

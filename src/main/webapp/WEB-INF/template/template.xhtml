@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<f:facet name="first">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Optica</title>
+		
+		     
+        <script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/js/template/js/plugin/webfont/webfont.min.js"></script>
+		<script>
+			WebFont.load({
+				google: {"families":["Lato:300,400,700,900"]},
+				custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/template/css/fonts.min.css']},
+				active: function() {
+					sessionStorage.fonts = true;
+				}
+			});
+		</script>
+	</f:facet>
+    
+    <f:facet name="middle"> 
+	<!-- <link
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/bootstrap/css/bootstrap.min.css"
+		rel="stylesheet" /> -->
+		
+		<link  href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/template/css/bootstrap.min.css"
+		rel="stylesheet"/>
+		
+		<link
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/template/css/atlantis.min.css"
+		rel="stylesheet" />
+		
+		<link rel="stylesheet" href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/template/css/demo.css"/>	
+<!-- 	
+	<link
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/styles.css"
+		rel="stylesheet" /> -->
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+<!-- 	<script -->
+<!-- 		src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/bootstrap/js/bootstrap.min.js"></script> -->
+<!-- 	<script
+		src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/js/custom.js"></script> -->
+    
+
+     </f:facet>
+     <f:facet name="last">
+     
+
+		<link rel="stylesheet" href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/fontawesome-5.7.2/css/all.css"/>
+ 
+     </f:facet>
+</h:head>
+
+<h:body>
+   
+   <div class="wrapper">
+	 <ui:include src="/WEB-INF/template/header.xhtml" />
+	 <ui:include src="/WEB-INF/template/left_menu.xhtml" />
+     <ui:include src="/WEB-INF/template/content.xhtml" />  
+  </div>
+  
+      
+	<p:ajaxStatus onstart="PF('statusDialog').show()"
+		onsuccess="PF('statusDialog').hide()" />
+	<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+		draggable="false" closable="false">
+		<p:graphicImage
+			value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+	</p:dialog>
+	<!-- Expired session -->
+	<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+		timeout="#{session.maxInactiveInterval * 1000}" />
+	<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+		header="Expired session" draggable="false" closable="false">
+		<h:outputText value="The session is finished" />
+		<input id="confirmBackToLogin" type="button" value="Sign in"
+			onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+	</p:dialog>
+
+
+    
+    <!--   Core JS Files   -->
+	<!-- <script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/js/template/js/core/jquery.3.2.1.min.js"></script> -->
+	<script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/core/popper.min.js"></script>
+	<script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/core/bootstrap.min.js"></script>
+
+	<!-- jQuery UI -->
+	<script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+	<script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+
+	<!-- jQuery Scrollbar -->
+	<script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    
+    <!-- Bootstrap Notify -->
+	<script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+	<!-- Sweet Alert -->
+	<script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+	<!-- Atlantis JS -->
+	<script src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/js/atlantis.min.js"></script>
+
+
+
+    
+</h:body>
+
+</html>

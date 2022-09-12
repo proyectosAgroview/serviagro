@@ -1,0 +1,277 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableCostoRecurso" header="CostoRecursoData">
+						<p:growl id="men" />
+						<p:dataTable value="#{costoRecursoView.data}" var="costoRecurso"
+							paginator="true" rows="5">
+							<p:column filterBy="#{costoRecurso.recursoId}"
+								sortBy="#{costoRecurso.recursoId}">
+								<f:facet name="header">
+									<h:outputText value="recursoId" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.recursoId}" />
+							</p:column>
+							<p:column filterBy="#{costoRecurso.compania}"
+								sortBy="#{costoRecurso.compania}">
+								<f:facet name="header">
+									<h:outputText value="compania" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.compania}" />
+							</p:column>
+							<p:column filterBy="#{costoRecurso.fechaInicial}"
+								sortBy="#{costoRecurso.fechaInicial}">
+								<f:facet name="header">
+									<h:outputText value="fechaInicial" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.fechaInicial}" />
+							</p:column>
+							<p:column filterBy="#{costoRecurso.fechaFinal}"
+								sortBy="#{costoRecurso.fechaFinal}">
+								<f:facet name="header">
+									<h:outputText value="fechaFinal" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.fechaFinal}" />
+							</p:column>
+							<p:column filterBy="#{costoRecurso.udadMedId}"
+								sortBy="#{costoRecurso.udadMedId}">
+								<f:facet name="header">
+									<h:outputText value="udadMedId" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.udadMedId}" />
+							</p:column>
+							<p:column filterBy="#{costoRecurso.valorUnitEst}"
+								sortBy="#{costoRecurso.valorUnitEst}">
+								<f:facet name="header">
+									<h:outputText value="valorUnitEst" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.valorUnitEst}" />
+							</p:column>
+							<p:column filterBy="#{costoRecurso.elemCostoId}"
+								sortBy="#{costoRecurso.elemCostoId}">
+								<f:facet name="header">
+									<h:outputText value="elemCostoId" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.elemCostoId}" />
+							</p:column>
+							<p:column filterBy="#{costoRecurso.infoAdicional}"
+								sortBy="#{costoRecurso.infoAdicional}">
+								<f:facet name="header">
+									<h:outputText value="infoAdicional" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.infoAdicional}" />
+							</p:column>
+							<p:column filterBy="#{costoRecurso.infoAdicional2}"
+								sortBy="#{costoRecurso.infoAdicional2}">
+								<f:facet name="header">
+									<h:outputText value="infoAdicional2" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.infoAdicional2}" />
+							</p:column>
+							<p:column filterBy="#{costoRecurso.fechaCreacion}"
+								sortBy="#{costoRecurso.fechaCreacion}">
+								<f:facet name="header">
+									<h:outputText value="fechaCreacion" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.fechaCreacion}" />
+							</p:column>
+							<p:column filterBy="#{costoRecurso.fechaModificacion}"
+								sortBy="#{costoRecurso.fechaModificacion}">
+								<f:facet name="header">
+									<h:outputText value="fechaModificacion" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.fechaModificacion}" />
+							</p:column>
+							<p:column filterBy="#{costoRecurso.estado}"
+								sortBy="#{costoRecurso.estado}">
+								<f:facet name="header">
+									<h:outputText value="estado" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{costoRecurso.elemCostoId_ElementoCosto}"
+								sortBy="#{costoRecurso.elemCostoId_ElementoCosto}">
+								<f:facet name="header">
+									<h:outputText value="ElemCostoId_ElementoCosto" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.elemCostoId_ElementoCosto}" />
+							</p:column>
+
+							<p:column filterBy="#{costoRecurso.recursoId_Recurso}"
+								sortBy="#{costoRecurso.recursoId_Recurso}">
+								<f:facet name="header">
+									<h:outputText value="RecursoId_Recurso" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.recursoId_Recurso}" />
+							</p:column>
+
+							<p:column filterBy="#{costoRecurso.udadMedId_UdadMed}"
+								sortBy="#{costoRecurso.udadMedId_UdadMed}">
+								<f:facet name="header">
+									<h:outputText value="UdadMedId_UdadMed" />
+								</f:facet>
+								<h:outputText value="#{costoRecurso.udadMedId_UdadMed}" />
+							</p:column>
+
+							<p:column headerText="Options">
+								<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+									update=":dialogCostoRecurso"
+									actionListener="#{costoRecursoView.action_edit}">
+									<f:attribute name="selectedCostoRecurso"
+										value="#{costoRecurso}" />
+								</p:commandButton>
+								<p:commandButton id="btnDelete" title="Delete"
+									actionListener="#{costoRecursoView.action_delete_datatable}"
+									onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+									icon="ui-icon-trash" update="@form">
+									<f:attribute name="selectedCostoRecurso"
+										value="#{costoRecurso}" />
+								</p:commandButton>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="New"
+								action="#{costoRecursoView.action_new()}"
+								update=":dialogCostoRecurso" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogCostoRecurso" appendTo="@(body)"
+					draggable="true" closable="false"
+					visible="#{costoRecursoView.showDialog}" resizable="false"
+					modal="true" width="500">
+					<h:form id="formDialog">
+						<p:messages id="msg" />
+						<p:panel id="panelCostoRecurso" header="CostoRecurso">
+							<h:panelGrid columns="2" id="panelGrid">
+								<h:outputText id="msgRecursoId" value="RecursoId" />
+								<p:inputText id="txtRecursoId"
+									binding="#{costoRecursoView.txtRecursoId}">
+									<p:ajax update=":dialogCostoRecurso"
+										listener="#{costoRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgCompania" value="Compania" />
+								<p:inputText id="txtCompania"
+									binding="#{costoRecursoView.txtCompania}">
+									<p:ajax update=":dialogCostoRecurso"
+										listener="#{costoRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgUdadMedId" value="UdadMedId" />
+								<p:inputText id="txtUdadMedId"
+									binding="#{costoRecursoView.txtUdadMedId}">
+									<p:ajax update=":dialogCostoRecurso"
+										listener="#{costoRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgValorUnitEst" value="ValorUnitEst" />
+								<p:inputText id="txtValorUnitEst"
+									binding="#{costoRecursoView.txtValorUnitEst}">
+									<p:ajax update=":dialogCostoRecurso"
+										listener="#{costoRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgElemCostoId" value="ElemCostoId" />
+								<p:inputText id="txtElemCostoId"
+									binding="#{costoRecursoView.txtElemCostoId}">
+									<p:ajax update=":dialogCostoRecurso"
+										listener="#{costoRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgInfoAdicional" value="InfoAdicional" />
+								<p:inputText id="txtInfoAdicional"
+									binding="#{costoRecursoView.txtInfoAdicional}">
+									<p:ajax update=":dialogCostoRecurso"
+										listener="#{costoRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgInfoAdicional2" value="InfoAdicional2" />
+								<p:inputText id="txtInfoAdicional2"
+									binding="#{costoRecursoView.txtInfoAdicional2}">
+									<p:ajax update=":dialogCostoRecurso"
+										listener="#{costoRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgEstado" value="Estado" />
+								<p:inputText id="txtEstado"
+									binding="#{costoRecursoView.txtEstado}">
+									<p:ajax update=":dialogCostoRecurso"
+										listener="#{costoRecursoView.listener_txtId}" />
+								</p:inputText>
+								<h:outputText id="msgEntity.getId().getFechaInicial()"
+									value=" Entity.getId().getFechaInicial()" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{costoRecursoView.txtEntity.getId().getFechaInicial()}">
+									<p:ajax event="dateSelect"
+										listener="#{costoRecursoView.listener_txtEntity.getId().getFechaInicial()}" />
+								</p:calendar>
+								<h:outputText id="msgEntity.getId().getFechaFinal()"
+									value=" Entity.getId().getFechaFinal()" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{costoRecursoView.txtEntity.getId().getFechaFinal()}">
+									<p:ajax event="dateSelect"
+										listener="#{costoRecursoView.listener_txtEntity.getId().getFechaFinal()}" />
+								</p:calendar>
+								<h:outputText id="msgEntity.getId().getFechaCreacion()"
+									value=" Entity.getId().getFechaCreacion()" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{costoRecursoView.txtEntity.getId().getFechaCreacion()}">
+									<p:ajax event="dateSelect"
+										listener="#{costoRecursoView.listener_txtEntity.getId().getFechaCreacion()}" />
+								</p:calendar>
+								<h:outputText id="msgEntity.getId().getFechaModificacion()"
+									value=" Entity.getId().getFechaModificacion()" />
+								<p:calendar showOn="button" navigator="true" locale="en"
+									binding="#{costoRecursoView.txtEntity.getId().getFechaModificacion()}">
+									<p:ajax event="dateSelect"
+										listener="#{costoRecursoView.listener_txtEntity.getId().getFechaModificacion()}" />
+								</p:calendar>
+
+								<h:outputText id="msgElemCostoId_ElementoCosto"
+									value=" ElemCostoId_ElementoCosto" />
+								<p:inputText id="txtElemCostoId_ElementoCosto" disabled="true"
+									binding="#{costoRecursoView.txtElemCostoId_ElementoCosto}" />
+								<h:outputText id="msgRecursoId_Recurso"
+									value=" RecursoId_Recurso" />
+								<p:inputText id="txtRecursoId_Recurso" disabled="true"
+									binding="#{costoRecursoView.txtRecursoId_Recurso}" />
+								<h:outputText id="msgUdadMedId_UdadMed"
+									value=" UdadMedId_UdadMed" />
+								<p:inputText id="txtUdadMedId_UdadMed" disabled="true"
+									binding="#{costoRecursoView.txtUdadMedId_UdadMed}" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave"
+									binding="#{costoRecursoView.btnSave}" value="Save"
+									action="#{costoRecursoView.action_save()}"
+									update=":dialogCostoRecurso :frm:panelDataTableCostoRecurso" />
+								<p:commandButton id="btnClear" value="Clear"
+									action="#{costoRecursoView.action_clear()}"
+									update=":dialogCostoRecurso" />
+								<p:commandButton id="btnExit" value="Exit"
+									action="#{costoRecursoView.action_closeDialog()}"
+									update=":dialogCostoRecurso" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

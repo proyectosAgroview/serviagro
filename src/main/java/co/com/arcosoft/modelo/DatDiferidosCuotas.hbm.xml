@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 10/04/2019 08:24:40 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatDiferidosCuotas" table="dat_diferidos_cuotas">
+        <id name="datDiferidosCuotasId" type="java.lang.Long">
+            <column name="dat_diferidos_cuotas_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="datDiferidos" class="co.com.arcosoft.modelo.DatDiferidos" fetch="select">
+            <column name="dat_diferidos_id" />
+        </many-to-one>
+        <property name="anio" type="java.lang.Long">
+            <column name="anio" />
+        </property>
+        <property name="mes" type="java.lang.Long">
+            <column name="mes" />
+        </property>
+        <property name="fecha" type="java.util.Date">
+            <column name="fecha" length="19" />
+        </property>
+        <property name="valorCuota" type="java.lang.Double">
+            <column name="valor_cuota" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

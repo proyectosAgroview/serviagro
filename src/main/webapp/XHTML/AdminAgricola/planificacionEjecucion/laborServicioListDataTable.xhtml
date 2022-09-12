@@ -1,0 +1,249 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableLaborServicio"
+						header="Labor - Servicios">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{laborServicioView.data}"
+							var="laborServicio" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Labor - Servicios" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+							<p:column filterBy="#{laborServicio.laborId}"
+								sortBy="#{laborServicio.laborId}">
+								<f:facet name="header">
+									<h:outputText value="Labor" />
+								</f:facet>
+								<h:outputText value="#{laborServicio.laborId}" />
+							</p:column>
+
+							<p:column filterBy="#{laborServicio.servicioId}"
+								sortBy="#{laborServicio.servicioId}">
+								<f:facet name="header">
+									<h:outputText value="Servicio" />
+								</f:facet>
+								<h:outputText value="#{laborServicio.servicioId}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogLaborServicio"
+										actionListener="#{laborServicioView.action_edit}">
+										<f:attribute name="selectedLaborServicio"
+											value="#{laborServicio}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{laborServicioView.action_new()}"
+								update=":dialogLaborServicio" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogLaborServicio" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{laborServicioView.showDialog}" resizable="false"
+					modal="true" width="600" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelLaborServicio" header="Labor - Servicios">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtLaborId" value="Labor principal: " />
+								<p:selectOneMenu id="txtLaborId" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									binding="#{laborServicioView.txtLaborId}" required="true"
+									requiredMessage="Seleccione la labor principal">
+									<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+									<f:selectItems value="#{laborServicioView.selectLaborId}" />
+									<p:ajax update="panelLaborServicio,msg,panelBotones"
+										listener="#{laborServicioView.listener_txtId}" />
+								</p:selectOneMenu>
+								<p:message for="txtLaborId" />
+
+
+								<p:outputLabel for="txtServicioId" value="Servicio: " />
+								<p:selectOneMenu id="txtServicioId" effect="fade" filter="true"
+									filterMatchMode="startsWith"
+									binding="#{laborServicioView.txtServicioId}" required="true"
+									requiredMessage="Seleccione un servicio">
+									<f:selectItem itemLabel="Seleccione un servicio" itemValue="" />
+									<f:selectItems value="#{laborServicioView.selectServicioId}" />
+								</p:selectOneMenu>
+								<p:message for="txtServicioId" />
+
+							</h:panelGrid>
+							
+																<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+												binding="#{datAplicProductoView.btnAgregar}" value="Agregar"
+												action="#{datAplicProductoView.action_agregarProductos}"
+												update="tablaDetProductos :dialogDatAplicProducto" />
+
+											<p:commandButton id="btnlimpiar" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="gridDetProd" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+									</h:panelGrid>
+
+									<p:outputPanel>
+										<p:dataTable id="tablaDetProductos"
+											value="#{datAplicProductoView.dataDetProductos}"
+											var="listaDetProductos" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+											editable="true" reflow="true">
+
+											<p:ajax event="rowEdit" update="@this " process="@this"
+												listener="#{datAplicProductoView.rowEventEditDetProductosListener}" />
+
+											<p:column headerText="Producto">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetProductos.productoId_Producto}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetProductos.productoId_Producto}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Unidad (Dosis)">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetProductos.udadMedId_UdadMed}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetProductos.udadMedId_UdadMed}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Área">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetProductos.areaAplicada}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetProductos.areaAplicada}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Dosis">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetProductos.dosis}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetProductos.dosis}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Cantidad aplicada">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetProductos.cantidadAplicada}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetProductos.cantidadAplicada}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Valor unitario">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetProductos.valorUnit}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetProductos.valorUnit}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Costo total">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetProductos.costoTotal}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetProductos.costoTotal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datAplicProductoView.actionDeleteDatAplicProdDet}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaDetProductos :dialogDatAplicProducto">
+														<f:attribute name="selectedDatAplicProd"
+															value="#{listaDetProductos}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								</p:tab>
+								</p:tabView>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{laborServicioView.btnSave}" value="Grabar"
+									action="#{laborServicioView.action_save()}"
+									update=":dialogLaborServicio :frm:panelDataTableLaborServicio" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{laborServicioView.action_clear()}"
+									process="@this" update=":dialogLaborServicio" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

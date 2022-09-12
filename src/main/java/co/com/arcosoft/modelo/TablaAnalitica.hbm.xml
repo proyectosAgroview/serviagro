@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 9/04/2019 02:57:11 PM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.TablaAnalitica" table="tabla_analitica">
+        <id name="tablaAnaliticaId" type="java.lang.Long">
+            <column name="tabla_analitica_id" />
+            <generator class="identity" />
+        </id>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="usuario" type="java.lang.Long">
+            <column name="usuario" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="variableEntrada1" type="java.lang.String">
+            <column name="variable_entrada1" length="20" />
+        </property>
+        <property name="variableEntrada2" type="java.lang.String">
+            <column name="variable_entrada2" length="20" />
+        </property>
+        <property name="variableEntrada3" type="java.lang.String">
+            <column name="variable_entrada3" length="20" />
+        </property>
+        <property name="variableSalida1" type="java.lang.String">
+            <column name="variable_salida1" length="20" />
+        </property>
+        <property name="variableSalida2" type="java.lang.String">
+            <column name="variable_salida2" length="20" />
+        </property>
+        <set name="tablaAnaliticaDetalles" table="tabla_analitica_detalle" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="tabla_analitica_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TablaAnaliticaDetalle" />
+        </set>
+    </class>
+</hibernate-mapping>

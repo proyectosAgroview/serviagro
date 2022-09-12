@@ -1,0 +1,83 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableLogBascula"
+						header="Log de balanza">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{logBasculaView.data}"
+							var="logBascula" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="logBascula" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{logBascula.tiquete}"
+								sortBy="#{logBascula.tiquete}">
+								<f:facet name="header">
+									<h:outputText value="#Tiquete" />
+								</f:facet>
+								<h:outputText value="#{logBascula.tiquete}" />
+							</p:column>
+
+
+							<p:column filterBy="#{logBascula.fecha}"
+								sortBy="#{logBascula.fecha}">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{logBascula.fecha}">
+									<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+								</h:outputText>
+							</p:column>
+
+							<p:column filterBy="#{logBascula.codUsuario}"
+								sortBy="#{logBascula.codUsuario}">
+								<f:facet name="header">
+									<h:outputText value="Usuario" />
+								</f:facet>
+								<h:outputText value="#{logBascula.codUsuario}" />
+							</p:column>
+							
+							<p:column filterBy="#{logBascula.observacion}"
+								sortBy="#{logBascula.observacion}">
+								<f:facet name="header">
+									<h:outputText value="Observación" />
+								</f:facet>
+								<h:outputText value="#{logBascula.observacion}" />
+							</p:column>
+
+				
+						</p:dataTable>
+					</p:panel>
+				</h:form>
+				</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

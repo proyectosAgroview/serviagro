@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatAplicProdDet" table="dat_aplic_prod_det" >
+        <id name="datProdDetId" type="java.lang.Long">
+            <column name="dat_prod_det_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="almacenId" class="co.com.arcosoft.modelo.Almacen" fetch="select">
+            <column name="ALMACEN_ID" precision="18" scale="0" />
+        </many-to-one>
+        <many-to-one name="producto" class="co.com.arcosoft.modelo.Producto" fetch="select">
+            <column name="producto_id" />
+        </many-to-one>
+        <many-to-one name="datAplicProducto" class="co.com.arcosoft.modelo.DatAplicProducto" fetch="select">
+            <column name="dat_aplic_prod_id" />
+        </many-to-one>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_aplic" />
+        </many-to-one>
+        <property name="dosis" type="java.lang.Double">
+            <column name="dosis" precision="12" scale="4" />
+        </property>
+        <property name="cantidadAplicada" type="java.lang.Double">
+            <column name="cantidad_aplicada" precision="12" scale="4" />
+        </property>
+        <property name="valorUnit" type="java.lang.Double">
+            <column name="valor_unit" precision="12" scale="4" />
+        </property>
+        <property name="costoTotal" type="java.lang.Double">
+            <column name="costo_total" precision="12" scale="4" />
+        </property>
+        <many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_id" precision="18" scale="0" />
+        </many-to-one>
+        <many-to-one name="laborId" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" precision="18" scale="0" />
+        </many-to-one>
+         <many-to-one name="ordenTrabajo" class="co.com.arcosoft.modelo.DatPlanLaborDet" fetch="select">
+            <column name="orden_trabajo" precision="18" scale="0" />
+        </many-to-one>
+        <many-to-one name="nivel2Id" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="nivel2_id" precision="18" scale="0" />
+        </many-to-one>
+        <property name="numTinas" type="java.lang.Double">
+            <column name="num_tinas" precision="12" scale="4" />
+        </property>
+        <many-to-one name="datPlanillaNominaId" class="co.com.arcosoft.modelo.DatPlanillaNomina" fetch="select">
+            <column name="dat_planilla_nomina_id" precision="18" scale="0" />
+        </many-to-one>
+        
+		<property name="etapaId" type="java.lang.Long">
+			<column name="etapa_id" precision="18" scale="0" />
+		</property>
+		<property name="variedId" type="java.lang.Long">
+			<column name="varied_id" precision="18" scale="0" />
+		</property>
+		
+        <property name="edad" type="java.lang.Double">
+            <column name="edad" precision="12" scale="4" />
+        </property>
+    </class>
+</hibernate-mapping>

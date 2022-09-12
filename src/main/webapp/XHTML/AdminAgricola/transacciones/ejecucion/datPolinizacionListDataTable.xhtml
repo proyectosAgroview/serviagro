@@ -1,0 +1,945 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatPlanillaNomina"
+						header="Polinización">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datPolinizacionView.data}"
+							var="datPlanillaNomina" paginator="true" lazy="true" rows="5"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datPlanillaNomina" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{datPlanillaNomina.consecutivo}"
+								sortBy="#{datPlanillaNomina.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="# Planilla" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datPlanillaNomina.ordenTrabajo}"
+								sortBy="#{datPlanillaNomina.ordenTrabajo}">
+								<f:facet name="header">
+									<h:outputText value="O.T." />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.ordenTrabajo}" />
+							</p:column>
+
+							<p:column filterBy="#{datPlanillaNomina.fechaRegistro}"
+								sortBy="#{datPlanillaNomina.fechaRegistro}">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.fechaRegistro}" >
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+													</h:outputText>
+							</p:column>
+
+							<p:column filterBy="#{datPlanillaNomina.laborNombre}">
+								<f:facet name="header">
+									<h:outputText value="Labor" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.laborNombre}" />
+							</p:column>
+
+
+							<p:column filterBy="#{datPlanillaNomina.nivel2Nombre}">
+								<f:facet name="header">
+									<h:outputText value="Hacienda" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.nivel2Nombre}" />
+							</p:column>
+
+
+							<p:column filterBy="#{datPlanillaNomina.nivel4Nombre}">
+								<f:facet name="header">
+									<h:outputText value="Lote" />
+								</f:facet>
+								<h:outputText value="#{datPlanillaNomina.nivel4Nombre}" />
+							</p:column>
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatPlanillaNomina"
+										disabled="#{datPlanillaNomina.estadoTrue}"
+										actionListener="#{datPolinizacionView.action_edit}">
+										<f:attribute name="selectedDatPlanillaNomina"
+											value="#{datPlanillaNomina}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"
+										disabled="#{datPlanillaNomina.estadoTrue}"
+										title="Anular Registro"
+										actionListener="#{datPolinizacionView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatPlanillaNomina"
+											value="#{datPlanillaNomina}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datPolinizacionView.action_new()}"
+								update=":dialogDatPlanillaNomina" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatPlanillaNomina" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datPolinizacionView.showDialog}" resizable="false"
+					modal="true" width="1000"  styleClass="dialogFix" header ="Polinización"
+					responsive="true">
+					<h:form id="formDialog">
+
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+							
+							<h:panelGrid columns ="2">	
+								<p:outputLabel value="#Planilla: " style="font-size: 0.8em;"/>
+								<p:inputText id="txtConsecutivo" disabled="false"
+									binding="#{datPolinizacionView.txtConsecutivo}"
+									placeholder="Buscar o crear registro" size="23">
+								</p:inputText>
+								
+								<p:outputLabel for="msgFechaRegistro"
+									value="Fecha: " style="font-size: 0.8em;"/>
+								<p:calendar id="msgFechaRegistro" showOn="button"
+									navigator="false" locale="es"
+									binding="#{datPolinizacionView.txtFechaRegistro}"
+									pattern="dd/MM/yyyy" mask="true" required="false"
+									requiredMessage="La    es obligatoria">
+								</p:calendar>
+								
+								<p:outputLabel for="txtOrdenTrabajo"
+									value="O.T: " style="font-size: 0.8em;"/>
+								<p:selectOneMenu id="txtOrdenTrabajo" effect="fade"
+									filter="true" filterMatchMode="contains"
+									binding="#{datPolinizacionView.txtOrdenTrabajo}"
+									 style="width:1px"
+									required="false"
+									requiredMessage="O.T(Ot, labor, Hda, Lote): ">
+									<f:selectItem
+										itemLabel="O.T(Ot, labor, Hda, Lote): "
+										itemValue="" noSelectionOption="true" />
+									<f:selectItems
+										value="#{datPolinizacionView.selectOrdenTrabajo}" />
+									<p:ajax
+										listener="#{datPolinizacionView.listener_ConsultaOrdenTrabajo}"
+										update="txtNPases,txtLaborId_Labor,txtNivel1Id,txtNivel2Id,txtNivel3Id,txtNivel4Id_Nivel4" />
+								</p:selectOneMenu>
+							</h:panelGrid>
+							
+							<p:panelGrid>
+								<p:row>
+								<p:column>
+								<h:panelGrid columns="2" >
+							
+								<p:outputLabel for="txtLaborId_Labor" value="Labor: " style="font-size: 0.8em;"/>
+								<p:selectOneMenu id="txtLaborId_Labor" effect="fade"
+									filter="true" filterMatchMode="contains" style="width: 10%;font-size: 0.8em;"
+									binding="#{datPolinizacionView.txtLaborId_Labor}"
+									required="false" requiredMessage="Seleccione una labor">
+									<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+									<f:selectItems value="#{datPolinizacionView.selectLaborId}" />
+								</p:selectOneMenu>
+								
+								<p:outputLabel for="txtNPases" value="#Pases: " style="font-size: 0.8em;"/>
+								<p:spinner id="txtNPases" 
+									binding="#{datPolinizacionView.txtNPases}" required="false"
+									requiredMessage="Indique un número" size="3">
+								</p:spinner>
+								</h:panelGrid>
+								</p:column>
+							
+							<p:column >
+								<h:panelGrid columns="2" >
+
+								
+								<p:outputLabel for="txtNivel1Id" value="Zona: " style="font-size: 0.8em;" />
+								<p:selectOneMenu id="txtNivel1Id" effect="fade" filter="true"
+									filterMatchMode="contains" style="width: 10%;font-size: 0.8em;"
+									binding="#{datPolinizacionView.txtNivel1Id}" required="false"
+									requiredMessage="Seleccione una zona">
+									<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+									<f:selectItems value="#{datPolinizacionView.selectNivel1}" />
+								</p:selectOneMenu>
+
+								<p:outputLabel for="txtNivel2Id" value="Hacienda: " style="font-size: 0.8em;"/>
+								<p:selectOneMenu id="txtNivel2Id" effect="fade" filter="true"
+									filterMatchMode="contains" style="width: 10%;font-size: 0.8em;"
+									binding="#{datPolinizacionView.txtNivel2Id}" required="false"
+									requiredMessage="Seleccione una hacienda">
+									<f:selectItem itemLabel="Seleccione una hacienda" itemValue="" />
+									<f:selectItems value="#{datPolinizacionView.selectNivel2}" />
+								</p:selectOneMenu>
+							
+								</h:panelGrid>
+								</p:column>
+								
+								
+							<p:column >
+								<h:panelGrid columns="2" >
+
+								
+								<p:outputLabel for="txtNivel3Id" value="Bloque: " style="font-size: 0.8em;"/>
+								<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+									filterMatchMode="contains" style="width: 10%;font-size: 0.8em;"
+									binding="#{datPolinizacionView.txtNivel3Id}" required="false"
+									requiredMessage="Seleccione un bloque del cultivo">
+									<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+									<f:selectItems value="#{datPolinizacionView.selectNivel3}" />
+								</p:selectOneMenu>
+								
+								<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: " style="font-size: 0.8em;"/>
+								<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+									filter="true" filterMatchMode="contains" style="width: 10%;font-size: 0.8em;"
+									binding="#{datPolinizacionView.txtNivel4Id_Nivel4}"
+									required="false" requiredMessage="Seleccione un lote">
+									<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+									<f:selectItems value="#{datPolinizacionView.selectNivel4}" />
+							
+								</p:selectOneMenu>
+											
+								</h:panelGrid>
+								</p:column>
+															
+								
+								</p:row>
+								
+														
+								<h:panelGrid columns="3" >
+								
+									
+								<p:outputLabel for="txtRequiereMaquinaria" value="Utilza equipos?:" style="font-size: 0.8em;" />
+									<p:selectOneRadio id="txtRequiereMaquinaria" disabled="false" style="font-size: 0.8em;"
+												binding="#{datPolinizacionView.txtRequiereMaquinaria}" required="true"
+												requiredMessage="Utiliza equipos: Si/No?">
+												<f:selectItem itemLabel="No" itemValue="No" />
+												<f:selectItem itemLabel="Si" itemValue="Si" />
+									</p:selectOneRadio>
+									<p:message for="txtRequiereMaquinaria" />
+							
+								<p:outputLabel for="txtColorIdentificador" value="Color identificador: " style="font-size: 0.8em;"/>
+								<p:selectOneMenu id="txtColorIdentificador" effect="fade"
+									filter="true" filterMatchMode="Contains" style="width: 10%;font-size: 0.8em;"
+									binding="#{datPolinizacionView.txtColorIdentificador}"
+									required="true" requiredMessage="Seleccione una etiqueta">
+									<f:selectItem itemLabel="Seleccione una etiquete" itemValue="" />
+									<f:selectItems value="#{datPolinizacionView.selectColorIdentificador}" />
+								</p:selectOneMenu>
+							<p:message for="txtColorIdentificador" />
+										
+									
+								<p:outputLabel for="txtObservacion" value="Observación:" style="font-size: 0.8em;"/>
+								<p:inputTextarea id="txtObservacion"
+									binding="#{datPolinizacionView.txtObservacion}" rows="1"
+									cols="50"  maxlength="1000"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText  />
+
+								<!-- id auto incrementable -->
+								<p:inputText style="font-size: 0.8em; visibility:hidden" id="txtPlanillaNominaId"
+									binding="#{datPolinizacionView.txtPlanillaNominaId}">
+								</p:inputText>
+
+							</h:panelGrid>
+							
+							</p:panelGrid>
+									
+				
+						<p:tabView>
+
+						<p:tab title="Mano de obra">
+								<p:panel id="toggleableMO" toggleable="true" widgetVar="panel">
+
+											<p:messages id="msgMO" closable="true" showDetail="true" />
+												
+						<p:panelGrid id="gridDatPlanillaNominaDet">
+							<p:row>
+								<p:column>
+									<h:panelGrid  columns="2">
+
+										<p:outputLabel for="txtTrabId_Trabajador" value="Trabajador: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+											filter="false" filterMatchMode="contains"
+											binding="#{datPolinizacionView.txtTrabId_Trabajador}"
+											style="width: 10%;font-size: 0.8em;" required="false"
+											requiredMessage="Seleccione un trabajador">
+											<f:selectItem itemLabel="Seleccione un trabajador"
+												itemValue="" />
+											<f:selectItems
+												value="#{datPolinizacionView.selectTrabajador}" />
+											<p:ajax
+												listener="#{datPolinizacionView.listener_ConsultaCodTrabajador}"
+												update="txtCodTrabajadorNomina" />
+
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtCeptoNominaId_ConceptoNomina"
+											value="Concepto nómina: " style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtCeptoNominaId_ConceptoNomina"
+											effect="fade" filter="false" filterMatchMode="contains"
+											binding="#{datPolinizacionView.txtCeptoNominaId_ConceptoNomina}"
+											style="width: 10%;font-size: 0.8em;" required="false"
+											requiredMessage="Seleccione un concepto">
+											<f:selectItem itemLabel="Seleccione un concepto" itemValue="" />
+											<f:selectItems
+												value="#{datPolinizacionView.selectCeptoNominaId}" />
+											<p:ajax
+												listener="#{datPolinizacionView.listener_ConsultaCodConceptoNomina}"
+												update="txtCodConceptoNomina" />
+										</p:selectOneMenu>
+													
+											<p:outputLabel for="txtUdadMedPago" value="Unidad de Pago: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtUdadMedPago" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 10%;font-size: 0.8em;"
+											binding="#{datPolinizacionView.txtUdadMedPago}"
+											required="false"
+											requiredMessage="Seleccione una unidad de pago">
+
+											<f:selectItem itemLabel="Seleccione una  unidad de pago"
+												itemValue="" />
+											<f:selectItems
+												value="#{datPolinizacionView.selectUdadMedPago}" />
+											<p:ajax process="@all"
+												update="txtCantidadPago, txtNroPlantas,txtAreaAplicada,txtCodUmPagoNomina,  "
+												listener="#{datPolinizacionView.listener_ConsultaAreaNivel4}" />
+										</p:selectOneMenu>
+
+											
+										<p:outputLabel for="txtCantidadPago" value="Cantidad (Pago): "
+											style="font-size: 0.8em;" />
+										<p:inputText id="txtCantidadPago" disabled="false"
+											binding="#{datPolinizacionView.txtCantidadPago}"
+											required="false"
+											requiredMessage="Indique la cantidad a pagar">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+												
+		
+										<p:outputLabel for="txtValorUnitario" value="Tarifa: "
+											style="font-size: 0.8em;" />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtValorUnitario" disabled="false"
+												binding="#{datPolinizacionView.txtValorUnitario}"
+												required="false" requiredMessage="Indique el valor unitario">
+
+											</p:inputText>
+											<p:commandButton icon="ui-icon-calculator" value="Calcular">
+												<p:ajax process="@all" update="txtValorUnitario"
+													listener="#{datPolinizacionView.ConsultarTarifaPago}" />
+											</p:commandButton>
+
+										</p:panelGrid>
+
+										<p:outputLabel for="txtCostoTotal" value="Costo total: "
+											style="font-size: 0.8em;" />
+										<p:panelGrid columns="2">
+											<p:inputText id="txtCostoTotal"
+												binding="#{datPolinizacionView.txtCostoTotal}"
+												disable="false">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											<p:commandButton icon="ui-icon-calculator" value="Calcular">
+												<p:ajax process="@all" update="txtCostoTotal"
+													listener="#{datPolinizacionView.listener_calcularCostoTotal}" />
+											</p:commandButton>
+										</p:panelGrid>
+										
+										<p:outputLabel for="txtInflorecenciasPolinizadas" value="Inflorecencias polinizadas: "
+											style="font-size: 0.8em;" />
+										<p:inputText id="txtInflorecenciasPolinizadas" disabled="false"
+											binding="#{datPolinizacionView.txtInflorecenciasPolinizadas}"
+											required="false"
+											requiredMessage="Indique la cantidad ">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										
+										
+									</h:panelGrid>
+									</p:column>
+									
+									</p:row>
+									</p:panelGrid>
+									
+									<div class="ui-g">
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												id="txtCodConceptoNomina"
+												binding="#{datPolinizacionView.txtCodConceptoNomina}" />
+										</div>
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												id="txtCodTrabajadorNomina"
+												binding="#{datPolinizacionView.txtCodTrabajadorNomina}" />
+										</div>
+										<div class="ui-g-1">
+											<p:inputText style="visibility:hidden; font-size: 0em;"
+												id="txtCodUmPagoNomina"
+												binding="#{datPolinizacionView.txtCodUmPagoNomina}" />
+										</div>
+									</div>		
+																				
+											<h:panelGrid columns="2" style="margin:10px;">
+												<p:commandButton id="btnAgregarNomina" icon="ui-icon-plusthick"
+													process="@this,txtValorUnitario,txtCantidadPago,txtUdadMedPago,
+															txtCeptoNominaId_ConceptoNomina,txtTrabId_Trabajador,
+															txtCodConceptoNomina,txtCodTrabajadorNomina,txtCodUmPagoNomina,
+															txtInflorecenciasPolinizadas
+															"
+													binding="#{datPolinizacionView.btnAgregarNomina}"
+													value="Agregar"
+													action="#{datPolinizacionView.action_agregarPlanilla}"
+													ajax="true" update="tablaDetPlanillaDet, msgMO" />
+
+												<p:commandButton id="btnlimpiar1" icon="ui-icon-trash"
+													value="Limpiar">
+													<p:ajax update="gridDatPlanillaNominaDet" resetValues="true" />
+												</p:commandButton>
+												
+
+											</h:panelGrid>
+
+											<p:outputPanel id="dataTableNomina">
+												<p:dataTable id="tablaDetPlanillaDet"
+													value="#{datPolinizacionView.dataPlanillaDet}"
+													var="listaDetPlanillaDet" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+													reflow="true">
+
+													<p:column headerText="Trabajador">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDetPlanillaDet.codTrabajador}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDetPlanillaDet.codTrabajador}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Cepto Nómina">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText value="#{listaDetPlanillaDet.codConceptoNomina}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaDetPlanillaDet.codConceptoNomina}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="U.M(Pago)">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDetPlanillaDet.codUmPago}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDetPlanillaDet.codUmPago}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Cantidad">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDetPlanillaDet.cantidadPago}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDetPlanillaDet.cantidadPago}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Tarifa">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText value="#{listaDetPlanillaDet.valorUnitario}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaDetPlanillaDet.valorUnitario}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="C. Total">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText value="#{listaDetPlanillaDet.costoTotal}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaDetPlanillaDet.costoTotal}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Inflo Pol.">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText value="#{listaDetPlanillaDet.cantidadProd}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaDetPlanillaDet.cantidadProd}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{datPolinizacionView.actionDeleteDatPlanillaNominaDet}"
+																title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaDetPlanillaDet :dialogDatPlanillaNomina">
+																<f:attribute name="selectedDatPlanillaDet"
+																	value="#{listaDetPlanillaDet}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:panel>
+							
+							</p:tab>
+						<p:tab title="Productos/Insumos">
+							<p:panelGrid>
+								<p:row>
+								<p:column>
+								<h:panelGrid columns="2" >
+										<p:outputLabel for="txtAlmacenId_Almacen" value="Almacén: " style="font-size: 0.8em;"/>
+											<p:selectOneMenu id="txtAlmacenId_Almacen" effect="fade"
+												filter="true" filterMatchMode="contains"
+												style="width: 10%;font-size: 0.8em;"
+												binding="#{datPolinizacionView.txtAlmacenId_Almacen}"
+												required="false" requiredMessage="Seleccione un almacén">
+												<f:selectItem itemLabel="Seleccione un almacén" itemValue="" />
+												<f:selectItems value="#{datPolinizacionView.selectAlmacen}" />
+											</p:selectOneMenu>
+											
+												<p:outputLabel for="txtSupervisorInsumos"
+												value="Supervisor: " style="font-size: 0.8em;"/>
+											<p:selectOneMenu id="txtSupervisorInsumos" effect="fade"
+												filter="true" filterMatchMode="contains"
+												binding="#{datPolinizacionView.txtSupervisorInsumos}"
+												style="width: 10%;font-size: 0.8em;" required="false"
+												requiredMessage="Seleccione un supervisor">
+												<f:selectItem itemLabel="Seleccione un supervisor"
+													itemValue="" />
+												<f:selectItems
+													value="#{datPolinizacionView.selectSupervisorInsumos}" />
+											</p:selectOneMenu>
+											
+										</h:panelGrid>
+										</p:column>
+										
+										<p:column>
+											<h:panelGrid columns ="2">
+											
+											
+											<p:outputLabel for="txtAreaAplicada"
+												value="Área: " style="font-size: 0.8em;"/>
+											<p:inputText id="txtAreaAplicada"
+												binding="#{datPolinizacionView.txtAreaAplicada}"
+												required="false"
+												style="width: 80%;font-size: 0.8em;"
+												requiredMessage="Indique el área de aplicación">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											
+											<p:outputLabel for="txtNroPlantas"
+												value="#Plantas: " style="font-size: 0.8em;"/>
+											<p:inputText id="txtNroPlantas"
+											style="width: 80%;font-size: 0.8em;"
+												binding="#{datPolinizacionView.txtNroPlantas}"
+												required="false"
+												requiredMessage="Indique el # de plantas">
+											</p:inputText>
+											
+									<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden; font-size: 0.0em;" id="txtDatAplicProductoId"
+									binding="#{datPolinizacionView.txtDatAplicProdId}"/>
+											
+										</h:panelGrid>
+										</p:column>
+							
+										<p:column>
+											<h:panelGrid columns ="2">
+											
+											<p:outputLabel for="txtNumTinas"
+												value="Área, #Tinas y/o Plantas: " style="font-size: 0.8em;"/>
+											<p:inputText id="txtNumTinas"
+												style="width: 80%;font-size: 0.8em;"
+												binding="#{datPolinizacionView.txtNumTinas}"
+												required="false"
+												requiredMessage="Indique el # de tinas">
+											</p:inputText>
+											
+										</h:panelGrid>
+										</p:column>
+							
+								</p:row>
+								</p:panelGrid>
+							
+								<p:panel id="toggleable" toggleable="true" widgetVar="panel">
+
+											<p:messages id="msg1" closable="true" showDetail="true" />
+
+											<p:panelGrid id="gridDetProd" >
+											 
+											 <div class="ui-g">
+												  <div class="ui-g-1">
+												 <p:outputLabel value="Prod.: " style="font-size: 0.8em; width: 100%;" />
+												 </div>
+												 <div class="ui-g-1">
+													<p:selectOneMenu id="txtProductoId_Producto" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 10%;font-size: 0.8em;"
+													binding="#{datPolinizacionView.txtProductoId_Producto}">
+													
+													<f:selectItem itemLabel="Seleccione un producto"
+														itemValue="" />
+													<f:selectItems
+														value="#{datPolinizacionView.selectProductoId}" />
+													<p:ajax
+														listener="#{datPolinizacionView.listener_ConsultaUmProducto}"
+														update="txtUdadMedIdProducto,txtNombreProducto, txtNombreUdadMed" />
+													</p:selectOneMenu>
+												</div>
+											</div>	
+											<div class="ui-g">
+												<div class="ui-g-1">
+												<p:outputLabel value="Unidad (Dosis): " style="font-size: 0.8em;"/>
+												</div>
+												<div class="ui-g-1">
+												<p:selectOneMenu id="txtUdadMedIdProducto" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 10%;font-size: 0.8em;"
+													binding="#{datPolinizacionView.txtUdadMedIdProducto}">
+													
+													<f:selectItem itemLabel="Seleccione una unidad de medida"
+														itemValue="" />
+													<f:selectItems
+														value="#{datPolinizacionView.selectUdadMedProducto}" />
+												</p:selectOneMenu>
+											 	</div>
+											 
+											 
+											 
+											 </div>
+											 
+											 <div class="ui-g">
+											 	<div class="ui-g-1">
+											 	<p:outputLabel value="Dosis: " style="font-size: 0.8em; width: 100%;"/>
+												</div>
+												
+												<div class="ui-g-1">
+												<p:inputText id="txtDosis" 	style="width: 150%; margin-left: 0px"
+													binding="#{datPolinizacionView.txtDosis}">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+											 	</div>
+											 	
+											 	<div class="ui-g-1">
+											 	<p:outputLabel value="Cant:" style="font-size: 0.8em; width: 100%; margin-left: 30px" />
+												</div>
+												
+												<div class="ui-g-1">
+													<p:inputText id="txtCantidadAplicada"  style="width: 150%; margin-left: 10px"
+														binding="#{datPolinizacionView.txtCantidadAplicada}"
+														>
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+												</div>
+												<div  class="ui-g-1">
+													<p:commandButton icon="ui-icon-calculator" style="width: 160%; margin-left: 30px"  value = "Calcular">
+														<p:ajax process="@this,txtDosis,txtAreaAplicada,txtNumTinas "
+															listener="#{datPolinizacionView.listener_calcularCantidadAplicada}" 
+															update ="txtCantidadAplicada"/>
+													</p:commandButton>
+											 	</div>
+											 	
+											 	<div class="ui-g-1">
+											 	<p:outputLabel for="txtValorUnitInsumos" value="Precio: " 
+													style="font-size: 0.8em; width: 100%; margin-left: 65px" />
+												</div>
+												
+												<div class="ui-g-1">
+													<p:inputText id="txtValorUnitInsumos"  style="width: 160%;  margin-left: 40px" 
+														binding="#{datPolinizacionView.txtValorUnitInsumos}"
+														required="false" 		
+														requiredMessage="Indique el valor unitario">
+													</p:inputText>
+												</div>
+												
+											 	<div class="ui-g-1">
+													<p:commandButton icon="ui-icon-calculator"  style="margin-left: 70px; width: 160;" value="Calcular">
+														<p:ajax
+															process="@all"
+																update="txtValorUnitInsumos"
+															listener="#{datPolinizacionView.ConsultarPrecioPromProductoDet()}" />
+													</p:commandButton>
+												</div>	
+											 </div>
+
+											 <div class="ui-g">	
+											 <div class="ui-g-1">
+											 	<p:outputLabel value="Costo: " style="font-size: 0.8em;width: 100%;"/>
+												</div>
+													
+											 	<div class="ui-g-1">
+											 		<p:inputText id="txtCostoTotalInsumos" style="width: 150%;"
+														binding="#{datPolinizacionView.txtCostoTotalInsumos}"
+														 	>
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+												</div>
+											 	<div class="ui-g-1">
+											 		<p:commandButton icon="ui-icon-calculator" style="margin-left: 20px; width: 160%;" value="Calcular" >
+														<p:ajax process="@this,txtValorUnitInsumos,txtCantidadAplicada "
+															listener="#{datPolinizacionView.listener_calcularCostoTotalInsumos}"
+															update ="txtCostoTotalInsumos" />
+													
+													</p:commandButton>
+												</div>
+											<div class="ui-g-1">		
+													<p:inputText style="visibility:hidden" id="txtNombreProducto"
+														binding="#{datPolinizacionView.txtNombreProducto}"/>
+														</div>		
+														<div class="ui-g-1">										
+													<p:inputText style="visibility:hidden" id="txtNombreUdadMed"
+														binding="#{datPolinizacionView.txtNombreUdadMed}" />
+														</div>
+											 </div>
+																					
+												</p:panelGrid>											
+
+											<h:panelGrid columns="2" style="margin:10px;">
+												<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+													process="@this,txtProductoId_Producto,
+											       txtUdadMedIdProducto,
+											       txtDosis,txtCantidadAplicada,txtValorUnitInsumos,txtCostoTotalInsumos"
+													binding="#{datPolinizacionView.btnAgregar}"
+													value="Agregar"
+													action="#{datPolinizacionView.action_agregarProductos}"
+													ajax="true" update="tablaDetProductos, msg1" />
+
+												<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+													value="Limpiar">
+													<p:ajax update="gridDetProd" resetValues="true" />
+												</p:commandButton>
+												
+
+											</h:panelGrid>
+
+											<p:outputPanel id="dataTable">
+												<p:dataTable id="tablaDetProductos"
+													value="#{datPolinizacionView.dataDetProductos}"
+													var="listaDetProductos" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+													reflow="true">
+
+													<p:column headerText="Producto">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDetProductos.nombreProducto}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDetProductos.nombreProducto}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Unidad (Dosis)">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDetProductos.nombreUdadMed}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDetProductos.nombreUdadMed}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Dosis">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText value="#{listaDetProductos.dosis}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaDetProductos.dosis}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Cantidad aplicada">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDetProductos.cantidadAplicada}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDetProductos.cantidadAplicada}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Valor unitario">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText value="#{listaDetProductos.valorUnit}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaDetProductos.valorUnit}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Costo total">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText value="#{listaDetProductos.costoTotal}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText value="#{listaDetProductos.costoTotal}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{datPolinizacionView.actionDeleteDatAplicProdDet}"
+																title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaDetProductos :dialogDatPlanillaNomina">
+																<f:attribute name="selectedDatAplicProd"
+																	value="#{listaDetProductos}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										</p:panel>
+									</p:tab>
+							
+							</p:tabView>
+										
+						
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datPolinizacionView.btnSave}" value="Grabar"
+									action="#{datPolinizacionView.action_save()}"
+									update=":dialogDatPlanillaNomina :frm:panelDataTableDatPlanillaNomina" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datPolinizacionView.action_clear()}"
+									process="@this" update=":dialogDatPlanillaNomina" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datPolinizacionView.showDialog}" modal="true"
+					width="500" >
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datPolinizacionView.txtObservacionAnularReg}"
+									rows="5" cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datPolinizacionView.btnDelete}"
+									value="Grabar"
+									action="#{datPolinizacionView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatPlanillaNomina" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datPolinizacionView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

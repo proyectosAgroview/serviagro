@@ -1,0 +1,1113 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 20000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+
+
+				<h:form id="frm">
+					<p:panel id="panelDataTable" header="Filtros">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+
+										<p:outputLabel for="msgFechaIni" value="F. Ini: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaIni" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{datPlanServiciosMqView.txtFechaIni}"
+											required="false" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFin" value="F. Fin: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" style="font-size: 0.9em;"
+											mask="true" size="12"
+											binding="#{datPlanServiciosMqView.txtFechaFin}"
+											required="false" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtSupervisorConsulta" value="Supervisor:"
+											style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtSupervisorConsulta" effect="fade"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											binding="#{datPlanServiciosMqView.txtSupervisorConsulta}"
+											style="width: 160px;font-size: 0.9em;" required="false"
+											requiredMessage="Seleccione un trabajador">
+											<f:selectItem itemLabel="Seleccione un trabajador"
+												itemValue="" />
+											<f:selectItems
+												value="#{datPlanServiciosMqView.selectSupervisorConsulta}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtZonaConsulta" value="Zona:"
+											style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtZonaConsulta" effect="fade"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											binding="#{datPlanServiciosMqView.txtZonaConsulta}"
+											style="width: 160px;font-size: 0.9em;" required="false"
+											requiredMessage="Seleccione un zona">
+											<f:selectItem itemLabel="Seleccione un zona" itemValue="" />
+											<f:selectItems
+												value="#{datPlanServiciosMqView.selectZonaConsulta}" />
+										</p:selectOneMenu>
+
+
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtTipoProyectoFiltro"
+											value="Tipo de proyecto: " style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtTipoProyectoFiltro"
+											style="font-size: 0.9em;"
+											binding="#{datPlanServiciosMqView.txtTipoProyectoFiltro}"
+											required="true" requiredMessage="Seleccione un tipo de proyecto">
+											<f:selectItem itemLabel="Todos"
+												itemValue="Todos" />
+											<f:selectItem itemLabel="NIVELACIÓN"
+												itemValue="NIVELACION" />
+											<f:selectItem itemLabel="PREPARACIÓN" itemValue="PREPARACION" />
+											<f:selectItem itemLabel="lEVANTE SOCAS" itemValue="lEVANTE SOCAS" />
+											<f:selectItem itemLabel="OFICIOS VARIOS" itemValue="OFICIOS VARIOS" />
+											<f:selectItem itemLabel="RIEGOS" itemValue="RIEGOS" />
+											<f:selectItem itemLabel="DRENAJES" itemValue="DRENAJES" />
+										</p:selectOneMenu>
+										
+										<p:commandButton id="btnConsultar" value="Consultar"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{datPlanServiciosMqView.listarProgramacionLabores}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+
+									
+
+									</h:panelGrid>
+								</p:column>
+
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:panel id="panelDataTableDatPlanServiciosMq">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datPlanServiciosMqView.data2}"
+							var="datPlan" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#ID REGISTRO" />
+								</f:facet>
+								<h:outputText value="#{datPlan.dat_plan_servicios_mq_id}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datPlan.consecutivo}" />
+							</p:column>
+
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Supervisor" />
+								</f:facet>
+								<h:outputText value="#{datPlan.nom_supervisor}" />
+							</p:column>
+
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Zona" />
+								</f:facet>
+								<h:outputText value="#{datPlan.nom_zona}" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Cliente" />
+								</f:facet>
+								<h:outputText value="#{datPlan.nom_cliente}" />
+							</p:column>
+
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Hacienda" />
+								</f:facet>
+								<h:outputText value="#{datPlan.nom_finca}" />
+							</p:column>
+
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Tipo proyecto" />
+								</f:facet>
+								<h:outputText value="#{datPlan.tipoProyecto}" />
+							</p:column>
+
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Cant. Progrmaciones" />
+								</f:facet>
+								<h:outputText value="#{datPlan.cantRegistros}" />
+							</p:column>
+
+
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogDatPlanServiciosMq"
+										actionListener="#{datPlanServiciosMqView.action_edit}">
+										<f:attribute name="selectedDatPlanServiciosMq2"
+											value="#{datPlan}" />
+									</p:commandButton>
+								<p:commandButton id="btnDelete1" icon="ui-icon-trash"
+										actionListener="#{datPlanServiciosMqView.actionDeleteMovimiento}"
+										required="false" title="Borrar" value="Borrar"
+										onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+										update="tbl, :frm:growl, frm">
+										<f:attribute name="selectedDatPlanServiciosMq2"
+											value="#{datPlan}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datPlanServiciosMqView.action_new()}"
+								update=":dialogDatPlanServiciosMq" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatPlanServiciosMq" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datPlanServiciosMqView.showDialog}"
+					header="Programador de labores a realizar" resizable="false"
+					modal="true" width="1050" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+
+					
+								<p:panel>
+
+									<p:panelGrid>
+
+										<p:row>
+
+
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel value="#Consecutivo:"
+														style="font-size: 0.9em;" />
+													<p:inputText id="txtConsecutivo" disabled="false"
+														style="font-size: 0.9em;"
+														binding="#{datPlanServiciosMqView.txtConsecutivo}"
+														size="10">
+													</p:inputText>
+										
+										
+												</h:panelGrid>
+											</p:column>
+											
+											
+											<p:column>
+												<h:panelGrid columns="1">
+
+
+
+													<p:outputLabel for="txtTipoProyecto"
+														value="Tipo de proyecto: " style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtTipoProyecto"
+														style="font-size: 0.9em;"
+														binding="#{datPlanServiciosMqView.txtTipoProyecto}"
+														required="true"
+														requiredMessage="Seleccione un tipo de proyecto">
+														<f:selectItem itemLabel="OTROS"
+																itemValue="OTROS" />
+														<f:selectItem itemLabel="NIVELACIÓN"
+																itemValue="NIVELACION" />
+															<f:selectItem itemLabel="PREPARACIÓN" itemValue="PREPARACION" />
+															<f:selectItem itemLabel="lEVANTE SOCAS" itemValue="lEVANTE SOCAS" />
+															<f:selectItem itemLabel="OFICIOS VARIOS" itemValue="OFICIOS VARIOS" />
+															<f:selectItem itemLabel="RIEGOS" itemValue="RIEGOS" />
+															<f:selectItem itemLabel="DRENAJES" itemValue="DRENAJES" />
+															<p:ajax listener="#{datPlanServiciosMqView.consultaTipoProyecto}"
+															process="@this, txtTipoProyecto"
+															update="txtCantidadPresupuesto" />
+															
+													</p:selectOneMenu>
+
+												</h:panelGrid>
+											</p:column>
+											
+
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel for="txtTrabId_Trabajador"
+														value="Supervisor:" style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+														filter="true" filterMatchMode="contains" autoWidth="false"
+														binding="#{datPlanServiciosMqView.txtTrabId_Trabajador}"
+														style="width: 160px;font-size: 0.9em;" required="false"
+														requiredMessage="Seleccione un trabajador">
+														<f:selectItem itemLabel="Seleccione un trabajador"
+															itemValue="" />
+														<f:selectItems
+															value="#{datPlanServiciosMqView.selectTrabajador}" />
+													</p:selectOneMenu>
+
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel for="txtZonaGeograficaId_ZonaGeografica"
+														value="Zona:" style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtZonaGeograficaId_ZonaGeografica"
+														effect="fade" filter="true" filterMatchMode="contains"
+														autoWidth="false"
+														binding="#{datPlanServiciosMqView.txtZonaGeograficaId_ZonaGeografica}"
+														style="width: 100px;font-size: 0.9em;" required="false"
+														requiredMessage="Seleccione un zona">
+														<f:selectItem itemLabel="Seleccione un zona" itemValue="" />
+														<f:selectItems
+															value="#{datPlanServiciosMqView.selectZonaGeografica}" />
+													</p:selectOneMenu>
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+													<!-- id auto incrementable -->
+													<p:inputText style="visibility:hidden"
+														id="txtDatPlanServiciosMqId"
+														binding="#{datPlanServiciosMqView.txtDatPlanServiciosMqId}">
+													</p:inputText>
+
+
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel for="txtPersEmprId_PersEmpr"
+														value="Cliente: " style="font-size: 0.9em; " />
+													<p:selectOneMenu id="txtPersEmprId_PersEmpr" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.9em; width: 180px;"
+														binding="#{datPlanServiciosMqView.txtPersEmprId_PersEmpr}"
+														autoWidth="false" required="false"
+														requiredMessage="Seleccione un proveedor">
+														<f:selectItem itemLabel="Seleccione un proveedor"
+															itemValue="" />
+														<f:selectItems
+															value="#{datPlanServiciosMqView.selectContratista}" />
+														<p:ajax update="txtNivel2ClientesId" />
+													</p:selectOneMenu>
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel for="txtNivel2ClientesId" value="Hacienda: "
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtNivel2ClientesId" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="width: 180px;font-size: 0.9em;" autoWidth="false"
+														binding="#{datPlanServiciosMqView.txtNivel2ClientesId}"
+														required="false" requiredMessage="Seleccione una Hacienda">
+														<f:selectItem itemLabel="Seleccione una hacienda"
+															itemValue="" />
+														<f:selectItems
+															value="#{datPlanServiciosMqView.selectNivel2ClientesId}" />
+														<p:ajax
+															process="@this, txtPersEmprId_PersEmpr, txtNivel2ClientesId"
+															update="txtNivel4ClientesId" />
+
+													</p:selectOneMenu>
+
+												</h:panelGrid>
+											</p:column>
+
+
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel for="txtNivel4ClientesId" value="Suerte: "
+														style="font-size: 0.9em;" />
+													<p:inputText id="txtNivel4ClientesId" disabled="false"
+														style="font-size: 0.9em;"
+														binding="#{datPlanServiciosMqView.txtNivel4ClientesId}"
+														size="6">
+													</p:inputText>
+
+												</h:panelGrid>
+											</p:column>
+											
+												<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel for="txtPeriodoInicial" value="Fecha plan: "
+														style="font-size: 0.9em" />
+													<p:calendar id="txtPeriodoInicial" showOn="button"
+														navigator="false" locale="es" pattern="dd/MM/yyyy"
+														style="font-size: 0.9em;"
+														binding="#{datPlanServiciosMqView.txtPeriodoInicial}"
+														mask="true" required="false" size="12"
+														requiredMessage="La Fecha es obligatoria">
+													</p:calendar>
+
+												</h:panelGrid>
+											</p:column>
+
+										</p:row>
+									</p:panelGrid>
+
+									<p:panelGrid>
+										<p:row>
+
+										
+
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel for="txtLaborId_Labor" value="Labor: "
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtLaborId_Labor" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="width: 180px;font-size: 0.9em;" autoWidth="false"
+														binding="#{datPlanServiciosMqView.txtLaborId_Labor}"
+														required="false" requiredMessage="Seleccione una labor">
+														<f:selectItem itemLabel="Seleccione una labor"
+															itemValue="" />
+														<f:selectItems
+															value="#{datPlanServiciosMqView.selectLaborId}" />
+														<p:ajax
+															listener="#{datPlanServiciosMqView.listener_ConsultaNombreLaborMaq}"
+															process="@this, txtLaborId_Labor, txtPersEmprId_PersEmpr"
+															update="txtUdadMedId_UdadMed,txtValorUnitario " />
+													</p:selectOneMenu>
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+													<p:outputLabel for="txtNumPases" value="Pases"
+														style="font-size: 0.9em;" />
+													<p:spinner id="txtNumPases" size="8"
+														binding="#{datPlanServiciosMqView.txtNumPases}" min="1"
+														max="5" required="false" requiredMessage="Cantidad"
+														placeholder="1" disable="true">
+
+													</p:spinner>
+
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="1">
+
+													<p:outputLabel for="txtUdadMedId_UdadMed"
+														value="Unidad de Pago: " style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtUdadMedId_UdadMed" effect="fade"
+														filter="true" filterMatchMode="contains" autoWidth="false"
+														binding="#{datPlanServiciosMqView.txtUdadMedId_UdadMed}"
+														style="width: 100px;font-size: 0.9em;" required="false"
+														requiredMessage="Seleccione una unidad de pago">
+														<f:selectItem itemLabel="Unidad de pago" itemValue="" />
+														<f:selectItems
+															value="#{datPlanServiciosMqView.selectUdadMed}" />
+
+													</p:selectOneMenu>
+
+
+												</h:panelGrid>
+											</p:column>
+
+											
+											<p:column>
+												<h:panelGrid columns="1">
+													<p:outputLabel for="txtCantidadPresupuesto" value="Cantidad PRESUPUESTO:"
+														style="font-size: 0.9em;" />
+													<p:inputNumber id="txtCantidadPresupuesto" size="8" minValue="0"
+														binding="#{datPlanServiciosMqView.txtCantidadPresupuesto}"
+														required="false" requiredMessage="Cantidad" >
+
+													</p:inputNumber>
+
+												</h:panelGrid>
+											</p:column>
+											
+											<p:column>
+												<h:panelGrid columns="1">
+													<p:outputLabel for="txtCantidad" value="Cantidad porgramada:"
+														style="font-size: 0.9em;" />
+													<p:inputNumber id="txtCantidad" size="8" minValue="0"
+														binding="#{datPlanServiciosMqView.txtCantidad}"
+														required="false" requiredMessage="Cantidad" disable="true">
+
+													</p:inputNumber>
+
+												</h:panelGrid>
+											</p:column>
+											
+											<p:column>
+												<h:panelGrid columns="1">
+													<p:outputLabel for="txtAreaProgramada" value="Área"
+														style="font-size: 0.9em;" />
+													<p:inputNumber id="txtAreaProgramada" size="8" minValue="0"
+														binding="#{datPlanServiciosMqView.txtAreaProgramada}"
+														required="false" requiredMessage="AreaProgramada" disable="true">
+
+													</p:inputNumber>
+
+												</h:panelGrid>
+											</p:column>
+
+
+
+
+										</p:row>
+									</p:panelGrid>
+
+
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="1">
+													<p:outputLabel for="txtValorUnitario" value="VR. Unitario:"
+														style="font-size: 0.9em;" />
+													<p:inputNumber id="txtValorUnitario" size="8" minValue="0"
+														binding="#{datPlanServiciosMqView.txtValorUnitario}"
+														required="false" requiredMessage="Vr. unitario" disable="true">
+
+													</p:inputNumber>
+
+												</h:panelGrid>
+											</p:column>
+											
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel style="font-size: 0.9em; "
+														value="Observación: " />
+													<p:inputTextarea id="txtDetalleNota"
+														style="font-size: 0.9em;"
+														binding="#{datPlanServiciosMqView.txtDetalleNota}"
+														rows="1" cols="30" maxlength="3900" autoResize="true" />
+												</h:panelGrid>
+
+											</p:column>
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:commandButton id="btnAgregarMaquinaria"
+														style="margin:10px;" icon="ui-icon-plusthick"
+														process="@all"
+														binding="#{datPlanServiciosMqView.btnAgregarMaquinaria}"
+														value="Agregar"
+														action="#{datPlanServiciosMqView.action_agregarServicio}"
+														ajax="true"
+														update="tablaDatPlanServiciosMqDet, txtPeriodoInicial,
+														txtUdadMedId_UdadMed,
+														txtLaborId_Labor,txtCantidadPresupuesto,
+														txtDetalleNota,
+														txtNumPases,
+														txtCantidad,
+														txtPersEmprId_PersEmpr, 
+														txtNivel4ClientesId,
+														txtNivel2ClientesId,
+													 	txtLaborId_Labor
+														" />
+												</h:panelGrid>
+											</p:column>
+
+										</p:row>
+									</p:panelGrid>
+
+
+
+									<p:messages id="msgMQ" closable="true" showDetail="true" />
+
+
+								</p:panel>
+
+
+
+								<p:scrollPanel mode="native" style="width:980px;height:270px">
+									<p:outputPanel id="dataTableServRealizadosEquipoDet">
+										<p:dataTable id="tablaDatPlanServiciosMqDet"
+											resizableColumns="true" style="margin-bottom:20px"
+											value="#{datPlanServiciosMqView.dataPlanServDet}"
+											var="listaDatPlanServiciosMq" paginator="true" rows="5"
+											editMode="cell" widgetVar="cellEventos" editable="true"
+											reflow="true">
+											<p:ajax event="cellEdit"
+												listener="#{datPlanServiciosMqView.onCellEditEventos}" process=":formDialog:txtPeriodoInicial"/>
+
+											<p:column headerText="Opciones" width="120">
+												<div align="center">
+													
+													
+													<p:commandButton id="btnConsultarAvance"
+														 title="Consultar saldo" value="Avance"
+															style="font-size: 0.8em;"
+														actionListener="#{datPlanServiciosMqView.action_ConsultarAvance}"
+														update="tablaDatPlanServiciosMqDet  :dialogSaldoArea">
+														<f:attribute name="selectedPlanDatServDet"
+															value="#{listaDatPlanServiciosMq}" />
+															
+													</p:commandButton>
+													
+												
+
+													<p:commandButton id="btnDelete" 
+														actionListener="#{datPlanServiciosMqView.actionDeleteDatPlanServiciosMqDet}"
+														title="Borrar" value="Borrar"
+														style="font-size: 0.8em;"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaDatPlanServiciosMqDet :dialogDatPlanServiciosMq">
+														<f:attribute name="selectedPlanDatServDet"
+															value="#{listaDatPlanServiciosMq}" />
+													</p:commandButton>
+
+
+												</div>
+											</p:column>
+
+											<p:column headerText="Fecha plan">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDatPlanServiciosMq.periodoInicial}">
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:calendar navigator="false" locale="es"
+															value="#{listaDatPlanServiciosMq.periodoInicial}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+
+
+											<p:column headerText="Hda" width="70">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="hdaData" style="font-size: 0.8em;"
+															value="#{listaDatPlanServiciosMq.nombreHacienda}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															style="font-size: 0.8em;"
+															value="#{listaDatPlanServiciosMq.nivel2ClientesmqId_Nivel2Clientesmq.nivel2ClientesmqId}">
+															<f:selectItems
+																value="#{datPlanServiciosMqView.selectNivel2ClientesIdEdit}"
+																var="var1" itemValue="#{var1}"></f:selectItems>
+															<p:ajax process="@this, 	:formDialog:txtPersEmprId_PersEmpr"></p:ajax>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+
+											<p:column headerText="Ste" width="50">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="steData" style="font-size: 0.8em;"
+															value="#{listaDatPlanServiciosMq.codigoLote}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															style="font-size: 0.8em;"
+															value="#{listaDatPlanServiciosMq.nivel4ClientesmqId.nivel4ClientesmqId}">
+															<f:selectItems
+																value="#{datPlanServiciosMqView.selectNivel4ClientesIdEdit}"
+																var="var4" itemValue="#{var4}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Labor" width="120">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="laborData" style="font-size: 0.8em;"
+															value="#{listaDatPlanServiciosMq.nombreLabor}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															style="font-size: 0.8em;"
+															value="#{listaDatPlanServiciosMq.laborId_Labor.laborId}">
+															<f:selectItems
+																value="#{datPlanServiciosMqView.selectLaborId}"
+																var="var5" itemValue="#{var5}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Pases" width="90">
+												<p:cellEditor>
+													<f:facet name="output" style="font-size: 0.8em;">
+														<h:outputText value="#{listaDatPlanServiciosMq.numPases}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDatPlanServiciosMq.numPases}">
+															<f:convertNumber pattern="#0.00" />
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="U.M" width="60">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="umData" style="font-size: 0.8em;"
+															value="#{listaDatPlanServiciosMq.nombreUdadMed}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															style="font-size: 0.8em;"
+															value="#{listaDatPlanServiciosMq.udadMedId_UdadMed.udadMedId}">
+															<f:selectItems
+																value="#{datPlanServiciosMqView.selectUdadMed}"
+																var="var6" itemValue="#{var6}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+													<p:column headerText="Cant. Presupuesto" width="90">
+												<p:cellEditor>
+													<f:facet name="output" style="font-size: 0.8em;">
+														<h:outputText
+															value="#{listaDatPlanServiciosMq.cantidadPresupuesto}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDatPlanServiciosMq.cantidadPresupuesto}">
+															<f:convertNumber pattern="#0.00" />
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="Cant. Plan" width="90">
+												<p:cellEditor>
+													<f:facet name="output" style="font-size: 0.8em;">
+														<h:outputText
+															value="#{listaDatPlanServiciosMq.cantidadPlan}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDatPlanServiciosMq.cantidadPlan}">
+															<f:convertNumber pattern="#0.00" />
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Cant. Realizada" width="90">
+												<p:cellEditor>
+													<f:facet name="output" style="font-size: 0.8em;">
+														<h:outputText
+															value="#{listaDatPlanServiciosMq.cantidadRealizada}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDatPlanServiciosMq.cantidadRealizada}">
+
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Cant. Pendiente" width="90">
+												<p:cellEditor>
+													<f:facet name="output" style="font-size: 0.8em;">
+														<h:outputText
+															value="#{listaDatPlanServiciosMq.cantidadPendiente}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDatPlanServiciosMq.cantidadPendiente}">
+
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="Área prog." width="90">
+												<p:cellEditor>
+													<f:facet name="output" style="font-size: 0.8em;">
+														<h:outputText
+															value="#{listaDatPlanServiciosMq.areaProgramada}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDatPlanServiciosMq.areaProgramada}">
+
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="VR. Unitario" width="90">
+												<p:cellEditor>
+													<f:facet name="output" style="font-size: 0.8em;">
+														<h:outputText
+															value="#{listaDatPlanServiciosMq.valorEstUnitario}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDatPlanServiciosMq.valorEstUnitario}">
+
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="VR. TOTAL" width="90">
+												<p:cellEditor>
+													<f:facet name="output" style="font-size: 0.8em;">
+														<h:outputText
+															value="#{listaDatPlanServiciosMq.valorEstTotal}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDatPlanServiciosMq.valorEstTotal}">
+
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+
+
+											<p:column headerText="Finalizado?" width="90">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDatPlanServiciosMq.concluido}"
+															style="font-size: 0.8em;" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaDatPlanServiciosMq.concluido}">
+															<f:selectItem itemLabel="" itemValue="" var="var7"
+																noSelectionOption="true" />
+															<f:selectItem itemLabel="NO" itemValue="NO" var="var7" />
+															<f:selectItem itemLabel="SI" itemValue="SI" var="var7" />
+														</h:selectOneMenu>
+
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Observación" width="90">
+												<p:cellEditor>
+													<f:facet name="output" style="font-size: 0.8em;">
+														<h:outputText
+															value="#{listaDatPlanServiciosMq.detalleNota}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDatPlanServiciosMq.detalleNota}">
+
+														</p:inputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<f:attribute name="selectedPlanDatServDet"
+												value="#{listaDatPlanServiciosMq}" />
+
+
+
+										</p:dataTable>
+									</p:outputPanel>
+								</p:scrollPanel>
+
+
+
+								<p:panel id="panelBotones">
+									<div align="center">
+										<p:commandButton id="btnSave" icon="ui-icon-disk"
+											binding="#{datPlanServiciosMqView.btnSave}" value="Grabar"
+											process="@all"
+											action="#{datPlanServiciosMqView.action_save()}"
+											update=":dialogDatPlanServiciosMq :frm:panelDataTableDatPlanServiciosMq" />
+										<p:commandButton id="btnClear" icon="ui-icon-trash"
+											value="Limpiar"
+											action="#{datPlanServiciosMqView.action_clear()}"
+											process="@this" update=":dialogDatPlanServiciosMq" />
+									</div>
+								</p:panel>
+							
+					</h:form>
+				</p:dialog>
+
+
+
+				<p:dialog id="dialogSaldoArea" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					header="Consulta avance de ejecución por labor."
+					visible="#{datPlanServiciosMqView.showDialog}" modal="true"
+					width="600">
+					<h:form id="frmSaldo">
+					<!-- <p:growl id="men"/>	 -->
+					<p:dataTable id="tbl1"
+						value="#{datPlanServiciosMqView.dataSaldoArea}" scrollable="true"
+						scrollWidth="95%" scrollHeight="150" var="saldo" lazy="true"
+						resizableColumns="true" style="margin-bottom:20px"
+						rows="999999999" reflow="true">
+						<f:facet name="header">
+							<div align="right"></div>
+						</f:facet>
+
+
+						<p:column width="50">
+							<f:facet name="header">
+								<h:outputText value="Fecha plan/ejec." style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{saldo.periodo_inicial}"
+								style="font-size: 0.8em;">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+
+
+
+						<p:column width="40">
+							<f:facet name="header">
+								<h:outputText value="Máq." style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{saldo.cod_equipo}"
+								style="font-size: 0.8em;" />
+						</p:column>
+
+						<p:column width="90">
+							<f:facet name="header">
+								<h:outputText value="Operario" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{saldo.nom_operario}"
+								style="font-size: 0.8em;" />
+						</p:column>
+						
+						
+						
+						<p:column width="40">
+							<f:facet name="header">
+								<h:outputText value="Cantidad" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{saldo.cantidad_plan}"
+								style="font-size: 0.8em;">
+								<f:convertNumber />
+							</h:outputText>
+						</p:column>
+
+						<!-- 
+							<p:column headerText="Opciones" exportable="false" width="40">
+								<div align="center">
+									<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datPlanServiciosMqView.actionDeleteDatPlanServiciosMqDetEjec}"
+														title="Borrar" value="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tbl1">
+														<f:attribute name="selectedDatPlanServiciosMqdetEjec"
+															value="#{saldo}" />
+													</p:commandButton>
+									
+								</div>
+							</p:column>
+							 -->
+					</p:dataTable>
+		
+					<p:panelGrid>
+
+
+						<p:row>
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel value="TOTALES:  " style="font-size: 1em;" />
+								</h:panelGrid>
+							</p:column>
+
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtSaldoArea" value="Saldo actual:"
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtSaldoArea" style="font-size: 0.9em;"
+										size="12" binding="#{datPlanServiciosMqView.txtSaldoArea}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+										required="true">
+									</p:inputNumber>
+								</h:panelGrid>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					</h:form>
+				</p:dialog>
+
+
+
+				<p:dialog id="dialogReportarAvance" appendTo="@(body)"
+					draggable="true" closable="true" resizable="false"
+					header="Reportar avance de labor" modal="true" showEffect="fade"
+					styleClass="dialogFix"
+					visible="#{datPlanServiciosMqView.showDialog}" width="400"
+					responsive="true">
+					<h:form id="formDialog2">
+						<p:panel>
+
+							<h:panelGrid columns="2">
+
+								<p:outputLabel for="txtFechaAvance" value="Fecha: "
+									style="font-size: 0.9em" />
+								<p:calendar id="txtFechaAvance" showOn="button"
+									navigator="false" locale="es" pattern="dd/MM/yyyy"
+									style="font-size: 0.9em;"
+									binding="#{datPlanServiciosMqView.txtFechaAvance}" mask="true"
+									required="false" size="12"
+									requiredMessage="La Fecha es obligatoria">
+								</p:calendar>
+
+								<p:outputLabel for="txtEquipoIdAvance" value="Maquinaria ppal:"
+									style="font-size: 0.9em;" />
+								<p:selectOneMenu id="txtEquipoIdAvance" effect="fade"
+									filter="true" filterMatchMode="contains" autoWidth="false"
+									binding="#{datPlanServiciosMqView.txtEquipoIdAvance}"
+									style="width: 100px;font-size: 0.9em;" required="false"
+									requiredMessage="Seleccione un máquina">
+									<f:selectItem itemLabel="Seleccione un máquina" itemValue="" />
+									<f:selectItems
+										value="#{datPlanServiciosMqView.selectEquipoAvance}" />
+								</p:selectOneMenu>
+
+
+								<p:outputLabel for="txtOperarioAvance" value="Operario:"
+									style="font-size: 0.9em;" />
+								<p:selectOneMenu id="txtOperarioAvance" effect="fade"
+									filter="true" filterMatchMode="contains" autoWidth="false"
+									binding="#{datPlanServiciosMqView.txtOperarioAvance}"
+									style="width: 160px;font-size: 0.9em;" required="false"
+									requiredMessage="Seleccione un trabajador">
+									<f:selectItem itemLabel="Seleccione un trabajador" itemValue="" />
+									<f:selectItems value="#{datPlanServiciosMqView.selectOperario}" />
+								</p:selectOneMenu>
+
+
+								<p:outputLabel for="txtCantidadRealizada"
+									value="Cantidad/Area ejecutada:" style="font-size: 0.9em;" />
+								<p:inputNumber id="txtCantidadRealizada" size="8" minValue="0"
+									binding="#{datPlanServiciosMqView.txtCantidadRealizada}"
+									required="true" requiredMessage="Cantidad" disable="true">
+
+								</p:inputNumber>
+
+
+							</h:panelGrid>
+						</p:panel>
+
+						<p:panel id="panelBotonesAvance">
+							<div align="center">
+								<p:commandButton id="btnGrabarAvance" icon="ui-icon-disk"
+									binding="#{datPlanServiciosMqView.btnGrabarAvance}"
+									value="Grabar" process="@all"
+									action="#{datPlanServiciosMqView.action_GrabarAvance()}"
+									update=":dialogDatPlanServiciosMq  :dialogReportarAvance" />
+							</div>
+
+
+						</p:panel>
+
+					</h:form>
+				</p:dialog>
+
+
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

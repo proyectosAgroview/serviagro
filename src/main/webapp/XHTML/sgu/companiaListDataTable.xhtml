@@ -1,0 +1,350 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableCompania" header="Compañia">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{companiaView.data}" var="compania"
+							paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Compañia" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{compania.estado}"
+								sortBy="#{compania.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{compania.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{compania.codigo}"
+								sortBy="#{compania.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{compania.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{compania.nombre}"
+								sortBy="#{compania.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{compania.nombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogCompania"
+										actionListener="#{companiaView.action_edit}">
+										<f:attribute name="selectedCompania" value="#{compania}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{companiaView.action_new()}" update=":dialogCompania" />
+						</div>
+					</p:panel>
+
+				</h:form>
+				<p:dialog id="dialogCompania" widgetVar="dlg" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{companiaView.showDialog}" resizable="true" modal="true"
+					width="750" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelCompania" header="Compañia">
+
+							<p:tabView id="tabMapa">
+								
+								<p:tab id="general" title="General">
+									
+									<h:panelGrid columns="2" cellpadding="5">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{companiaView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{companiaView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelCompania,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{companiaView.listener_txtCodigo}" />
+										</p:inputText>
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true" size="60"
+											binding="#{companiaView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+
+										<p:outputLabel for="txtRut" value="Rut/Nit: " />
+										<p:inputText id="txtRut" disabled="true"
+											binding="#{companiaView.txtRut}" />
+
+										<p:outputLabel for="txtEntBancId_EntBanc"
+											value="Banco titular" />
+										<p:selectOneMenu id="txtEntBancId_EntBanc" filter="true"
+											filterMatchMode="startsWith"
+											binding="#{companiaView.txtEntBancId_EntBanc}"
+											required="false" requiredMessage="Seleccione un banco">
+											<f:selectItem itemLabel="Seleccione un banco" itemValue="" />
+											<f:selectItems value="#{companiaView.selectEntBanc}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtCiudadId_Ciudad" value="Ciudad" />
+										<p:selectOneMenu id="txtCiudadId_Ciudad" filter="true"
+											filterMatchMode="startsWith"
+											binding="#{companiaView.txtCiudadId_Ciudad}" required="false"
+											requiredMessage="Seleccione una ciudad">
+											<f:selectItem itemLabel="Seleccione una ciudad" itemValue="" />
+											<f:selectItems value="#{companiaView.selectCiudad}" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel for="txtDireccion" value="Dirección: " />
+													<p:inputText id="txtDireccion" disabled="true"
+														binding="#{companiaView.txtDireccion}" />
+
+													<p:outputLabel for="txtTelefono" value="Teléfono: " />
+													<p:inputText id="txtTelefono" disabled="true"
+														binding="#{companiaView.txtTelefono}" />
+
+													<p:outputLabel for="txtPbx" value="Pbx: " />
+													<p:inputText id="txtPbx" disabled="true"
+														binding="#{companiaView.txtPbx}" />
+
+
+												</h:panelGrid>
+
+											</p:column>
+
+											<p:column>
+
+												<h:panelGrid columns="2">
+													<p:outputLabel for="txtInfoAdicional"
+														value="Información Adicional 1:" />
+													<p:inputTextarea id="txtInfoAdicional"
+														binding="#{companiaView.txtInfoAdicional}" rows="1"
+														cols="30" maxlength="100" counterTemplate="{0} Caracteres"
+														autoResize="true" />
+
+													<p:outputLabel for="txtInfoAdicional2"
+														value="Información Adicional 2:" />
+													<p:inputTextarea id="txtInfoAdicional2"
+														binding="#{companiaView.txtInfoAdicional2}" rows="1"
+														cols="30" maxlength="100"
+														counterTemplate="{0} Caracteres." autoResize="true" />
+
+													<!-- id auto incrementable -->
+													<p:inputText style="visibility:hidden" id="txtCompaniaId"
+														binding="#{companiaView.txtCompaniaId}">
+													</p:inputText>
+
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+								</p:tab>
+
+								<p:tab id="Configuraciones"
+									title="Configuraciones de labores">
+									<h:panelGrid columns="2" cellpadding="5">
+									
+									<p:outputLabel for="txtUmHoras" value="Unidad estandár horas:" />
+										<p:selectOneMenu id="txtUmHoras" filter="true"
+											filterMatchMode="contains"
+											binding="#{companiaView.txtUmHoras}" required="false"
+											requiredMessage="Seleccione una unidad de medida">
+											<f:selectItem itemLabel="Seleccione una unidad de medida" itemValue="" />
+											<f:selectItems value="#{companiaView.selectUmHoras}" />
+										</p:selectOneMenu>
+										
+											<p:outputLabel for="txtUmArea" value="Unidad estandár de área:" />
+										<p:selectOneMenu id="txtUmArea" filter="true"
+											filterMatchMode="contains"
+											binding="#{companiaView.txtUmArea}" required="false"
+											requiredMessage="Seleccione una unidad de medida">
+											<f:selectItem itemLabel="Seleccione una unidad de medida" itemValue="" />
+											<f:selectItems value="#{companiaView.selectUmArea}" />
+										</p:selectOneMenu>
+										
+											<p:outputLabel for="txtUmUnidad" value="Unidad estandár Unidad:" />
+										<p:selectOneMenu id="txtUmUnidad" filter="true"
+											filterMatchMode="contains"
+											binding="#{companiaView.txtUmUnidad}" required="false"
+											requiredMessage="Seleccione una unidad de medida">
+											<f:selectItem itemLabel="Seleccione una unidad de medida" itemValue="" />
+											<f:selectItems value="#{companiaView.selectUmUnidad}" />
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtUmPlanta" value="Planta Estandár planta:" />
+										<p:selectOneMenu id="txtUmPlanta" filter="true"
+											filterMatchMode="contains"
+											binding="#{companiaView.txtUmPlanta}" required="false"
+											requiredMessage="Seleccione una Planta de medida">
+											<f:selectItem itemLabel="Seleccione una Planta de medida" itemValue="" />
+											<f:selectItems value="#{companiaView.selectUmPlanta}" />
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtNivelAutorizaLabor"
+											value="Activar la aprobación de labores solicitadas: " />
+										<p:selectOneMenu id="txtNivelAutorizaLabor" disabled="true"
+											binding="#{companiaView.txtNivelAutorizaLabor}"
+											required="true" requiredMessage="Seleccione un tipo">
+											<f:selectItem itemLabel="NO" itemValue="NO" />
+											<f:selectItem itemLabel="SI" itemValue="SI" />
+										</p:selectOneMenu>
+										
+
+
+									</h:panelGrid>
+								</p:tab>
+								
+								<p:tab id="estandares" title="Configuración de producción">
+									<h:panelGrid columns="2" cellpadding="5">
+
+										<p:outputLabel for="txtKilosAzucarTc" value="Kilogramos de azucar (TC): " />
+										<p:inputNumber id="txtKilosAzucarTc" disabled="true"
+											binding="#{companiaView.txtKilosAzucarTc}"
+											required="false"/>
+											
+										<p:outputLabel for="txtValorKgAzucar" value="Valor de azucar por kilo: " />
+										<p:inputNumber id="txtValorKgAzucar" disabled="true"
+											binding="#{companiaView.txtValorKgAzucar}"
+											required="false" />
+											
+										<p:outputLabel for="txtRendimientoIngenio" value="Rendimiento de ingenio: " />
+										<p:inputNumber id="txtRendimientoIngenio" disabled="true"
+											binding="#{companiaView.txtRendimientoIngenio}"
+											required="false" />
+											
+										<p:outputLabel for="txtRefPorcentaje" value="RETEFUENTE (%): " />
+										<p:inputNumber id="txtRefPorcentaje" disabled="true"
+											binding="#{companiaView.txtRefPorcentaje}"
+											required="false" />
+											
+										<p:outputLabel for="txtRdcPorcentaje" value="CENICAÑA (%): " />
+										<p:inputNumber id="txtRdcPorcentaje" disabled="true"
+											binding="#{companiaView.txtRdcPorcentaje}"
+											required="false" />
+											
+										<p:outputLabel for="txtFondoAgroIndustriaPorcentaje" value="FONDO SOCIAL DE LA AGROINDUSTRIA: (%): " />
+										<p:inputNumber id="txtFondoAgroIndustriaPorcentaje" disabled="true"
+											binding="#{companiaView.txtFondoAgroIndustriaPorcentaje}"
+											required="false" />
+											
+											<p:outputLabel for="txtDescuentoAdicional1Porcentaje" value="CENICAÑA (%): " />
+										<p:inputNumber id="txtDescuentoAdicional1Porcentaje" disabled="true"
+											binding="#{companiaView.txtDescuentoAdicional1Porcentaje}"
+											required="false" />
+											
+											<p:outputLabel for="txtDescuentoAdicional2Porcentaje" value="CENICAÑA (%): " />
+										<p:inputNumber id="txtDescuentoAdicional2Porcentaje" disabled="true"
+											binding="#{companiaView.txtDescuentoAdicional2Porcentaje}"
+											required="false" />
+
+									</h:panelGrid>
+								</p:tab>
+
+								<p:tab title="Configuración Mapas">
+									<h:panelGrid columns="2" cellpadding="5">
+
+										<p:outputLabel value="Registrar KML?" />
+										<p:selectOneRadio id="txtEstadoKml" disabled="true"
+											binding="#{companiaView.txtEstadoKml}">
+											<f:selectItem itemLabel="Si" itemValue="A" />
+											<f:selectItem itemLabel="No" itemValue="I" />
+											<p:ajax listener="#{companiaView.listener_activarCampos}"
+												update="txtUrlKml" />
+										</p:selectOneRadio>
+
+										<p:outputLabel value="URL KML: " />
+										<p:inputText id="txtUrlKml" disabled="true"
+											binding="#{companiaView.txtUrlKml}">
+										</p:inputText>
+
+										<p:outputLabel value="Latitud: " />
+										<p:inputText disabled="true" styleClass="Lat"
+											binding="#{companiaView.txtLatitud}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+
+										<p:outputLabel value="Longitud: " />
+										<p:inputText disabled="true" styleClass="Longi"
+											binding="#{companiaView.txtLongitud}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+
+										<h:inputHidden id="estado" value="#{companiaView.hayKml}" />
+										<h:inputHidden id="url" value="#{companiaView.urlKmlMap}" />
+
+									</h:panelGrid>
+								</p:tab>
+
+
+							</p:tabView>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{companiaView.btnSave}" value="Grabar"
+									action="#{companiaView.action_save()}"
+									update=":dialogCompania :frm:panelDataTableCompania" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{companiaView.action_clear()}"
+									process="@this" update=":dialogCompania" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,252 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Interface: Nómina 8.5">
+
+						<p:panelGrid styleClass="ui-panelgrid-blank">
+
+							<p:row>
+								<p:column style="font-weight: bold;">
+
+									<h:panelGrid columns="3" id="panelGrid" width="350">
+
+
+										<p:outputLabel for="txtCompania" value="Compañía" />
+										<p:selectOneMenu id="txtCompania"
+											binding="#{interfacePlanoNomina85View.txtCompania}"
+											required="true" requiredMessage="Seleccione una compañía">
+											<f:selectItem itemLabel="Seleccione una compañía"
+												itemValue="" />
+											<f:selectItems
+												value="#{interfacePlanoNomina85View.selectCompania}" />
+										</p:selectOneMenu>
+
+										<p:message for="txtCompania" />
+
+										<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{interfacePlanoNomina85View.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaInicial" />
+
+										<p:outputLabel for="msgFechaFinal" value="Fecha Final: " />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{interfacePlanoNomina85View.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaFinal" />
+
+
+										<p:outputLabel for="zonas" value="Zonas: " />
+										<p:selectCheckboxMenu id="zonas"
+											value="#{interfacePlanoNomina85View.selectedNivel1}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una zona">
+											<f:selectItems value="#{interfacePlanoNomina85View.zonas}"
+												var="zonas" itemLabel=" #{zonas.nombre}"
+												itemValue="#{zonas.nivel1Id}" />
+										</p:selectCheckboxMenu>
+										<p:message for="zonas" />
+
+										<p:outputLabel for="fincas" value="Fincas: " />
+										<p:selectCheckboxMenu id="fincas"
+											value="#{interfacePlanoNomina85View.selectedNivel2}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una finca">
+											<f:selectItems value="#{interfacePlanoNomina85View.fincas}"
+												var="fincas" itemLabel=" #{fincas.nombre}"
+												itemValue="#{fincas.nivel2Id}" />
+										</p:selectCheckboxMenu>
+										<p:message for="fincas" />
+
+										<p:outputLabel for="bloques" value="Bloques: " />
+										<p:selectCheckboxMenu id="bloques"
+											value="#{interfacePlanoNomina85View.selectedNivel3}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un bloque">
+											<f:selectItems value="#{interfacePlanoNomina85View.bloques}"
+												var="bloques" itemLabel=" #{bloques.nombre}"
+												itemValue="#{bloques.nivel3Id}" />
+										</p:selectCheckboxMenu>
+										<p:message for="bloques" />
+
+										<p:outputLabel for="lotes" value="Lote: " />
+										<p:selectCheckboxMenu id="lotes"
+											value="#{interfacePlanoNomina85View.selectedNivel4}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un lote">
+											<f:selectItems value="#{interfacePlanoNomina85View.lotes}"
+												var="lotes" itemLabel=" #{lotes.nombre}"
+												itemValue="#{lotes.nivel4Id}" />
+										</p:selectCheckboxMenu>
+										<p:message for="lotes" />
+
+										<p:outputLabel for="tenencias" value="Tenencia: " />
+										<p:selectCheckboxMenu id="tenencias"
+											value="#{interfacePlanoNomina85View.selectedTenencia}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una tenencia">
+											<f:selectItems
+												value="#{interfacePlanoNomina85View.tenencias}"
+												var="tenencias" itemLabel=" #{tenencias.nombre}"
+												itemValue="#{tenencias.tenenId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="tenencias" />
+
+										<p:outputLabel for="grupoLabores" value="Grupos de labor: " />
+										<p:selectCheckboxMenu id="grupoLabores"
+											value="#{interfacePlanoNomina85View.selectedGrupoLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un grupo">
+											<f:selectItems
+												value="#{interfacePlanoNomina85View.grupoLabores}"
+												var="grupoLabores" itemLabel=" #{grupoLabores.nombre}"
+												itemValue="#{grupoLabores.grpLaborId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="grupoLabores" />
+
+										<p:outputLabel for="labores" value="Labor: " />
+										<p:selectCheckboxMenu id="labores"
+											value="#{interfacePlanoNomina85View.selectedLabor}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una labor">
+											<f:selectItems value="#{interfacePlanoNomina85View.labores}"
+												var="labores" itemLabel=" #{labores.nombre}"
+												itemValue="#{labores.laborId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="labores" />
+
+										<p:outputLabel for="unidadesMedida" value="Unidad de medida: " />
+										<p:selectCheckboxMenu id="unidadesMedida"
+											value="#{interfacePlanoNomina85View.selectedUdadMed}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una Udad. de medida">
+											<f:selectItems
+												value="#{interfacePlanoNomina85View.unidadesMedida}"
+												var="unidadesMedida" itemLabel=" #{unidadesMedida.nombre}"
+												itemValue="#{unidadesMedida.udadMedId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="unidadesMedida" />
+
+
+										<p:outputLabel for="contratistas" value="Contratista: " />
+										<p:selectCheckboxMenu id="contratistas"
+											value="#{interfacePlanoNomina85View.selectedContratista}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un contratista">
+											<f:selectItems
+												value="#{interfacePlanoNomina85View.contratistas}"
+												var="contratistas" itemLabel=" #{contratistas.nombre}"
+												itemValue="#{contratistas.persEmprId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="contratistas" />
+
+
+										<p:outputLabel for="trabajadores" value="Trabajador: " />
+										<p:selectCheckboxMenu id="trabajadores"
+											value="#{interfacePlanoNomina85View.selectedTrabajador}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false" requiredMessage="Seleccione un trabajador">
+											<f:selectItems
+												value="#{interfacePlanoNomina85View.trabajadores}"
+												var="contratistas" itemLabel=" #{contratistas.nombre}"
+												itemValue="#{contratistas.trabId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="contratistas" />
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+
+								</p:column>
+
+							</p:row>
+
+						</p:panelGrid>
+
+					</p:panel>
+
+
+					<p:dialog id="dialog" appendTo="@(body)" draggable="true"
+						closable="true"
+						visible="#{interfacePlanoNomina85View.showDialog}"
+						modal="true" showEffect="fade" width="1200" responsive="true"
+						resizable="false" styleClass="dialogFix">
+
+						<p:dataTable id="tbl"
+							value="#{interfacePlanoNomina85View.data}"
+							var="informeCosG" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Reporte" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+
+
+
+								</div>
+							</f:facet>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Plano" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.planoNomina}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:dialog>
+
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnConsultar" value="Generar y visualizar"
+								icon="ui-icon-newwin"
+								action="#{interfacePlanoNomina85View.action_informe1()}"
+								update="frm:dialog, :frm:tbl" />
+						</div>
+					</p:panel>
+
+
+				</h:form>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

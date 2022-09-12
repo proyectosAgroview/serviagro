@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatAbastCombustible" table="dat_abast_combustible" >
+        <id name="datAbastCombustibleId" type="java.lang.Long">
+            <column name="dat_abast_combustible_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tipoAbastecimiento" class="co.com.arcosoft.modelo.TipoAbastecimiento" fetch="select">
+            <column name="tipo_abastecimiento_id" />
+        </many-to-one>
+        <many-to-one name="trabajador" class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="despachador" />
+        </many-to-one>
+        <many-to-one name="bombaAbastecimiento" class="co.com.arcosoft.modelo.BombaAbastecimiento" fetch="select">
+            <column name="bomba_abastecimiento_id" />
+        </many-to-one>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        <many-to-one name="producto" class="co.com.arcosoft.modelo.Producto" fetch="select">
+            <column name="producto_id" />
+        </many-to-one>
+        <many-to-one name="udadMed" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <property name="turnoCampoId" type="java.lang.Long">
+            <column name="turno_campo_id" />
+        </property>
+        <many-to-one name="centCost" class="co.com.arcosoft.modelo.CentCost" fetch="select">
+            <column name="cent_cost_id" />
+        </many-to-one>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="19" />
+        </property>
+        <property name="conductor" type="java.lang.Double">
+            <column name="conductor" precision="12" scale="4" />
+        </property>
+        <property name="cantidad" type="java.lang.Double">
+            <column name="cantidad" precision="12" scale="4" />
+        </property>
+        <property name="valorUnitario" type="java.lang.Double">
+            <column name="valor_unitario" precision="12" scale="4" />
+        </property>
+        <property name="costoTotal" type="java.lang.Double">
+            <column name="costo_total" precision="12" scale="4" />
+        </property>
+        <property name="medidor" type="java.lang.Double">
+            <column name="medidor" precision="12" scale="4" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="numeroPlanillaFisica" type="java.lang.Long">
+            <column name="numero_planilla_fisica" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="3000" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="fechaCierreOt" type="java.util.Date">
+            <column name="fecha_cierre_ot" length="19" />
+        </property>
+        <property name="fechaReaperturaOt" type="java.util.Date">
+            <column name="fecha_reapertura_ot" length="19" />
+        </property>
+        <property name="cierreOt" type="java.lang.String">
+            <column name="cierre_ot" length="1" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="almacenId" type="java.lang.Long">
+            <column name="almacen_Id" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,334 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+
+					<p:messages id="msg" showDetail="true" autoUpdate="true"
+						closable="true">
+						<p:effect type="pulsate" event="load" delay="400" />
+					</p:messages>
+
+					<p:panel id="panelDataTablereporte"
+						header="Ficha técnica del cultivo">
+
+						<p:panelGrid>
+							<p:row>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtHacienda" value="Hacienda: " />
+										<p:selectOneMenu id="txtHacienda"
+											binding="#{informeIdFichasDeCostoCultivoView.txtHacienda}"
+											filter="true" filterMatchMode="contains" style="width:160px"
+											autoWidth="false" disabled="false">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems
+												value="#{informeIdFichasDeCostoCultivoView.selectHacienda}" />
+											<p:ajax update="tbl, txtLote" process="@all"
+												listener="#{informeIdFichasDeCostoCultivoView.resetPantalla}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtLote" value="Lote: " />
+										<p:selectOneMenu id="txtLote"
+											binding="#{informeIdFichasDeCostoCultivoView.txtLote}"
+											filter="true" filterMatchMode="contains" style="width:160px"
+											autoWidth="false" disabled="false">
+											<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+											<f:selectItems
+												value="#{informeIdFichasDeCostoCultivoView.selectLote}" />
+											<p:ajax
+												listener="#{informeIdFichasDeCostoCultivoView.consultaN4}"
+												update="txtVariedad, txtAreaLote, txtFechaSiembra, txtFechaUltimoCorte,
+													txtNumCortes, txtEdadCultivo, tbl"
+												process="@all" />
+										</p:selectOneMenu>
+
+										<br />
+										<p:commandButton id="btnCosechas"
+											process="@this, txtHacienda, 
+											txtLote"
+											update=":dialogCosechas, msg"
+											binding="#{informeIdFichasDeCostoCultivoView.btnCosechas}"
+											action="#{informeIdFichasDeCostoCultivoView.consultaCosecha}"
+											icon="ui-icon-newwin" value="Consultar cosechas">
+										</p:commandButton>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtVariedad" value="Variedad: " />
+										<p:inputText id="txtVariedad" size="15"
+											binding="#{informeIdFichasDeCostoCultivoView.txtVariedad}"
+											disabled="false" readonly="true" />
+
+										<p:outputLabel for="txtAreaLote" value="Area: " />
+										<p:inputText id="txtAreaLote" size="15"
+											binding="#{informeIdFichasDeCostoCultivoView.txtAreaLote}"
+											disabled="false" readonly="true" />
+
+										<p:outputLabel for="txtFechaSiembra" value="F. Siembra: " />
+										<p:inputText id="txtFechaSiembra" size="15"
+											binding="#{informeIdFichasDeCostoCultivoView.txtFechaSiembra}"
+											disabled="false" readonly="true">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</p:inputText>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtFechaUltimoCorte" value="F. U/Corte: " />
+										<p:inputText id="txtFechaUltimoCorte" size="15"
+											binding="#{informeIdFichasDeCostoCultivoView.txtFechaUltimoCorte}"
+											disabled="false" readonly="true">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</p:inputText>
+
+										<p:outputLabel for="txtNumCortes" value="Cortes: " />
+										<p:inputText id="txtNumCortes" size="15"
+											binding="#{informeIdFichasDeCostoCultivoView.txtNumCortes}"
+											disabled="false" readonly="true" />
+
+										<p:outputLabel for="txtEdadCultivo" value="Edad cultivo (M): " />
+										<p:inputText id="txtEdadCultivo" size="15"
+											binding="#{informeIdFichasDeCostoCultivoView.txtEdadCultivo}"
+											disabled="false" readonly="true" />
+
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:layout style="min-width:400px;min-height:500px;">
+						<p:layoutUnit position="west" size="300">
+							<p:dataTable var="grpLabor"
+								value="#{informeIdFichasDeCostoCultivoView.grpLabor}"
+								selectionMode="single"
+								selection="#{informeIdFichasDeCostoCultivoView.selectGrpLabor}"
+								id="tblGrpLabor" lazy="true" scrollWidth="20%"
+								rowKey="#{grpLabor.grpLaborId}">
+
+								<p:ajax event="rowSelect"
+									update=":frm:tbl, :frm:txtValorTotalAcumulado, "
+									listener="#{informeIdFichasDeCostoCultivoView.fichaTecnicaCultivo}" />
+
+								<p:column width="100">
+									<h:outputText value="#{grpLabor.codigo} #{grpLabor.nombre}"
+										style="font-size: 0.9em;" />
+								</p:column>
+
+							</p:dataTable>
+						</p:layoutUnit>
+
+						<p:layoutUnit position="center">
+							<p:dataTable id="tbl"
+								value="#{informeIdFichasDeCostoCultivoView.dataDetalle}"
+								var="reporte" resizableColumns="true" style="margin-bottom:20px"
+								reflow="true" editable="false" scrollable="true"
+								scrollWidth="99%">
+
+
+
+								<p:column width="60">
+									<f:facet name="header">
+										<h:outputText value="Fecha" style="font-size: 0.9em;" />
+									</f:facet>
+									<h:outputText value="#{reporte.fechaRegistro}"
+										style="font-size: 0.9em;">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</p:column>
+
+								<p:column width="150">
+									<f:facet name="header">
+										<h:outputText value="Concepto" style="font-size: 0.9em;" />
+									</f:facet>
+									<h:outputText value="#{reporte.nombreLabor}"
+										style="font-size: 0.9em;" />
+								</p:column>
+
+								<p:column width="50">
+									<f:facet name="header">
+										<h:outputText value="Cantidad" style="font-size: 0.9em;" />
+									</f:facet>
+									<p:inputNumber value="#{reporte.cantidadPago}"
+										style="font-size: 0.9em;" readonly="true" size="9" />
+								</p:column>
+
+								<p:column width="50">
+									<f:facet name="header">
+										<h:outputText value="Unidad" style="font-size: 0.9em;" />
+									</f:facet>
+									<h:outputText value="#{reporte.codUdadMedPago}"
+										style="font-size: 0.9em;" />
+								</p:column>
+
+								<p:column width="50">
+									<f:facet name="header">
+										<h:outputText value="Cant/Ha" style="font-size: 0.9em;" />
+									</f:facet>
+									<p:inputNumber value="#{reporte.cantHa}"
+										style="font-size: 0.9em;" readonly="true" size="16" />
+								</p:column>
+
+								<p:column width="50">
+									<f:facet name="header">
+										<h:outputText value="Dias" style="font-size: 0.9em;" />
+									</f:facet>
+									<p:inputNumber value="#{reporte.diasTranscurridosLabor}"
+										style="font-size: 0.9em;" readonly="true" size="16" />
+								</p:column>
+							</p:dataTable>
+							<p:panelGrid>
+								<p:row>
+									<p:column style="text-align:right">
+										<h:panelGrid columns="2">
+											<p:outputLabel value="TOTAl GENERAL:  "
+												style="font-size: 1em;" />
+
+										</h:panelGrid>
+									</p:column>
+									<p:column style="text-align:right">
+										<h:panelGrid columns="2">
+
+											<p:outputLabel for="txtValorTotalAcumulado"
+												value="Subtotal($): " style="font-size: 1em;" />
+											<p:inputNumber id="txtValorTotalAcumulado"
+												style="font-size: 1em;" size="12"
+												binding="#{informeIdFichasDeCostoCultivoView.txtValorTotalAcumulado}"
+												decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+												required="false" readonly="true">
+											</p:inputNumber>
+										</h:panelGrid>
+									</p:column>
+
+
+								</p:row>
+							</p:panelGrid>
+						</p:layoutUnit>
+					</p:layout>
+				</h:form>
+
+				<p:dialog id="dialogCosechas" appendTo="@(body)" closable="true"
+					responsive="true" header="Historial de cortes/cosechas"
+					draggable="true"
+					visible="#{informeIdFichasDeCostoCultivoView.showDialog}"
+					resizable="false" modal="true" styleClass="dialogFix">
+
+					<h:form>
+						<p:dataTable id="tblCosechas"
+							value="#{informeIdFichasDeCostoCultivoView.dataCosecha}"
+							var="cosechas" paginator="true" rows="5" resizableColumns="true"
+							rowsPerPageTemplate="5,10" reflow="true" editable="false"
+							scrollable="true" scrollWidth="75%">
+
+							<p:column width="100">
+								<f:facet name="header">
+									<h:outputText value="Cte" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{cosechas.codLote}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column width="100">
+								<f:facet name="header">
+									<h:outputText value="Fecha" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{cosechas.fCorte}"
+									style="font-size: 0.9em;">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column width="100">
+								<f:facet name="header">
+									<h:outputText value="Variedad" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{cosechas.nomVariedad}"
+									style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column width="100">
+								<f:facet name="header">
+									<h:outputText value="Prod (TON)" style="font-size: 0.9em;" />
+								</f:facet>
+								<p:inputNumber value="#{cosechas.cantidadCosechadaTon}"
+									style="font-size: 0.9em;" readonly="true" size="9" />
+							</p:column>
+
+							<p:column width="60">
+								<f:facet name="header">
+									<h:outputText value="Prod (Ha)" style="font-size: 0.9em;" />
+								</f:facet>
+								<p:inputNumber value="#{cosechas.tonHa}"
+									style="font-size: 0.9em;" readonly="true" size="9" />
+							</p:column>
+
+							<p:column width="60">
+								<f:facet name="header">
+									<h:outputText value="Area" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{cosechas.area}" style="font-size: 0.9em;" />
+							</p:column>
+
+							<p:column width="100">
+								<f:facet name="header">
+									<h:outputText value="Rend" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{cosechas.rendAzucar}"
+									style="font-size: 0.9em;" readonly="true" size="16" />
+							</p:column>
+
+							<p:column width="100">
+								<f:facet name="header">
+									<h:outputText value="Edad" style="font-size: 0.9em;" />
+								</f:facet>
+								<p:inputNumber value="#{cosechas.edad}"
+									style="font-size: 0.9em;" readonly="true" size="16" />
+							</p:column>
+						</p:dataTable>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,810 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 20000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable" header="Filtros">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2" id="panelGrid">
+
+
+										<p:outputLabel for="msgFechaInicial" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{datCompraProductosNacionalAgricolaView.txtFechaInicial}"
+											required="false" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFinal" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											style="font-size: 0.9em;" mask="true" size="12"
+											binding="#{datCompraProductosNacionalAgricolaView.txtFechaFinal}"
+											required="false" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+
+										<p:outputLabel for="contratistas" value="Proveedor: " />
+										<p:selectCheckboxMenu id="contratistas"
+											value="#{datCompraProductosNacionalAgricolaView.selectedContratista}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un proveedor">
+											<f:selectItems value="#{datCompraProductosNacionalAgricolaView.contratistas}"
+												var="contratistas" itemLabel=" #{contratistas.nombre}"
+												itemValue="#{contratistas.persEmprId}" />
+										</p:selectCheckboxMenu>
+
+										<p:outputLabel value="Documento:" />
+										<p:inputText id="txtDocumentoC"
+											binding="#{datCompraProductosNacionalAgricolaView.txtDocumentoC}"
+											disable="true">
+
+										</p:inputText>
+										
+									</h:panelGrid>
+								</p:column>
+								
+								<p:column>
+									<h:panelGrid columns="2">
+									<p:commandButton id="btnConsultar" value="Consultar"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{datCompraProductosNacionalAgricolaView.listarCompras}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+									</h:panelGrid>
+								</p:column>
+								
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:panel id="panelDataTableDatCompraProductos"
+						header="Compras directas nacionales">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datCompraProductosNacionalAgricolaView.data2}"
+							var="datCompraProductos" paginator="true" rows="5"
+							 resizableColumns="true" style="margin-bottom:20px"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Productos" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datCompraProductos.fecha_registro}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Documento" />
+								</f:facet>
+								<h:outputText value="#{datCompraProductos.consecutivo}" />
+							</p:column>
+
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Proveedor" />
+								</f:facet>
+								<h:outputText value="#{datCompraProductos.nom_proveedor}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="No. Factura" />
+								</f:facet>
+								<h:outputText value="#{datCompraProductos.num_factura}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Tipo moneda" />
+								</f:facet>
+								<h:outputText value="#{datCompraProductos.tipo_moneda}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="VR. Factura" />
+								</f:facet>
+								<h:outputText value="#{datCompraProductos.valor_factura}">
+									<f:convertNumber pattern="#0.00" />
+								</h:outputText>
+							</p:column>
+
+
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+										update=":dialogDatCompraProductos"
+										actionListener="#{datCompraProductosNacionalAgricolaView.action_edit}">
+										<f:attribute name="selectedDatCompraProductos2"
+											value="#{datCompraProductos}" />
+									</p:commandButton>
+										<p:commandButton id="btnDelete1" icon="ui-icon-trash"
+														actionListener="#{datCompraProductosNacionalAgricolaView.actionDeleteCompras}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tbl">
+														<f:attribute name="selectedDatCompraProductos2"
+															value="#{datCompraProductos}" />
+													</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datCompraProductosNacionalAgricolaView.action_new()}"
+								update=":dialogDatCompraProductos" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatCompraProductos" appendTo="@(body)"
+					draggable="true" closable="true" 
+					visible="#{datCompraProductosNacionalAgricolaView.showDialog}" resizable="false"
+					modal="true" width="960" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+
+						<p:tabView id="tabMapa"
+							activeIndex="#{datCompraProductosNacionalAgricolaView.activeTapIndex}">
+
+							<p:tab title="Documento de compra nacional">
+
+
+									<p:panelGrid>
+									<p:row>
+										<p:column>
+										<h:panelGrid columns="2">
+											<p:outputLabel for="txtPersEmpr" value="Proveedor: "
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtPersEmpr" effect="fade" filter="true"
+												filterMatchMode="contains"
+												binding="#{datCompraProductosNacionalAgricolaView.txtPersEmpr}"
+												autoWidth="false" style="width: 160; font-size: 0.9em;"
+												required="true" requiredMessage="Seleccione un proveedor">
+												<f:selectItem itemLabel="Seleccione un proveedor" itemValue="" />
+												<f:selectItems
+													value="#{datCompraProductosNacionalAgricolaView.selectContratista}" />
+											</p:selectOneMenu>
+										</h:panelGrid>
+										</p:column>
+										
+										<p:column>
+										<h:panelGrid columns="2">
+												<p:outputLabel style="visibility:hidden; font-size: 01em;" />
+												<p:inputText style="visibility:hidden"
+													id="txtDatCompraProductosId" size="1"
+													binding="#{datCompraProductosNacionalAgricolaView.txtDatCompraProductosId}">
+												</p:inputText>
+											
+										</h:panelGrid>
+										</p:column>
+									</p:row>
+									</p:panelGrid>
+									
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel value="Entrada: " style="font-size: 0.9em;" />
+												<p:inputText id="txtConsecutivo" disabled="false"
+													style="font-size: 0.9em; "
+													binding="#{datCompraProductosNacionalAgricolaView.txtConsecutivo}"
+													size="14">
+												</p:inputText>
+
+												<p:outputLabel value="Factura No.: "
+													style="font-size: 0.9em;" />
+												<p:inputText id="txtNumFactura" disabled="false"
+													style="font-size: 0.9em; " required="true"
+													requiredMessage="El número de factura es númerico y es obligatorio"
+													binding="#{datCompraProductosNacionalAgricolaView.txtNumFactura}" size="14" >
+														<f:convertNumber />
+												</p:inputText>
+
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel for="txtFechaRegistro" value="Fecha: "
+													style="font-size: 0.9em;" />
+												<p:calendar id="txtFechaRegistro" showOn="button"
+													navigator="false" locale="es" size="14"
+													style="font-size: 0.9em;"
+													binding="#{datCompraProductosNacionalAgricolaView.txtFechaRegistro}"
+													pattern="dd/MM/yyyy" mask="true" required="true"
+													requiredMessage="La  fecha  es obligatoria" />
+											</h:panelGrid>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+
+								<h:panelGrid columns="2">
+
+									<p:outputLabel for="txtDetalleNota" value="Detalle:"
+										style=" font-size: 0.9em;" />
+									<p:inputTextarea id="txtDetalleNota"
+										binding="#{datCompraProductosNacionalAgricolaView.txtDetalleNota}" rows="2"
+										cols="60" maxlength="3400" autoResize="true" required="true"
+										style="font-size: 0.9em;"
+										requiredMessage="La Observación es obligatoria" />
+								</h:panelGrid>
+
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel for="txtTipoMoneda" value="Moneda: "
+													style="font-size: 0.9em;" />
+												<p:selectOneMenu id="txtTipoMoneda" effect="fade"
+													filter="true" filterMatchMode="contains"
+													binding="#{datCompraProductosNacionalAgricolaView.txtTipoMoneda}"
+													autoWidth="false" style="width: 160; font-size: 0.9em;"
+													required="true"
+													requiredMessage="Seleccione un tipo de moneda">
+													<f:selectItem itemLabel="Seleccione una moneda"
+														itemValue="" noSelectionOption="true" />
+													<f:selectItem itemLabel="Dolares" itemValue="Dolares" />
+													<f:selectItem itemLabel="Pesos" itemValue="Pesos" />
+													<p:ajax
+														listener="#{datCompraProductosNacionalAgricolaView.action_tasa_conversion}"
+														process="@this"
+														update="txtTasaConversionTrm, txtValorDescuento">
+													</p:ajax>
+												</p:selectOneMenu>
+
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel value="Tasa de cambio (TRM): "
+													style="font-size: 0.9em;" />
+												<p:inputText id="txtTasaConversionTrm" disabled="false"
+													style="font-size: 0.9em; " required="true"
+													binding="#{datCompraProductosNacionalAgricolaView.txtTasaConversionTrm}"
+													size="12">
+												</p:inputText>
+											</h:panelGrid>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+
+										<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtTransportadoraFactura"
+													value="Transportadora:" style=" font-size: 0.9em;" />
+												<p:inputTextarea id="txtTransportadoraFactura"
+													binding="#{datCompraProductosNacionalAgricolaView.txtTransportadoraFactura}"
+													rows="2" cols="30" maxlength="300" autoResize="true"
+													required="false" style="font-size: 0.9em;"
+													requiredMessage="La transportadora es obligatoria" />
+
+												
+											</h:panelGrid>
+										</p:column>
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtTransportadoraNGuia" value="N° Guía:"
+													style=" font-size: 0.9em;" />
+												<p:inputText id="txtTransportadoraNGuia"
+													binding="#{datCompraProductosNacionalAgricolaView.txtTransportadoraNGuia}"
+													autoResize="true" required="false"
+													style="font-size: 0.9em;"
+													requiredMessage="La guía  es obligatoria" />
+										</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtTransportadoraValorFlete" value="VR. Flete ($):"
+													style=" font-size: 0.9em;" />
+												<p:inputNumber id="txtTransportadoraValorFlete"
+													style="font-size: 0.9em;" size="12"
+													binding="#{datCompraProductosNacionalAgricolaView.txtTransportadoraValorFlete}"
+													required="false" decimalSeparator="." thousandSeparator=","
+													decimalPlaces="2">
+												</p:inputNumber>
+											</h:panelGrid>
+										</p:column>
+									</p:row>
+									</p:panelGrid>
+
+							</p:tab>
+
+							<p:tab title="Detalle productos">
+
+								<p:messages id="msg1" autoUpdate="true" closable="true"
+									showDetail="true" />
+
+								<h:panelGrid columns="2">
+
+									<p:outputLabel for="txtAlmacenId_Almacen2" value="Almacén: "
+										style="font-size: 0.9em;" />
+									<p:selectOneMenu id="txtAlmacenId_Almacen2" effect="fade"
+										filter="true" filterMatchMode="contains"
+										style="font-size: 0.9em;"
+										binding="#{datCompraProductosNacionalAgricolaView.txtAlmacenId_Almacen2}"
+										required="false" requiredMessage="Seleccione un almacén">
+										<f:selectItem itemLabel="Seleccione un almacén" itemValue="" />
+										<f:selectItems
+											value="#{datCompraProductosNacionalAgricolaView.selectAlmacen2}" />
+									</p:selectOneMenu>
+
+									
+                                   
+                                    
+									<p:outputLabel for="txtProductoId_Producto" value="Producto: "
+										style="font-size: 0.9em;" />
+									
+									<p:selectOneMenu id="txtProductoId_Producto" 
+									    dynamic="true"
+									    effect="fade"
+										filter="true" filterMatchMode="contains" 
+										style="font-size: 0.9em;" 
+										binding="#{datCompraProductosNacionalAgricolaView.txtProductoId_Producto}"
+										required="false" requiredMessage="Seleccione un producto">
+										
+										<f:selectItem itemLabel="Seleccione un producto" itemValue="" />
+										<f:selectItems
+											value="#{datCompraProductosNacionalAgricolaView.selectProductoId}"  />
+											 <p:ajax update="txtUnidadMedida, txtUltimoPrecioCompra, txtSaldo" 
+											process="@this, txtAlmacenId_Almacen2"
+											listener="#{datCompraProductosNacionalAgricolaView.listener_ConsultaUmProducto}">
+										</p:ajax> 
+											
+									</p:selectOneMenu>
+
+								
+
+									<p:outputLabel for="txtUnidadMedida" value="Unidad de médida:"
+										style="font-size: 0.9em;" />
+									<p:selectOneMenu id="txtUnidadMedida" effect="fade"
+										filter="true" filterMatchMode="contains"
+										style="font-size: 0.9em;"
+										binding="#{datCompraProductosNacionalAgricolaView.txtUnidadMedida}"
+										required="false"
+										requiredMessage="Seleccione una unidad de médida">
+										<f:selectItem itemLabel="Seleccione una unidad de médida"
+											itemValue="" />
+										<f:selectItems value="#{datCompraProductosNacionalAgricolaView.selectUdadMed}" />
+									</p:selectOneMenu>
+
+
+
+								</h:panelGrid>
+								
+								<h:panelGrid columns="4">
+									<p:outputLabel value="Saldo: " style="font-size: 0.9em;" />
+									<p:inputText id="txtSaldo" disabled="false"
+										style="font-size: 0.9em; "
+										binding="#{datCompraProductosNacionalAgricolaView.txtSaldo}" size="12">
+										<f:converter converterId="javax.faces.Double" />
+									</p:inputText>
+									
+									<p:outputLabel value="VR. Unitario última compra:" style="font-size: 0.9em;" />
+										<p:inputNumber id="txtUltimoPrecioCompra"
+													style="font-size: 0.9em;" size="12"
+													binding="#{datCompraProductosNacionalAgricolaView.txtUltimoPrecioCompra}"
+													required="false" >
+												</p:inputNumber>
+									
+									</h:panelGrid>
+
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel value="Cantidad: " style="font-size: 0.9em;" />
+												<p:inputText id="cantidadCompra" disabled="false"
+													style="font-size: 0.9em; "
+													binding="#{datCompraProductosNacionalAgricolaView.cantidadCompra}"
+													size="12">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel value="VR. Unitario: "
+													style="font-size: 0.9em;" />
+												<p:inputText id="txtValorUnit" disabled="false"
+													style="font-size: 0.9em; "
+													binding="#{datCompraProductosNacionalAgricolaView.txtValorUnit}" size="12">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel value="Iva(%): " style="font-size: 0.9em;" />
+												<p:inputText id="txtPorcentajeIva" disabled="false"
+													style="font-size: 0.9em; "
+													binding="#{datCompraProductosNacionalAgricolaView.txtPorcentajeIva}"
+													size="6">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+											</h:panelGrid>
+										</p:column>
+
+									</p:row>
+								</p:panelGrid>
+
+								<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+									<f:facet name="header">
+										<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+											process="@all" binding="#{datCompraProductosNacionalAgricolaView.btnAgregar}"
+											value="Agregar"
+											action="#{datCompraProductosNacionalAgricolaView.action_agregarPrecioProductos}"
+											update="tabla, txtSubTotalValorFactura, txtValorFactura, txtImpuestos, txtValorDescuento,
+											txtProductoId_Producto,txtAlmacenId_Almacen2,txtValorUnit, cantidadCompra,
+											txtUnidadMedida, :dialogDatCompraProductos" />
+
+										<p:commandButton id="btnlimpiar" process="@this"
+											icon="ui-icon-trash" value="Limpiar">
+											<p:ajax resetValues="true" />
+										</p:commandButton>
+									</f:facet>
+								</h:panelGrid>
+
+								<p:scrollPanel mode="native" style="width:800px;">
+
+									<p:outputPanel>
+
+										<p:dataTable id="tabla"
+											value="#{datCompraProductosNacionalAgricolaView.dataDetPrecioProductos}"
+											var="listaDetPrecioProductos" scrollable="true"
+											 resizableColumns="true" style="margin-bottom:20px"
+												paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+											editable="true" editMode="cell" widgetVar="cellEventos">
+
+
+											<p:ajax event="cellEdit"
+												listener="#{datCompraProductosNacionalAgricolaView.onCellEditEventos}" />
+
+											<p:column headerText="Fecha">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.fechaInicial}">
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:calendar navigator="false" locale="es"
+															style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.fechaInicial}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Almacen">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="almacenData" style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.almacenId.codigo}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.almacenId.almacenId}">
+															<f:selectItems
+																value="#{datCompraProductosNacionalAgricolaView.selectAlmacen2}"
+																var="var1" itemValue="#{var1}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Prod.">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="prodData" style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.producto.codigo}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.producto.productoId}">
+															<f:selectItems
+																value="#{datCompraProductosNacionalAgricolaView.selectProducto2}"
+																var="var2" itemValue="#{var2}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+													<p:column headerText="Nombre">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.nomProducto}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.nomProducto}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+
+											<p:column headerText="U.M.">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="umData" style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.unidadMedida.nombre}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.unidadMedida.udadMedId}">
+															<f:selectItems
+																value="#{datCompraProductosNacionalAgricolaView.selectUdadMed}"
+																var="var3" itemValue="#{var3}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+
+											<p:column headerText="Cant.">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.cantidadCompra}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.cantidadCompra}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Precio">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.valorUnitario}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.valorUnitario}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Iva">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPrecioProductos.valorIva}"
+															style="font-size: 0.9em;">
+															<f:convertNumber pattern="#0.00" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPrecioProductos.valorIva}"
+															style="font-size: 0.9em;" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="VR. Total">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPrecioProductos.costoTotal}"
+															style="font-size: 0.9em;">
+															<f:convertNumber pattern="#0.00" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPrecioProductos.costoTotal}"
+															style="font-size: 0.9em;" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+
+											<f:attribute name="selectedPrecioProductos"
+												value="#{listaDetPrecioProductos}" />
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datCompraProductosNacionalAgricolaView.actionDeletePrecioPromProd}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tabla">
+														<f:attribute name="selectedPrecioProductos"
+															value="#{listaDetPrecioProductos}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								</p:scrollPanel>
+
+								<p:panelGrid>
+									<p:row>
+										<p:column style="text-align:right">
+											<h:panelGrid columns="1">
+												<p:outputLabel for="txtSubTotalValorFactura"
+													value="SubTotal: " style="font-size: 0.9em;" />
+												<p:inputNumber id="txtSubTotalValorFactura"
+													style="font-size: 0.9em;" size="12"
+													binding="#{datCompraProductosNacionalAgricolaView.txtSubTotalValorFactura}"
+													required="false" decimalSeparator="." thousandSeparator=","
+													decimalPlaces="2">
+												</p:inputNumber>
+											</h:panelGrid>
+										</p:column>
+
+										<p:column style="text-align:right">
+											<h:panelGrid columns="1">
+												<p:outputLabel for="txtValorDescuento" value="Descuento: "
+													style="font-size: 0.9em;" />
+												<p:inputNumber id="txtValorDescuento"
+													style="font-size: 0.9em;" size="12"
+													binding="#{datCompraProductosNacionalAgricolaView.txtValorDescuento}"
+													required="false" decimalSeparator="." thousandSeparator=","
+													decimalPlaces="2">
+
+												</p:inputNumber>
+											</h:panelGrid>
+										</p:column>
+
+										
+									
+
+										<p:column style="text-align:right">
+											<h:panelGrid columns="1">
+												<p:outputLabel for="txtImpuestos" value="Impuestos:"
+													style="font-size: 0.9em;" />
+												<p:inputNumber id="txtImpuestos" style="font-size: 0.9em;"
+													size="12" binding="#{datCompraProductosNacionalAgricolaView.txtImpuestos}"
+													required="false" decimalSeparator="." thousandSeparator=","
+													decimalPlaces="2">
+
+												</p:inputNumber>
+											</h:panelGrid>
+										</p:column>
+
+
+
+										<p:column style="text-align:right">
+											<h:panelGrid columns="1">
+
+												<p:outputLabel for="txtValorFactura"
+													value="Calcular VR.TOTAL " style="font-size: 0.9em;" />
+												<p:panelGrid columns="2">
+													<p:inputNumber id="txtValorFactura" disabled="false"
+														size="8"
+														binding="#{datCompraProductosNacionalAgricolaView.txtValorFactura}"
+														required="false" requiredMessage="Indique el valor"
+														decimalSeparator="." thousandSeparator=","
+														decimalPlaces="2">
+
+													</p:inputNumber>
+													<p:commandButton icon="ui-icon-calculator" value="Calcular">
+														<p:ajax process="@all"
+															update="txtValorFactura, txtImpuestos,txtSubTotalValorFactura"
+															listener="#{datCompraProductosNacionalAgricolaView.consultarVRTOTAL}" />
+													</p:commandButton>
+
+												</p:panelGrid>
+
+
+
+											</h:panelGrid>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+
+
+							</p:tab>
+						</p:tabView>
+
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datCompraProductosNacionalAgricolaView.btnSave}" value="Grabar"
+									action="#{datCompraProductosNacionalAgricolaView.action_save()}"
+									update=":dialogDatCompraProductos :frm:panelDataTableDatCompraProductos" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datCompraProductosNacionalAgricolaView.action_clear()}"
+									process="@this" update=":dialogDatCompraProductos" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

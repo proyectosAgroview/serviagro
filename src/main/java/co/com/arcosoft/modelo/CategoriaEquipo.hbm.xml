@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.CategoriaEquipo" table="categoria_equipo" >
+        <id name="categEquipId" type="java.lang.Long">
+            <column name="categ_equip_id" />
+            <generator class="identity" />
+        </id>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="taraMin" type="java.lang.Double">
+            <column name="tara_min" precision="12" scale="4" />
+        </property>
+        <property name="taraMax" type="java.lang.Double">
+            <column name="tara_max" precision="12" scale="4" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        
+        <property name="funcion" type="java.lang.String">
+            <column name="funcion" length="20" />
+        </property>
+        
+        <property name="rangoDifHorometro" type="java.lang.Double">
+            <column name="rango_dif_horometro" precision="12" scale="4" />
+        </property>
+        
+        <many-to-one name="conceptoKardexId"
+			class="co.com.arcosoft.modelo.ConceptoKardex" fetch="select">
+			<column name="concepto_kardex_id" />
+		</many-to-one>
+		
+        <set name="equipos" table="equipo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="categ_equip_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Equipo" />
+        </set>
+        <set name="tipoRecursosEquiposes" table="tipo_recursos_equipos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="categ_equip_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TipoRecursosEquipos" />
+        </set>
+        <set name="modeloEquipos" table="modelo_equipo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="categ_equip_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.ModeloEquipo" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.TarifaDeduccion" table="tarifa_deduccion" >
+        <id name="deduccionId" type="java.lang.Long">
+            <column name="deduccion_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="conceptoNominaId" class="co.com.arcosoft.modelo.ConceptoNomina" fetch="select">
+            <column name="concepto_nomina_id" />
+        </many-to-one>
+        <many-to-one name="trabajador" class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="trab_id" />
+        </many-to-one>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaInicial" type="java.util.Date">
+            <column name="fecha_inicial" length="19" />
+        </property>
+        <property name="fechaFinal" type="java.util.Date">
+            <column name="fecha_final" length="19" />
+        </property>
+        <property name="valorDeduccion" type="java.lang.Double">
+            <column name="valor_deduccion" precision="12" scale="4" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

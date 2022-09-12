@@ -1,0 +1,1362 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
+	monitoring="autodetect" dynamicConfig="true">
+
+	<diskStore path="java.io.tmpdir/ehcache" />
+
+	<defaultCache maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="120" timeToLiveSeconds="120" diskSpoolBufferSizeMB="30"
+		maxEntriesLocalDisk="10000000" diskExpiryThreadIntervalSeconds="120"
+		memoryStoreEvictionPolicy="LRU" statistics="true">
+		<persistence strategy="localTempSwap" />
+	</defaultCache>
+	
+	<cache name="co.com.arcosoft.modelo.Almacen" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CuentaContable" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ConceptoNomina" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CentCost" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ElementoCosto" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.FabricanteEquipo" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ModeloEquipo" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Medidor" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.GrpLabor" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatPlanLabor" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="5" timeToLiveSeconds="300">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatHerramienta" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+
+	<cache name="co.com.arcosoft.modelo.Equipo" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.EquipoEvento" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CategoriaEquipo" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatMantenimientoEquipo" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="5" timeToLiveSeconds="300">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.TarifaEquipProp" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatAbastCombustible" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatServRealizadosEquipo" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatServRealizadosEquipoDet" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatHorasTrabajoEquipo" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatServicioDet" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PlanRevisionEquipo" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PlanRevisionEquipoDet" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PlanRevisionEquipoActiv" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PrecioPromProd" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ProgramaSiembraCosecha" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ProgramaSiembraCosechaDet" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.RangoValor" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.SistemasEquipo" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Bascula" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Ciudad" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.LogBascula" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Tag" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.TarifaDeduccion" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.TarifaInfraestructura" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.TarifaLaborRendimiento" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.TarifaOtrosDevengos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.TarifaProfesion" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	
+	<cache name="co.com.arcosoft.modelo.DatServImplemento" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.VariableLab" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Variable" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Usuarios" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+		
+    <cache name="co.com.arcosoft.modelo.Compania" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	 <cache name="co.com.arcosoft.modelo.UdadMed" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.TarifaContratista" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+
+	<cache name="co.com.arcosoft.modelo.Trabajador" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Profesion" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel1" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel2" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatPlanillaNomina" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatPlanillaNominaDet" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatPlanillaNominaLabor" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatPlanillaNominaOnivel4" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatPlanLaborDet" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatPlanServiciosMq" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatPlanServiciosMqdet" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CronogramaLabores" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatServicio" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatTransProdNivel4" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.VariedadNivel4" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Variedad" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ValorVar" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ValorVarAnaLab" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ValorVarAnaTrans" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatEstimCosecha" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatAplicProdDet" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatAnaTransProd" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatPluvio" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatParadasFabrica" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatPlanAnualFabrica" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatSolicitudesMtto" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatTransProd" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatTransProdDet" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.EstClimat" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Fitosanidad" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Cultivo" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Etapa" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.GrpSuelo" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.GrpTenen" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PlanAsignarRecurso" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CultivoFitosanidad" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+
+	<cache name="co.com.arcosoft.modelo.DatTransProdTrabajadores" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatAplicProducto" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatAplicProductoDet" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatProgramaRiego" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatOtrosCostosMq" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatOtrosCostosMqdet" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatOtrosCostosNivel4" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatProgramaRiegoDet" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatRiego" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatSanVeg" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatAnaLaboratorio" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="5" timeToLiveSeconds="300">
+		<persistence strategy="localTempSwap" />
+	</cache>
+
+	<cache name="co.com.arcosoft.modelo.CronogramaLaboresNivel4" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+
+	<cache name="co.com.arcosoft.modelo.EstPluvio" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel3" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel2Persempr" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4Hvida" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Producto" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.tarifaContratistas" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.datPlanLabors" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Producto.tipoRecursosInsumoses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.datServicioDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.datServRealizadosEquipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.tarifaLaborRendimientos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.datPlanillaNominaLabors" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CategoriaEquipo.equipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.conceptoNominas" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Profesion.tipoRecursosProfesions" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datPlanLabors" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.laborAsociadasForLaborAsocId" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+			
+	<cache name="co.com.arcosoft.modelo.Labor.datServicios" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Producto.datAbastCombustibles" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.nivel2Persemprs" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.datRiegos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.datServicios" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+
+	<cache name="co.com.arcosoft.modelo.Nivel4.restriccionQuemaNivel4s" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.restriMaduranteNivel4s" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+
+	<cache name="co.com.arcosoft.modelo.Nivel4.datRiegos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Producto.empaqueProductos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datSanVegs" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.variedadNivel4s" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.equipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CentCost.datMantenimientoEquipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datAplicProductos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Producto.datHerramientas" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.datOtrosCostoses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Producto.precioPromProds" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.laborServicios" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.datTransProdTrabajadoreses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+    <cache name="co.com.arcosoft.modelo.CategoriaEquipo.tipoRecursosEquiposes" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.cronogramaLaboresNivel4s" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.FabricanteEquipo.vehiculosTransps" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.nivel4s" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CentCost.nivel2s" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.tarifaContratistas" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.trabajadors" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.tipoRecursosEquiposes" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Producto.ingrActivProds" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ConceptoNomina.datPlanillaNominaDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Producto.datTransProdDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ConceptoNomina.tarifaDeduccions" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.datAplicProductos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel3.nivel4s" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ConceptoNomina.datPlanillaNominas" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CategoriaEquipo.modeloEquipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datPlanillaNominaDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.datPlanLabors" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+		
+	<cache name="co.com.arcosoft.modelo.Labor.datOtrosCostoses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+		
+	<cache name="co.com.arcosoft.modelo.Producto.equipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	
+		
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.productos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.tipoRecursosInsumoses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datTransProdNivel4s" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ConceptoNomina.tarifaContratistas" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.costoRecursos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.nivel2s" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CentCost.grpLaborTenCencoses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	
+	<cache name="co.com.arcosoft.modelo.DatPlanLabor.datPlanLaborDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Medidor.equipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.planRevisionEquipoActivs" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	
+	<cache name="co.com.arcosoft.modelo.Profesion.tarifaProfesions" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.precioPromProds" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Compania.usuarioses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datPlanillaNominaOnivel4s" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datOtrosCostosNivel4s" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Producto.datMantenimientoEquipoProds" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CentCost.datOtrosCostoses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CentCost.datAbastCombustibles" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.cronogramaLaboresLaboreses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datServicios" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ConceptoNomina.datMantenimientoEquipoMecs" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+		<cache name="co.com.arcosoft.modelo.Producto.datRgtroInvents" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+		<cache name="co.com.arcosoft.modelo.ConceptoNomina.limiteCeptoNominas" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.datServRealizadosEquipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.laborAsociadasForLaborId" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ConceptoNomina.tarifaOtrosDevengoses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+		
+	<cache name="o.com.arcosoft.modelo.PersEmpr.datPlanillaNominas" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+		
+	<cache name="co.com.arcosoft.modelo.Nivel4.datEstimCosechas" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+		
+	<cache name="co.com.arcosoft.modelo.Nivel1.nivel2s" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+		
+	<cache name="co.com.arcosoft.modelo.Producto.maduranteProductos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+		
+	<cache name="co.com.arcosoft.modelo.ConceptoNomina.datNominaTrabajadorDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+		
+		
+	<cache name="co.com.arcosoft.modelo.ModeloEquipo.equipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+		<cache name="co.com.arcosoft.modelo.FabricanteEquipo.modeloEquipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CentCost.equipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datProgramaRiegoDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.equipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.datTransProdDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.estructSiembs" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.tarifaEquipProps" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.servicios" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.datOtrosCostoses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Medidor.datServRealizadosEquipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.profesions" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.tipoRecursosOtroses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datPlanLaborDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.laborCcontables" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Profesion.persEmprs" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Profesion.tarifaContratistas" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+    <cache name="co.com.arcosoft.modelo.Nivel4.datPlanillaNominas" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	  <cache name="co.com.arcosoft.modelo.Labor.datMantenimientoEquipoMecs" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datTransProdTrabajadoreses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datAnaLaboratorios" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CentCost.productos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CentCost.trabajadors" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.CentCost.tags" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Labor.laborRecursoses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.eventoses" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datAplicProdDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.equipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.datServRealizadosEquipos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Nivel4.datServicioDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ConceptoNomina.tarifaProfesions" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Profesion.trabajadors" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.DatPlanLabor.planAsignarRecursos" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.datPlanillaNominas" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.ElementoCosto.tipoRecursosProfesions" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.PersEmpr.datPlanillaNominaDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	<cache name="co.com.arcosoft.modelo.Producto.datAplicProdDets" 
+        maxEntriesLocalHeap="10000" eternal="false"
+		timeToIdleSeconds="300" timeToLiveSeconds="600">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+
+	<cache name="org.hibernate.cache.internal.StandardQueryCache"
+		maxEntriesLocalHeap="5" eternal="false" timeToLiveSeconds="120">
+		<persistence strategy="localTempSwap" />
+	</cache>
+
+	<cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
+		maxEntriesLocalHeap="5000" eternal="true">
+		<persistence strategy="localTempSwap" />
+	</cache>
+	
+	
+	
+	
+</ehcache>

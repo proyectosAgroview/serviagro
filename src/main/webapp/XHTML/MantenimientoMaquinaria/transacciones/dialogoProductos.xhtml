@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog id="dialogProducto" appendTo="@(body)" draggable="true"
+		closable="true" visible="#{productoView.showDialog}" resizable="false"
+		modal="true" width="500" responsive="true">
+
+		<h:form id="formDialogP">
+			<p:messages id="msgP" closable="true" />
+			<p:panel id="panelProducto" header="Producto">
+
+				<h:panelGrid columns="2" id="panelGrid">
+
+					<h:outputText id="msgCodigoP" value=" Codigo" />
+					<p:inputText id="txtCodigoP" disabled="false"
+						binding="#{productoView.txtCodigo}">
+						<p:ajax update=":dialogProducto"
+							listener="#{productoView.listener_txtCodigo_mini}" />
+					</p:inputText>
+
+					<h:outputText id="msgNombreP" value=" Nombre" />
+					<p:inputText id="txtNombrep" disabled="true"  size="40"
+						binding="#{productoView.txtNombre}" />
+
+					<p:outputLabel id="msgInfoAdicional" value="Referencia:" />
+					<p:inputTextarea id="txtInfoAdicional"
+						binding="#{productoView.txtInfoAdicional}" rows="1" cols="30"
+						maxlength="100" autoResize="true" />
+		
+					<h:outputText id="msgTipoProdId_TipoProductoP"
+						value=" Tipo de producto" />
+					<p:selectOneMenu id="txtTipoProdId_TipoProductoP" disabled="true"
+						style="width:180px" autoWidth="false"
+						binding="#{productoView.txtTipoProdId_TipoProducto}">
+						<f:selectItem itemLabel="Selecccione un tipo de producto"
+							itemValue="" noSelectionOption="true" />
+						<f:selectItems value="#{productoView.selectTipoProducto}" />
+					</p:selectOneMenu>
+
+					<h:outputText id="msgUdadMedId_UdadMed_ProdP"
+						value=" Unidad de medida" />
+					<p:selectOneMenu id="txtUdadMedId_UdadMed_ProdP" disabled="true"
+						style="width:180px" autoWidth="false"
+						binding="#{productoView.txtUdadMedId_UdadMed_Prod}">
+						<f:selectItem itemLabel="Selecccione una unidad de medida"
+							itemValue="" noSelectionOption="true" />
+						<f:selectItems value="#{productoView.selectUdadMed}" />
+					</p:selectOneMenu>
+
+					<h:outputText id="msgAlmacenId_AlmacenP" value=" Almacen" />
+					<p:selectOneMenu id="txtAlmacenId_AlmacenP" effect="fade"
+						filter="true" filterMatchMode="contains"
+						binding="#{productoView.txtAlmacenId_Almacen}" required="true"
+						requiredMessage="Seleccione un almacén">
+						<f:selectItem itemLabel="Seleccione un almacén" itemValue="" />
+						<f:selectItems value="#{productoView.selectAlmacen}" />
+					</p:selectOneMenu>
+
+					<h:outputText id="msgUbicacionAlmacenP" value=" Ubicación" />
+					<p:inputText id="txtUbicacionAlmacenP"  
+						binding="#{productoView.txtUbicacionAlmacen}" />
+
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="panelBotones">
+				<div align="center">
+					<p:commandButton id="btnSaveProd" binding="#{productoView.btnSave}"
+						value="Grabar" action="#{productoView.action_create_mini()}"
+						update=":dialogProducto" />
+					<p:commandButton id="btnClearProd" value="Limpiar"
+						action="#{productoView.action_clear()}" update=":dialogProducto" />
+				</div>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+</ui:composition>
+
+

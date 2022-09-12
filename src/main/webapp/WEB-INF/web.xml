@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="http://java.sun.com/xml/ns/javaee" 
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
+version="3.0">
+  
+  <display-name></display-name>
+ 
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <mime-mapping>
+    <extension>xhtml</extension>
+    <mime-type>application/xml</mime-type>
+  </mime-mapping>
+  <mime-mapping>
+    <extension>xml</extension>
+    <mime-type>application/xml</mime-type>
+  </mime-mapping>
+  <mime-mapping>
+    <extension>jspx</extension>
+    <mime-type>application/xml</mime-type>
+  </mime-mapping>
+  
+   <mime-mapping>
+    <extension>xlsx</extension>
+    <mime-type>application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</mime-type>
+   </mime-mapping>
+   
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+  <listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  </listener>
+  
+  <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+   <context-param>
+    <param-name>primefaces.UPLOADER</param-name>
+    <param-value>commons</param-value>
+  </context-param>
+  
+  <filter>
+    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+    <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+    <init-param>
+	      <param-name>thresholdSize</param-name>
+          <param-value>51200</param-value>
+  	</init-param>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+    <servlet-name>Faces Servlet</servlet-name>
+  </filter-mapping>
+  
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/classes/applicationContext.xml</param-value>
+  </context-param>
+  
+  <context-param>
+    <param-name>primefaces.FONT_AWESOME</param-name>
+    <param-value>false</param-value>
+  </context-param>
+  
+   <context-param>
+    <param-name>primefaces.RESET_VALUES</param-name>
+    <param-value>false</param-value>
+  </context-param>
+  
+   <context-param>
+    <param-name>primefaces.MOVE_SCRIPTS_TO_BOTTOM</param-name>
+    <param-value>false</param-value>
+  </context-param>
+
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+    
+  <context-param>
+	<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+	<param-value>/WEB-INF/classes/springsecurity.taglib.xml</param-value>
+ </context-param>
+  
+  <!-- Processes application requests -->
+	<servlet>
+		<servlet-name>spring</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet> 
+  
+  <servlet-mapping>
+	<servlet-name>spring</servlet-name>
+	<url-pattern>/restServicesAPI/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.faces</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.xhtml</url-pattern>
+  </servlet-mapping>
+  
+  <context-param>
+	  <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+	  <param-value>true</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>primefaces.THEME</param-name>
+    <param-value>nova-colored</param-value>
+  </context-param>
+
+  <session-config>
+        <session-timeout>180</session-timeout>
+  </session-config>
+
+    
+  <!-- <resource-ref>
+		<description>Pool conexiones postgreSQL</description>
+		<res-ref-name>jdbc/postgres</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+   </resource-ref>  -->
+  
+
+</web-app>

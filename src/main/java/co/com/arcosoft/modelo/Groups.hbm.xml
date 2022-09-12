@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Groups" table="groups" >
+        <id name="id" type="java.lang.Long">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="groupName" type="java.lang.String">
+            <column name="group_name" length="50" not-null="true" />
+        </property>
+        <set name="groupAuthoritieses" table="group_authorities" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="group_id" not-null="true" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.GroupAuthorities" />
+        </set>
+        <set name="groupMemberses" table="group_members" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="group_id" not-null="true" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.GroupMembers" />
+        </set>
+    </class>
+</hibernate-mapping>

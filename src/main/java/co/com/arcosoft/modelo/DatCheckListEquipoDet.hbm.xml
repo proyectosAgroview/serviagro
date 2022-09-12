@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 16/08/2019 09:52:37 AM by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatCheckListEquipoDet" table="dat_check_list_equipo_det">
+        <id name="datCheckListEquipoDetId" type="java.lang.Long">
+            <column name="dat_check_list_equipo_det_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="datCheckListEquipo" class="co.com.arcosoft.modelo.DatCheckListEquipo" fetch="select">
+            <column name="dat_check_list_equipo_id" />
+        </many-to-one>
+        <many-to-one name="sistemasEquipo" class="co.com.arcosoft.modelo.SistemasEquipo" fetch="select">
+            <column name="sistema_id" />
+        </many-to-one>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        <many-to-one name="compartimientosEquipo" class="co.com.arcosoft.modelo.CompartimientosEquipo" fetch="select">
+            <column name="compartimiento_id" />
+        </many-to-one>
+        <property name="horasHoy" type="java.lang.Double">
+            <column name="horas_hoy" precision="12" scale="4" />
+        </property>
+        <property name="kmHoy" type="java.lang.Double">
+            <column name="km_hoy" precision="12" scale="4" />
+        </property>
+        <property name="diasHoy" type="java.lang.Double">
+            <column name="dias_hoy" precision="12" scale="4" />
+        </property>
+        <set name="datCheckListEquipoLabors" table="dat_check_list_equipo_labor" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="dat_check_list_equipo_det_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatCheckListEquipoLabor" />
+        </set>
+    </class>
+</hibernate-mapping>

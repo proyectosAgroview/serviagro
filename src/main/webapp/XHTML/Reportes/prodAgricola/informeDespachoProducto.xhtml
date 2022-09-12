@@ -1,0 +1,194 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Informe: Toneladas despachadas por producto">
+
+						<p:panelGrid styleClass="ui-panelgrid-blank">
+
+							<p:row>
+								<p:column style="font-weight: bold;">
+
+									<h:panelGrid columns="3" id="panelGrid" width="340">
+										<p:outputLabel for="txtCompania" value="Compañía" />
+
+										<p:selectOneMenu id="txtCompania"
+											binding="#{informeDespachoProductoView.txtCompania}" style="font-size: 0.8em;"
+											required="true" requiredMessage="Seleccione una compañía">
+											<f:selectItem itemLabel="Seleccione una compañía"
+												itemValue="" />
+											<f:selectItems
+												value="#{informeDespachoProductoView.selectCompania}" />
+										</p:selectOneMenu>
+
+										<p:message for="txtCompania" />
+
+										<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{informeDespachoProductoView.txtFechaInicial}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaInicial" />
+
+										<p:outputLabel for="msgFechaFinal" value="Fecha Final: " />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											mask="true"
+											binding="#{informeDespachoProductoView.txtFechaFinal}"
+											required="true" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaFinal" />
+
+										<p:outputLabel for="contratistas" value="Clientes: " />
+										<p:selectCheckboxMenu id="contratistas"
+											value="#{informeDespachoProductoView.selectedContratista}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un cliente">
+											<f:selectItems
+												value="#{informeDespachoProductoView.contratistas}"
+												var="contratistas" itemLabel=" #{contratistas.nombre}"
+												itemValue="#{contratistas.persEmprId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="contratistas" />
+
+
+										<p:outputLabel for="productos" value="Producto: " />
+										<p:selectCheckboxMenu id="productos"
+											value="#{informeDespachoProductoView.selectedProducto}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un producto">
+											<f:selectItems
+												value="#{informeDespachoProductoView.productos}"
+												var="productos" itemLabel=" #{productos.nombre}"
+												itemValue="#{productos.productoId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="productos" />
+
+
+
+										<p:outputLabel for="unidadesMedida" value="Unidad de medida: " />
+										<p:selectCheckboxMenu id="unidadesMedida"
+											value="#{informeDespachoProductoView.selectedUdadMed}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una Udad. de medida">
+											<f:selectItems
+												value="#{informeDespachoProductoView.unidadesMedida}"
+												var="unidadesMedida" itemLabel=" #{unidadesMedida.nombre}"
+												itemValue="#{unidadesMedida.udadMedId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="unidadesMedida" />
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+
+								</p:column>
+
+								<p:column style="font-weight: bold;">
+									<h:panelGrid columns="1" id="panelGrid1" width="350">
+										<p:chart widgetVar="grafica"  type="bar"
+											model="#{informeDespachoProductoView.multiAxisModel}"
+											
+											style="width:550px; vertical-align: top; height:480px"
+											responsive="true">
+											<p:ajax event="itemSelect"
+												listener="#{informeDespachoProductoView.itemSelect}"
+												update="frm:dialog" />
+										</p:chart>
+									</h:panelGrid>
+								</p:column>
+
+							</p:row>
+
+						</p:panelGrid>
+
+					</p:panel>
+					<p:dialog id="dialog" appendTo="@(body)" draggable="true"
+						closable="true"
+						visible="#{informeDespachoProductoView.showDialog}" modal="true"
+						showEffect="fade" width="600" responsive="true" resizable="false"
+						styleClass="dialogFix">
+
+						<p:dataTable id="tbl" value="#{informeDespachoProductoView.data}"
+							var="informeCosG" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Reporte" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Compañia" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.nombreCompania}" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Producto" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.nombreProducto}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Cantidad (Ton)" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.cantidadDespachada}" >
+									   <f:convertNumber pattern="#0.00" />
+							  		 </h:outputText>
+							</p:column>
+						</p:dataTable>
+
+					</p:dialog>
+
+
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnConsultar" value="Consultar"
+								icon="ui-icon-newwin"
+								action="#{informeDespachoProductoView.action_informe1()}"
+								update="frm:panelGrid1" />
+							<p:commandButton value="Imprimir" icon="ui-icon-print"
+								style="margin:10px;" onclick="print('grafica')">
+							</p:commandButton>
+
+						</div>
+					</p:panel>
+
+
+
+				</h:form>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

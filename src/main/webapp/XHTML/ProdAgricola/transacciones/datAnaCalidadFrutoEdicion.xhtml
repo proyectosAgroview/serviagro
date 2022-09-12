@@ -1,0 +1,337 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+							
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatAnaLaboratorio"
+						header="Análisis del proceso industrial">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datAnaLabCalidadFrutoPalma2View.data}"
+							var="datAnaLaboratorio" paginator="true" lazy="true" rows="5"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Análisis del proceso industrial" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datAnaLaboratorio.estado}"
+								sortBy="#{datAnaLaboratorio.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaLaboratorio.consecutivo}"
+								sortBy="#{datAnaLaboratorio.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datAnaLaboratorio.nroTicket}"
+								sortBy="#{datAnaLaboratorio.nroTicket}">
+								<f:facet name="header">
+									<h:outputText value="#Tiquete" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.nroTicket}" />
+							</p:column>
+
+							
+							<p:column filterBy="#{datAnaLaboratorio.fechaAnalisis}"
+								sortBy="#{datAnaLaboratorio.fechaAnalisis}">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.fechaAnalisis}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Tipo Análisis" />
+								</f:facet>
+								<h:outputText value="#{datAnaLaboratorio.nombreAnalisis}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogDatAnaLaboratorio"
+										disabled="#{datAnaLaboratorio.estadoTrue}"
+										actionListener="#{datAnaLabCalidadFrutoPalma2View.action_edit}">
+										<f:attribute name="selectedDatAnaLaboratorio"
+											value="#{datAnaLaboratorio}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"
+										disabled="#{datAnaLaboratorio.estadoTrue}"
+										title="Anular Registro"
+										actionListener="#{datAnaLabCalidadFrutoPalma2View.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatAnaLaboratorio"
+											value="#{datAnaLaboratorio}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datAnaLabCalidadFrutoPalma2View.action_new()}"
+								update=":dialogDatAnaLaboratorio" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatAnaLaboratorio" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datAnaLabCalidadFrutoPalma2View.showDialog}" resizable="false"
+					modal="true" width="1100" styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatAnaLaboratorio"
+							header="Análisis del proceso industrial">
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{datAnaLabCalidadFrutoPalma2View.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="2" id="panelGrid1">
+
+										<p:outputLabel value="# Consecutivo: " />
+										<p:inputText id="txtConsecutivo" disabled="false"
+											binding="#{datAnaLabCalidadFrutoPalma2View.txtConsecutivo}"
+											placeholder="Buscar o crear registro" size="23">
+										</p:inputText>
+
+										<p:outputLabel value="#Tiquete: " />
+										<p:inputText id="txtTiquete" disabled="false"
+											binding="#{datAnaLabCalidadFrutoPalma2View.txtTiquete}"
+											size="20">
+										</p:inputText>
+											
+
+										<p:outputLabel for="msgFechaAnalisis" value="Fecha: "
+											style="font-size: 0.8em;" />
+										<p:calendar id="msgFechaAnalisis" showOn="button"
+											navigator="false" locale="es" size="14"
+											binding="#{datAnaLabCalidadFrutoPalma2View.txtFechaAnalisis}"
+											pattern="dd/MM/yyyy" mask="true" required="true"
+											requiredMessage="La fecha   es obligatoria">
+										</p:calendar>
+
+
+										<p:outputLabel for="txtAnaLaboratorioId_AnaLaboratorio"
+											value="Tipo de análisis: " />
+										<p:selectOneMenu id="txtAnaLaboratorioId_AnaLaboratorio"
+											effect="fade" filter="true" filterMatchMode="contains"
+											style="width: 100%;"
+											binding="#{datAnaLabCalidadFrutoPalma2View.txtAnaLaboratorioId_AnaLaboratorio}"
+											required="true" requiredMessage="Seleccione un análisis">
+												<f:selectItem itemLabel="Seleccione un análisis" itemValue="" noSelectionOption="true" />
+												<f:selectItem itemLabel="ANALISIS DE CALIDAD DE FRUTO" itemValue="3" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtHoraDigitacion" value="Hora ánalisis:"
+											style="font-size: 0.8em;" />
+										<p:calendar id="txtHoraDigitacion" showOn="button"
+											navigator="false" locale="es" size="8"
+											binding="#{datAnaLabCalidadFrutoPalma2View.txtHoraDigitacion}"
+											pattern="HH:mm" timeOnly="true" 
+											 mask="true" required="true" 
+											requiredMessage="La hora  es obligatoria">
+										</p:calendar>
+										
+											<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: " 
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+												filter="true" filterMatchMode="contains"
+												binding="#{datAnaLabCalidadFrutoPalma2View.txtNivel4Id_Nivel4}"
+												style="font-size: 0.9em;" required="true"
+												requiredMessage="Seleccione un lote">
+												<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+												<f:selectItems
+													value="#{datAnaLabCalidadFrutoPalma2View.selectNivel4Tiquete}" />
+												<p:ajax process="txtTiquete" />
+											</p:selectOneMenu>
+										
+										
+										
+										<p:outputLabel for="txtObservacion" value="Observación:" />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{datAnaLabCalidadFrutoPalma2View.txtObservacion}" rows="3"
+											cols="30" maxlength="1000" counterTemplate="{0} Caracteres"
+											autoResize="true" />
+
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden"
+											id="txtDatAnaLaboratorioId"
+											binding="#{datAnaLabCalidadFrutoPalma2View.txtDatAnaLaboratorioId}">
+										</p:inputText>
+
+
+									</h:panelGrid>
+								</p:tab>
+								
+
+								<p:tab title="Variables del análisis">
+														
+					
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel>
+						<p:dataTable id="tablaValores"
+							value="#{datAnaLabCalidadFrutoPalma2View.dataValor}" var="listaValor"
+							scrollable="true" scrollHeight="200"  scrollWidth="950"
+							editable="true" editMode="cell" widgetVar="cellEventos">
+
+							<p:ajax event="cellEdit"
+								listener="#{datAnaLabCalidadFrutoPalma2View.onCellEditEventos}" />
+
+
+							<p:column headerText="Variable" style="width: 30%" >
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.9em;"
+											value="#{listaValor.codigoVariable}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.9em;"
+											value="#{listaValor.codigoVariable}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<p:column headerText="Valor"  style="width: 20% ; font-size:: 0.8em" >
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText style="font-size: 0.8em;"
+											value="#{listaValor.valorVariable}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText style="font-size: 0.8em;"
+											value="#{listaValor.valorVariable}">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+
+							<f:attribute name="selectedValorAnalisis" value="#{listaValor}" />
+
+						</p:dataTable>
+						</p:panel>
+
+								</p:tab>
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datAnaLabCalidadFrutoPalma2View.btnSave}"
+									value="Grabar e Importar variables" process="@all"
+									action="#{datAnaLabCalidadFrutoPalma2View.action_save()}"
+									update=":dialogDatAnaLaboratorio :frm:panelDataTableDatAnaLaboratorio :formDialog" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datAnaLabCalidadFrutoPalma2View.action_clear()}"
+									process="@this" update=":dialogDatAnaLaboratorio" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+
+
+
+				<!-- Formulario anulacion -->
+
+
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="false"
+					visible="#{datAnaLabCalidadFrutoPalma2View.showDialog}" modal="true"
+					width="500">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datAnaLabCalidadFrutoPalma2View.txtObservacionAnularReg}"
+									rows="5" cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden"
+									id="txtDatAnaLaboratorioId2"
+									binding="#{datAnaLabCalidadFrutoPalma2View.txtDatAnaLaboratorioId}">
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datAnaLabCalidadFrutoPalma2View.btnDelete}"
+									value="Grabar"
+									action="#{datAnaLabCalidadFrutoPalma2View.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatAnaLaboratorio" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datAnaLabCalidadFrutoPalma2View.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

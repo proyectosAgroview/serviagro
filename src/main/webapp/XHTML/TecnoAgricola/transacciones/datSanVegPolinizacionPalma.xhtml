@@ -1,0 +1,475 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableDatSanVeg"
+						header="Polinización">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl"
+							value="#{datSanVegPolinizacionPalmaView.data}" var="datSanVeg"
+							paginator="true" lazy="true" rows="5" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Análisis de sanidad vegental" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datSanVeg.estado}"
+								sortBy="#{datSanVeg.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datSanVeg.consecutivo}"
+								sortBy="#{datSanVeg.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.consecutivo}" />
+							</p:column>
+							
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Tipo Análisis" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.nombreAnalisis}" />
+							</p:column>
+
+
+							<p:column filterBy="#{datSanVeg.fechaAnalisis}"
+								sortBy="#{datSanVeg.fechaAnalisis}">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.fechaAnalisis}" >
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Finca" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.nombreHacienda}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Lote" />
+								</f:facet>
+								<h:outputText value="#{datSanVeg.nombreLote}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatSanVeg" disabled="#{datSanVeg.estadoTrue}"
+										actionListener="#{datSanVegPolinizacionPalmaView.action_edit}">
+										<f:attribute name="selectedDatSanVeg" value="#{datSanVeg}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"
+										disabled="#{datSanVeg.estadoTrue}" title="Anular Registro"
+										actionListener="#{datSanVegPolinizacionPalmaView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatSanVeg" value="#{datSanVeg}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datSanVegPolinizacionPalmaView.action_new()}"
+								update=":dialogDatSanVeg" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatSanVeg" appendTo="@(body)" draggable="true"
+					closable="true"
+					visible="#{datSanVegPolinizacionPalmaView.showDialog}"
+					resizable="false" modal="true" width="1100" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatSanVeg"
+							header="Polinización">
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{datSanVegPolinizacionPalmaView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="5" id="panelGrid1">
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{datSanVegPolinizacionPalmaView.txtEstado}"
+											required="true" requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel value="# Consecutivo: " />
+										<p:inputText id="txtConsecutivo" disabled="false"
+											binding="#{datSanVegPolinizacionPalmaView.txtConsecutivo}"
+											placeholder="Buscar o crear registro" size="23">
+										</p:inputText>
+										<p:outputLabel />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="msgfechaAnalisis"
+											value="Fecha del análisis: " />
+										<p:calendar id="msgfechaAnalisis" showOn="button"
+											navigator="false" locale="es"
+											binding="#{datSanVegPolinizacionPalmaView.txtFechaAnalisis}"
+											pattern="dd/MM/yyyy" mask="true" required="true"
+											requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgfechaAnalisis" />
+										<p:outputLabel />
+										<p:outputLabel />
+										
+										<p:outputLabel for="txtAnaSanVegId_AnaSanVeg"
+											value="Tipo de análisis: " />
+										<p:selectOneMenu id="txtAnaSanVegId_AnaSanVeg" effect="fade"
+											filter="true" filterMatchMode="contains" style="width: 100%;"
+											binding="#{datSanVegPolinizacionPalmaView.txtAnaSanVegId_AnaSanVeg}"
+											required="true" requiredMessage="Seleccione un análisis">
+											<f:selectItem itemLabel="POLINIZACION" itemValue="7" />
+										</p:selectOneMenu>
+										<p:message for="txtAnaSanVegId_AnaSanVeg" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtTrabId_Trabajador" value="Analista: " />
+										<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+											filter="true" filterMatchMode="contains" style="width: 100%;"
+											binding="#{datSanVegPolinizacionPalmaView.txtTrabId_Trabajador}"
+											required="false" requiredMessage="Seleccione un analista">
+											<f:selectItem itemLabel="Seleccione un analista" itemValue="" />
+											<f:selectItems
+												value="#{datSanVegPolinizacionPalmaView.selectTrabajador}" />
+
+										</p:selectOneMenu>
+										<p:message for="txtTrabId_Trabajador" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel1Id" value="Zona: " />
+										<p:selectOneMenu id="txtNivel1Id" effect="fade" filter="true"
+											filterMatchMode="contains"
+											binding="#{datSanVegPolinizacionPalmaView.txtNivel1Id}"
+											required="true" style="width: 100%;"
+											requiredMessage="Seleccione una zona">
+											<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+											<f:selectItems
+												value="#{datSanVegPolinizacionPalmaView.selectNivel1}" />
+											<p:ajax update="txtNivel2Id_Nivel2" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel1Id" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel2Id_Nivel2" value="Hacienda: " />
+										<p:selectOneMenu id="txtNivel2Id_Nivel2" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{datSanVegPolinizacionPalmaView.txtNivel2Id_Nivel2}"
+											style="width: 100%;" required="true"
+											requiredMessage="Seleccione una hacienda">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems
+												value="#{datSanVegPolinizacionPalmaView.selectNivel2}" />
+											<p:ajax update="txtNivel3Id" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel2Id_Nivel2" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel3Id" value="Bloque: " />
+										<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+											filterMatchMode="contains" style="width: 100%;"
+											binding="#{datSanVegPolinizacionPalmaView.txtNivel3Id}"
+											required="true"
+											requiredMessage="Seleccione un bloque del cultivo">
+											<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+											<f:selectItems
+												value="#{datSanVegPolinizacionPalmaView.selectNivel3}" />
+											<p:ajax update="txtNivel4Id_Nivel4" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel3Id" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: " />
+										<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+											filter="true" filterMatchMode="contains" style="width: 100%;"
+											binding="#{datSanVegPolinizacionPalmaView.txtNivel4Id_Nivel4}"
+											required="true" requiredMessage="Seleccione un lote">
+											<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+											<f:selectItems
+												value="#{datSanVegPolinizacionPalmaView.selectNivel4}" />
+
+										</p:selectOneMenu>
+										<p:message for="txtNivel4Id_Nivel4" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtObservacion" value="Observación:" />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{datSanVegPolinizacionPalmaView.txtObservacion}"
+											rows="3" cols="30" counter="display" maxlength="1000"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtDatSanVegId"
+											binding="#{datSanVegPolinizacionPalmaView.txtDatSanVegId}">
+										</p:inputText>
+
+
+									</h:panelGrid>
+								</p:tab>
+
+								<p:tab title="Variables digitadas">
+									<h:panelGrid columns="2" id="panelGrid2">
+
+
+										<p:outputLabel for="txtVariable1" value="Linea: " />
+										<p:spinner disabled="true" id="txtVariable1"
+											binding="#{datSanVegPolinizacionPalmaView.txtVariable1}"
+											required="false" requiredMessage="Indique la linea" 
+											size="10">
+										</p:spinner>
+
+
+										<p:outputLabel for="txtVariable2" value="Planta: " />
+										<p:spinner disabled="true" id="txtVariable2"
+											binding="#{datSanVegPolinizacionPalmaView.txtVariable2}"
+											required="false" requiredMessage="Indique una planta"
+											 size="10">
+										</p:spinner>
+
+									<p:outputLabel for="txtVariable3" value="Polen entregado: " />
+										<p:spinner disabled="true" id="txtVariable3"
+											binding="#{datSanVegPolinizacionPalmaView.txtVariable3}"
+											required="false" requiredMessage="Indique la cantidad de racimos"
+											 size="10">
+										</p:spinner>
+										
+										<p:outputLabel for="txtVariable4" value="Número de flores:" />
+										<p:spinner disabled="true" id="txtVariable4"
+											binding="#{datSanVegPolinizacionPalmaView.txtVariable4}"
+											required="false" requiredMessage="Indique el número de flores"
+											 size="10">
+										</p:spinner>
+
+									</h:panelGrid>
+
+									<h:panelGrid columns="2" id="PanelGrid6" style="margin:10px"
+										cellpadding="5">
+
+										<f:facet name="header">
+
+											<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+												binding="#{datSanVegPolinizacionPalmaView.btnAgregar}"
+												value="Agregar"
+												action="#{datSanVegPolinizacionPalmaView.action_agregarValores()}"
+												update="tablaValores :dialogDatSanVeg" />
+
+											<p:commandButton id="btnlimpiar1" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="panelGrid2" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+
+									</h:panelGrid>
+
+									<p:outputPanel>
+
+																<p:dataTable id="tablaValores"
+							value="#{datSanVegPolinizacionPalmaView.dataValor}" var="listaValor"
+							scrollable="true" scrollHeight="200"  scrollWidth="950"
+							editable="true" editMode="cell" widgetVar="cellEventos">
+											
+
+								<p:ajax event="cellEdit"
+								listener="#{datSanVegPolinizacionPalmaView.onCellEditEventos}" />
+											
+
+
+											<p:column headerText="Linea">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaValor.variable1}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaValor.variable1}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Planta">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaValor.variable2}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaValor.variable2}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+
+											<p:column headerText="Polen">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaValor.variable3}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaValor.variable3}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="No. Flores">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaValor.variable4}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaValor.variable4}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<f:attribute name="selectedValor" value="#{listaValor}" />
+										
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datSanVegPolinizacionPalmaView.actionDeleteValorVar}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaValores :dialogDatSanVeg">
+														<f:attribute name="selectedValor" value="#{listaValor}" />
+													</p:commandButton>
+
+												</div>
+											</p:column>
+
+										</p:dataTable>
+									</p:outputPanel>
+
+
+								</p:tab>
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datSanVegPolinizacionPalmaView.btnSave}"
+									value="Grabar"
+									action="#{datSanVegPolinizacionPalmaView.action_save()}"
+									update=":dialogDatSanVeg :frm:panelDataTableDatSanVeg" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datSanVegPolinizacionPalmaView.action_clear()}"
+									process="@this" update=":dialogDatSanVeg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="false"
+					visible="#{datSanVegPolinizacionPalmaView.showDialog}" modal="true"
+					width="500">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datSanVegPolinizacionPalmaView.txtObservacionAnularReg}"
+									rows="5" cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden" id="txtDatSanVegId2"
+									binding="#{datSanVegPolinizacionPalmaView.txtDatSanVegId}">
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false"
+									binding="#{datSanVegPolinizacionPalmaView.btnDelete}"
+									value="Grabar"
+									action="#{datSanVegPolinizacionPalmaView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatSanVeg" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datSanVegPolinizacionPalmaView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,73 @@
+En archivos
+	1- Los primeros 6 items son la tabla madera (ref producto) y se maneja con un atributo tipo_madera(tendria los valores de los 6 items mas "otro"), obligatorio - Listo
+	2- Proveedor (pers_empr) - Listo
+	3- Precios madera (madera_precio_proveedor - agregar campos : madera_id, pers_empr_id, udad_med_id, periodo_inicial, periodo_final, flete, precio) - Listo
+	4- Clase de productos (tipo_producto) - Listo
+	5- Producto terminado (producto - agregar campos : udad_med(conversion), factor(numero decimal) ref (grupo_producto)) - Listo
+	6- Grupos de producto (nueva) - Listo
+	7- Concepto kardex (concepto_kardex - agregar campos : aplica) - Listo
+	8- Procesos de produccion (procesos_produccion) (en access se llama procesos) - Listo
+	9- Compania (parametros = Registro de control) - Listo
+	10- En los parametros de la compania agregar el procentaje de perdida a las pulgadas - Listo
+
+	11- Al menu oculto llamarlo estivas_madera
+	12- tablas de trasacciones value borrar - Listo
+	13- en los datas el boton editar value editar - Listo
+	14- Al data del kardex agregar el tipo de movimiento - Listo
+	15- En procesos poner mod y cif como inputNumber - Listo
+	16- catalogo tipo_tabla(sub_tipo_tabla) - agregar madera_aprovechable y unidad_real	
+	17- catalogo tipo_cuarton(sub_tipo_cuarton) - agregar madera_aprovechable y unidad_real	
+
+	18- En la compania crear un tab(Contizaciones) con los campos (porc_costo_man_obra, porc_costo_cif, porc_gastos_admon_fin)
+	
+En materiales
+	1- Compra de madera (dat_compra_madera = dat_compra_productos) (en access se llama mpentradas)
+	2- Detalle de compra madera (precio_prom_madera = precio_prom_prod) (en access se llama kardexmp)
+	3- Abonos ( nueva - dat_abonos_compra_madera => ref abonos oriana)
+
+Transaccion
+	1- Cotizacion (
+		pers_empr_id, 
+		f_creacion, 
+		f_modificacion, 
+		consecutivo, 
+		solicitante(se llena y actualiza el representante legal), 
+		producto_id, 
+		udad_med_id, {largo, ancho, alto, peso (se llenan con producto)}
+		total_pulgadas(se llena con el total se la suma de pulgadas del detalle), 
+		porc_cobertura, 
+		valor_cobertura(porc_covertura * total_pulgadas), 
+		pulgadas_sin_covertura(total_pulgadas - valor_covertura)
+		precio_pulgada_madera, 
+		forma_pago(numerico), 
+		clase_producto(se llena con el producto), 
+		sub_total_costo_venta(se suma el costo total del detalle), 
+		costo_mano_obra(segun porc_costo_man_obra del sub_total_costo_venta),
+		costos_venta_man_obra(sub_total_costo_venta + costo_mano_obra), 
+		costo_cif(porc_costo_cif del costos_venta_man_obra), 
+		porc_costo_financiero, 
+		costo_financiero(porc_costo_financiero del costos_venta_man_obra + cif),
+		total_costo_vent_mo_cif_finan(costos_venta_man_obra + costo_financiero + costo_cif), 
+		total_costo_admon_finan(porc_gastos_admon_fin del sub_total_costo_venta), 
+		total_costos_gastos(total_costo_vent_mo_cif_finan + total_costo_admon_finan), 
+		norma_nif, 
+		porc_utilidad_ant_impuesto, 
+		utilidad_ant_impuesto(total_costo_vent_mo_cif_finan + total_costo_admon_finan * porc_utilidad_ant_impuesto / 100),
+		porc_imp_renta, 
+		prov_imp_renta(utilidad_ant_impuesto * porc_imp_renta), 
+		utilidad_neta(utilidad_ant_impuesto - prov_imp_renta), 
+		precio_venta_ant_flete(total_costos_gastos + utilidad_ant_impuesto + prov_imp_renta), 
+
+		transporte, 
+		comisiones, 
+		materiales, 
+		precio_venta(precio_venta_ant_flete + transporte + comisiones + materiales))
+
+	2- Cotizacion detalle ()
+	
+Producto
+	1- Agregar campos (largo, ancho, alto, peso)
+
+Compra de madera
+	1- Agregar el campo forma_presentacion (normal, troza, descuadrada)
+	2- Adjuntar archivos en la pantalla nueva y la compra de madera

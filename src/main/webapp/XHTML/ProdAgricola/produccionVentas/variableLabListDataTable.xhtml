@@ -1,0 +1,259 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableVariableLab"
+						header="Variables de análisis">
+						<!-- <p:growl id="men" />  -->
+						<p:dataTable id="tbl" value="#{variableLabView.data}"
+							var="variable" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="VariableLabs" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{variable.estado}"
+								sortBy="#{variable.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{variable.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{variable.codigo}"
+								sortBy="#{variable.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{variable.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{variable.nombre}"
+								sortBy="#{variable.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{variable.nombre}" />
+							</p:column>
+
+
+							<p:column filterBy="#{variable.tipoDato}"
+								sortBy="#{variable.tipoDato}">
+								<f:facet name="header">
+									<h:outputText value="Tipo Dato" />
+								</f:facet>
+								<h:outputText value="#{variable.tipoDato}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogVariableLab"
+										actionListener="#{variableLabView.action_edit}">
+										<f:attribute name="selectedVariableLab" value="#{variable}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{variableLabView.action_new()}"
+								update=":dialogVariableLab" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogVariableLab" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{variableLabView.showDialog}"
+					resizable="false" modal="true" width="800" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+
+						<p:panel id="panelVariableLab" header="Variables">
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{variableLabView.activeTapIndex}"
+							 scrollable="true"  style="margin:1px;">
+
+								<p:tab title="Información de Variables">
+
+									<h:panelGrid columns="2" id="panelGrid" >
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{variableLabView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{variableLabView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="25">
+											<p:ajax
+												update=":formDialog:panelVariableLab,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{variableLabView.listener_txtCodigo}" />
+										</p:inputText>
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true" size="40"
+											binding="#{variableLabView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+										
+
+										
+
+										<p:outputLabel value="Tipo de Dato:" />
+										<p:selectOneMenu id="txtTipoDato" disabled="true"
+											binding="#{variableLabView.txtTipoDato}" style="width:125px"
+											required="true" requiredMessage="Seleccione un tipo de dato">
+											<f:selectItem itemLabel="Seleccione un tipo de dato" itemValue=""  noSelectionOption="true"/>
+											<f:selectItem itemLabel="Decimal" itemValue="Decimal" />
+											<p:ajax
+												update="txtValorMaximo, txtValorMinimo, txtNumeroDecimales, txtTipoDeAcumulado "
+												listener="#{variableLabView.listener_tipoDato}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtNumeroDecimales"
+											value="Número de decimales: " />
+										<p:spinner disabled="true" id="txtNumeroDecimales"
+											binding="#{variableLabView.txtNumeroDecimales}" value="0"
+											size="3">
+											<f:validateDoubleRange minimum="0" maximum="9" />
+										</p:spinner>
+
+										<p:outputLabel for="txtValorMaximo" value=" Valor Máximo:" />
+										<p:inputText id="txtValorMaximo"
+											binding="#{variableLabView.txtValorMaximo}" size="3">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+
+										<p:outputLabel for="txtValorMinimo" value=" Valor Mínimo:" />
+										<p:inputText id="txtValorMinimo"
+											binding="#{variableLabView.txtValorMinimo}" size="3">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+
+										<p:inputText style="visibility:hidden" id="txtVariableLabId"
+											binding="#{variableLabView.txtVariableLabId}" />
+
+									</h:panelGrid>
+									</p:tab>
+
+									<p:tab title="Otras configuraciones">
+										<h:panelGrid columns="2" id="panelGrid2" layout="grid">
+
+											<p:outputLabel value="Frecuencia de digitación:" />
+											<p:selectOneMenu id="txtPeriocidadVariable" disabled="true"
+												binding="#{variableLabView.txtPeriocidadVariable}"
+												style="width:125px" required="true"
+												requiredMessage="Seleccione una frecuencia">
+												<f:selectItem itemLabel="Seleccionar" itemValue="" />
+												<f:selectItem itemLabel="Diaria" itemValue="Diaria" />
+												<f:selectItem itemLabel="Horaria" itemValue="Horaria" />
+											</p:selectOneMenu>
+
+											<p:outputLabel value="Tipo de acumulado:" />
+											<p:selectOneMenu id="txtTipoDeAcumulado" disabled="true"
+												binding="#{variableLabView.txtTipoDeAcumulado}"
+												style="width:125px" required="true"
+												requiredMessage="Seleccione un tipo de acumulado">
+												<f:selectItem itemLabel="Sumatoria" itemValue="Sumatoria" />
+												<f:selectItem itemLabel="Promedio" itemValue="Promedio" />
+											</p:selectOneMenu>
+
+											<p:outputLabel value="Tipo de variable:" />
+											<p:selectOneMenu id="txtTipoVariable" disabled="true"
+												binding="#{variableLabView.txtTipoVariable}"
+												style="width:125px" required="true"
+												requiredMessage="Seleccione un tipo de variable">
+												<f:selectItem itemLabel="Digitada" itemValue="Digitada" />
+												<f:selectItem itemLabel="Formula" itemValue="Formula" />
+												<p:ajax update="txtFormula"
+													listener="#{variableLabView.listener_tipoVariable}" />
+											</p:selectOneMenu>
+
+
+											<p:outputLabel for="txtFormula" value="Fórmula:" />
+											<p:inputTextarea id="txtFormula" disabled="true"
+												binding="#{variableLabView.txtFormula}" rows="2" cols="60"
+												maxlength="100" counterTemplate="{0} Caracteres."
+												autoResize="true" />
+
+
+											<p:outputLabel for="txtInfoAdicional"
+												value="Información Adicional 1:" />
+											<p:inputTextarea id="txtInfoAdicional" disabled="true"
+												binding="#{variableLabView.txtInfoAdicional}" rows="2"
+												cols="30" maxlength="100" counterTemplate="{0} Caracteres"
+												autoResize="true" />
+
+
+											<p:outputLabel for="txtInfoAdicional2"
+												value="Información Adicional 2:" />
+											<p:inputTextarea id="txtInfoAdicional2" disabled="true"
+												binding="#{variableLabView.txtInfoAdicional2}" rows="2"
+												cols="30" maxlength="100" counterTemplate="{0} Caracteres."
+												autoResize="true" />
+
+
+										</h:panelGrid>
+									
+
+								</p:tab>
+
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{variableLabView.btnSave}" value="Grabar"
+									action="#{variableLabView.action_save()}"
+									update=":dialogVariableLab :frm:panelDataTableVariableLab" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" process="@this"
+									action="#{variableLabView.action_clear()}"
+									update=":dialogVariableLab" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

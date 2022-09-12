@@ -1,0 +1,358 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 20000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+					<p:panel id="panelDataTable" header="Filtros">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2" id="panelGrid">
+
+
+										<p:outputLabel for="msgFechaInicial" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{datFacturaServiciosTercerosView.txtFechaInicial}"
+											required="false" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFinal" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es" pattern="dd/MM/yyyy"
+											style="font-size: 0.9em;" mask="true" size="12"
+											binding="#{datFacturaServiciosTercerosView.txtFechaFinal}"
+											required="false" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel value="Consecutivo:" />
+										<p:inputText id="txtNumeroFacturaConsulta"
+											binding="#{datFacturaServiciosTercerosView.txtNumeroFacturaConsulta}"
+											disable="true">
+
+										</p:inputText>
+										
+											<p:outputLabel for="txtCentCostConsulta" value="Centro costo" />
+											<p:selectOneMenu id="txtCentCostConsulta" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width:160px;"
+												binding="#{datFacturaServiciosTercerosView.txtCentCostConsulta}"
+												required="false" requiredMessage="Seleccione un centro de Costo">
+												<f:selectItem itemLabel="TODOS"
+													itemValue="0" />
+												<f:selectItems value="#{datFacturaServiciosTercerosView.selectCentCostConsulta}" />
+											</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:commandButton id="btnConsultar" value="Consultar"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{datFacturaServiciosTercerosView.listarFacturaServicios}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+									</h:panelGrid>
+								</p:column>
+
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="panelDataTableDatFacturaServicios"
+						header="Factura (Ingresos)  / egresos proveedores externos">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl"
+							value="#{datFacturaServiciosTercerosView.data2}"
+							var="datFacturaServicios" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datFacturaServiciosTerceros" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Consecutivo" />
+								</f:facet>
+								<h:outputText value="#{datFacturaServicios.consecutivo}" />
+							</p:column>
+
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datFacturaServicios.fecha_registro}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Tipo operación" />
+								</f:facet>
+								<h:outputText value="#{datFacturaServicios.tipoOperacion}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Cent. costo" />
+								</f:facet>
+								<h:outputText value="#{datFacturaServicios.nomCentroCosto}" />
+							</p:column>
+
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Proveedor" />
+								</f:facet>
+								<h:outputText value="#{datFacturaServicios.nomProveedor}" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Cliente" />
+								</f:facet>
+								<h:outputText value="#{datFacturaServicios.nom_cliente}" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Detalle factura" />
+								</f:facet>
+								<h:outputText value="#{datFacturaServicios.detalle_factura}" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="VR. Total" />
+								</f:facet>
+								<h:outputText value="#{datFacturaServicios.valor_factura}">
+									<f:convertNumber type="currency" currencySymbol="$" />
+								</h:outputText>
+							</p:column>
+
+						
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogDatFacturaServicios"
+										actionListener="#{datFacturaServiciosTercerosView.action_edit}">
+										<f:attribute name="selectFacturas"
+											value="#{datFacturaServicios}" />
+
+									</p:commandButton>
+
+									<p:commandButton id="btnDelete1" icon="ui-icon-trash"
+										actionListener="#{datFacturaServiciosTercerosView.action_delete_datatable}"
+										required="false" title="Borrar" value="Borrar"
+										onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+										update="tbl, :frm:growl, frm">
+										<f:attribute name="selectFacturas"
+											value="#{datFacturaServicios}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						
+
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datFacturaServiciosTercerosView.action_new()}"
+								update=":dialogDatFacturaServicios" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatFacturaServicios" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datFacturaServiciosTercerosView.showDialog}"
+					resizable="false" modal="true" width="1000" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatFacturaServicios"
+							header="Factura (Ingresos) / egresos proveedores externos">
+
+
+							<h:panelGrid columns="2">
+								<p:outputLabel value="#Documento:" style="font-size: 0.9em;" />
+								<p:inputText id="txtConsecutivo" disabled="false"
+									style="font-size: 0.9em;"
+									binding="#{datFacturaServiciosTercerosView.txtConsecutivo}" size="10">
+								</p:inputText>
+
+
+								<p:outputLabel for="msgFechaRegistro" value="F. Registro "
+									style="font-size: 0.9em" />
+								<p:calendar id="msgFechaRegistro" showOn="button"
+									navigator="false" locale="es" pattern="dd/MM/yyyy"
+									style="font-size: 0.9em;"
+									binding="#{datFacturaServiciosTercerosView.txtFechaRegistro}"
+									mask="true" required="true" size="12"
+									requiredMessage="La Fecha de la factura  es obligatoria">
+								</p:calendar>
+
+								<p:outputLabel for="txtTipoOperacion" value="Tipo operación" />
+								<p:selectOneMenu id="txtTipoOperacion" effect="fade"
+									filter="true" filterMatchMode="contains" autoWidth="false"
+									style="width:160px;"
+									binding="#{datFacturaServiciosTercerosView.txtTipoOperacion}"
+									required="true" requiredMessage="Seleccione un tipo de operación">
+									<f:selectItem itemLabel="Ingreso"
+										itemValue="Ingreso" />
+									<f:selectItem itemLabel="Egreso"
+										itemValue="Egreso" />
+								</p:selectOneMenu>
+								
+								<p:outputLabel for="txtCentCostId_CentCost" value="CeCos" />
+								<p:selectOneMenu id="txtCentCostId_CentCost" effect="fade"
+									filter="true" filterMatchMode="contains" autoWidth="false"
+									style="width:160px;"
+									binding="#{datFacturaServiciosTercerosView.txtCentCostId_CentCost}"
+									required="true" requiredMessage="Seleccione un centro de Costo">
+									<f:selectItem itemLabel="Seleccione un centro de Costo"
+										itemValue="" />
+									<f:selectItems value="#{datFacturaServiciosTercerosView.selectCentCost}" />
+								</p:selectOneMenu>
+
+
+								<p:outputLabel value="Proveedor: " style="font-size: 0.9em; " />
+								<p:selectOneMenu id="txtPersEmprId" effect="fade" filter="true"
+									filterMatchMode="contains"
+									style="font-size: 0.9em; width: 150px;"
+									binding="#{datFacturaServiciosTercerosView.txtPersEmprId}"
+									autoWidth="false" required="true"
+									requiredMessage="Seleccione un proveedor">
+									<f:selectItem itemLabel="Seleccione un proveedor" itemValue="" />
+									<f:selectItems
+										value="#{datFacturaServiciosTercerosView.selectContratista}" />
+
+								</p:selectOneMenu>
+
+								<p:outputLabel value="Cliente: " style="font-size: 0.9em; " />
+								<p:selectOneMenu id="txtClienteId" effect="fade" filter="true"
+									filterMatchMode="contains"
+									style="font-size: 0.9em; width: 150px;"
+									binding="#{datFacturaServiciosTercerosView.txtClienteId}"
+									autoWidth="false" required="true"
+									requiredMessage="Seleccione un cliente">
+									<f:selectItem itemLabel="Seleccione un cliente" itemValue="" />
+									<f:selectItems
+										value="#{datFacturaServiciosTercerosView.selectCliente}" />
+
+								</p:selectOneMenu>
+
+								
+									<p:outputLabel style="font-size: 0.9em; "
+										value="Detalle de la factura: " />
+									<p:inputTextarea id="txtDetalleFactura"
+										style="font-size: 0.9em;"
+										binding="#{datFacturaServiciosTercerosView.txtDetalleFactura}"
+										rows="1" cols="50" maxlength="3900" autoResize="true" />
+
+									<p:outputLabel for="txtValorFactura" value="Total factura: "
+										style="font-size: 0.9em;" />
+									<p:inputNumber id="txtValorFactura" style="font-size: 0.9em;"
+										size="12" decimalSeparator="." thousandSeparator=","
+										decimalPlaces="2" requiredMessage="El valor es obligatorio"
+										binding="#{datFacturaServiciosTercerosView.txtValorFactura}"
+										required="true">
+									</p:inputNumber>
+
+									<!-- id auto incrementable -->
+									<p:inputText style="visibility:hidden"
+										id="txtDatFacturaServiciosTercerosId"
+										binding="#{datFacturaServiciosTercerosView.txtDatFacturaServiciosTercerosId}">
+									</p:inputText>
+
+
+								</h:panelGrid>
+
+
+
+
+								<!-- <p:growl id="men"/>	 -->
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datFacturaServiciosTercerosView.btnSave}"
+									value="Grabar"
+									action="#{datFacturaServiciosTercerosView.action_save()}"
+									update=":dialogDatFacturaServicios :frm:panelDataTableDatFacturaServicios" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datFacturaServiciosTercerosView.action_clear()}"
+									process="@this" update=":dialogDatFacturaServicios" />
+
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

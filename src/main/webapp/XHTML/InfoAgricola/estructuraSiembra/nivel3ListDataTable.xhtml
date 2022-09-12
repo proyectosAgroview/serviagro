@@ -1,0 +1,220 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+					<p:panel id="panelDataTableNivel3" header="Bloque">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{nivel3View.data}" var="nivel3"
+							paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Bloque" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{nivel3.estado}" sortBy="#{nivel3.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{nivel3.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{nivel3.nombreNivel2}">
+								<f:facet name="header">
+									<h:outputText value="Hacienda" />
+								</f:facet>
+								<h:outputText value="#{nivel3.nombreNivel2}" />
+							</p:column>
+
+
+							<p:column filterBy="#{nivel3.codigo}" sortBy="#{nivel3.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{nivel3.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{nivel3.nombre}" sortBy="#{nivel3.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{nivel3.nombre}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogNivel3"
+										actionListener="#{nivel3View.action_edit}">
+										<f:attribute name="selectedNivel3" value="#{nivel3}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{nivel3View.action_new()}" update=":dialogNivel3" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogNivel3" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{nivel3View.showDialog}"
+					resizable="false" modal="true" width="600" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelNivel3" header="Bloque">
+
+							<p:tabView style="margin:1px;" id="tabMapa" activeIndex="#{nivel3View.activeTapIndex}">
+								<p:tab title="General" >
+									<h:panelGrid columns="3" cellpadding="5">
+
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{nivel3View.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+
+										<p:outputLabel for="txtNivel2Id_Nivel2" value="Hacienda:" />
+										<p:selectOneMenu id="txtNivel2Id_Nivel2" effect="fade"
+											style="width: 100%;"
+											filter="true" filterMatchMode="startsWith"
+											binding="#{nivel3View.txtNivel2Id_Nivel2}" required="true"
+											requiredMessage="Seleccione una hacienda">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems value="#{nivel3View.selectNivel2}" />
+										</p:selectOneMenu>
+										<p:message for="txtNivel2Id_Nivel2" />
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{nivel3View.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelNivel3,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{nivel3View.listener_txtCodigo}" />
+										</p:inputText>
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true"
+											binding="#{nivel3View.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+										<p:message for="txtNombre" />
+
+										<p:outputLabel for="txtCodigoAlternativo" value="Código en ERP: " />
+										<p:inputText id="txtCodigoAlternativo" disabled="true"
+											binding="#{nivel3View.txtCodigoAlternativo}" required="false"
+											requiredMessage="El código es Obligatorio" />
+										<p:message for="txtCodigoAlternativo" />
+
+
+										<p:outputLabel for="txtTrabId_Trabajador" value="Supervisor" />
+										<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+											filter="true" filterMatchMode="startsWith"
+											binding="#{nivel3View.txtTrabId_Trabajador}" required="false"
+											requiredMessage="Seleccione un trabajador">
+											<f:selectItem itemLabel="Seleccione un trabajador"
+												itemValue="" />
+											<f:selectItems value="#{nivel3View.selectTrabajador}" />
+										</p:selectOneMenu>
+										<p:message for="txtTrabId_Trabajador" />
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1:" />
+										<p:inputTextarea id="txtInfoAdicional"  scrollHeight="25"
+											binding="#{nivel3View.txtInfoAdicional}" rows="2" cols="30"
+											counter="display" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="false" />
+										<h:outputText id="display" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2:" />
+										<p:inputTextarea id="txtInfoAdicional2"  scrollHeight="25"
+											binding="#{nivel3View.txtInfoAdicional2}" rows="2" cols="30"
+											counter="display2" maxlength="100"
+											counterTemplate="{0} Caracteres." autoResize="false" />
+										<h:outputText id="display2" />
+
+										<!-- id auto incrementable -->
+										<p:inputText style="visibility:hidden" id="txtNivel3Id"
+											binding="#{nivel3View.txtNivel3Id}">
+										
+										</p:inputText>
+									</h:panelGrid>
+								</p:tab>
+								<p:tab title="Ubicación(Maps)">
+									<h:panelGrid columns="3" cellpadding="5">
+										<p:outputLabel for="txtLatitud" value="Latitud: " />
+										<p:inputText id="txtLatitud" disabled="true"
+											binding="#{nivel3View.txtLatitud}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtLatitud" />
+
+										<p:outputLabel for="txtLongitud" value="Longitud: " />
+										<p:inputText id="txtLongitud" disabled="true"
+											binding="#{nivel3View.txtLongitud}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtLongitud" />
+
+										<p:outputLabel for="txtPrecision" value="Precision: " />
+										<p:inputText id="txtPrecision" disabled="true"
+											binding="#{nivel3View.txtPrecision}">
+											<f:converter converterId="javax.faces.Float" />
+										</p:inputText>
+										<p:message for="txtPrecision" />
+									</h:panelGrid>
+										
+								</p:tab>
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{nivel3View.btnSave}" value="Grabar"
+									action="#{nivel3View.action_save()}"
+									update=":dialogNivel3 :frm:panelDataTableNivel3" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{nivel3View.action_clear()}"
+									process="@this" update=":dialogNivel3" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

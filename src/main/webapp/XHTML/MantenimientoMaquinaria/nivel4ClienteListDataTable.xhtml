@@ -1,0 +1,320 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+
+				
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableNivel4" header="Suerte">
+						<!--  <p:growl id="men"/> -->
+
+						<p:panel id="panelDataTable" header="Listado de Haciendas/Suertes">
+							<p:growl id="growl" showDetail="true" sticky="true" />
+							<p:panelGrid>
+								<p:row>
+
+									<p:column>
+										<h:panelGrid columns="2">
+
+											<p:outputLabel for="txtPersEmprId" value="Cliente: "
+												style="font-size: 0.9em; " />
+											<p:selectOneMenu id="txtPersEmprId" effect="fade"
+												filter="true" filterMatchMode="contains"
+												style="font-size: 0.8em; width: 180px;"
+												binding="#{nivel4ClientesmqView.txtPersEmprId}"
+												autoWidth="false" required="false"
+												requiredMessage="Seleccione un cliente">
+												<f:selectItem itemLabel="Seleccione un cliente"
+													itemValue="" />
+												<f:selectItems
+													value="#{nivel4ClientesmqView.selectCliente}" />
+												<p:ajax update="txtNivelConsulta2ClientesId" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtNivelConsulta2ClientesId"
+												value="Hacienda: " style="font-size: 0.8em;" />
+											<p:selectOneMenu id="txtNivelConsulta2ClientesId"
+												effect="fade" filter="true" filterMatchMode="contains"
+												style="width: 180px;font-size: 0.8em;" autoWidth="false"
+												binding="#{nivel4ClientesmqView.txtNivelConsulta2ClientesId}"
+												required="false" requiredMessage="Seleccione una Hacienda">
+												<f:selectItem itemLabel="Seleccione una hacienda"
+													itemValue="" />
+												<f:selectItems
+													value="#{nivel4ClientesmqView.selectNivelConsulta2ClientesId}" />
+												<p:ajax
+													process="@this, txtPersEmprId, txtNivelConsulta2ClientesId"
+													update="txtNivelConsulta4ClientesId" />
+											</p:selectOneMenu>
+
+
+										</h:panelGrid>
+									</p:column>
+
+									<p:column>
+										<h:panelGrid columns="2">
+
+
+
+											<p:outputLabel for="txtNivelConsulta4ClientesId"
+												value="Suerte: " style="font-size: 0.8em;" />
+											<p:selectOneMenu id="txtNivelConsulta4ClientesId"
+												effect="fade" filter="true" filterMatchMode="contains"
+												style="width: 180px;font-size: 0.8em;" autoWidth="false"
+												binding="#{nivel4ClientesmqView.txtNivelConsulta4ClientesId}"
+												required="false" requiredMessage="Seleccione una suerte">
+												<f:selectItem itemLabel="Seleccione una suerte" itemValue="" />
+												<f:selectItems
+													value="#{nivel4ClientesmqView.selectNivelConsulta4ClientesId}" />
+												<p:ajax process="txtNivelConsulta2ClientesId" />
+											</p:selectOneMenu>
+
+
+											<p:commandButton id="btnConsultar" value="Consultar"
+												style="font-size: 0.9em;" icon="ui-icon-newwin"
+												action="#{nivel4ClientesmqView.listarSuertes}"
+												update="growl, frm, tbl" process="@all" partialSubmit="true" />
+										</h:panelGrid>
+										
+									</p:column>
+
+
+
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+
+						<p:dataTable id="tbl" value="#{nivel4ClientesmqView.data2}"
+							 resizableColumns="true" style="margin-bottom:20px"
+							var="nivel4" paginator="true" rows="5" lazy="true" reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Suerte" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+							
+								<p:column >
+								<f:facet name="header">
+									<h:outputText value="Cliente" />
+								</f:facet>
+								<h:outputText value="#{nivel4.nomProveedor}" />
+							</p:column>
+							
+						
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Hacienda" />
+								</f:facet>
+								<h:outputText value="#{nivel4.nomFinca}" />
+							</p:column>
+
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{nivel4.loteA}" />
+							</p:column>
+
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{nivel4.nomLote}" />
+							</p:column>
+
+
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Área" />
+								</f:facet>
+								<h:outputText value="#{nivel4.area}">
+									<f:convertNumber pattern="#0.00" />
+								</h:outputText>
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogNivel4Clientesmq"
+										actionListener="#{nivel4ClientesmqView.action_edit}">
+										<f:attribute name="selectedNivel4Clientesmq2" value="#{nivel4}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+
+					</p:panel>
+
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{nivel4ClientesmqView.action_new()}"
+								update=":dialogNivel4Clientesmq" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogNivel4Clientesmq" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{nivel4ClientesmqView.showDialog}" resizable="false"
+					modal="true" width="750" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+
+					<h:form id="formDialog" enctype="multipart/form-data"
+						acceptcharset="ISO-8859-1">
+
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelNivel2" header="Suerte">
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{nivel4ClientesmqView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="2" id="panelGrid1">
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{nivel4ClientesmqView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{nivel4ClientesmqView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+										</p:inputText>
+
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true" size="50"
+											binding="#{nivel4ClientesmqView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+
+										<p:outputLabel for="txtPersEmprId_PersEmpr" value="Cliente: "
+											style="font-size: 0.9em; " />
+										<p:selectOneMenu id="txtPersEmprId_PersEmpr" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="font-size: 0.8em; width: 180px;"
+											binding="#{nivel4ClientesmqView.txtPersEmprId_PersEmpr}"
+											autoWidth="false" required="false"
+											requiredMessage="Seleccione un proveedor">
+											<f:selectItem itemLabel="Seleccione un proveedor"
+												itemValue="" />
+											<f:selectItems
+												value="#{datServRealizadosEquipoView.selectContratista}" />
+											<p:ajax update="txtNivel2ClientesmqId_Nivel2Clientesmq" />
+										</p:selectOneMenu>
+
+
+										<p:outputLabel for="txtNivel2ClientesmqId_Nivel2Clientesmq"
+											value="Hacienda:" />
+										<p:selectOneMenu id="txtNivel2ClientesmqId_Nivel2Clientesmq"
+											effect="fade" filter="true" filterMatchMode="contains"
+											style="width: 100%;" autoWidth="false"
+											binding="#{nivel4ClientesmqView.txtNivel2ClientesmqId_Nivel2Clientesmq}"
+											required="true" requiredMessage="Seleccione una hacienda">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems
+												value="#{nivel4ClientesmqView.selectNivel2ClientesId}" />
+											<p:ajax process="txtPersEmprId_PersEmpr" />
+
+										</p:selectOneMenu>
+
+
+										<p:outputLabel for="txtAreaNeta" value="Área neta(HA): " />
+										<p:inputText id="txtAreaNeta" disabled="true"
+											binding="#{nivel4ClientesmqView.txtAreaNeta}"
+											required="false" 
+											requiredMessage="Seleccione el área">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+
+
+										<p:outputLabel for="txtCodigoAlternativo"
+											value="Código en ERP: " />
+										<p:inputText id="txtCodigoAlternativo" disabled="true"
+											binding="#{nivel4ClientesmqView.txtCodigoAlternativo}"
+											required="false" requiredMessage="El código es Obligatorio" />
+
+
+										<p:inputText id="txtNivel4ClientesmqId"
+											style="visibility:hidden"
+											binding="#{nivel4ClientesmqView.txtNivel4ClientesmqId}">
+										</p:inputText>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Información Adicional">
+
+									<h:panelGrid columns="3" id="panelGrid3">
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1:" />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{nivel4ClientesmqView.txtInfoAdicional}" rows="2"
+											cols="30" counter="display" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2:" />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{nivel4ClientesmqView.txtInfoAdicional2}" rows="2"
+											cols="30" counter="display2" maxlength="100"
+											counterTemplate="{0} Caracteres." autoResize="true" />
+										<h:outputText id="display2" />
+
+									</h:panelGrid>
+
+								</p:tab>
+
+							</p:tabView>
+
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{nivel4ClientesmqView.btnSave}" value="Grabar"
+									action="#{nivel4ClientesmqView.action_save()}"
+									update=":dialogNivel4Clientesmq :frm:panelDataTableNivel4" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{nivel4ClientesmqView.action_clear()}"
+									process="@this" update=":dialogNivel4Clientesmq" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
+

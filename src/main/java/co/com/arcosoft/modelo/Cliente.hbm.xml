@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 08-sep-2015 22:35:06 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Cliente" table="CLIENTE"  >
+        <id name="clienteId" type="java.lang.Long">
+            <column name="CLIENTE_ID" precision="18" scale="0" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="PERS_EMPR_ID" precision="18" scale="0" />
+        </many-to-one>
+        <many-to-one name="tipoCliente" class="co.com.arcosoft.modelo.TipoCliente" fetch="select">
+            <column name="TIPO_CLIENTE_ID" precision="18" scale="0" />
+        </many-to-one>
+        <property name="compania" type="java.lang.Long">
+            <column name="COMPANIA" precision="18" scale="0" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="INFO_ADICIONAL" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="INFO_ADICIONAL2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.lang.String">
+            <column name="FECHA_CREACION" length="10" />
+        </property>
+        <property name="fechaModificacion" type="java.lang.String">
+            <column name="FECHA_MODIFICACION" length="10" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="ESTADO" length="1" />
+        </property>
+        <set name="datTransProds" table="DAT_TRANS_PROD" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EMPRESA_COMPRADORA" precision="18" scale="0" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatTransProd" />
+        </set>
+        <set name="datTransProdDets" table="DAT_TRANS_PROD_DET" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CLIENTE_ID" precision="18" scale="0" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatTransProdDet" />
+        </set>
+    </class>
+</hibernate-mapping>

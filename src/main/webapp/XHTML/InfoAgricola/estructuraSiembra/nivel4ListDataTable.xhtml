@@ -1,0 +1,406 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableNivel4" header="Lote">
+						<!-- <p:growl id="men" /> -->
+						<p:dataTable id="tbl" value="#{nivel4View.data}" var="nivel4"
+							paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+							reflow="true" lazy="true">
+
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Lote" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{nivel4.estado}" sortBy="#{nivel4.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{nivel4.estado}" />
+							</p:column>
+
+							<p:column >
+								<f:facet name="header">
+									<h:outputText value="Hacienda" />
+								</f:facet>
+								<h:outputText value="#{nivel4.nombreBloque}" />
+							</p:column>
+
+							<p:column filterBy="#{nivel4.codigo}" sortBy="#{nivel4.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{nivel4.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{nivel4.nombre}" sortBy="#{nivel4.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{nivel4.nombre}" />
+							</p:column>
+
+							<p:column filterBy="#{nivel4.fechaSiembra}"
+								sortBy="#{nivel4.fechaSiembra}">
+								<f:facet name="header">
+									<h:outputText value="Fecha de siembra" />
+								</f:facet>
+								<h:outputText value="#{nivel4.fechaSiembra}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+
+
+							</p:column>
+
+							<p:column filterBy="#{nivel4.fechaUltimoCorte}"
+								sortBy="#{nivel4.fechaUltimoCorte}">
+								<f:facet name="header">
+									<h:outputText value="Fecha último corte" />
+								</f:facet>
+								<h:outputText value="#{nivel4.fechaUltimoCorte}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column filterBy="#{nivel4.areaNeta}"
+								sortBy="#{nivel4.areaNeta}">
+								<f:facet name="header">
+									<h:outputText value="Area neta" />
+								</f:facet>
+								<h:outputText value="#{nivel4.areaNeta}">
+									<f:convertNumber pattern="#0.00" />
+								</h:outputText>
+							</p:column>
+
+							<p:column filterBy="#{nivel4.nombreEtapa}">
+								<f:facet name="header">
+									<h:outputText value="Etapa cultivo" />
+								</f:facet>
+								<h:outputText value="#{nivel4.nombreEtapa}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogNivel4"
+										actionListener="#{nivel4View.action_edit}">
+										<f:attribute name="selectedNivel4" value="#{nivel4}" />
+									</p:commandButton>
+
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{nivel4View.action_new()}" update=":dialogNivel4" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogNivel4" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{nivel4View.showDialog}"
+					resizable="false" modal="true" width="700" styleClass="dialogFix"
+					responsive="true" closeOnEscape="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" showDetail="true" />
+						<p:panel id="panelNivel4" header="Lote">
+								<p:tabView id="tabMapa" activeIndex="#{nivel4View.activeTapIndex}" >
+									<p:tab title="General">
+
+										<h:panelGrid columns="5">
+
+											<p:outputLabel for="txtEstado" value="Estado: " />
+											<p:selectOneRadio id="txtEstado" disabled="true"
+												binding="#{nivel4View.txtEstado}" required="true"
+												requiredMessage="Seleccione un estado">
+												<f:selectItem itemLabel="Activo" itemValue="A" />
+												<f:selectItem itemLabel="Inactivo" itemValue="I" />
+											</p:selectOneRadio>
+											<p:message for="txtEstado" />
+											<p:outputLabel />
+											<p:outputLabel />
+
+
+											<p:outputLabel for="txtNivel3Id_Nivel3" value="Hacienda: " />
+											<p:selectOneMenu id="txtNivel3Id_Nivel3"
+												binding="#{nivel4View.txtNivel3Id_Nivel3}" required="true"
+												requiredMessage="Seleccione una hacienda" filter="true"
+												filterMatchMode="contains">
+												<f:selectItem itemLabel="Seleccione una hacienda" itemValue="" />
+												<f:selectItems value="#{nivel4View.selectItemNivel3}" />
+											</p:selectOneMenu>
+											<p:message for="txtNivel3Id_Nivel3" />
+											<p:outputLabel />
+											<p:outputLabel />
+
+											<p:outputLabel value="Código: " />
+											<p:inputText id="txtCodigo" disabled="false"
+												binding="#{nivel4View.txtCodigo}"
+												placeholder="Buscar o crear registro" size="25">
+												<p:ajax
+													update=":formDialog:panelNivel4,:formDialog:msg,:formDialog:panelBotones"
+													listener="#{nivel4View.listener_txtCodigo}" />
+											</p:inputText>
+											<p:outputLabel />
+											<p:outputLabel />
+											<p:outputLabel />
+
+											<p:outputLabel for="txtNombre" value="Nombre: " />
+											<p:inputText id="txtNombre" disabled="true"
+												binding="#{nivel4View.txtNombre}" required="true"
+												requiredMessage="El Nombre es Obligatorio" />
+											<p:message for="txtNombre" />
+											<p:outputLabel />
+											<p:outputLabel />
+
+											<p:outputLabel for="txtCodigoAlternativo"
+												value="Código en ERP: " />
+											<p:inputText id="txtCodigoAlternativo" disabled="true"
+												binding="#{nivel4View.txtCodigoAlternativo}"
+												required="false" requiredMessage="El código es Obligatorio" />
+											<p:message for="txtCodigoAlternativo" />
+											<p:outputLabel />
+											<p:outputLabel />
+
+
+
+
+											<p:outputLabel value="Fecha Inactivo:" />
+											<p:calendar showOn="button" navigator="false" locale="es"
+												binding="#{nivel4View.txtFechaInactivo}"
+												pattern="dd/MM/yyyy" mask="true">
+												<p:ajax event="dateSelect"
+													listener="#{nivel4View.listener_txtFechaInactivo}" />
+											</p:calendar>
+											<p:outputLabel />
+											<p:outputLabel />
+											<p:outputLabel />
+
+											<p:outputLabel for="txtGenerico" value="Es generico? " />
+											<p:selectOneRadio id="txtGenerico" disabled="true"
+												binding="#{nivel4View.txtGenerico}">
+												<f:selectItem itemLabel="Si" itemValue="1" />
+												<f:selectItem itemLabel="No" itemValue="0" />
+											</p:selectOneRadio>
+											<p:outputLabel />
+											<p:outputLabel />
+											<p:outputLabel />
+
+
+											<!-- Id  -->
+											<p:inputText style="visibility:hidden" id="txtNivel4Id"
+												binding="#{nivel4View.txtNivel4Id}">
+											</p:inputText>
+
+										</h:panelGrid>
+
+									</p:tab>
+
+									<p:tab title="Datos de Siembra y Superficie">
+
+										<h:panelGrid columns="2">
+
+											<p:outputLabel for="txtFechaSiembra"
+												value="Fecha de siembra:" />
+											<p:calendar id="txtFechaSiembra" showOn="button"
+												navigator="false" locale="es"
+												binding="#{nivel4View.txtFechaSiembra}" pattern="dd/MM/yyyy"
+												required="true" mask="true"
+												requiredMessage="Seleccione la fecha de siembra">
+											</p:calendar>
+											
+
+											<p:outputLabel value="Edad actual: " />
+											<p:inputText id="txtEdadActual" disabled="true"
+												binding="#{nivel4View.txtEdadActual}">
+											</p:inputText>
+											
+											<p:outputLabel value="Toneladas estimadas por lote: " />
+											<p:inputText id="txtNumEst" disabled="true"
+												binding="#{nivel4View.txtNumEstimTonAnioFiscal}">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											
+											
+											<p:outputLabel for="txtAreaNeta" value="Área neta(HA): " />
+											<p:inputText id="txtAreaNeta" disabled="true"
+												binding="#{nivel4View.txtAreaNeta}" required="true"
+												requiredMessage="Seleccione el área">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											
+											
+											<h:outputText value="Vacunos/Búfalos:" />
+											<p:inputText id="txtVacunosActuales" disabled="true"
+												binding="#{nivel4View.txtVacunosActuales}" />
+											
+											<p:outputLabel value="Número de plantas: " />
+											<p:inputText id="txtNumPlantasActuales" disabled="true"
+												binding="#{nivel4View.txtNumPlantasActuales}">
+												<f:converter converterId="javax.faces.Long" />
+											</p:inputText>
+											
+											
+											<p:outputLabel value="Densidad de siembra: " />
+											<p:inputText id="txtNumDensidadActual" disabled="true"
+												binding="#{nivel4View.txtNumDensidadActual}">
+												<f:converter converterId="javax.faces.Long" />
+											</p:inputText>
+											
+										</h:panelGrid>
+
+									</p:tab>
+
+									<p:tab title="Características del lote">
+
+										<h:panelGrid columns="2">
+
+											<p:outputLabel for="txtEtapaId_Etapa" value="# Cosechas: " />
+											<p:selectOneMenu id="txtEtapaId_Etapa"
+												binding="#{nivel4View.txtEtapaId_Etapa}" filter="true"
+												filterMatchMode="contains" required="true"
+												requiredMessage="Seleccione una etapa">
+												<f:selectItem itemLabel="Seleccione una etapa" itemValue="" />
+												<f:selectItems value="#{nivel4View.selectItemEtapa}" />
+											</p:selectOneMenu>
+											
+											<p:outputLabel value="Renovación?: " />
+											<p:selectOneRadio id="txtRenovacion" disabled="true"
+												binding="#{nivel4View.txtRenovacion}">
+												<f:selectItem itemLabel="Si" itemValue="1" />
+												<f:selectItem itemLabel="No" itemValue="0" />
+											</p:selectOneRadio>
+											
+											<p:outputLabel for="txtEspacioLineasSembradas"
+												value="Distancia de siembra: " />
+											<p:selectOneMenu id="txtEspacioLineasSembradas"
+												binding="#{nivel4View.txtEspacioLineasSembradas}"
+												filter="true" filterMatchMode="contains">
+												<f:selectItem itemLabel="Seleccione una distancia"
+													itemValue="" />
+												<f:selectItems value="#{nivel4View.selectDistanciaSiembra}" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtVariedadId" value="Variedad: " />
+											<p:selectOneMenu id="txtVariedadId"
+												binding="#{nivel4View.txtVariedadId}" filter="true"
+												filterMatchMode="contains" required="true"
+												requiredMessage="Seleccione una variedad">
+												<f:selectItem itemLabel="Seleccione una variedad"
+													itemValue="" />
+												<f:selectItems value="#{nivel4View.selectVariedadId}" />
+											</p:selectOneMenu>
+											
+											<p:outputLabel for="txtZonAgroec_ZonAgroec" value="Zona agroecologica: " />
+											<p:selectOneMenu id="txtZonAgroec_ZonAgroec"
+												binding="#{nivel4View.txtZonAgroec_ZonAgroec}" filter="true"
+												filterMatchMode="contains" required="false"
+												requiredMessage="Seleccione una zona agroecologica">
+												<f:selectItem itemLabel="Seleccione una agroecologica" itemValue="" />
+												<f:selectItems value="#{nivel4View.selectItemZonAgroec}" />
+											</p:selectOneMenu>
+											
+
+										</h:panelGrid>
+
+									</p:tab>
+									
+									
+									<p:tab title="Datos de última cosecha">
+
+										<h:panelGrid columns="2">
+
+											<p:outputLabel for="txtFechaCorteAnterior"
+												value="Fecha de cosecha anterior:" />
+											<p:calendar id="txtFechaCorteAnterior" showOn="button"
+												navigator="false" locale="es"
+												binding="#{nivel4View.txtFechaCorteAnterior}" pattern="dd/MM/yyyy"
+												required="false" mask="true"
+												requiredMessage="Seleccione la fecha de cosecha anterior">
+											</p:calendar>
+											
+											<p:outputLabel for="txtFechaUltimoCorte"
+												value="Fecha última cosecha:" />
+											<p:calendar id="txtFechaUltimoCorte" showOn="button"
+												navigator="false" locale="es"
+												binding="#{nivel4View.txtFechaUltimoCorte}"
+												pattern="dd/MM/yyyy" mask="true">
+											</p:calendar>
+
+											<p:outputLabel value="Edad última cosecha: " />
+											<p:inputText id="txtEdadUltimaCosecha" disabled="true"
+												binding="#{nivel4View.txtEdadUltimaCosecha}">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+
+											<p:outputLabel value="Toneladas última cosecha por lote: " />
+											<p:inputText id="txtNumTonUltCosecha" disabled="true"
+												binding="#{nivel4View.txtNumTonUltCosecha}">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											
+											<p:outputLabel value="Toneladas última cosecha por unidad de área: " />
+											<p:inputText id="txtNumTonHaUltCosecha" disabled="true"
+												binding="#{nivel4View.txtNumTonHaUltCosecha}">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											
+											<p:outputLabel value="Toneladas última cosecha por unidad de área mes: " />
+											<p:inputText id="txtNumTonHaMesUltCosecha" disabled="true"
+												binding="#{nivel4View.txtNumTonHaMesUltCosecha}">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											
+										</h:panelGrid>
+
+									</p:tab>
+
+									
+
+
+								</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{nivel4View.btnSave}" value="Grabar"
+									action="#{nivel4View.action_save()}"
+									update=":dialogNivel4 :frm:panelDataTableNivel4" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{nivel4View.action_clear()}"
+									process="@this" update=":dialogNivel4" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

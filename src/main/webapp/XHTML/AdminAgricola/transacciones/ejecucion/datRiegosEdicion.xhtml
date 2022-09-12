@@ -1,0 +1,487 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTablelistaDetPlanillaDet"
+						header="Edición labores de riego">
+						<!-- <p:growl id="men"/>	 -->
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtFechaIni" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaIni" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{listarRiegosView.txtFechaIni}" required="false"
+											requiredMessage="La Fecha inicial es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="txtFechaFin" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{listarRiegosView.txtFechaFin}" required="false"
+											requiredMessage="La Fecha  final  es obligatoria">
+										</p:calendar>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtPlanilla" value="n° Planilla "
+											style="font-size: 0.9em;" />
+										<p:inputText id="txtPlanilla" style="font-size: 0.9em;"
+											binding="#{listarRiegosView.txtPlanilla}" maxlength="1000"
+											autoResize="true" size="15">
+											<f:convertNumber></f:convertNumber>
+										</p:inputText>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+										<p:commandButton id="btnCargarDatos" value="Consultar"
+											icon="ui-icon-newwin" style="font-size: 1em;"
+											action="#{listarRiegosView.listarRiegosAgricolas}"
+											update=":frm:tbl, txtValorTotalAcumulado,txtCantidadAcumulado "
+											process="@all" />
+										<h:outputLabel></h:outputLabel>
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:dataTable id="tbl" value="#{listarRiegosView.dataDetalleRiegos}"
+						var="listaDetPlanillaDet" paginator="true" rows="10"
+						resizableColumns="true" style="margin-bottom:20px"
+						rowsPerPageTemplate="10,15" reflow="true" editable="false"
+						scrollable="true" scrollWidth="99%">
+
+						<p:column headerText="Opciones" width="90"
+							style="font-size: 0.9em;">
+							<div align="center">
+								<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+									style="font-size: 0.9em;" update=":dialogDatPlanillaNomina"
+									title="Editar"
+									actionListener="#{listarRiegosView.action_editRiegos}">
+									<f:attribute name="selectDetalleRiegos"
+										value="#{listaDetPlanillaDet}" />
+								</p:commandButton>
+								<p:commandButton id="btnDelete" icon="ui-icon-trash"
+									actionListener="#{listarRiegosView.actionDeleteDatRiego}"
+									title="Borrar" style="font-size: 0.9em;"
+									onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+									update="tbl :dialogDatPlanillaNomina">
+									<f:attribute name="selectDetalleRiegos"
+										value="#{listaDetPlanillaDet}" />
+								</p:commandButton>
+							</div>
+						</p:column>
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="#Plan" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.consecutivo}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Id" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.datRiegoId}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Fecha" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.fecha}"
+								style="font-size: 0.9em;">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Hda" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.nomFinca}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="60">
+							<f:facet name="header">
+								<h:outputText value="Lote" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.nomLote}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Labor" style="font-size: 0.9em;" />
+							</f:facet>
+							<h:outputText value="#{listaDetPlanillaDet.nombreLabor}"
+								style="font-size: 0.9em;" />
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Horometro inicial" style="font-size: 0.9em;" />
+							</f:facet>
+							<p:inputNumber value="#{listaDetPlanillaDet.horometroInicial}"
+								style="font-size: 0.9em;" decimalSeparator="."
+								thousandSeparator="," size="6" decimalPlaces="1" minValue="0"
+								maxValue="100000" readonly="true">
+								<f:converter converterId="javax.faces.Double" />
+							</p:inputNumber>
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="Horometro final" style="font-size: 0.9em;" />
+							</f:facet>
+							<p:inputNumber value="#{listaDetPlanillaDet.horometroFinal}"
+								style="font-size: 0.9em;" decimalSeparator="."
+								thousandSeparator="," size="6" decimalPlaces="1" minValue="0"
+								maxValue="100000" readonly="true">
+								<f:converter converterId="javax.faces.Double" />
+							</p:inputNumber>
+						</p:column>
+
+						<p:column width="100">
+							<f:facet name="header">
+								<h:outputText value="V. Total" style="font-size: 0.9em;" />
+							</f:facet>
+							<p:inputNumber value="#{listaDetPlanillaDet.horasRiego}"
+								style="font-size: 0.9em;" decimalSeparator="."
+								thousandSeparator="," size="6" decimalPlaces="1" minValue="0"
+								maxValue="100000" readonly="true">
+								<f:converter converterId="javax.faces.Double" />
+							</p:inputNumber>
+						</p:column>
+					</p:dataTable>
+
+					<p:panelGrid>
+						<p:row>
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel value="TOTALES:  " style="font-size: 1em;" />
+								</h:panelGrid>
+							</p:column>
+							
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtValorTotalAcumulado"
+										value="Costo total($): " style="font-size: 1em;" />
+									<p:inputNumber id="txtValorTotalAcumulado"
+										style="font-size: 1em;" size="12"
+										binding="#{listarRiegosView.txtValorTotalAcumulado}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+										required="false">
+									</p:inputNumber>
+								</h:panelGrid>
+							</p:column>
+							
+							<p:column style="text-align:right">
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtCantidadAcumulado"
+										value="Unidades trabajadas: " style="font-size: 1em;" />
+									<p:inputNumber id="txtCantidadAcumulado"
+										style="font-size: 1em;" size="12"
+										binding="#{listarRiegosView.txtCantidadAcumulado}"
+										decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+										required="false">
+									</p:inputNumber>
+								</h:panelGrid>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<p:panel id="panelBoton">
+						<div align="center">
+
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" process="@all" partialSubmit="true"
+									resetValues="true" />
+							</p:commandButton>
+						</div>
+					</p:panel>
+				</h:form>
+
+				<p:dialog id="dialogDatPlanillaNomina" appendTo="@(body)"
+					draggable="true" closable="false"
+					visible="#{listarRiegosView.showDialog}" resizable="false"
+					modal="true" width="1000" styleClass="dialogFix"
+					header="Edición labores de riegos" responsive="true">
+					<h:form id="formDialog">
+
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+
+						<h:panelGrid columns="2">
+							<p:outputLabel value="#Planilla: " style="font-size: 0.8em;" />
+							<p:inputText id="txtConsecutivo" disabled="false"
+								binding="#{listarRiegosView.txtConsecutivo}"
+								placeholder="Buscar o crear registro" size="23">
+							</p:inputText>
+
+							<p:outputLabel for="msgFechaRegistro" value="Fecha: "
+								style="font-size: 0.8em;" />
+							<p:calendar id="msgFechaRegistro" showOn="button"
+								navigator="false" locale="es"
+								binding="#{listarRiegosView.txtFechaRegistro}"
+								pattern="dd/MM/yyyy" mask="true" required="true"
+								requiredMessage="La  fecha  es obligatoria">
+							</p:calendar>
+						</h:panelGrid>
+
+						<h:panelGrid columns="2">
+							<p:outputLabel for="txtOrdenTrabajo" value="O.T: "
+								style="font-size: 0.8em;" />
+							<p:selectOneMenu id="txtOrdenTrabajo" effect="fade" filter="true"
+								filterMatchMode="contains"
+								binding="#{listarRiegosView.txtOrdenTrabajo}" required="false"
+								requiredMessage="O.T(Ot, labor, Hda, Lote): ">
+								<f:selectItem itemLabel="O.T(Ot, labor, Hda, Lote): "
+									itemValue="" noSelectionOption="true" />
+								<f:selectItems value="#{listarRiegosView.selectOrdenTrabajo}" />
+								<p:ajax
+									listener="#{listarRiegosView.listener_ConsultaOrdenTrabajo}"
+									update="txtLaborId_Labor,txtNivel2Id,txtNivel3Id,txtNivel4Id_Nivel4" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtLaborId_Labor" value="Labor: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtLaborId_Labor" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;font-size: 0.8em;" autoWidth="false"
+											binding="#{listarRiegosView.txtLaborId_Labor}"
+											required="false" requiredMessage="Seleccione una labor">
+											<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+											<f:selectItems value="#{listarRiegosView.selectLaborId}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtNivel2Id" value="Hacienda: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtNivel2Id" effect="fade" filter="true"
+											filterMatchMode="contains"
+											style="width: 100%;font-size: 0.8em;" autoWidth="false"
+											binding="#{listarRiegosView.txtNivel2Id}" required="false"
+											requiredMessage="Seleccione una hacienda">
+											<f:selectItem itemLabel="Seleccione una hacienda"
+												itemValue="" />
+											<f:selectItems value="#{listarRiegosView.selectNivel2}" />
+											<p:ajax update="txtNivel3Id" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtNivel3Id" value="Bloque: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtNivel3Id" effect="fade" filter="true"
+											filterMatchMode="contains"
+											style="width: 100%;font-size: 0.8em;" autoWidth="false"
+											binding="#{listarRiegosView.txtNivel3Id}" required="false"
+											requiredMessage="Seleccione un bloque del cultivo">
+											<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+											<f:selectItems value="#{listarRiegosView.selectNivel3}" />
+											<p:ajax update=" txtNivel4Id_Nivel4" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote:"
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;font-size: 0.8em;" autoWidth="false"
+											binding="#{listarRiegosView.txtNivel4Id_Nivel4}"
+											required="false" requiredMessage="Seleccione un código">
+											<f:selectItem itemLabel="Seleccione un código" itemValue="" />
+											<f:selectItems value="#{listarRiegosView.selectNivel4}" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+						<p:panelGrid id="gridlistaDetPlanillaDetDet">
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtTrabajador" value="Trabajador: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtTrabajador" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{listarRiegosView.txtTrabajador}"
+											style="width: 100%;font-size: 0.8em;" required="false"
+											requiredMessage="Seleccione un trabajador">
+											<f:selectItem itemLabel="Seleccione un trabajador" itemValue="" />
+											<f:selectItems value="#{listarRiegosView.selectTrabajador}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtTurnoCampo"
+											value="Turno de campo: " style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtTurnoCampo"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{listarRiegosView.txtTurnoCampo}"
+											style="width: 100%;font-size: 0.8em;" required="false"
+											requiredMessage="Seleccione un concepto">
+											<f:selectItem itemLabel="Seleccione un turno de campo" itemValue="" />
+											<f:selectItems value="#{listarRiegosView.selectTurnoCampo}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtSistemaRiego" value="Sistema riego: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtSistemaRiego" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;font-size: 0.8em;"
+											binding="#{listarRiegosView.txtSistemaRiego}" required="false"
+											requiredMessage="Seleccione un sistema de riego">
+											<f:selectItem itemLabel="Seleccione un sistema de riego" itemValue="" />
+											<f:selectItems value="#{listarRiegosView.selectSistemaRiego}" />
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtInfraestructura" value="Infraestructura: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtInfraestructura" effect="fade"
+											filter="true" filterMatchMode="contains"
+											style="width: 100%;font-size: 0.8em;"
+											binding="#{listarRiegosView.txtInfraestructura}" required="false"
+											requiredMessage="Seleccione una infraestructura">
+											<f:selectItem itemLabel="Seleccione una infraestructura" itemValue="" />
+											<f:selectItems value="#{listarRiegosView.selectInfraestructura}" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtNumeroRiegos" value="Numero de riegos: "
+											style="font-size: 0.8em;" />
+										<p:inputNumber id="txtNumeroRiegos" disabled="false" size="10"
+											binding="#{listarRiegosView.txtNumeroRiegos}" required="false"
+											requiredMessage="Indique la cantidad a pagar"/>
+
+										<p:outputLabel for="txtTotalAreaRegada" value="Total de area regada: "
+											style="font-size: 0.8em;" />
+										<p:inputNumber id="txtTotalAreaRegada" disabled="false" size="10"
+											binding="#{listarRiegosView.txtTotalAreaRegada}" required="false"
+											requiredMessage="Indique la cantidad a pagar"/>
+
+										<p:outputLabel for="txtCaudalNivel4" value="Caudal: "
+											style="font-size: 0.8em;" />
+										<p:inputNumber id="txtCaudalNivel4" disabled="false" size="10"
+											binding="#{listarRiegosView.txtCaudalNivel4}" required="false"
+											requiredMessage="Indique la cantidad a pagar"/>
+
+										<p:outputLabel for="txtHorometroInicalR" value="Hora inicial: "
+											style="font-size: 0.8em;" />
+										<p:inputNumber id="txtHorometroInicalR" disabled="false" size="10"
+											binding="#{listarRiegosView.txtHorometroInicalR}" required="false"
+											requiredMessage="Indique la cantidad a pagar"/>
+
+										<p:outputLabel for="txtHorometroFinalR" value="Hora final: "
+											style="font-size: 0.8em;" />
+										<p:inputNumber id="txtHorometroFinalR" disabled="false" size="10"
+											binding="#{listarRiegosView.txtHorometroFinalR}" required="false"
+											requiredMessage="Indique la cantidad a pagar"/>
+
+										<p:outputLabel for="txtVolTotalNivel4" value="(M3) Totales: "
+											style="font-size: 0.8em;" />
+										<p:inputNumber id="txtVolTotalNivel4" disabled="false" size="10"
+											binding="#{listarRiegosView.txtVolTotalNivel4}" required="false"
+											requiredMessage="Indique la cantidad a pagar"/>
+										
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{listarRiegosView.btnSave}" value="Grabar"
+									action="#{listarRiegosView.action_ActualizarRiegos()}"
+									update=":dialogDatPlanillaNomina :frm:panelDataTablelistaDetPlanillaDet" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{listarRiegosView.action_clear()}"
+									process="@this" update=":dialogDatPlanillaNomina" />
+								<p:commandButton id="btnCerrar" icon="ui-icon-closethick"
+									title="Cerrar" value="Cerrar"
+									onclick="if(!confirm('Realmente desea salir sin grabar? Sí ya lo hizo, omita este mensaje')){return false;}"
+									action="#{listarRiegosView.action_closeDialog}"
+									update=":dialogDatPlanillaNomina">
+								</p:commandButton>
+
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatServicioDet" table="dat_servicio_det" >
+        <id name="datServicioDetId" type="java.lang.Long">
+            <column name="dat_servicio_det_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        <many-to-one name="udadMedByUdadMedProd" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_prod" />
+        </many-to-one>
+        <many-to-one name="udadMedByUdadMedPago" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_pago" />
+        </many-to-one>
+        <many-to-one name="datServicioId" class="co.com.arcosoft.modelo.DatServicio" fetch="select">
+            <column name="dat_servicio_id" />
+        </many-to-one>
+        <property name="persEmpr" type="java.lang.Long">
+            <column name="contratista_id" />
+        </property>
+        <property name="horaInicial" type="java.util.Date">
+            <column name="hora_inicial" length="19" />
+        </property>
+        <property name="horaFinal" type="java.util.Date">
+            <column name="hora_final" length="19" />
+        </property>
+        <property name="tiempoInactivo" type="java.lang.Double">
+            <column name="tiempo_inactivo" precision="12" scale="4" />
+        </property>
+        <property name="totalHoras" type="java.lang.Double">
+            <column name="total_horas" precision="12" scale="4" />
+        </property>
+        <property name="cantidadPago" type="java.lang.Double">
+            <column name="cantidad_pago" precision="12" scale="4" />
+        </property>
+        <property name="cantidadProd" type="java.lang.Double">
+            <column name="cantidad_prod" precision="12" scale="4" />
+        </property>
+        <property name="valorUnit" type="java.lang.Double">
+            <column name="valor_unit" precision="12" scale="4" />
+        </property>
+        <property name="costoTotal" type="java.lang.Double">
+            <column name="costo_total" precision="12" scale="4" />
+        </property>
+        <property name="horometroInicial" type="java.lang.Double">
+            <column name="horometro_inicial" precision="12" scale="4" />
+        </property>
+        <property name="horometroFinal" type="java.lang.Double">
+            <column name="horometro_final" precision="12" scale="4" />
+        </property>
+       
+        <many-to-one name="datPlanillaNominaId" class="co.com.arcosoft.modelo.DatPlanillaNomina" fetch="select">
+            <column name="dat_planilla_nomina_id" precision="18" scale="0" />
+        </many-to-one>
+        
+			<many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_id" precision="18" scale="0" />
+        </many-to-one>
+        <many-to-one name="laborId" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" precision="18" scale="0" />
+        </many-to-one>
+         <many-to-one name="ordenTrabajo" class="co.com.arcosoft.modelo.DatPlanLaborDet" fetch="select">
+            <column name="orden_trabajo" precision="18" scale="0" />
+        </many-to-one>
+        <many-to-one name="nivel2Id" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="nivel2_id" precision="18" scale="0" />
+        </many-to-one>
+    
+		<property name="etapaId" type="java.lang.Long">
+			<column name="etapa_id" precision="18" scale="0" />
+		</property>
+		<property name="variedId" type="java.lang.Long">
+			<column name="varied_id" precision="18" scale="0" />
+		</property>
+	
+        <property name="edad" type="java.lang.Double">
+            <column name="edad" precision="12" scale="4" />
+        </property>
+        
+       
+    </class>
+</hibernate-mapping>

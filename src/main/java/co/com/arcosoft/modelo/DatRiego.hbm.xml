@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatRiego" table="dat_riego" >
+   
+        <id name="datRiegoId" type="java.lang.Long">
+            <column name="dat_riego_id" />
+            <generator class="identity" />
+        </id>
+        
+        <many-to-one name="ordenTrabajo" class="co.com.arcosoft.modelo.DatPlanLaborDet" fetch="select">
+            <column name="orden_trabajo" precision="18" scale="0" />
+        </many-to-one>
+        
+        <many-to-one name="datPlanillaNominaId" class="co.com.arcosoft.modelo.DatPlanillaNomina" fetch="select">
+            <column name="dat_planilla_nomina_id" precision="18" scale="0" />
+        </many-to-one>
+        
+        <many-to-one name="sistemaRiego" class="co.com.arcosoft.modelo.SistemaRiego" fetch="select">
+            <column name="sistema_riego_id" precision="18" scale="0" />
+        </many-to-one>
+        
+        <many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_id" precision="18" scale="0" />
+        </many-to-one>
+        <many-to-one name="labor" class="co.com.arcosoft.modelo.Labor" fetch="select">
+            <column name="labor_id" precision="18" scale="0" />
+        </many-to-one>
+        
+        <many-to-one name="infraestructura" class="co.com.arcosoft.modelo.Infraestructura" fetch="select">
+            <column name="infra_id" precision="18" scale="0" />
+        </many-to-one>
+        
+        <many-to-one name="trabajador" class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="supervisor" precision="18" scale="0" />
+        </many-to-one>
+        
+        <many-to-one name="nivel2Id" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="nivel2_id" precision="18" scale="0" />
+        </many-to-one>
+        
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="anio" type="java.lang.Long">
+            <column name="anio" />
+        </property>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="19" />
+        </property>
+        <property name="NPases" type="java.lang.Long">
+            <column name="n_pases" />
+        </property>
+        <property name="nivel1Id" type="java.lang.Long">
+            <column name="nivel1_id" />
+        </property>
+        <property name="nivel3Id" type="java.lang.Long">
+            <column name="nivel3_id" />
+        </property>
+        <property name="edadEjecucion" type="java.lang.Double">
+            <column name="edad_ejecucion" precision="12" scale="4" />
+        </property>
+        <property name="areaRegada" type="java.lang.Double">
+            <column name="area_regada" precision="12" scale="4" />
+        </property>
+        <property name="caudalNivel4" type="java.lang.Double">
+            <column name="caudal_nivel4" precision="12" scale="4" />
+        </property>
+        <property name="horaIniNivel4" type="java.util.Date">
+            <column name="hora_ini_nivel4" length="19" />
+        </property>
+        <property name="horaFinNivel4" type="java.util.Date">
+            <column name="hora_fin_nivel4" length="19" />
+        </property>
+        <property name="horaTotalNivel4" type="java.lang.Double">
+            <column name="hora_total_nivel4" precision="12" scale="4" />
+        </property>
+        <property name="volM3Nivel4" type="java.lang.Double">
+            <column name="vol_m3_nivel4" precision="12" scale="4" />
+        </property>
+        <property name="volTotalNivel4" type="java.lang.Double">
+            <column name="vol_total_nivel4" precision="12" scale="4" />
+        </property>
+        <property name="caudalInfraestructura" type="java.lang.Double">
+            <column name="caudal_infraestructura" precision="12" scale="4" />
+        </property>
+        <property name="horaIniInfra" type="java.util.Date">
+            <column name="hora_ini_infra" length="19" />
+        </property>
+        <property name="horaFinInfra" type="java.util.Date">
+            <column name="hora_fin_infra" length="19" />
+        </property>
+        <property name="horaTotalInfra" type="java.lang.Double">
+            <column name="hora_total_infra" precision="12" scale="4" />
+        </property>
+        <property name="volM3Infra" type="java.lang.Double">
+            <column name="vol_m3_infra" precision="12" scale="4" />
+        </property>
+        <property name="volTotalInfra" type="java.lang.Double">
+            <column name="vol_total_infra" precision="12" scale="4" />
+        </property>
+        <property name="valorUnit" type="java.lang.Double">
+            <column name="valor_unit" precision="12" scale="4" />
+        </property>
+        <property name="costoTotal" type="java.lang.Double">
+            <column name="costo_total" precision="12" scale="4" />
+        </property>
+        <property name="etapaId" type="java.lang.Long">
+            <column name="etapa_id" />
+        </property>
+        <property name="variedId" type="java.lang.Long">
+            <column name="varied_id" />
+        </property>
+        <property name="cierreCostos" type="java.lang.String">
+            <column name="cierre_costos" length="1" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="1000" />
+        </property>
+        <property name="idMobile" type="java.lang.String">
+            <column name="id_mobile" length="30" />
+        </property>
+        <property name="latitud" type="java.lang.Double">
+            <column name="latitud" precision="22" scale="0" />
+        </property>
+        <property name="longitud" type="java.lang.Double">
+            <column name="longitud" precision="22" scale="0" />
+        </property>
+        <property name="precision" type="java.lang.Double">
+            <column name="precision1" precision="22" scale="0" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="kwhIncial" type="java.lang.Double">
+            <column name="kwh_inicial" precision="12" scale="4" />
+        </property>
+        <property name="kwhFinal" type="java.lang.Double">
+            <column name="kwh_final" precision="12" scale="4" />
+        </property>
+        <property name="surcosLargos" type="java.lang.Double">
+            <column name="surcos_largos" precision="12" scale="4" />
+        </property>
+        <property name="surcosCortos" type="java.lang.Double">
+            <column name="surcos_cortos" precision="12" scale="4" />
+        </property>
+        <property name="totalAreaRegada" type="java.lang.Double">
+            <column name="total_area_regada" precision="12" scale="4" />
+        </property>
+        <property name="totalHorometro" type="java.lang.Double">
+            <column name="total_horometro" precision="12" scale="4" />
+        </property>
+        <property name="numeroRiegos" type="java.lang.Double">
+            <column name="numero_riegos" precision="12" scale="4" />
+        </property>
+        <property name="horometroInicial" type="java.lang.Double">
+            <column name="horometro_inicial" precision="12" scale="4" />
+        </property>
+        <property name="horometroFinal" type="java.lang.Double">
+            <column name="horometro_final" precision="12" scale="4" />
+        </property>
+ 		<many-to-one name="turnoCampo" class="co.com.arcosoft.modelo.TurnoCampo" fetch="select">
+            <column name="turno_campo_id" precision="18" scale="0" />
+        </many-to-one>
+       
+        
+    </class>
+</hibernate-mapping>

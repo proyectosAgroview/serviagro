@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatOtrosCostosNivel4" table="dat_otros_costos_nivel4" >
+        <id name="datOtrosCostosNivel4Id" type="java.lang.Long">
+            <column name="dat_otros_costos_nivel4_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="nivel4" class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+            <column name="nivel4_id" />
+        </many-to-one>
+        <many-to-one name="datOtrosCostos" class="co.com.arcosoft.modelo.DatOtrosCostos" fetch="select">
+            <column name="dat_otros_costos_id" />
+        </many-to-one>
+        <many-to-one name="nivel2" class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+            <column name="nivel2_id" />
+        </many-to-one>
+        <property name="areaNivel4" type="java.lang.Double">
+            <column name="area_neta" precision="12" scale="4" />
+        </property>
+        
+        <property name="etapaId" type="java.lang.Long">
+            <column name="etapa_id"/>
+        </property>
+        <property name="variedId" type="java.lang.Long">
+            <column name="varied_id"/>
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jsp:root jsfc="f:view" xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+   
+   <html>
+       <head>
+         <meta name="content-type" content="text/html; charset=UTF-8"/>
+       </head>
+		<body>
+			<f:view>
+				<ui:composition>
+					<!-- Beging Menu -->
+           		     <h:form>
+           		     
+					    <p:panelMenu>
+					        <p:submenu label="Catalogo" >
+					            <p:submenu label="Sanidad Vegetal" >
+					                    <p:menuitem value="Fitosanidad"  actionListener="#{menuBean.setPagina('/XHTML/fitosanidadListDataTable.xhtml')}" icon="ui-icon-arrow-1-e" />
+					                    <p:menuitem value="Fases Fenologicas(incluir)" url="#" icon="ui-icon-arrow-1-e" />
+					                <p:submenu label="Análisis Sanidad ">   
+					                    <p:menuitem value="Variables" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/variableListDataTable.xhtml" icon="ui-icon-arrow-1-e" />
+					                    <p:menuitem value="Rengo Valor" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/rangoValorListDataTable.xhtml" icon="ui-icon-arrow-1-e" />
+					                    <p:menuitem value="Clasificación de Variables" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/listValorListDataTable.xhtml" icon="ui-icon-arrow-1-e" />
+					                </p:submenu>
+					                <p:menuitem value="Estación Evaporimétrica" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/estEvaporimetroListDataTable.xhtml" icon="ui-icon-arrow-1-e"  /> 
+								    <p:menuitem value="Estación Climatológica" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/estClimatListDataTable.xhtml" icon="ui-icon-arrow-1-e"   /> 
+					            </p:submenu>
+					        </p:submenu>
+					        <p:separator />
+					        <p:submenu label="Datos">
+							      <p:menuitem value="Evaporimetros" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datEvaporimetroListDataTable.xhtml" icon="ui-icon-arrow-1-e"/>
+							      <p:menuitem value="Clima" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/datClimatListDataTable.xhtml" icon="ui-icon-arrow-1-e" />
+							</p:submenu>
+							<p:submenu label="Prueba">
+					            <p:menuitem value="Prueba" actionListener="#{menuBean.setPagina('/XHTML/datEvaporimetroListDataTable.xhtml')}"  icon="ui-icon-disk">					            	
+					            </p:menuitem>
+					            <p:menuitem value="Prueba 2" actionListener="#{menuBean.setPagina('/XHTML/estClimatListDataTable.xhtml')}" icon="ui-icon-disk" >					            	
+					            </p:menuitem>
+					        </p:submenu>
+					    </p:panelMenu>
+					  
+					</h:form>
+					
+		  		   <!-- end menu -->
+				</ui:composition>
+			</f:view>
+		</body>
+	</html>
+</jsp:root>

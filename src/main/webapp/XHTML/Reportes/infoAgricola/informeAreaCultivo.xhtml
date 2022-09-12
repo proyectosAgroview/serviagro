@@ -1,0 +1,245 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+
+
+</h:head>
+
+
+
+<h:body>
+	<ui:composition template="/XHTML/tmp_modulo.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Informe:Distribución de área por cultivo">
+
+						<p:panelGrid styleClass="ui-panelgrid-blank">
+
+							<p:row>
+								<p:column style="font-weight: bold;">
+
+									<h:panelGrid columns="3" id="panelGrid">
+
+
+										<p:outputLabel for="txtCompania" value="Compañía" />
+										<p:selectOneMenu id="txtCompania"
+											binding="#{informeDistribucionAreaCultivoView.txtCompania}"
+											required="true" requiredMessage="Seleccione una compañía">
+											<f:selectItem itemLabel="Seleccione compañía" itemValue="" />
+											<f:selectItems
+												value="#{informeDistribucionAreaCultivoView.selectCompania}" />
+										</p:selectOneMenu>
+										<p:message for="txtCompania" />
+
+
+
+										<p:outputLabel for="cultivos" value="Cultivos: " />
+										<p:selectCheckboxMenu id="cultivos"
+											value="#{informeDistribucionAreaCultivoView.selectCultivo}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un cultivo">
+											<f:selectItems
+												value="#{informeDistribucionAreaCultivoView.cultivos}"
+												var="cultivos" itemLabel=" #{cultivos.nombre}"
+												itemValue="#{cultivos.cultivoId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="cultivos" />
+
+										<p:outputLabel for="zonas" value="Zonas: " />
+										<p:selectCheckboxMenu id="zonas"
+											value="#{informeDistribucionAreaCultivoView.selectedNivel1}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una zona">
+											<f:selectItems
+												value="#{informeDistribucionAreaCultivoView.zonas}"
+												var="zonas" itemLabel=" #{zonas.nombre}"
+												itemValue="#{zonas.nivel1Id}" />
+										</p:selectCheckboxMenu>
+										<p:message for="zonas" />
+
+										<p:outputLabel for="fincas" value="Fincas: " />
+										<p:selectCheckboxMenu id="fincas"
+											value="#{informeDistribucionAreaCultivoView.selectedNivel2}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos una finca">
+											<f:selectItems
+												value="#{informeDistribucionAreaCultivoView.fincas}"
+												var="fincas" itemLabel=" #{fincas.nombre}"
+												itemValue="#{fincas.nivel2Id}" />
+										</p:selectCheckboxMenu>
+										<p:message for="fincas" />
+
+										<p:outputLabel for="bloques" value="Bloques: " />
+										<p:selectCheckboxMenu id="bloques"
+											value="#{informeDistribucionAreaCultivoView.selectedNivel3}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un bloque">
+											<f:selectItems
+												value="#{informeDistribucionAreaCultivoView.bloques}"
+												var="bloques" itemLabel=" #{bloques.nombre}"
+												itemValue="#{bloques.nivel3Id}" />
+										</p:selectCheckboxMenu>
+										<p:message for="bloques" />
+
+										<p:outputLabel for="lotes" value="Lote: " />
+										<p:selectCheckboxMenu id="lotes"
+											value="#{informeDistribucionAreaCultivoView.selectedNivel4}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un lote">
+											<f:selectItems
+												value="#{informeDistribucionAreaCultivoView.lotes}"
+												var="lotes" itemLabel=" #{lotes.nombre}"
+												itemValue="#{lotes.nivel4Id}" />
+										</p:selectCheckboxMenu>
+										<p:message for="lotes" />
+
+
+										<p:outputLabel for="variedades" value="Variedades: " />
+
+										<p:selectCheckboxMenu id="variedades"
+											value="#{informeDistribucionAreaCultivoView.selectedVariedades}"
+											showCheckbox="true" required="false" filter="true"
+											filterMatchMode="contains"
+											requiredMessage="Seleccione al menos un Variedad">
+											<f:selectItems
+												value="#{informeDistribucionAreaCultivoView.variedades}"
+												var="variedad" itemLabel=" #{variedad.nombre}"
+												itemValue="#{variedad.variedId}" />
+										</p:selectCheckboxMenu>
+
+										<p:message for="variedades" />
+
+									</h:panelGrid>
+
+								</p:column>
+
+								<p:column style="font-weight: bold;">
+
+									<p:chart type="pie" widgetVar="grafica"
+										model="#{informeDistribucionAreaCultivoView.pieModel1}"
+										style="width:550px; align:center important!; 
+										height:480px"
+										responsive="true">
+										<p:ajax event="itemSelect"
+											listener="#{informeDistribucionAreaCultivoView.itemSelect}"
+											update="frm:dialog" />
+									</p:chart>
+
+								</p:column>
+
+							</p:row>
+
+						</p:panelGrid>
+
+					</p:panel>
+
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnConsultar" value="Consultar"
+								icon="ui-icon-newwin"
+								action="#{informeDistribucionAreaCultivoView.action_informe1()}"
+								update="frm" />
+
+							<p:commandButton value="Imprimir" icon="ui-icon-print"
+								style="margin:10px;" onclick="print('grafica')">
+							</p:commandButton>
+
+						</div>
+					</p:panel>
+
+					<p:dialog id="dialog" appendTo="@(body)" draggable="true"
+						closable="true"
+						visible="#{informeDistribucionAreaCultivoView.showDialog}"
+						modal="false" showEffect="fade" width="600" responsive="true"
+						resizable="false" styleClass="dialogFix">
+
+						<p:dataTable id="tbl"
+							value="#{informeDistribucionAreaCultivoView.data}" var="informe"
+							paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Reporte" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Cultivo" />
+								</f:facet>
+								<h:outputText value="#{informe.cultivo}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Área" />
+								</f:facet>
+								<h:outputText value="#{informe.area}">
+									<f:convertNumber pattern="#0.00" />
+								</h:outputText>
+
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Porcentaje" />
+								</f:facet>
+								<h:outputText value="#{informe.porcentajeArea}">
+									<f:convertNumber pattern="#0.00" />
+								</h:outputText>
+							</p:column>
+
+						</p:dataTable>
+
+					</p:dialog>
+
+				</h:form>
+
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

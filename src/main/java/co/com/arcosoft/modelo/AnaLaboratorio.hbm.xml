@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 13-abr-2018 9:41:11 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.AnaLaboratorio" table="ana_laboratorio" >
+        <id name="anaLabId" type="java.lang.Long">
+            <column name="ana_lab_id" />
+            <generator class="identity" />
+        </id>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="tipoAnalisis" type="java.lang.String">
+            <column name="tipo_analisis" length="30" />
+        </property>
+        <property name="frecuenciaDigitacion" type="java.lang.String">
+            <column name="frecuencia_digitacion" length="30" />
+        </property>
+        <property name="horaInicialDigitacion" type="java.util.Date">
+            <column name="hora_inicial_digitacion" length="19" />
+        </property>
+        <set name="datAnaLaboratorios" table="dat_ana_laboratorio" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ana_lab_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatAnaLaboratorio" />
+        </set>
+        <set name="anaLaboratorioVariables" table="ana_laboratorio_variable" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ana_lab_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.AnaLaboratorioVariable" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,196 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableTag" header="Tag">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{tagView.data}" var="tag"
+							paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+							reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="tag" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{tag.estado}" sortBy="#{tag.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{tag.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{tag.codigo}" sortBy="#{tag.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{tag.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{tag.nombre}" sortBy="#{tag.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{tag.nombre}" />
+							</p:column>
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogTag" actionListener="#{tagView.action_edit}">
+										<f:attribute name="selectedTag" value="#{tag}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{tagView.action_new()}" update=":dialogTag" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogTag" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{tagView.showDialog}" resizable="false"
+					modal="true" width="750" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelTag" header="Tag">
+							<h:panelGrid columns="2" id="panelGrid">
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{tagView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+
+								<p:outputLabel value="Código: " />
+								<p:inputText id="txtCodigo" disabled="false"
+									binding="#{tagView.txtCodigo}"
+									placeholder="Buscar o crear registro" size="23">
+									<p:ajax update="panelTag,msg,panelBotones"
+										listener="#{tagView.listener_txtCodigo}" />
+								</p:inputText>
+
+								<p:outputLabel for="txtNombre" value="Nombre:" />
+								<p:inputTextarea id="txtNombre" binding="#{tagView.txtNombre}"
+									rows="2" cols="40" maxlength="180" required="true"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+
+								<p:outputLabel for="txtZonasFabricaId" value="Zona de fábrica donde esta ubicado:" />
+								<p:selectOneMenu id="txtZonasFabricaId" effect="fade"
+									filter="true" filterMatchMode="contains" autoWidth="false" 
+									style="width: 80%;"
+									binding="#{tagView.txtZonasFabricaId}" required="false"
+									requiredMessage="Seleccione una zona">
+									<f:selectItem itemLabel="Seleccione una zona"
+										itemValue="" />
+									<f:selectItems value="#{tagView.selectZonasFabrica}" />
+								</p:selectOneMenu>
+
+								<p:outputLabel for="txtFuncion" value="Función: " />
+								<p:inputTextarea id="txtFuncion" binding="#{tagView.txtFuncion}"
+									rows="2" cols="40" maxlength="999" required="false"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+									
+							<p:outputLabel for="txtNivelPrioridad" value="Niveles de prioridad:" />
+								<p:selectOneMenu id="txtNivelPrioridad" effect="fade"
+									filter="true" filterMatchMode="contains"
+									binding="#{tagView.txtNivelPrioridad}" required="false"
+									requiredMessage="Seleccione un nivel de prioridad">
+									<f:selectItem itemLabel="Seleccione un nivel" itemValue="" />
+									<f:selectItem itemLabel="Nivel 1: Urgente" itemValue="Urgente" />
+									<f:selectItem itemLabel="Nivel 2: Alto" itemValue="Alto" />
+									<f:selectItem itemLabel="Nivel 3: Medio" itemValue="Medio" />
+									<f:selectItem itemLabel="Nivel 4: Bajo" itemValue="Bajo" />
+									<f:selectItem itemLabel="Nivel 5: En planificación" itemValue="En planificacion" />
+								</p:selectOneMenu>
+									
+
+								<p:outputLabel for="txtCentCostId_CentCost" value="CeCos" />
+								<p:selectOneMenu id="txtCentCostId_CentCost" effect="fade"
+									filter="true" filterMatchMode="contains" autoWidth="false" 
+									style="width: 80%;"
+									binding="#{tagView.txtCentCostId_CentCost}" required="false"
+									requiredMessage="Seleccione un centro de Costo">
+									<f:selectItem itemLabel="Seleccione un centro de Costo"
+										itemValue="" />
+									<f:selectItems value="#{tagView.selectCentCost}" />
+								</p:selectOneMenu>
+
+								<p:outputLabel for="txtResponsable" value="Responsable" />
+								<p:selectOneMenu id="txtResponsable" effect="fade"
+									filter="true" filterMatchMode="contains" autoWidth="false" 
+									style="width: 80%;"
+									binding="#{tagView.txtResponsable}" required="false"
+									requiredMessage="Seleccione un trabajador">
+									<f:selectItem itemLabel="Seleccione un trabajador" itemValue="" />
+									<f:selectItems value="#{tagView.selectTrabajador}" />
+								</p:selectOneMenu>
+
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional"
+									binding="#{tagView.txtInfoAdicional}" rows="2" cols="30"
+									 maxlength="100"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+
+								<p:outputLabel for="txtInfoAdicional2"
+									value="Información Adicional 2:" />
+								<p:inputTextarea id="txtInfoAdicional2"
+									binding="#{tagView.txtInfoAdicional2}" rows="2" cols="30"
+									maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden" id="txtTagId"
+									binding="#{tagView.txtTagId}">
+
+
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{tagView.btnSave}" value="Grabar"
+									action="#{tagView.action_save()}"
+									update=":dialogTag :frm:panelDataTableTag" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{tagView.action_clear()}"
+									process="@this" update=":dialogTag" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

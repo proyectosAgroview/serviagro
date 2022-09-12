@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatPluvio" table="dat_pluvio" >
+        <id name="datPluvioId" type="java.lang.Long">
+            <column name="dat_pluvio_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="estPluvio" class="co.com.arcosoft.modelo.EstPluvio" fetch="select">
+            <column name="est_pluvio_id" />
+        </many-to-one>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="precipitacion" type="java.lang.Double">
+            <column name="precipitacion" precision="12" scale="4" />
+        </property>
+        <property name="temperaturaMaxima" type="java.lang.Double">
+            <column name="temperatura_maxima" precision="12" scale="4" />
+        </property>
+        <property name="temperaturaMedia" type="java.lang.Double">
+            <column name="temperatura_media" precision="12" scale="4" />
+        </property>
+        <property name="temperaturaMinima" type="java.lang.Double">
+            <column name="temperatura_minima" precision="12" scale="4" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="fechaPrecipitacion" type="java.util.Date">
+            <column name="fecha_precipitacion" length="19" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="500" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,52 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+	<div class="main-panel">
+		<div class="content">
+			<div class="page-inner">
+
+				<div class="card-header bg-bluegreen-gradient text-white bubble-shadow">
+					<h4 class="text-section" style="text-transform: uppercase"><B>#{initialMenuView.tituloModulo}</B></h4> 
+				</div>
+                 
+                 			
+				<div class="page-category">
+				
+				  <div class="row">
+				   <div class="col-md-12">
+					 <div class="card" >
+					  <div class="card-header">
+					    
+					    <div class="card-title"></div>
+					    <div class="card-category"></div>
+					  
+					  </div>
+					  
+					  <div class="card-body">
+					  
+					   <div class="col-xl-12">
+					     	<ui:insert name="body" />
+					     	<div align="center" style="margin-top: 150px;">
+												<p:graphicImage
+													value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/logoserviagro.jpg"
+													width="500" />
+											</div>
+					  </div>
+					  </div>
+					 </div>
+					</div>
+					
+				  </div>
+					
+			
+				</div>
+			</div>
+		</div>
+		<ui:include src="/WEB-INF/template/footer.xhtml" />
+	</div>
+</ui:composition>
+</html>

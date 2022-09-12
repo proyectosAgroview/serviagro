@@ -1,0 +1,199 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableCategoriaEquipo"
+						header="Categorías de equipos">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{categoriaEquipoView.data}"
+							var="categoriaEquipo" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="categoriaEquipo" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{categoriaEquipo.estado}"
+								sortBy="#{categoriaEquipo.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{categoriaEquipo.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{categoriaEquipo.codigo}"
+								sortBy="#{categoriaEquipo.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{categoriaEquipo.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{categoriaEquipo.nombre}"
+								sortBy="#{categoriaEquipo.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{categoriaEquipo.nombre}" />
+							</p:column>
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogCategoriaEquipo"
+										actionListener="#{categoriaEquipoView.action_edit}">
+										<f:attribute name="selectedCategoriaEquipo"
+											value="#{categoriaEquipo}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{categoriaEquipoView.action_new()}"
+								update=":dialogCategoriaEquipo" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogCategoriaEquipo" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{categoriaEquipoView.showDialog}" resizable="false"
+					modal="true" width="600" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelCategoriaEquipo" header="Categorías de equipos">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{categoriaEquipoView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+
+								<p:outputLabel value="Código: " />
+								<p:inputText id="txtCodigo" disabled="false"
+									binding="#{categoriaEquipoView.txtCodigo}"
+									placeholder="Buscar o crear registro" size="23">
+									<p:ajax update="panelCategoriaEquipo,msg,panelBotones"
+										listener="#{categoriaEquipoView.listener_txtCodigo}" />
+								</p:inputText>
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNombre" value="Nombre: " />
+								<p:inputText id="txtNombre" disabled="true"
+									binding="#{categoriaEquipoView.txtNombre}" required="true"
+									requiredMessage="El Nombre es Obligatorio" />
+								<p:message for="txtNombre" />
+								
+											<p:outputLabel for="txtFuncion" value="Función: " />
+										<p:selectOneMenu id="txtFuncion"
+											binding="#{categoriaEquipoView.txtFuncion}" required="true"
+											requiredMessage="Seleccione una función">
+											<f:selectItem itemLabel="Seleccione una función" itemValue="" />
+											<f:selectItem itemLabel="Construcción"
+												itemValue="Construcción" />
+											<f:selectItem itemLabel="Alce y corte"
+												itemValue="Alce y corte" />
+											<f:selectItem itemLabel="Tractor" itemValue="Tractor" />
+											<f:selectItem itemLabel="Automóvil" itemValue="Automóvil" />
+											<f:selectItem itemLabel="Motobomba/Electrogeno"
+												itemValue="Motobomba/Electrogeno" />
+											<f:selectItem itemLabel="Implemento" itemValue="Implemento" />
+											<f:selectItem itemLabel="Remolques/Vagones"
+												itemValue="Remolques/Vagones" />
+											<f:selectItem itemLabel="Tractomula" itemValue="Tractomula" />
+											<f:selectItem itemLabel="Camión" itemValue="Camion" />
+											<f:selectItem itemLabel="Camioneta" itemValue="Camioneta" />
+											<f:selectItem itemLabel="Doble Troque"
+												itemValue="Doble Troque" />
+											<f:selectItem itemLabel="Herramienta" itemValue="Herramienta" />
+											<f:selectItem itemLabel="Volqueta" itemValue="Volqueta" />
+											<f:selectItem itemLabel="Otros" itemValue="Otros" />
+											<f:selectItem itemLabel="Equio industrial" itemValue="Equio industrial" />
+											</p:selectOneMenu>
+										<p:message for="txtFuncion" />					
+	
+								<p:outputLabel for="txtTaraMin" value="Peso mínimo: " />
+								<p:inputText id="txtTaraMin" disabled="true"
+									binding="#{categoriaEquipoView.txtTaraMin}" required="false"
+									requiredMessage="El peso minimo es obligatorio" />
+								<p:message for="txtTaraMin" />
+
+								<p:outputLabel for="txtTaraMax" value="Peso máximo: " />
+								<p:inputText id="txtTaraMax" disabled="true"
+									binding="#{categoriaEquipoView.txtTaraMax}" required="false"
+									requiredMessage="El peso máximo es obligatorio" />
+								<p:message for="txtTaraMax" />
+
+
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional"
+									binding="#{categoriaEquipoView.txtInfoAdicional}" rows="5"
+									cols="30" counter="display" maxlength="100"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText id="display" />
+
+								<p:outputLabel for="txtInfoAdicional2"
+									value="Información Adicional 2:" />
+								<p:inputTextarea id="txtInfoAdicional2"
+									binding="#{categoriaEquipoView.txtInfoAdicional2}" rows="5"
+									cols="30" counter="display2" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+								<h:outputText id="display2" />
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden" id="txtCategEquipId"
+									binding="#{categoriaEquipoView.txtCategEquipId}">
+									
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{categoriaEquipoView.btnSave}" value="Grabar"
+									action="#{categoriaEquipoView.action_save()}"
+									update=":dialogCategoriaEquipo :frm:panelDataTableCategoriaEquipo" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{categoriaEquipoView.action_clear()}"
+									process="@this" update=":dialogCategoriaEquipo" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

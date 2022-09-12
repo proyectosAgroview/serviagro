@@ -1,0 +1,495 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatClimat" header="Registros Climáticos">
+						<!-- 	<p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datClimatView.data}"
+							var="datClimat" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" lazy="true"
+							reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Registros Climáticos" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datClimat.estado}"
+								sortBy="#{datEvaporimetro.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datClimat.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datClimat.nombreEstclimat}"
+								sortBy="#{datClimat.nombreEstclimat}">
+								<f:facet name="header">
+									<h:outputText value="Estación Climatológica" />
+								</f:facet>
+								<h:outputText value="#{datClimat.nombreEstclimat}" />
+							</p:column>
+
+
+							<p:column filterBy="#{datClimat.fechaLluvia}"
+								sortBy="#{datClimat.fechaLluvia}">
+								<f:facet name="header">
+									<h:outputText value="Fecha lluvia" />
+								</f:facet>
+								<h:outputText value="#{datClimat.fechaLluvia}" />
+							</p:column>
+
+
+							<p:column filterBy="#{datClimat.precipitacion}"
+								sortBy="#{datClimat.precipitacion}">
+								<f:facet name="header">
+									<h:outputText value="Precipitación (mm)" />
+								</f:facet>
+								<h:outputText value="#{datClimat.precipitacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datClimat.temperaturaMedia}"
+								sortBy="#{datClimat.temperaturaMedia}">
+								<f:facet name="header">
+									<h:outputText value="Temperatura Media" />
+								</f:facet>
+								<h:outputText value="#{datClimat.temperaturaMedia}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Evaporación" />
+								</f:facet>
+								<h:outputText value="#{datClimat.evaporacion}" />
+							</p:column>
+
+							<p:column filterBy="#{datClimat.velocidadViento}"
+								sortBy="#{datClimat.velocidadViento}">
+								<f:facet name="header">
+									<h:outputText value="Velocidad del Viento" />
+								</f:facet>
+								<h:outputText value="#{datClimat.velocidadViento}" />
+							</p:column>
+
+							<p:column filterBy="#{datClimat.direccionViento}"
+								sortBy="#{datClimat.direccionViento}">
+								<f:facet name="header">
+									<h:outputText value="Dirección del Viento" />
+								</f:facet>
+								<h:outputText value="#{datClimat.direccionViento}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+									disabled="#{datClimat.estadoTrue}" update=":dialogDatClimat"
+									actionListener="#{datClimatView.action_edit}">
+									<f:attribute name="selectedDatClimat" value="#{datClimat}" />
+								</p:commandButton>
+								<p:commandButton id="btnDelete"
+									disabled="#{datClimat.estadoTrue}" title="Anular Registro"
+									actionListener="#{datClimatView.action_anularReg}"
+									icon="ui-icon-circle-close" update=":dialogAnularReg">
+									<f:attribute name="selectedDatClimat" value="#{datClimat}" />
+								</p:commandButton>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datClimatView.action_new()}" update=":dialogDatClimat" />
+						</div>
+					</p:panel>
+				</h:form>
+
+				<p:dialog id="dialogDatClimat" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{datClimatView.showDialog}"
+					resizable="false" modal="true" width="700" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatClimat" header="Registros Climáticos">
+
+							<p:tabView scrollable="true">
+								<!-- Precipitacion -->
+
+								<p:tab title="Precipitación">
+									<h:panelGrid columns="3" cellpadding="5">
+
+										<p:outputLabel for="txtEstClimatId_EstClimat"
+											value=" Estación Evaporimetro" />
+										<p:selectOneMenu id="txtEstClimatId_EstClimat"
+											binding="#{datClimatView.txtEstClimatId_EstClimat}"
+											required="true" requiredMessage="Seleccione una estación"
+											filter="true" filterMatchMode="contains">
+											<f:selectItem itemLabel="Seleccione una estación"
+												itemValue="" />
+											<f:selectItems value="#{datClimatView.selectEstClima}" />
+										</p:selectOneMenu>
+										<p:message for="txtEstClimatId_EstClimat" />
+
+										<p:outputLabel for="msgFechaLluvia" value=" Fecha Lluvia" />
+										<p:calendar id="msgFechaLluvia" showOn="button"
+											navigator="false" locale="es"
+											binding="#{datClimatView.txtFechaLluvia}"
+											pattern="dd/MM/yyyy HH:mm:ss" mask="true" required="true"
+											requiredMessage="La Fecha y Hora es Obligatoria">
+											<p:ajax event="dateSelect"
+												listener="#{datClimatView.listener_txtFechaLluvia}" />
+										</p:calendar>
+										<p:message for="msgFechaLluvia" />
+
+										<p:outputLabel for="txtPrecipitacion"
+											value=" Precipitación(mm)" />
+										<p:inputText id="txtPrecipitacion"
+											binding="#{datClimatView.txtPrecipitacion}" required="true"
+											requiredMessage="La Precipitación es Obligatorio">
+											
+										</p:inputText>
+										<p:message for="txtPrecipitacion" />
+
+									</h:panelGrid>
+								</p:tab>
+
+								<!-- Temperatura -->
+
+								<p:tab title="Temperatura">
+									<h:panelGrid columns="5" cellpadding="5">
+
+										<p:outputLabel for="txtTemperaturaMaxima"
+											value=" Temperatura Máxima" />
+										<p:inputText id="txtTemperaturaMaxima"
+											binding="#{datClimatView.txtTemperaturaMaxima}">
+											
+										</p:inputText>
+										<p:message for="txtTemperaturaMaxima" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtTemperaturaMinima"
+											value=" Temperatura Mínima" />
+										<p:inputText id="txtTemperaturaMinima"
+											binding="#{datClimatView.txtTemperaturaMinima}">
+											
+										</p:inputText>
+										<p:message for="txtTemperaturaMinima" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtTemperaturaMedia"
+											value=" Temperatura Media" />
+										<p:inputText id="txtTemperaturaMedia"
+											binding="#{datClimatView.txtTemperaturaMedia}" />
+										<p:commandButton id="iconOnly" icon="ui-icon-calculator"  value="Calcular"
+											ondblclick="true">
+											<p:ajax update="txtTemperaturaMedia"
+												listener="#{datClimatView.listener_calculartempMedia}" />
+										</p:commandButton>
+										<p:message for="txtTemperaturaMedia" />
+										<p:tooltip id="toolTipTrack" for="iconOnly"
+											value="haz doble click para calcular el valor"
+											trackMouse="true" />
+
+										<p:outputLabel for="txtTemperaturaAmbiente"
+											value=" Temperatura Ambiente" />
+										<p:inputText id="txtTemperaturaAmbiente"
+											binding="#{datClimatView.txtTemperaturaAmbiente}">
+											
+										</p:inputText>
+										<p:message for="txtTemperaturaAmbiente" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtSensacionTermica"
+											value=" Sensación Térmica" />
+										<p:inputText id="txtSensacionTermica"
+											binding="#{datClimatView.txtSensacionTermica}">
+											
+										</p:inputText>
+										<p:message for="txtSensacionTermica" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtHumedadMaxima" value=" Humedad Máxima" />
+										<p:inputText id="txtHumedadMaxima"
+											binding="#{datClimatView.txtHumedadMaxima}">
+											
+										</p:inputText>
+										<p:message for="txtHumedadMaxima" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtHumedadMinima" value=" Humedad Mínima" />
+										<p:inputText id="txtHumedadMinima"
+											binding="#{datClimatView.txtHumedadMinima}">
+											
+										</p:inputText>
+										<p:message for="txtHumedadMinima" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtHumedadMedia" value=" Humedad Media" />
+										<p:inputText id="txtHumedadMedia"
+											binding="#{datClimatView.txtHumedadMedia}">
+											
+										</p:inputText>
+										<p:message for="txtHumedadMinima" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtHumedadExterior"
+											value=" Humedad Exterior" />
+										<p:inputText id="txtHumedadExterior"
+											binding="#{datClimatView.txtHumedadExterior}">
+											
+										</p:inputText>
+										<p:message for="txtHumedadExterior" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtHumedadInterior"
+											value=" Humedad Interior" />
+										<p:inputText id="txtHumedadInterior"
+											binding="#{datClimatView.txtHumedadInterior}">
+											
+										</p:inputText>
+										<p:message for="txtHumedadInterior" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtEvaporacion" value=" Evaporación" />
+										<p:inputText id="txtEvaporacion"
+											binding="#{datClimatView.txtEvaporacion}">
+											
+										</p:inputText>
+										<p:message for="txtEvaporacion" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtEvaporacionTranspiracion"
+											value=" Evapotranspiración" />
+										<p:inputText id="txtEvaporacionTranspiracion"
+											binding="#{datClimatView.txtEvaporacionTranspiracion}">
+											
+										</p:inputText>
+										<p:message for="txtEvaporacionTranspiracion" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtInsolacion" value=" Insolación" />
+										<p:inputText id="txtInsolacion"
+											binding="#{datClimatView.txtInsolacion}">
+											
+										</p:inputText>
+										<p:message for="txtInsolacion" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtEnergiaSolar" value=" Energia Solar" />
+										<p:inputText id="txtEnergiaSolar"
+											binding="#{datClimatView.txtEnergiaSolar}">
+											
+										</p:inputText>
+										<p:message for="txtEnergiaSolar" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtRadiacionSolar"
+											value=" Radiación Solar" />
+										<p:inputText id="txtRadiacionSolar"
+											binding="#{datClimatView.txtRadiacionSolar}">
+											
+										</p:inputText>
+										<p:message for="txtRadiacionSolar" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNubosidad" value=" Nubosidad" />
+										<p:inputText id="txtNubosidad"
+											binding="#{datClimatView.txtNubosidad}">
+											
+										</p:inputText>
+										<p:message for="txtNubosidad" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtHorasSol" value=" Horas Sol" />
+										<p:inputText id="txtHorasSol"
+											binding="#{datClimatView.txtHorasSol}">
+											
+										</p:inputText>
+										<p:message for="txtHorasSol" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+										<p:outputLabel for="txtPuntoRocio" value=" Punto de Rocío" />
+										<p:inputText id="txtPuntoRocio"
+											binding="#{datClimatView.txtPuntoRocio}">
+											
+										</p:inputText>
+										<p:message for="txtPuntoRocio" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+									</h:panelGrid>
+								</p:tab>
+
+								<!-- Viento -->
+
+								<p:tab title="Viento">
+									<h:panelGrid columns="3" cellpadding="5">
+
+										<p:outputLabel for="txtVelocidadViento"
+											value=" Velocidad del Viento" />
+										<p:inputText id="txtVelocidadViento"
+											binding="#{datClimatView.txtVelocidadViento}">
+											
+										</p:inputText>
+										<p:message for="txtVelocidadViento" />
+
+										<p:outputLabel for="txtVelocidadMaxima"
+											value=" Velocidad Máxima" />
+										<p:inputText id="txtVelocidadMaxima"
+											binding="#{datClimatView.txtVelocidadMaxima}">
+											
+										</p:inputText>
+										<p:message for="txtVelocidadMaxima" />
+
+										<p:outputLabel for="txtDireccionViento"
+											value=" Dirección del Viento" />
+										<p:inputText id="txtDireccionViento"
+											binding="#{datClimatView.txtDireccionViento}">
+											
+										</p:inputText>
+										<p:message for="txtDireccionViento" />
+
+										<p:outputLabel for="txtGradosDiaCalor"
+											value=" Grados Día Calor" />
+										<p:inputText id="txtGradosDiaCalor"
+											binding="#{datClimatView.txtGradosDiaCalor}">
+											
+										</p:inputText>
+										<p:message for="txtGradosDiaCalor" />
+
+										<p:outputLabel for="txtGradosDiaFrio" value=" Grados Día Frío" />
+										<p:inputText id="txtGradosDiaFrio"
+											binding="#{datClimatView.txtGradosDiaFrio}">
+											
+										</p:inputText>
+										<p:message for="txtGradosDiaFrio" />
+
+										<p:outputLabel for="txtHorasLuz" value=" Horas Luz" />
+										<p:inputText id="txtHorasLuz"
+											binding="#{datClimatView.txtHorasLuz}">
+											
+										</p:inputText>
+										<p:message for="txtHorasLuz" />
+
+										<p:outputLabel for="txtObservacion" value="Observación:" />
+										<p:inputTextarea id="txtObservacion"
+											binding="#{datClimatView.txtobservacion}" rows="5" cols="30"
+											counter="display3" maxlength="500"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display3" />
+										<p:outputLabel />
+										<p:outputLabel />
+
+
+										<!-- Generador de ID automaticos -->
+
+										<p:inputText id="txtDatsClimatoId" style="visibility:hidden"
+											binding="#{datClimatView.txtDatsClimatoId}">
+											<p:ajax update=":dialogDatClimat"
+												listener="#{datClimatView.listener_txtId}" />
+										</p:inputText>
+
+									</h:panelGrid>
+								</p:tab>
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datClimatView.btnSave}" value="Grabar"
+									action="#{datClimatView.action_save()}"
+									update=":dialogDatClimat :frm:panelDataTableDatClimat" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" process="@this"
+									action="#{datClimatView.action_clear()}"
+									update=":dialogDatClimat" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="false"
+					visible="#{datClimatView.showDialog}" modal="true" width="500"
+					>
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datClimatView.txtobservacionAnularReg}" rows="5"
+									cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datClimatView.btnDelete}"
+									value="Grabar" action="#{datClimatView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatClimat" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datClimatView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

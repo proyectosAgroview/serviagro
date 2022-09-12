@@ -1,0 +1,481 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 20000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatNominaTrabajador"
+						header="Novedades de la liquidación de trabajadores">
+						<!-- <p:growl id="men"/>	 -->
+
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtFechaIni" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaIni" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{datNominaTrabajadorView.txtFechaIni}"
+											required="false"
+											requiredMessage="La Fecha inicial es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="txtFechaFin" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{datNominaTrabajadorView.txtFechaFin}"
+											required="false"
+											requiredMessage="La Fecha  final  es obligatoria">
+										</p:calendar>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtPlanilla" value="n° Planilla "
+											style="font-size: 0.9em;" />
+										<p:inputNumber id="txtPlanilla" style="font-size: 0.9em;"
+											binding="#{datNominaTrabajadorView.txtPlanilla}"
+											maxlength="1000" autoResize="true" size="15">
+										</p:inputNumber>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+
+										<p:commandButton id="btnCargarDatos" value="Consultar"
+											icon="ui-icon-newwin" style="font-size: 1em;"
+											action="#{datNominaTrabajadorView.listarNominaTrabajador}"
+											update=":frm:tbl " process="@all" />
+
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+						<p:dataTable id="tbl" value="#{datNominaTrabajadorView.data}"
+							var="datOtrosCostos" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Productos" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datOtrosCostos.estado}"
+								sortBy="#{datOtrosCostos.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datOtrosCostos.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{datOtrosCostos.consecutivo}"
+								sortBy="#{datOtrosCostos.consecutivo}">
+								<f:facet name="header">
+									<h:outputText value="#Planilla" />
+								</f:facet>
+								<h:outputText value="#{datOtrosCostos.consecutivo}" />
+							</p:column>
+
+							<p:column filterBy="#{datOtrosCostos.fechaInicial}"
+								sortBy="#{datOtrosCostos.fechaInicial}">
+								<f:facet name="header">
+									<h:outputText value="Fecha inicial" />
+								</f:facet>
+								<h:outputText value="#{datOtrosCostos.fechaInicial}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column filterBy="#{datOtrosCostos.fechaFinal}"
+								sortBy="#{datOtrosCostos.fechaFinal}">
+								<f:facet name="header">
+									<h:outputText value="Fecha final" />
+								</f:facet>
+								<h:outputText value="#{datOtrosCostos.fechaFinal}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+										update=":dialogDatNominaTrabajador" value="Editar"
+										actionListener="#{datNominaTrabajadorView.action_edit}">
+										<f:attribute name="selectedDatNominaTrabajador"
+											value="#{datOtrosCostos}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datNominaTrabajadorView.action_new()}"
+								update=":dialogDatNominaTrabajador" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatNominaTrabajador" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datNominaTrabajadorView.showDialog}" resizable="false"
+					modal="true" width="1100" height="650" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatNominaTrabajador"
+							header="Novedades de la liquidación de trabajadores">
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{datNominaTrabajadorView.activeTapIndex}">
+								<p:tab title="Período de pago">
+									<p:panel>
+										<h:panelGrid columns="2" id="panelGrid1">
+
+											<p:outputLabel value="#Planilla:" style="font-size: 0.9em;" />
+											<p:inputText id="txtConsecutivo" disabled="false"
+												style="font-size: 0.9em;"
+												binding="#{datNominaTrabajadorView.txtConsecutivo}"
+												placeholder="Buscar o crear registro" size="12">
+											</p:inputText>
+
+											<p:outputLabel for="txtFechaInicial" value="Fecha inicial: "
+												style="font-size: 0.9em" />
+											<p:calendar id="txtFechaInicial" showOn="button"
+												navigator="false" locale="es" pattern="dd/MM/yyyy"
+												style="font-size: 0.9em;"
+												binding="#{datNominaTrabajadorView.txtFechaInicial}"
+												mask="true" required="true" size="15"
+												requiredMessage="La Fecha   es obligatoria">
+											</p:calendar>
+
+											<p:outputLabel for="txtFechaFinal" value="Fecha final: "
+												style="font-size: 0.9em" />
+											<p:calendar id="txtFechaFinal" showOn="button"
+												navigator="false" locale="es" pattern="dd/MM/yyyy"
+												style="font-size: 0.9em;"
+												binding="#{datNominaTrabajadorView.txtFechaFinal}"
+												mask="true" required="true" size="15"
+												requiredMessage="La Fecha   es obligatoria">
+											</p:calendar>
+
+											<p:outputLabel for="txtObservacion" value="Observación: " />
+											<p:inputTextarea id="txtObservacion"
+												style="font-size: 0.9em;"
+												binding="#{datNominaTrabajadorView.txtObservacion}" rows="2"
+												cols="50" maxlength="3900" autoResize="true" />
+
+											<!-- id auto incrementable -->
+											<p:inputText style="visibility:hidden"
+												id="txtDatNominaTrabajadorId"
+												binding="#{datNominaTrabajadorView.txtDatNominaTrabajadorId}">
+											</p:inputText>
+
+										</h:panelGrid>
+									</p:panel>
+								</p:tab>
+
+								<p:tab title="Trabajadores relacionados">
+									<p:panel id="toggleableMO">
+										<p:messages id="msgMO" closable="true" showDetail="true" />
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:panelGrid columns="2" id="gridDatNominaTrabajadordet">
+
+														<p:outputLabel for="txtTrabId_Trabajador"
+															value="Trabajador: " style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtTrabId_Trabajador"
+															autoWidth="false" style="font-size: 0.9em; width: 180px;"
+															effect="fade" filter="true" filterMatchMode="contains"
+															binding="#{datNominaTrabajadorView.txtTrabId_Trabajador}"
+															required="false"
+															requiredMessage="Seleccione un trabajador">
+															<f:selectItem itemLabel="Seleccione un trabajador"
+																itemValue="" />
+															<f:selectItems
+																value="#{datNominaTrabajadorView.selectTrabajador}" />
+														</p:selectOneMenu>
+
+														<p:outputLabel for="txtCeptoNominaId_ConceptoNomina"
+															value="Concepto nómina: " style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtCeptoNominaId_ConceptoNomina"
+															effect="fade" filter="true" filterMatchMode="contains"
+															binding="#{datNominaTrabajadorView.txtCeptoNominaId_ConceptoNomina}"
+															style="font-size: 0.9em; width: 160px;" autoWidth="180px"
+															required="false" requiredMessage="Seleccione un concepto">
+															<f:selectItem itemLabel="Seleccione un concepto"
+																itemValue="" />
+															<f:selectItems
+																value="#{datNominaTrabajadorView.selectCeptoNominaId}" />
+														</p:selectOneMenu>
+
+														<p:outputLabel for="txtTipoMovimiento"
+															value="Tipo de movimiento: " style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtTipoMovimiento" autoWidth="false"
+															style="font-size: 0.9em; width: 180px;" effect="fade"
+															filter="true" filterMatchMode="contains"
+															binding="#{datNominaTrabajadorView.txtTipoMovimiento}"
+															required="false"
+															requiredMessage="Seleccione un tipo de movimiento">
+															<f:selectItem
+																itemLabel="Seleccione un tipo de movimiento"
+																itemValue="" noSelectionOption="true" />
+															<f:selectItem itemLabel="Devengo" itemValue="Devengo" />
+															<f:selectItem itemLabel="Deduccion" itemValue="Deduccion" />
+															<p:ajax
+																listener="#{datNominaTrabajadorView.listener_TipoMovimiento}"
+																process="@this"
+																update="txtValorTotal, txtValorDeduccion ">
+															</p:ajax>
+														</p:selectOneMenu>
+
+													</h:panelGrid>
+												</p:column>
+
+												<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel for="txtValorTotal" value="VR. Devengos: "
+															style="font-size: 0.9em;" />
+														<p:inputNumber id="txtValorTotal" size="12"
+															binding="#{datNominaTrabajadorView.txtValorTotal}"
+															decimalSeparator="." thousandSeparator=","
+															decimalPlaces="2" disable="true">
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputNumber>
+
+														<p:outputLabel for="txtValorDeduccion"
+															value="VR. Deducciones: " style="font-size: 0.9em;" />
+														<p:inputNumber id="txtValorDeduccion" size="12"
+															binding="#{datNominaTrabajadorView.txtValorDeduccion}"
+															decimalSeparator="." thousandSeparator=","
+															decimalPlaces="2" disable="true">
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputNumber>
+
+
+													</h:panelGrid>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+
+										<h:panelGrid columns="2" style="margin:10px;">
+											<p:commandButton id="btnAgregarNomina"
+												icon="ui-icon-plusthick" process="@all"
+												binding="#{datNominaTrabajadorView.btnAgregar}"
+												ajax="true" value="Agregar"
+												action="#{datNominaTrabajadorView.action_agregarPlanilla}"
+												update="tablaDatNominaTrabajadordet, msgMO, txtValorTotal,
+												txtValorDeduccion, txtTipoMovimiento, txtCeptoNominaId_ConceptoNomina,
+												txtValorTotalAcumulado, txtValorTotalAcumuladoDeduccion" />
+
+											<p:commandButton id="btnlimpiar1" icon="ui-icon-trash"
+												value="Limpiar">
+												<p:ajax update="toggleableMO" resetValues="true" />
+											</p:commandButton>
+
+
+										</h:panelGrid>
+										
+											<p:outputPanel id="dataNominaTrabajador">
+												<p:dataTable id="tablaDatNominaTrabajadordet"
+													resizableColumns="true" style="margin-bottom:20px"
+													scrollWidth="99%" scrollHeight="250"
+													value="#{datNominaTrabajadorView.dataNominaTrabajador}"
+													var="listaDatNominaTrabajadordet" 
+													editable="true" editMode="cell" widgetVar="cellEventos"
+													reflow="true">
+
+													<p:ajax event="cellEdit"
+														listener="#{datNominaTrabajadorView.onCellEditEventos}" />
+
+													<p:column headerText="Trabajador" style="font-size: 0.9em;">
+														<p:cellEditor disabled="true">
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDatNominaTrabajadordet.nombreTrabajador}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDatNominaTrabajadordet.nombreTrabajador}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Cepto Nómina" style="font-size: 0.9em;">
+														<p:cellEditor disabled="true">
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDatNominaTrabajadordet.nombreConceptoNomina}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDatNominaTrabajadordet.nombreConceptoNomina}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="Tipo movimiento" style="font-size: 0.9em;">
+														<p:cellEditor disabled="true">
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDatNominaTrabajadordet.tipoMovimiento}" />
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDatNominaTrabajadordet.tipoMovimiento}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="VR. Devengo" style="font-size: 0.9em;">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDatNominaTrabajadordet.valorTotal}">
+																	<f:convertNumber pattern="#0" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDatNominaTrabajadordet.valorTotal}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+
+													<p:column headerText="VR. Deducción" style="font-size: 0.9em;">
+														<p:cellEditor>
+															<f:facet name="output">
+																<h:outputText
+																	value="#{listaDatNominaTrabajadordet.valorDeduccion}">
+																	<f:convertNumber pattern="#0.0" />
+																</h:outputText>
+															</f:facet>
+															<f:facet name="input">
+																<p:inputText
+																	value="#{listaDatNominaTrabajadordet.valorDeduccion}" />
+															</f:facet>
+														</p:cellEditor>
+													</p:column>
+													
+													<f:attribute name="selectedNominaTrabajadorDet"
+														value="#{listaDatNominaTrabajadordet}" />
+
+													<p:column headerText="Opciones">
+														<div align="center">
+															<p:commandButton id="btnDelete" icon="ui-icon-trash"
+																actionListener="#{datNominaTrabajadorView.actionDeleteDatNominaTrabajadorDet}"
+																title="Borrar"
+																onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+																update="tablaDatNominaTrabajadordet, :dialogDatNominaTrabajador">
+																<f:attribute name="selectedNominaTrabajadorDet"
+																	value="#{listaDatNominaTrabajadordet}" />
+															</p:commandButton>
+														</div>
+													</p:column>
+												</p:dataTable>
+											</p:outputPanel>
+										
+										<p:panelGrid>
+											<p:row>
+												<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel value="TOTAL DEVENGOS: "
+															style="font-size: 0.9em;" />
+														<p:inputNumber id="txtValorTotalAcumulado" size="12"
+															binding="#{datNominaTrabajadorView.txtValorTotalAcumulado}"
+															decimalSeparator="." thousandSeparator=","
+															decimalPlaces="2" disable="true">
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputNumber>
+													</h:panelGrid>
+												</p:column>
+												<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel value="TOTAL DEDUCCIONES: "
+															style="font-size: 0.9em;" />
+														<p:inputNumber id="txtValorTotalAcumuladoDeduccion"
+															size="12"
+															binding="#{datNominaTrabajadorView.txtValorTotalAcumuladoDeduccion}"
+															decimalSeparator="." thousandSeparator=","
+															decimalPlaces="2" disable="true">
+															<f:converter converterId="javax.faces.Double" />
+														</p:inputNumber>
+													</h:panelGrid>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+								</p:tab>
+
+
+
+
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datNominaTrabajadorView.btnSave}" value="Grabar"
+									action="#{datNominaTrabajadorView.action_save()}"
+									update=":dialogDatNominaTrabajador :frm:panelDataTableDatNominaTrabajador" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datNominaTrabajadorView.action_clear()}"
+									process="@this" update=":dialogDatNominaTrabajador" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

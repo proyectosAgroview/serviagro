@@ -1,0 +1,88 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable" header="Informe: listado de Haciendas/lotes">
+
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid styleClass="ui-panelgrid-blank">
+
+							<p:row>
+								<p:column style="font-weight: bold;">
+
+									<h:panelGrid columns="2" id="panelGrid" >
+										
+
+										<p:outputLabel for="txtHacienda" value="Hacienda: " />
+										<p:selectOneMenu id="txtHacienda"
+											binding="#{informeProntuarioLotesView.txtHacienda}"
+											filter="true" filterMatchMode="contains" style="width:160px"
+											required="false"
+											autoWidth="false" disabled="false" >
+											<f:selectItem itemLabel="Seleccione una hacienda" itemValue=""/>
+											<f:selectItems value="#{informeProntuarioLotesView.selectHacienda}"/>
+											<p:ajax update="txtLote"/>
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtLote" value="Lote: " />
+										<p:selectOneMenu id="txtLote"
+											binding="#{informeProntuarioLotesView.txtLote}"
+											filter="true" filterMatchMode="contains" style="width:160px"
+											autoWidth="false" disabled="false" >
+											<f:selectItem itemLabel="Seleccione un lote" itemValue=""/>
+											<f:selectItems value="#{informeProntuarioLotesView.selectLote}"/>
+										</p:selectOneMenu>
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+
+								</p:column>
+
+							</p:row>
+
+						</p:panelGrid>
+
+					</p:panel>
+
+
+					<p:panel id="panelBoton">
+						<div align="center">
+
+							<p:commandButton id="btnConsultar" value="Generar reporte"
+								icon="ui-icon-newwin"
+								action="#{informeProntuarioLotesView.exportToPyGExcel}" update="growl, frm" process="@all" partialSubmit="true"/>
+
+							<p:commandButton disabled="#{informeProntuarioLotesView.disableButton}"
+								icon="ui-icon-arrowthick-1-s" value="Descargar" ajax="false">
+								<p:fileDownload value="#{informeProntuarioLotesView.file}" />
+							</p:commandButton>
+
+
+							<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+								value="Limpiar">
+								<p:ajax update="frm" process="@all" partialSubmit="true" resetValues="true" />
+							</p:commandButton>
+
+						</div>
+					</p:panel>
+				
+
+				</h:form>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

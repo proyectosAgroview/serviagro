@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.PersEmpr" table="pers_empr" >
+        <id name="persEmprId" type="java.lang.Long">
+            <column name="pers_empr_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="tipProvee" class="co.com.arcosoft.modelo.TipProvee" fetch="select">
+            <column name="tp_prov_id" />
+        </many-to-one>
+        <property name="entBanc" type="java.lang.Long">
+            <column name="ent_banc_id" />
+        </property>
+        <property name="tipoCliente" type="java.lang.Long">
+            <column name="tipo_cliente_id" />
+        </property>
+        <property name="ciudad" type="java.lang.Long">
+            <column name="ciudad_id" />
+        </property>
+        <property name="profesion" type="java.lang.Long">
+            <column name="prof_id" />
+        </property>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="300" />
+        </property>
+        <property name="tipoPersona" type="java.lang.String">
+            <column name="tipo_persona" length="30" />
+        </property>
+        <property name="tipoIdentificacion" type="java.lang.String">
+            <column name="tipo_identificacion" length="30" />
+        </property>
+        <property name="identificacion" type="java.lang.String">
+            <column name="identificacion" length="20" />
+        </property>
+        <property name="representanteLegal" type="java.lang.String">
+            <column name="representante_legal" length="60" />
+        </property>
+        <property name="estadoCivil" type="java.lang.String">
+            <column name="estado_civil" length="20" />
+        </property>
+        <property name="email" type="java.lang.String">
+            <column name="email" length="40" />
+        </property>
+        <property name="sitioWeb" type="java.lang.String">
+            <column name="sitio_web" length="150" />
+        </property>
+        <property name="direccion" type="java.lang.String">
+            <column name="direccion" length="40" />
+        </property>
+        <property name="codigoPostal" type="java.lang.String">
+            <column name="codigo_postal" length="20" />
+        </property>
+        <property name="apartadoPostal" type="java.lang.String">
+            <column name="apartado_postal" length="20" />
+        </property>
+        <property name="telefono" type="java.lang.String">
+            <column name="telefono" length="20" />
+        </property>
+        <property name="telefono2" type="java.lang.String">
+            <column name="telefono2" length="20" />
+        </property>
+        <property name="pbx" type="java.lang.String">
+            <column name="pbx" length="20" />
+        </property>
+        <property name="numeroCuenta" type="java.lang.String">
+            <column name="numero_cuenta" length="30" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="tipoEmpresa" type="java.lang.String">
+            <column name="tipo_empresa" length="1" />
+        </property>
+        <property name="tipoProductor" type="java.lang.String">
+            <column name="tipo_productor" length="60" />
+        </property>
+        <property name="certificacion" type="java.lang.String">
+            <column name="certificacion" length="2" />
+        </property>
+        <property name="tablaPrecios" type="java.lang.String">
+            <column name="tabla_precios" length="10" />
+        </property>        
+        <property name="porcentajePagoFruto" type="java.lang.Double">
+            <column name="porcentaje_pago_fruto" precision="12" scale="4" />
+        </property>
+        
+        <property name="esArlEpsPension" type="java.lang.String">
+            <column name="es_arl_eps_pension" />
+        </property>
+        
+        <set name="nivel4s" table="nivel4" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="pers_empr_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Nivel4" />
+        </set>
+        <set name="trabajadors" table="trabajador" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="contratista_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Trabajador" />
+        </set>
+        <set name="datTransProdDets" table="dat_trans_prod_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cliente_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatTransProdDet" />
+        </set>
+        <set name="equipos" table="equipo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="contratista_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Equipo" />
+        </set>
+        <set name="datServicios" table="dat_servicio" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="contratista_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServicio" />
+        </set>
+        <set name="datServicioDets" table="dat_servicio_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="contratista_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServicioDet" />
+        </set>
+        <set name="nivel2s" table="nivel2" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="prove_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Nivel2" />
+        </set>
+        <set name="tarifaContratistas" table="tarifa_contratista" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="contratista_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.TarifaContratista" />
+        </set>
+        <set name="datPlanillaNominaDets" table="dat_planilla_nomina_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="contratista_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanillaNominaDet" />
+        </set>
+        <set name="datPlanLabors" table="dat_plan_labor" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="contratista_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanLabor" />
+        </set>
+        <set name="datOtrosCostoses" table="dat_otros_costos" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="pers_empr_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatOtrosCostos" />
+        </set>
+        <set name="nivel2Persemprs" table="nivel2_persempr" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="persempr_id" not-null="true" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.Nivel2Persempr" />
+        </set>
+        <set name="datPlanillaNominas" table="dat_planilla_nomina" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="contratista_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatPlanillaNomina" />
+        </set>
+        <set name="precioPromProds" table="precio_prom_prod" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="pers_empr_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.PrecioPromProd" />
+        </set>
+        <set name="datServRealizadosEquipos" table="dat_serv_realizados_equipo" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="equipo_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServRealizadosEquipo" />
+        </set>
+        
+    </class>
+</hibernate-mapping>

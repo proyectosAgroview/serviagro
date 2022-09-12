@@ -1,0 +1,884 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableEquipo" header="Equipos">
+						<p:growl id="men" autoUpdate="true" />
+						<p:dataTable id="tbl" value="#{equipoView.data}" var="equipo"  sortBy="#{equipo.equipoId}"  sortOrder="descending"
+							paginator="true"  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                 rowsPerPageTemplate="5,10,15" lazy="true" rows="5" reflow="true" >
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="equipo" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{equipo.estado}" sortBy="#{equipo.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{equipo.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{equipo.codigo}" sortBy="#{equipo.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{equipo.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{equipo.nombre}" sortBy="#{equipo.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{equipo.nombre}" />
+							</p:column>
+					
+							
+							<p:column width="75">
+								<f:facet name="header" >
+									<h:outputText  value="Notificación Eventos" />
+								</f:facet>
+								
+								<button type="button" class="#{equipo.colorEvento}"><span class="badge"><h:outputText value="#{equipo.contarEventos}"  /></span></button>
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value ="Editar" icon="ui-icon-pencil"
+										update=":dialogEquipo"
+										actionListener="#{equipoView.action_edit}">
+										<f:attribute name="selectedEquipo" value="#{equipo}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{equipoView.action_new()}" update=":dialogEquipo" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogEquipo" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{equipoView.showDialog}"
+					resizable="false" modal="true" width="700" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data"
+						acceptcharset="ISO-8859-1">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelEquipo" header="Equipos">
+
+
+							<p:tabView activeIndex="0" style="margin:1px;">
+
+								<p:tab title="General">
+
+									<h:panelGrid columns="3" id="panelGrid1">
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{equipoView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+										<p:message for="txtEstado" />
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{equipoView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelEquipo,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{equipoView.listener_txtCodigo}" />
+										</p:inputText>
+										<p:outputLabel />
+
+										<p:outputLabel for="txtNombre" value="Nombre: " />
+										<p:inputText id="txtNombre" disabled="true"
+											binding="#{equipoView.txtNombre}" required="true"
+											requiredMessage="El Nombre es Obligatorio" />
+										<p:message for="txtNombre" />
+
+										<p:outputLabel for="txtPlaca" value="Placa: "  />
+										<p:inputText id="txtPlaca" disabled="true"
+											binding="#{equipoView.txtPlaca}" required="false"
+											requiredMessage="La placa es obligatoria" />
+										<p:message for="txtPlaca" />
+
+										<p:outputLabel for="txtAnioFabricacion"
+											value="Año de fabricación: " />
+										<p:inputText id="txtAnioFabricacion" disabled="true"
+											binding="#{equipoView.txtAnioFabricacion}" required="false"
+											requiredMessage="El año es obligatoria" />
+										<p:message for="txtAnioFabricacion" />
+
+										<p:outputLabel for="txtModeloEquipoId_ModeloEquipo"
+											value="Modelo: " />
+										<p:selectOneMenu id="txtModeloEquipoId_ModeloEquipo"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{equipoView.txtModeloEquipoId_ModeloEquipo}"
+											required="false"
+											requiredMessage="Seleccione un modelo de equipo">
+											<f:selectItem itemLabel="Seleccione un modelo de equipo"
+												itemValue="" />
+											<f:selectItems value="#{equipoView.selectModeloEquipo}" />
+										</p:selectOneMenu>
+										<p:message for="txtModeloEquipoId_ModeloEquipo" />
+
+										<p:outputLabel for="txtCategEquipId_CategoriaEquipo"
+											value="Categoria: " />
+										<p:selectOneMenu id="txtCategEquipId_CategoriaEquipo"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{equipoView.txtCategEquipId_CategoriaEquipo}"
+											required="true"
+											requiredMessage="Seleccione una categoria de equipo">
+											<f:selectItem itemLabel="Seleccione una categoria de equipo"
+												itemValue="" />
+											<f:selectItems value="#{equipoView.selectCategoriaEquipo}" />
+										</p:selectOneMenu>
+										<p:message for="txtCategEquipId_CategoriaEquipo" />
+
+
+										<p:outputLabel for="txtColor" value="Color: " />
+										<p:colorPicker id="txtColor" disabled="true"
+											binding="#{equipoView.txtColor}" required="false"
+											requiredMessage="El color es obligatoria" />
+										<p:message for="txtColor" />
+										
+											<p:outputLabel for="txtValorCompra" value="Precio de compra: " />
+										<p:inputNumber id="txtValorCompra" disabled="true"
+											binding="#{equipoView.txtValorCompra}"
+											required="false" />
+											<p:message for="txtValorCompra" />
+										
+
+										<p:outputLabel for="txtTipoPropiedad"
+											value="Tipo de propietario: " />
+										<p:selectOneMenu id="txtTipoPropiedad"
+											binding="#{equipoView.txtTipoPropiedad}" required="true"
+											requiredMessage="Seleccione un tipo de propietario">
+											<f:selectItem itemLabel="Seleccione un tipo de propietario"
+												itemValue="" />
+											<f:selectItem itemLabel="Propio" itemValue="Propio" />
+											<f:selectItem itemLabel="Proveedor" itemValue="Proveedor" />
+											<f:selectItem itemLabel="Otros" itemValue="Otros" />
+										</p:selectOneMenu>
+										<p:message for="txtTipoPropiedad" />
+
+										<p:outputLabel for="txtContratistaId_Contratista"
+											value="Propietario: " />
+										<p:selectOneMenu id="txtContratistaId_Contratista" autoWidth="false"
+											style="width:160px;"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{equipoView.txtContratistaId_Contratista}"
+											required="true" requiredMessage="Seleccione una empresa">
+											<f:selectItem itemLabel="Seleccione una empresa" itemValue="" />
+											<f:selectItems value="#{equipoView.selectContratista}" />
+										</p:selectOneMenu>
+										<p:message for="txtContratistaId_Contratista" />
+									</h:panelGrid>
+									
+									
+										<p:outputLabel for="txtOrigenDatos" value="Origen de datos: " />
+										<p:selectOneMenu id="txtOrigenDatos"
+											binding="#{equipoView.txtOrigenDatos}"
+											required="true" requiredMessage="Seleccione una opción">
+											<f:selectItem itemLabel="Modulo_TallerAgricola" itemValue="Modulo_TallerAgricola" />
+										</p:selectOneMenu>
+										
+								</p:tab>
+
+								<p:tab title="Características">
+
+									<h:panelGrid columns="3" id="panelGrid2">
+
+										<p:outputLabel for="txtTrabId_Trabajador" value="Operario: " />
+										<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{equipoView.txtTrabId_Trabajador}" required="false"
+											requiredMessage="Seleccione un conductor">
+											<f:selectItem itemLabel="Seleccione un conductor"
+												itemValue="" />
+											<f:selectItems value="#{equipoView.selectTrabajador}" />
+										</p:selectOneMenu>
+										<p:message for="txtTrabId_Trabajador" />
+
+										<p:outputLabel for="txtMedidorId_Medidor" value="Medidor: " />
+										<p:selectOneMenu id="txtMedidorId_Medidor" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{equipoView.txtMedidorId_Medidor}" required="false"
+											requiredMessage="Seleccione un medidor">
+											<f:selectItem itemLabel="Seleccione un medidor" itemValue="" />
+											<f:selectItems value="#{equipoView.selectMedidor}" />
+											<p:ajax     process="@all" 
+											        update="txtHorometroActual,txtOdometroActual,txtConsumoGlHora,txtConsumoKmGl,
+											        txtHorasDiaEstandar,txtKmDiaEstandar" 
+											        listener="#{equipoView.action_selecctMedidor}"   />
+										</p:selectOneMenu>
+										<p:message for="txtMedidorId_Medidor" />
+										
+										<p:outputLabel for="txtHorasDiaEstandar"
+											value="Horas/Día estándar para proyectar Mttos: " />
+										<p:inputText id="txtHorasDiaEstandar" disabled="true"
+											binding="#{equipoView.txtHorasDiaEstandar}" required="false"
+											requiredMessage="Indique un valor">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtHorasDiaEstandar" />
+										
+										<p:outputLabel for="txtKmDiaEstandar"
+											value="Kilometros/Día estándar para proyectar Mttos: " />
+										<p:inputText id="txtKmDiaEstandar" disabled="true"
+											binding="#{equipoView.txtKmDiaEstandar}" required="false"
+											requiredMessage="Indique un valor">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtKmDiaEstandar" />
+										
+										
+
+										<p:outputLabel for="txtProducto" value="Combustible: " />
+										<p:selectOneMenu id="txtProducto" effect="fade" filter="true"
+											filterMatchMode="contains" autoWidth="false"
+											style="width:160px;"
+											binding="#{equipoView.txtProducto}" required="false"
+											requiredMessage="Seleccione un producto">
+											<f:selectItem itemLabel="Seleccione un producto" itemValue="" />
+											<f:selectItems value="#{equipoView.selectProductoId}" />
+										</p:selectOneMenu>
+										<p:message for="txtProducto" />
+										
+										<p:outputLabel for="txtFechaUltimoServicios" value="Fecha Ult. Servicio: " />
+										<p:calendar id="txtFechaUltimoServicios" showOn="button"
+											navigator="false" locale="es"
+											binding="#{equipoView.txtFechaUltimoServicios}" pattern="dd/MM/yyyy"
+											mask="true" >
+										</p:calendar>
+										<p:message for="txtFechaUltimoServicios" />
+										
+										<p:outputLabel for="txtFechaUltimoAbastecimiento" value="Fecha Ult. Abastecimiento: " />
+										<p:calendar id="txtFechaUltimoAbastecimiento" showOn="button"
+											navigator="false" locale="es"
+											binding="#{equipoView.txtFechaUltimoAbastecimiento}" pattern="dd/MM/yyyy"
+											mask="true" >
+										</p:calendar>
+										<p:message for="txtFechaUltimoAbastecimiento" />
+
+										<p:outputLabel for="txtHorometroActual"
+											value="Hórometro actual: " />
+										<p:inputText id="txtHorometroActual" disabled="true"
+											binding="#{equipoView.txtHorometroActual}" required="false"
+											requiredMessage="Indique el hórometro">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtHorometroActual" />
+
+										<p:outputLabel for="txtConsumoGlHora" value="Galones/Hora: " />
+										<p:inputText id="txtConsumoGlHora" disabled="true"
+											binding="#{equipoView.txtConsumoGlHora}" required="false"
+											requiredMessage="Indique Gl/Hr">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtConsumoGlHora" />
+
+										<p:outputLabel for="txtOdometroActual"
+											value="Odómetro actual: " />
+										<p:inputText id="txtOdometroActual" disabled="true"
+											binding="#{equipoView.txtOdometroActual}" required="false"
+											requiredMessage="Indique el odómetro">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtOdometroActual" />
+
+										<p:outputLabel for="txtConsumoKmGl" value="Kilómetros/Galón: " />
+										<p:inputText id="txtConsumoKmGl" disabled="true"
+											binding="#{equipoView.txtConsumoKmGl}" required="false"
+											requiredMessage="Indique Km/Gl">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtConsumoKmGl" />
+
+										<p:outputLabel for="txtNumEjeId_NumeroEje"
+											value="Número de ejes: " />
+										<p:selectOneMenu id="txtNumEjeId_NumeroEje"
+											binding="#{equipoView.txtNumEjeId_NumeroEje}"
+											required="false"
+											requiredMessage="Seleccione un número de eje">
+											<f:selectItem itemLabel="Seleccione un número de eje"
+												itemValue="" />
+											<f:selectItems value="#{equipoView.selectNumeroEje}" />
+										</p:selectOneMenu>
+										<p:message for="txtNumEjeId_NumeroEje" />
+
+										<p:outputLabel for="txtTaraEstandar" value="Tara estándar: " />
+										<p:inputText id="txtTaraEstandar" disabled="true"
+											binding="#{equipoView.txtTaraEstandar}" required="false"
+											requiredMessage="La tara es obligatoria" />
+										<p:message for="txtTaraEstandar" />
+
+										<p:outputLabel value="Foto: " />
+										<h:panelGroup>
+											<p:fileUpload value="#{equipoView.file}" mode="simple"
+												auto="true" fileUploadListener="#{equipoView.subirImagen}"
+												update="image" cancelLabel="Cancelar" sizeLimit="100000"
+												skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+												invalidFileMessage="Tipo de imagem inválido"
+												invalidSizeMessage="Ups!! El tamaño de la imagen es muy grande"
+												uploadLabel="Subir imagen" label="Elegir">
+											</p:fileUpload>
+											<p:lightBox styleClass="imagebox" id="lighbox1">
+												<h:outputLink
+													value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{equipoView.imagenEquipo}">
+													<h:graphicImage
+														value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{equipoView.imagenEquipo}"
+														id="image" style="height: 80px; width: 80px" />
+												</h:outputLink>
+											</p:lightBox>
+										</h:panelGroup>
+
+									</h:panelGrid>
+
+
+								</p:tab>
+
+								<p:tab title="Costos">
+
+									<h:panelGrid columns="3" id="panelGrid3">
+
+										<p:outputLabel for="txtLaborId_Labor" value="Labor estándar: " />
+										<p:selectOneMenu id="txtLaborId_Labor" effect="fade"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											style="width:160px;"
+											binding="#{equipoView.txtLaborId_Labor}" required="false"
+											requiredMessage="Seleccione una labor">
+											<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+											<f:selectItems value="#{equipoView.selectLabor}" />
+										</p:selectOneMenu>
+										<p:message for="txtLaborId_Labor" />
+
+										<p:outputLabel for="txtElemCostoId_ElementoCosto"
+											value="Elemento de costo: " />
+										<p:selectOneMenu id="txtElemCostoId_ElementoCosto" 
+											effect="fade" filter="true" filterMatchMode="contains" autoWidth="false"
+											style="width:160px;"
+											binding="#{equipoView.txtElemCostoId_ElementoCosto}"
+											required="false"
+											requiredMessage="Seleccione un elemento de costo">
+											<f:selectItem itemLabel="Seleccione un elemento de costo"
+												itemValue="" />
+											<f:selectItems value="#{equipoView.selectElementoCosto}" />
+										</p:selectOneMenu>
+										<p:message for="txtElemCostoId_ElementoCosto" />
+
+										<p:outputLabel for="txtCentCostId_CentCost" value="CeCos" />
+										<p:selectOneMenu id="txtCentCostId_CentCost" effect="fade"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											style="width:160px;"
+											binding="#{equipoView.txtCentCostId_CentCost}"
+											required="false"
+											requiredMessage="Seleccione un centro de Costo">
+											<f:selectItem itemLabel="Seleccione un centro de Costo"
+												itemValue="" />
+											<f:selectItems value="#{equipoView.selectCentCost}" />
+										</p:selectOneMenu>
+										<p:message for="txtCentCostId_CentCost" />
+
+
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1: " />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{equipoView.txtInfoAdicional}" rows="5" cols="30"
+											maxlength="100" counterTemplate="{0} Caracteres"
+											autoResize="true" />
+										<h:outputText />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2: " />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{equipoView.txtInfoAdicional2}" rows="5" cols="30"
+											maxlength="100" counterTemplate="{0} Caracteres."
+											autoResize="true" />
+										<h:outputText />
+
+										<p:inputText id="txtEquipoId" style="visibility:hidden"
+											binding="#{equipoView.txtEquipoId}">
+											
+										</p:inputText>
+
+									</h:panelGrid>
+
+								</p:tab>
+								
+								<p:tab title="Eventos(Documentación)">
+
+									<h:panelGrid columns="3" id="eventos">
+									
+									  <p:outputLabel for="txtEvento" value="Documento: " />
+										<p:selectOneMenu id="txtEvento" effect="fade"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											
+											style="width:160px;"
+											binding="#{equipoView.txtEvento}">
+											<f:selectItem itemLabel="Seleccione" itemValue="" />
+											<f:selectItems value="#{equipoView.selectEvento}" />
+									  </p:selectOneMenu>
+									  <p:message for="txtEvento" />
+									
+									  <p:outputLabel for="txtFechaInicialVencimiento" value="Fecha Inicial: " />
+										<p:calendar id="txtFechaInicialVencimiento" showOn="button"
+											navigator="false" locale="es"
+											binding="#{equipoView.txtFechaInicialVencimiento}" pattern="dd/MM/yyyy"
+											mask="true" >
+										</p:calendar>
+										<p:message for="txtFechaInicialVencimiento" />
+
+										<p:outputLabel for="txtFechaFinalVencimiento" value="Fecha final: " />
+										<p:calendar id="txtFechaFinalVencimiento" showOn="button"
+											navigator="false" locale="es"
+											binding="#{equipoView.txtFechaFinalVencimiento}" pattern="dd/MM/yyyy"
+											mask="true" required="false"
+											requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="txtFechaFinalVencimiento" />
+										
+										<h:outputLabel for="DiasNotificacion" value="Dias Notificación: " />
+                                         <p:spinner id="DiasNotificacion" disabled="disabledCampos" value="#{equipoView.diasNotificacion}" >
+                                         </p:spinner>
+                                        <p:outputLabel/>
+										
+								    </h:panelGrid>
+								    
+								     <h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregarEventos" icon="ui-icon-plusthick"
+												process="@this,txtFechaFinalVencimiento,txtFechaInicialVencimiento,txtEvento,DiasNotificacion "
+												binding="#{equipoView.btnAgregarEventos}" value="Agregar"
+												action="#{equipoView.action_agregarEventos}"
+												update="tablaEventos" />
+
+											<p:commandButton id="btnlimpiarEventos" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="eventos" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+									</h:panelGrid>
+									
+								   <p:outputPanel>
+									
+									<p:dataTable id="tablaEventos"
+											value="#{equipoView.dataEventosEquipos}"
+											var="listaEventos" paginator="true" rows="4"
+											reflow="true" editable="true" editMode="cell"
+											widgetVar="cellEventos">
+											
+											<p:ajax event="cellEdit" listener="#{equipoView.onCellEditEventos}" />
+
+											<p:column headerText="Fecha inicial">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaEventos.fechaInicial}">
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:calendar navigator="false" locale="es"
+															value="#{listaEventos.fechaInicial}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Fecha final">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaEventos.fechaFinal}">
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:calendar navigator="false" locale="es"
+															value="#{listaEventos.fechaFinal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Evento">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText 
+															value="#{listaEventos.eventosId_Eventos.nombre}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaEventos.eventosId_Eventos.nombre}">
+															<f:selectItems value="#{equipoView.selectEvento}"
+																var="varEventos" itemValue="#{varEventos}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="Dias Notificación">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaEventos.diasNotificacion}"/>
+													</f:facet>
+													<f:facet name="input">
+														<h:outputText value="#{listaEventos.diasNotificacion}"/>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<f:attribute name="selectedEquipoEventoId"
+												value="#{listaEventos}" />
+
+											<p:column headerText="Opciones">
+												<div align="center">
+												
+												    <p:commandButton id="btnCalendarGoogle"
+														style="color:oragne !important"
+														disabled="#{datPlanLabor.estadoTrue2}"
+														oncomplete="googleCalendar(xhr, status, args)"
+														title="Programar en  el calendario de google"
+														actionListener="#{equipoView.action_addEventoGoogleCalendar}"
+														icon="fa fa-calendar" update="tablaEventos :dialogEquipo">
+														<f:attribute name="selectedEquipoEventoId"
+															value="#{listaEventos}" />
+													</p:commandButton>
+
+													<p:commandButton id="btnDeleteEventos" icon="ui-icon-trash"
+														actionListener="#{equipoView.actionDeleteEventos}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaEventos :dialogEquipo">
+														<f:attribute name="selectedEventosEquiposId"
+															value="#{listaEventos}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+										
+										<p:contextMenu for="tablaEventos" widgetVar="cMenuEventos">
+											<p:menuitem value="Edit Cell" icon="ui-icon-search"
+												onclick="PF('cellEventos').showCellEditor();return false;" />
+											<p:menuitem value="Hide Menu" icon="ui-icon-close"
+												onclick="PF('cMenuEventos').hide()" />
+										</p:contextMenu>
+									
+								    </p:outputPanel>
+								    
+								    
+								    
+								</p:tab>	
+
+ 								<p:tab title="Ficha técnica" disabled="true">
+								     <h:panelGrid columns="2" id="ficha">
+
+										<p:outputLabel for="txtAltura" value="Altura: " />
+										<p:inputText id="txtAltura" disabled="true"
+											binding="#{equipoView.txtAltura}" />
+											
+									    <p:outputLabel for="txtDiametro" value="Diametro: " />
+										<p:inputText id="txtDiametro" disabled="true"
+											binding="#{equipoView.txtDiametro}" />
+											
+										<p:outputLabel for="txtTamano" value="Tamaño: " />
+										<p:inputText id="txtTamano" disabled="true"
+											binding="#{equipoView.txtTamano}" />
+											
+										<p:outputLabel for="txtPresion" value="Presión: " />
+										<p:inputText id="txtPresion" disabled="true"
+											binding="#{equipoView.txtPresion}" />
+											
+										<p:outputLabel for="txtCaudal" value="Caudal: " />
+										<p:inputText id="txtCaudal" disabled="true"
+											binding="#{equipoView.txtCaudal}" />
+											
+										<p:outputLabel for="txtSerial" value="Serial: " />
+										<p:inputText id="txtSerial" disabled="true"
+											binding="#{equipoView.txtSerial}" />
+											
+										<p:outputLabel for="txtRevoluciones" value="Revoluciones: " />
+										<p:inputText id="txtRevoluciones" disabled="true"
+											binding="#{equipoView.txtRevoluciones}" />
+											
+										<p:outputLabel for="txtPotencia" value="Potencia: " />
+										<p:inputText id="txtPotencia" disabled="true"
+											binding="#{equipoView.txtPotencia}" />
+											
+										<p:outputLabel for="txtVoltaje" value="Voltaje: " />
+										<p:inputText id="txtVoltaje" disabled="true"
+											binding="#{equipoView.txtVoltaje}" />
+											
+										<p:outputLabel for="txtCorriente" value="Corriente: " />
+										<p:inputText id="txtCorriente" disabled="true"
+											binding="#{equipoView.txtCorriente}" />
+								     
+								     </h:panelGrid>
+							    
+							    </p:tab>
+
+								<p:tab title="Tarifa maquinaria propia">
+
+									<p:messages id="msg1" closable="true" showDetail="true" />
+
+									<h:panelGrid id="gridTarifaEquipo" columns="3">
+
+
+										<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+										<p:calendar id="msgFechaInicial" showOn="button"
+											navigator="false" locale="es"
+											binding="#{equipoView.txtFechaInicial}" pattern="dd/MM/yyyy"
+											mask="true" required="false"
+											requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaInicial" />
+
+										<p:outputLabel for="msgFechaFinal" value="Fecha final: " />
+										<p:calendar id="msgFechaFinal" showOn="button"
+											navigator="false" locale="es"
+											binding="#{equipoView.txtFechaFinal}" pattern="dd/MM/yyyy"
+											mask="true" required="false"
+											requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaFinal" />
+
+										<p:outputLabel for="txtLaborIdLaborTarifa" value="Labor: " />
+										<p:selectOneMenu id="txtLaborIdLaborTarifa" effect="fade"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											
+											style="width:160px;"
+											binding="#{equipoView.txtLaborIdLaborTarifa}">
+											<f:selectItem itemLabel="Seleccione" itemValue="" />
+											<f:selectItems value="#{equipoView.selectLaborId_tarifa}" />
+											<p:ajax listener="#{equipoView.listener_ConsultaCodLabor}"
+												update="txtCodLaborTarifa" />
+										</p:selectOneMenu>
+										<p:message for="txtLaborIdLaborTarifa" />
+
+										<p:outputLabel for="txtUdadMedId_UdadMed"
+											value="Unidad de medida: " />
+										<p:selectOneMenu id="txtUdadMedId_UdadMed" effect="fade"
+											filter="true" filterMatchMode="contains"
+											autoWidth="false"
+											style="width:160px;"
+											binding="#{equipoView.txtUdadMedId_UdadMed}" required="false"
+											requiredMessage="Seleccione una unidad de medida">
+											<f:selectItem itemLabel="Seleccione  una unidad de medida"
+												itemValue="" />
+											<f:selectItems value="#{equipoView.selectUdadMed}" />
+											<p:ajax listener="#{equipoView.listener_ConsultaCodUdadMed}"
+												update="txtCodUdadMed" />
+
+										</p:selectOneMenu>
+										<p:message for="txtUdadMedId_UdadMed" />
+
+
+										<p:outputLabel for="txtValorUnit" value="Tarifa: " />
+										<p:inputText id="txtValorUnit" disabled="true"
+											binding="#{equipoView.txtValorUnit}" required="false"
+											requiredMessage="Indique el valor unitario">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputText>
+										<p:message for="txtValorUnit" />
+
+										<p:inputText style="visibility:hidden" id="txtCodUdadMed"
+											binding="#{equipoView.txtCodUdadMed}" />
+
+										<p:inputText style="visibility:hidden" id="txtCodLaborTarifa"
+											binding="#{equipoView.txtCodLaborTarifa}" />
+
+
+									</h:panelGrid>
+
+									<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+												process="@this,msgFechaInicial,msgFechaFinal,txtLaborIdLaborTarifa,txtUdadMedId_UdadMed,
+											             txtValorUnit"
+												binding="#{equipoView.btnAgregar}" value="Agregar"
+												action="#{equipoView.action_agregarTarifaEquipProp}"
+												update="tablaTarifaEquipo :dialogEquipo" />
+
+											<p:commandButton id="btnlimpiar" process="@this"
+												icon="ui-icon-trash" value="Limpiar">
+												<p:ajax update="gridTarifaEquipo" resetValues="true" />
+											</p:commandButton>
+										</f:facet>
+									</h:panelGrid>
+
+									<p:outputPanel>
+										<p:dataTable id="tablaTarifaEquipo"
+											value="#{equipoView.dataTarifaEquipProp}"
+											var="listaTarifaEquipo" paginator="true" rows="4"
+											reflow="true" editable="true" editMode="cell"
+											widgetVar="cell">
+
+											<p:ajax event="cellEdit" listener="#{equipoView.onCellEdit}" />
+
+											<p:column headerText="Fecha inicial">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaTarifaEquipo.fechaInicial}">
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:calendar navigator="false" locale="es"
+															value="#{listaTarifaEquipo.fechaInicial}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Fecha final">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaTarifaEquipo.fechaFinal}">
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:calendar navigator="false" locale="es"
+															value="#{listaTarifaEquipo.fechaFinal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Labor">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="labordata"
+															value="#{listaTarifaEquipo.labor_tarifa.laborId}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaTarifaEquipo.labor_tarifa.laborId}">
+															<f:selectItems value="#{equipoView.selectLaborId_tarifa}"
+																var="var1" itemValue="#{var1}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Unidad de medida" resizable="true">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="udadMedIddata"
+															value="#{listaTarifaEquipo.udadMedId_UdadMed.udadMedId}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaTarifaEquipo.udadMedId_UdadMed.udadMedId}">
+															<f:selectItems value="#{equipoView.selectUdadMed}"
+																var="var2" itemValue="#{var2}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Tarifa">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaTarifaEquipo.tarifa}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaTarifaEquipo.tarifa}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<f:attribute name="selectedTarifaEquipPropId"
+												value="#{listaTarifaEquipo}" />
+
+
+											<p:column headerText="Opciones">
+												<div align="center">
+
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{equipoView.actionDeleteTarifaEquipProp}"
+														required="false" title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaTarifaEquipo :dialogEquipo">
+														<f:attribute name="selectedTarifaEquipProp"
+															value="#{listaTarifaEquipo}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+
+										<p:contextMenu for="tablaTarifaEquipo" widgetVar="cMenu">
+											<p:menuitem value="Edit Cell" icon="ui-icon-search"
+												onclick="PF('cell').showCellEditor();return false;" />
+											<p:menuitem value="Hide Menu" icon="ui-icon-close"
+												onclick="PF('cMenu').hide()" />
+										</p:contextMenu>
+
+									</p:outputPanel>
+
+								</p:tab>
+
+						        
+						
+							</p:tabView>
+
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{equipoView.btnSave}" value="Grabar" ajax="false"
+									action="#{equipoView.action_save()}"
+									update=":dialogEquipo :frm:panelDataTableEquipo" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{equipoView.action_clear()}"
+									process="@this" update=":dialogEquipo" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+				
+				<script type="text/javascript">
+				
+					function googleCalendar(xhr, status, args) {
+						mywindow = window
+								.open(args.url, "Programación de Eventos",
+										"width=400,height=400,scrollbars=YES,menubar=NO,directories=NO");
+						// mywindow.moveTo(100,100);
+
+					}
+					
+				</script>
+				
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

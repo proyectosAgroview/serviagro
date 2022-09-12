@@ -1,0 +1,222 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+					<p:menubar>
+  							<p:menuitem value="Báscula" url="/XHTML/ProdAgricola/transacciones/datBascula.xhtml" icon="ui-icon-transferthick-e-w" style="margin-right:20px;"/>
+								<p:menuitem value="Pesar" url="/XHTML/ProdAgricola/transacciones/datBasculaPesajeBruto.xhtml" icon="ui-icon-transferthick-e-w" style="margin-right:20px;"/>
+								<p:menuitem value="Tarar" url="/XHTML/ProdAgricola/transacciones/datBasculaPesajeTara.xhtml" icon="ui-icon-transferthick-e-w" style="margin-right:20px;" />
+													<p:menuitem value="Análisis de calidad del fruto"
+						url="/XHTML/ProdAgricola/transacciones/datAnaCalidadFruto.xhtml"
+						icon="ui-icon-transferthick-e-w" style="margin-right:20px;" />
+								
+					</p:menubar>
+				
+				<!-- Formulario tarar -->
+
+				<h:form id="dialogT">
+					<p:panel header="Obtener peso Tara(Sin carga)">
+
+						<p:dataTable id="tbl3" value="#{datBasculaTararView.data}"
+							var="informeCosG" paginator="true" rows="10"
+							rowKey="#{informeCosG.consecutivo}" scrollable="true"
+							scrollHeight="150" rowsPerPageTemplate="10,15" reflow="true">
+
+							<p:column style="width: 3%">
+								<f:facet name="header">
+									<h:outputText value="Tiquete" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.consecutivo}"
+									style="font-size: 0.8em;" />
+
+							</p:column>
+
+
+							<p:column style="width: 8%">
+								<f:facet name="header">
+									<h:outputText value="Vehiculo" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.equipo}"
+									style="font-size: 0.8em;" />
+
+							</p:column>
+
+							<p:column style="width: 8%">
+								<f:facet name="header">
+									<h:outputText value="Transacción" style="font-size: 0.8em;" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.tipoTransaccion}"
+									style="font-size: 0.8em;" />
+
+							</p:column>
+
+
+							<p:column style="width: 10% ">
+								<f:facet name="header">
+									<h:outputText value="Fecha Mov." />
+								</f:facet>
+								<h:outputText value="#{informeCosG.fechaRegistro}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+								</h:outputText>
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false"
+								style="width: 7% ">
+								<div align="left">
+									<p:commandButton id="btOpeso" icon="ui-icon-pencil"
+										update=":dialogT2,:dialogT" value="Tarar"
+										actionListener="#{datBasculaTararView.action_Pesar}">
+										<f:attribute name="selectedPesaje" value="#{informeCosG}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+
+				</h:form>
+
+				<p:dialog id="dialogT2" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{datBasculaTararView.showDialog}"
+					resizable="false" modal="true" width="750" styleClass="dialogFix"
+					header="Pesaje" responsive="true">
+					
+					<p:messages id="msg4" closable="true" />
+					<h:form id="formDialogTarar">
+					
+
+							<p:panel header="Obtener(Peso tara - sin carga)">
+
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="1">
+												<p:outputLabel value="#Tiquete1:" style="font-size: 0.8em;" />
+												<p:inputText id="txtTiquete1" disabled="false"
+													style="font-size: 0.8em;"
+													binding="#{datBasculaTararView.txtTiquete1}"
+													placeholder="Buscar o crear registro" size="12">
+												</p:inputText>
+											</h:panelGrid>
+										</p:column>
+
+
+										<p:column>
+											<h:panelGrid columns="1">
+
+												<p:outputLabel for="txtFechaTara"
+													style="font-size: 0.8em;" value="Fecha: " />
+												<p:calendar id="txtFechaTara" showOn="button"
+													navigator="false" locale="es" style="font-size: 0.8em;"
+													binding="#{datBasculaTararView.txtFechaTara}"
+													pattern="dd/MM/yyyy HH:mm:ss" mask="true" required="true"
+													requiredMessage="La Fecha   es obligatoria">
+												</p:calendar>
+
+											</h:panelGrid>
+										</p:column>
+
+
+										<p:column>
+											<h:panelGrid columns="1">
+												<p:outputLabel for="txtTipoTransaccionTara"
+													value="Transacción:" style="font-size: 0.8em;" />
+												<p:selectOneMenu id="txtTipoTransaccionTara"
+													disabled="true"
+													binding="#{datBasculaTararView.txtTipoTransaccionTara}"
+													required="true" 
+													style="font-size: 1em; width: 200"  autoWidth="false"
+													requiredMessage="Seleccione una transacción">
+													<f:selectItem itemLabel="Seleccione una opción"
+														itemValue="" noSelectionOption="true" />
+													<f:selectItem itemLabel="Producción" itemValue="Produccion" />
+													<f:selectItem itemLabel="Despachos" itemValue="Despachos" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+									</p:row>
+								</p:panelGrid>
+
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtVehiTranspId2" value="Vehiculo: "
+										style="font-size: 1em;" />
+									<p:selectOneMenu id="txtVehiTranspId2" effect="fade"
+										filter="true" filterMatchMode="contains"
+										binding="#{datBasculaTararView.txtVehiTranspId2}"
+										style="font-size: 1em; width: 200"  autoWidth="false"
+										 required="true"
+										requiredMessage="Seleccione un vehiculo">
+										<f:selectItem itemLabel="Seleccione un vehiculo" itemValue="" />
+										<f:selectItems
+											value="#{datBasculaTararView.selectVehiculosTransp}" />
+									</p:selectOneMenu>
+
+
+
+								</h:panelGrid>
+
+								<h:panelGrid columns="2">
+									<p:outputLabel for="txtBasculaTara" value="Báscula "
+										style="font-size: 1.2em;" />
+									<p:selectOneMenu id="txtBasculaTara" effect="fade"
+										filter="true" filterMatchMode="contains"
+										binding="#{datBasculaTararView.txtBasculaTara}"
+										style="font-size: 1.2em;" required="true"
+										requiredMessage="Seleccione una báscula">
+										<f:selectItem itemLabel="Seleccione una báscula" itemValue="" />
+										<f:selectItems value="#{datBasculaTararView.selectBascula}" />
+										<p:ajax process="@this" update="txtPesoTara"
+											listener="#{datBasculaTararView.listener_basculaActiva()}" />
+									</p:selectOneMenu>
+
+
+									<p:outputLabel for="txtPesoTara" value="Peso Tara: "
+										style="font-size: 1.2em;" />
+									<p:panelGrid columns="2">
+										<p:inputText id="txtPesoTara" disabled="true"
+											binding="#{datBasculaTararView.txtPesoTara}"
+											required="false" size="15" requiredMessage="Indique el valor">
+
+										</p:inputText>
+										<p:commandButton icon="ui-icon-calculator" value="Obtener peso">
+											<p:ajax process="@this" update="txtPesoTara"
+												listener="#{datBasculaTararView.listener_calcularPesoTara}" />
+										</p:commandButton>
+									</p:panelGrid>
+								</h:panelGrid>
+
+						</p:panel>
+
+						<p:panel id="panelBotones">
+							<div align="left">
+								<p:commandButton id="btnSaveTarar" icon="ui-icon-disk"
+									binding="#{datBasculaTararView.btnSave}" value="Grabar"
+									action="#{datBasculaTararView.action_savePesoTara()}"
+									update=":dialogT2,  :dialogT, 
+									:formDialogTarar" />
+
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

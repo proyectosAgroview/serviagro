@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-oct-2017 19:44:09 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+	<class name="co.com.arcosoft.modelo.DatServRealizadosEquipoDet"
+		table="dat_serv_realizados_equipo_det">
+		<id name="datServRealizadosEquipoDetId" type="java.lang.Long">
+			<column name="dat_serv_realizados_equipo_det_id" />
+			<generator class="identity" />
+		</id>
+		<many-to-one name="udadMed"
+			class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+			<column name="udad_med_id" />
+		</many-to-one>
+		<many-to-one name="labor"
+			class="co.com.arcosoft.modelo.Labor" fetch="select">
+			<column name="labor_id" />
+		</many-to-one>
+		<many-to-one name="datServRealizadosEquipoId"
+			class="co.com.arcosoft.modelo.DatServRealizadosEquipo" fetch="select">
+			<column name="dat_serv_realizados_equipo_id" />
+		</many-to-one>
+
+		<many-to-one name="trabajador"
+			class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+			<column name="trab_id" />
+		</many-to-one>
+
+		<many-to-one name="nivel4"
+			class="co.com.arcosoft.modelo.Nivel4" fetch="select">
+			<column name="nivel4_id" precision="18" scale="0" />
+		</many-to-one>
+
+		<many-to-one name="nivel2Id"
+			class="co.com.arcosoft.modelo.Nivel2" fetch="select">
+			<column name="nivel2_id" precision="18" scale="0" />
+		</many-to-one>
+
+		<many-to-one name="persEmpr"
+			class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+			<column name="pers_empr_id" />
+		</many-to-one>
+
+
+		<many-to-one name="implemento"
+			class="co.com.arcosoft.modelo.Equipo" fetch="select">
+			<column name="implemento" />
+		</many-to-one>
+
+
+		<property name="horaInicial" type="java.util.Date">
+			<column name="hora_inicial" length="19" />
+		</property>
+		<property name="horaFinal" type="java.util.Date">
+			<column name="hora_final" length="19" />
+		</property>
+		<property name="horasTotal" type="java.lang.Double">
+			<column name="horas_total" precision="12" scale="4" />
+		</property>
+		<property name="horometroInicial" type="java.lang.Double">
+			<column name="horometro_inicial" precision="12" scale="4" />
+		</property>
+		<property name="horometroFinal" type="java.lang.Double">
+			<column name="horometro_final" precision="12" scale="4" />
+		</property>
+		<property name="horometroTotal" type="java.lang.Double">
+			<column name="horometro_total" precision="12" scale="4" />
+		</property>
+		<property name="valorUnitario" type="java.lang.Double">
+			<column name="valor_unitario" precision="12" scale="4" />
+		</property>
+		<property name="ingresoTotal" type="java.lang.Double">
+			<column name="ingreso_total" precision="12" scale="4" />
+		</property>
+		<property name="cantidad" type="java.lang.Double">
+			<column name="cantidad" precision="12" scale="4" />
+		</property>
+
+
+		<property name="bonificacionTrabajador"
+			type="java.lang.Double">
+			<column name="bonificacion_trabajador" precision="12"
+				scale="4" />
+		</property>
+
+
+		<property name="turno" type="java.lang.String">
+			<column name="turno" length="100" />
+		</property>
+
+		<property name="nombreNivel4" type="java.lang.String">
+			<column name="nombre_nivel4" length="100" />
+		</property>
+
+		<many-to-one name="nivel2ClientesId"
+			class="co.com.arcosoft.modelo.Nivel2Clientesmq" fetch="select">
+			<column name="nivel2_clientes_id" precision="20" scale="0" />
+		</many-to-one>
+
+		<many-to-one name="nivel4ClientesId"
+			class="co.com.arcosoft.modelo.Nivel4Clientesmq" fetch="select">
+			<column name="nivel4_clientes_id" precision="20" scale="0" />
+		</many-to-one>
+
+		<many-to-one name="conceptoNominaId"
+			class="co.com.arcosoft.modelo.ConceptoNomina" fetch="select">
+			<column name="concepto_nomina_id" precision="18" scale="0" />
+		</many-to-one>
+
+		<property name="fechaValidacion" type="java.util.Date">
+			<column name="fecha_validacion" length="19" />
+		</property>
+		<property name="usuarioValidacion" type="java.lang.Long">
+			<column name="usuario_validacion" />
+		</property>
+		<property name="estadoFactura" type="java.lang.String">
+			<column name="estado_factura" length="2" />
+		</property>
+		<property name="numFactura" type="java.lang.String">
+			<column name="num_factura" length="20" /> 
+		</property>
+
+
+		<property name="consecutivoPrefactura" type="java.lang.Long">
+			<column name="consecutivo_prefactura" />
+		</property>
+
+		<many-to-one name="productoId"
+			class="co.com.arcosoft.modelo.Producto" fetch="select">
+			<column name="producto_id" />
+		</many-to-one>
+
+		<many-to-one name="almacenId"
+			class="co.com.arcosoft.modelo.Almacen" fetch="select">
+			<column name="almacen_id" />
+		</many-to-one>
+
+		<property name="cantidadCombustible" type="java.lang.Double">
+			<column name="cantidad_combustible" precision="12" scale="4" />
+		</property>
+
+		<property name="costoCombustible" type="java.lang.Double">
+			<column name="costo_combustible" precision="12" scale="4" />
+		</property>
+
+
+		<property name="sello" type="java.lang.Double">
+			<column name="sello" precision="12" scale="4" />
+		</property>
+		<property name="auxilioTransporte" type="java.lang.Double">
+			<column name="auxilio_transporte" precision="12" scale="4" />
+		</property>
+
+
+		<many-to-one name="dat_plan_servicios_mqdet_id"
+			class="co.com.arcosoft.modelo.DatPlanServiciosMqdet" fetch="select">
+			<column name="dat_plan_servicios_mqdet_id" />
+		</many-to-one>
+
+		<property name="valor_unitario_trabajador"
+			type="java.lang.Double">
+			<column name="valor_unitario_trabajador" precision="12"
+				scale="4" />
+		</property>
+		<property name="valor_total_trabajador"
+			type="java.lang.Double">
+			<column name="valor_total_trabajador" precision="12" scale="4" />
+		</property>
+		    
+        <property name="fechaPrefactura" type="java.util.Date">
+            <column name="fecha_prefactura" length="19" />
+        </property>
+        <property name="fechaFactura" type="java.util.Date">
+            <column name="fecha_factura" length="19" />
+        </property>
+        <property name="usuarioPrefactura" type="java.lang.Long">
+            <column name="usuario_prefactura" />
+        </property>
+        <property name="usuarioFactura" type="java.lang.Long">
+            <column name="usuario_factura" />
+        </property>
+        
+        
+		<property name="observacion" type="java.lang.String">
+			<column name="observacion" length="3900" />
+		</property>
+				<property name="reportarNovedadParada" type="java.lang.String">
+			<column name="reportar_novedad_parada" length="10" />
+		</property>
+		<property name="cantidadTrabajador" type="java.lang.Double">
+			<column name="cantidad_trabajador" precision="12" scale="4" />
+		</property>
+		  <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+          <property name="unidadMedidaTrabajador" type="java.lang.Long">
+            <column name="unidad_medida_trabajador" />
+        </property>
+            
+        	<property name="horometroMtto" type="java.lang.Double">
+			<column name="horometro_mtto" precision="12" scale="4" />
+		</property>
+				<property name="tipoMttoTexto" type="java.lang.String">
+			<column name="tipo_mtto_texto" length="100" /> 
+		</property>
+	</class>
+</hibernate-mapping>

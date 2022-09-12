@@ -1,0 +1,840 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/tags">
+
+<ui:composition>
+	<!-- Sidebar -->
+	<div class="sidebar sidebar-style-2" >
+		<div class="sidebar-wrapper scrollbar scrollbar-inner">
+			<div class="sidebar-content">
+				<div class="user">
+					<div class="avatar-sm float-left mr-2">
+						<i style="color: gray; font-size: 30px; margin: 8px"
+							class="fas fa-user-circle "></i>
+					</div>
+					<div class="info">
+
+						<a data-toggle="collapse" href="#collapseExample"
+							aria-expanded="false"> <span>
+								#{initialMenuView.usuario}<sec:authorize
+									ifAnyGranted="Administrador">
+									<span class="user-level">Administrador</span>
+								</sec:authorize> <sec:authorize ifAnyGranted="Digitador">
+									<span class="user-level">Digitador</span>
+								</sec:authorize> <sec:authorize ifAnyGranted="Consultas">
+									<span class="user-level">Consultas</span>
+								</sec:authorize> <span class="caret"></span>
+						</span>
+						</a>
+						<div class="clearfix"></div>
+						<!-- 
+					<div class="collapse in" id="collapseExample">
+						<ul class="nav">
+						    <li>
+							  <a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/j_spring_security_logout"><span class="link-collapse">Salir</span></a>
+							
+							</li>
+						</ul>
+					</div> -->
+					</div>
+				</div>
+				<ul class="nav nav-primary">
+
+					<li class="nav-section"><span class="sidebar-mini-icon">
+							<i class="fa fa-ellipsis-h"></i>
+					</span>
+						<h4 class="text-section">#{initialMenuView.tituloModulo}</h4></li>
+
+
+					<!-- AYUDA -->
+
+					<li class="nav-item"><a data-toggle="collapse" href="#base">
+							<i class="fas fa-book"></i>
+							<p><b>Glosario de Terminos</b></p> <span class="caret"></span>
+					</a>
+						<div class="collapse" id="base">
+							<ul class="nav nav-collapse">
+							
+								<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/glosario.xhtml">
+										<span class="sub-item"><b>Glosario</b></span>
+								</a></li>
+								
+							</ul>
+						</div>
+					</li>
+
+					<!-- CATALOGOS-->
+
+					<li class="nav-item"><a data-toggle="collapse" href="#submenu">
+							<i class="fas fa-cogs"></i>
+							<p><b>Catalogos</b></p> <span class="caret"></span>
+					</a>
+						<div class="collapse" id="submenu">
+							<ul class="nav nav-collapse">
+
+								<!-- CATALOGOS   -->
+
+								<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/persEmprListDataTable.xhtml">
+										<span class="sub-item"><b>Empresas/Proveedores</b></span>
+								</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/tipProveeListDataTable.xhtml">
+										<span class="sub-item"><b>Tipo de Proveedor</b></span>
+								</a></li>
+
+								<li><a data-toggle="collapse" href="#subnav1"> <span
+										class="sub-item"><b>Unidad de Medida</b></span> <span class="caret"></span>
+								</a>
+									<div class="collapse" id="subnav1">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/udadMedListDataTable.xhtml">
+													<span class="sub-item"><b>Unidad de Medida</b></span>
+											</a><a
+												href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/factorConversionListDataTable.xhtml">
+													<span class="sub-item"><b>Factores de Convesión</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>
+								<!-- COSTOS  -->
+
+								<li><a data-toggle="collapse" href="#subnav1_1"> <span
+										class="sub-item"><b>Costos</b></span> <span class="caret"></span>
+								</a>
+									<div class="collapse" id="subnav1_1">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/cuentaContableListDataTable.xhtml">
+													<span class="sub-item"><b>Cuentas Contables</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/conceptoNominaListDataTable.xhtml">
+													<span class="sub-item"><b>Conceptos</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/conceptoKardexListDataTable.xhtml">
+													<span class="sub-item"><b>Concepto kardex</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/centCostListDataTable.xhtml">
+													<span class="sub-item"><b>Centro de Costos</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/elementoCostoListDataTable.xhtml">
+													<span class="sub-item"><b>Elementos de Costos</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>
+
+								<!-- MANO DE OBRA -->
+
+								<li><a data-toggle="collapse" href="#subnavMO"> <span
+										class="sub-item"><b>Mano de Obra</b></span> <span class="caret"></span>
+								</a>
+									<div class="collapse" id="subnavMO">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/profesionMtto.xhtml">
+													<span class="sub-item"><b>Cargos/Profesiones</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/trabajadorListDataTable.xhtml">
+													<span class="sub-item"><b>Trabajadores</b></span>
+											</a></li>
+
+										</ul>
+									</div></li>
+
+								<!-- MAQUINARIA Y EQUIPOS   -->
+								<li><a data-toggle="collapse" href="#subnav2"> <span
+										class="sub-item"><b>Maquinaria y Equipos</b></span> <span
+										class="caret"></span>
+								</a>
+									<div class="collapse" id="subnav2">
+										<ul class="nav nav-collapse subnav">
+										
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/fabricanteEquipoListDataTable.xhtml">
+													<span class="sub-item"><b>Fabricantes</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/categoriaEquipoListDataTable.xhtml">
+													<span class="sub-item"><b>Categorías/Clasificación</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/modeloEquipoListDataTable.xhtml">
+													<span class="sub-item"><b>Modelos</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/medidorListDataTable.xhtml">
+													<span class="sub-item"><b>Medidores</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/numeroEjeListDataTable.xhtml">
+													<span class="sub-item"><b>Número de Ejes</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/equipoListDataTable.xhtml">
+													<span class="sub-item"><b>Maquinaria</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/sistemasEquipoListDataTable.xhtml">
+													<span class="sub-item"><b>Sistemas por Equipo</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/compartimientosEquipoListDataTable.xhtml">
+													<span class="sub-item"><b>Compartimientos por Equipo</b></span>
+											</a></li>
+											
+										</ul>
+									</div>
+								</li>
+
+								<li><a data-toggle="collapse" href="#subnav3"> <span
+										class="sub-item"><b>Productos y Servicios</b></span> <span
+										class="caret"></span>
+								</a>
+									<div class="collapse" id="subnav3">
+										<ul class="nav nav-collapse subnav">
+										
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/almacenListDataTable.xhtml">
+													<span class="sub-item"><b>Almacén</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/tipoProductoListDataTable.xhtml">
+													<span class="sub-item"><b>Tipos de Productos</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/claseToxicologicaListDataTable.xhtml">
+													<span class="sub-item"><b>Clases Toxicológicas</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/empaqueListDataTable.xhtml">
+													<span class="sub-item"><b>Empaques</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/productoListDataTable.xhtml">
+													<span class="sub-item"><b>Productos</b></span>
+											</a></li>
+											
+										</ul>
+									</div>
+								</li>
+
+								<!-- MANTENIMIENTO -->
+
+								<li><a data-toggle="collapse" href="#subnav4"> <span
+										class="sub-item"><b>Mantenimiento</b></span> <span class="caret"></span>
+								</a>
+									<div class="collapse" id="subnav4">
+										<ul class="nav nav-collapse subnav">
+										
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/nivelPrioridadListDataTable.xhtml">
+													<span class="sub-item"><b>Nivel de Prioridad</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/tallerMecanicoListDataTable.xhtml">
+													<span class="sub-item"><b>Taller Mécanico</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/agenteCausadorParadaListDataTable.xhtml">
+													<span class="sub-item"><b>Agente Causador de Paradas</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/motivosEntradaTallerListDataTable.xhtml">
+													<span class="sub-item"><b>Tipos de Fallas</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/tipoMantenimientoListDataTable.xhtml">
+													<span class="sub-item"><b>Tipos de Mantenimiento</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/planRevisionEquipoListDataTable.xhtml">
+													<span class="sub-item"><b>Plan de Revisión</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/puntosLubricacionListDataTable.xhtml">
+													<span class="sub-item"><b>Punto de lubricacion</b></span>
+											</a></li>
+											
+										</ul>
+									</div>
+								</li>
+
+								<!--ABASTECIMIENTO -->
+
+								<li><a data-toggle="collapse" href="#subnav5"> <span
+										class="sub-item"><b>Abastecimiento</b></span> <span class="caret"></span>
+								</a>
+									<div class="collapse" id="subnav5">
+										<ul class="nav nav-collapse subnav">
+										
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/tipoAbastecimientoListDataTable.xhtml">
+													<span class="sub-item"><b>Tipo de Abastecimiento</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/bombaAbastecimientoListDataTable.xhtml">
+													<span class="sub-item"><b>Bombas de Abastecimiento</b></span>
+											</a></li>
+											
+										</ul>
+									</div>
+								</li>
+
+								<!--LABORES -->
+
+								<li><a data-toggle="collapse" href="#subnav6"> <span
+										class="sub-item"><b>Labores</b></span> <span class="caret"></span>
+								</a>
+									<div class="collapse" id="subnav6">
+										<ul class="nav nav-collapse subnav">
+										
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/grpLaborListDataTable.xhtml">
+													<span class="sub-item"><b>Grupo de Labores</b></span>
+											</a><a
+												href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/laborListDataTable.xhtml">
+													<span class="sub-item"><b>Labor</b></span>
+											</a></li>
+											
+										</ul>
+									</div>
+								</li>
+
+								<!--DOCUMENTACION-->
+
+								<li><a data-toggle="collapse" href="#subnav7"> <span
+										class="sub-item"><b>Documentación</b></span> <span class="caret"></span>
+								</a>
+									<div class="collapse" id="subnav7">
+										<ul class="nav nav-collapse subnav">
+										
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/eventosListDataTable.xhtml">
+													<span class="sub-item"><b>Eventos</b></span>
+											</a></li>
+											
+										</ul>
+									</div>
+								</li>
+
+								<!--TURNOS-->
+
+								<li><a data-toggle="collapse" href="#subnav8"> <span
+										class="sub-item"><b>Turnos</b></span> <span class="caret"></span>
+								</a>
+									<div class="collapse" id="subnav8">
+										<ul class="nav nav-collapse subnav">
+										
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/turnoCampoListDataTable.xhtml">
+													<span class="sub-item"><b>Turnos de Taller</b></span>
+											</a></li>
+											
+										</ul>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</li>
+
+					<!--TRANSACCIONES -->
+					<li class="nav-item"><a data-toggle="collapse"
+						href="#baseTransacciones"> <i class="fas fa-exchange-alt"></i>
+							<p><b>Transacciones</b></p> <span class="caret"></span>
+					</a>
+						<div class="collapse" id="baseTransacciones">
+							<ul class="nav nav-collapse">
+								
+								<li>
+									<a data-toggle="collapse" href="#subnavT1"> <span
+										class="sub-item"><b>Suministros</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="subnavT1">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datCompraProductosListDataTable.xhtml">
+													<span class="sub-item"><b>Compra directa nacional</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datCompraProductosInternacional.xhtml">
+													<span class="sub-item"><b>Compra directa internacional</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datOtrosMovInventarioListDataTable.xhtml">
+													<span class="sub-item"><b>Movimientos del kardex</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datOtrosMovInventarioMaquina.xhtml">
+													<span class="sub-item"><b>Suministros de maquinaria</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datOtrosMovInventarioTaller.xhtml">
+													<span class="sub-item"><b>Suministros de taller/general</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datOtrosMovInventarioTraslados.xhtml">
+													<span class="sub-item"><b>Traslados internos</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datOtrosMovInventarioEdicionItemKardex.xhtml">
+													<span class="sub-item"><b>Edita registros del kardex</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datRequerimientoProductos.xhtml">
+													<span class="sub-item"><b>Requerimiento de productos</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>		
+								
+								<li>
+									<a data-toggle="collapse" href="#subnavT2"> <span
+										class="sub-item"><b>Programador labores</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="subnavT2">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datPlanServiciosMqListDataTable.xhtml">
+													<span class="sub-item"><b>Programador de labores a ejecutar</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>
+								
+								<li>
+									<a data-toggle="collapse" href="#subnavT3"> <span
+										class="sub-item"><b>Servicios</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="subnavT3">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datServRealizadosEquipoListDataTable.xhtml">
+													<span class="sub-item"><b>Procesa servicios (Pines)</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datServRealizadosEquipoActualizaFecha.xhtml">
+													<span class="sub-item"><b>Actualizar fecha servcios (Pines)</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datServRealizadosEquipoConsultaPin.xhtml">
+													<span class="sub-item"><b>Ver documento (PIN)</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datServRealizadosEquipoDetEdicion.xhtml">
+													<span class="sub-item"><b>Edita registro servicios (Labor)</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/preFacturaServicios.xhtml">
+													<span class="sub-item"><b>Prefacturar servicios</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/gestionPreFacturaServicios.xhtml">
+													<span class="sub-item"><b>Gestion de pre-facturas</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>	
+								
+								<li>
+									<a data-toggle="collapse" href="#subnavT4"> <span
+										class="sub-item">Gastos</span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="subnavT4">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datOtrosCostosMqdet.xhtml">
+													<span class="sub-item"><b>Gastos de operación por máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datOtrosCostosMqGeneral.xhtml">
+													<span class="sub-item"><b>Gastos generales de operación</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datCajaMenorListDataTable.xhtml">
+													<span class="sub-item"><b>Abrir caja menor</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datDiferidos.xhtml">
+													<span class="sub-item"><b>Registrar diferidos</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datDiferirProductos.xhtml">
+													<span class="sub-item"><b>Diferir productos</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>	
+								
+								<li>
+									<a data-toggle="collapse" href="#subnavT5"> <span
+										class="sub-item"><b>Facturación</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="subnavT5">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/generacionfacturaServicios.xhtml">
+													<span class="sub-item"><b>Facturación cliente</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/reversaFacturaServicios.xhtml">
+													<span class="sub-item"><b>Gestión de facturas consolidadas</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>
+									
+								<li>
+									<a data-toggle="collapse" href="#subnavT6"> <span
+										class="sub-item"><b>Nomina</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="subnavT6">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/ERP/Maquinaria/interfaceLiquidacionNominaOperariosMq.xhtml">
+													<span class="sub-item"><b>Ejecutar liquidación de operarios</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/ERP/Maquinaria/interfaceLiquidacionAuxTransporte.xhtml">
+													<span class="sub-item"><b>Ejecutar liquidacion Aux. de movilización</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datNominaTrabajadorMqDetListDataTable.xhtml">
+													<span class="sub-item"><b>Novedades de liquidación operarios</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>	
+								
+								<li>
+									<a data-toggle="collapse" href="#subnavT7"> <span
+										class="sub-item"><b>Cartera</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="subnavT7">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datPagosNotasClientesListDataTable.xhtml">
+													<span class="sub-item"><b>Pago y notas D/C</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>
+								
+								<li>
+									<a data-toggle="collapse" href="#subnavT8"> <span
+										class="sub-item"><b>Mtto maq.</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="subnavT8">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datServRealizadosEquipoEnTaller.xhtml">
+													<span class="sub-item"><b>Procesar pines en taller</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datMantenimientoEquipoListDataTable.xhtml">
+													<span class="sub-item"><b>Mantenimiento de maquinaria</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datHorasTrabajoEquipoListDataTable.xhtml">
+													<span class="sub-item"><b>Registro de horas diarias</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datCheckListEquipoListDataTable.xhtml">
+													<span class="sub-item"><b>Registro de check-list</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datReporteFallasListDataTable.xhtml">
+													<span class="sub-item"><b>Resgistro de fallas</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/MantenimientoMaquinaria/transacciones/datConsultaEventosPorPagar.xhtml">
+													<span class="sub-item"><b>Consulta de documentos por pagar</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>							
+							</ul>
+						</div>
+					</li>
+						
+					<li class="nav-item"><a data-toggle="collapse"
+						href="#baseReportes2">  <i class="far fa-chart-bar"></i>
+							<p><b>Reportes</b></p> <span class="caret"></span>
+					</a>
+						<div class="collapse" id="baseReportes2">
+							<ul class="nav nav-collapse">								
+								<li>
+									<a data-toggle="collapse" href="#repSuministros"> <span
+										class="sub-item"><b>Suministros</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="repSuministros">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeCompraProductosMaquinaria.xhtml">
+													<span class="sub-item"><b>Consulta compras realizadas</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeInventarioMovimientoDetalladoProducto.xhtml">
+													<span class="sub-item"><b>Consulta movimientos por producto</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeInventarioProductosMaquinariaDet.xhtml">
+													<span class="sub-item"><b>Consulta movimientos de inventario</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeInventarioDocumentoKardex.xhtml">
+													<span class="sub-item"><b>Consultar documento del kardex</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSuministrosReposicionMaquinaria.xhtml">
+													<span class="sub-item"><b>Consulta suministros para reposición</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeInventarioSaldosBodega.xhtml">
+													<span class="sub-item"><b>Consulta saldos por bodega</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeInventarioSaldosProducto.xhtml">
+													<span class="sub-item"><b>Consulta saldos por producto</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeInventarioConsumoMaq.xhtml">
+													<span class="sub-item"><b>Consulta consumos consolidados</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeInventarioListaProducto.xhtml">
+													<span class="sub-item"><b>Productos para inventario fisico</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeInventarioMovimientoMes.xhtml">
+													<span class="sub-item"><b>Consolidado de inventario mes a mes</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeInventarioRotacionProducto.xhtml">
+													<span class="sub-item"><b>Rotación del inventario por bodega</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>		
+								
+								<li>
+									<a data-toggle="collapse" href="#repProLabores"> <span
+										class="sub-item"><b>Programador labores</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="repProLabores">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaqProgramaLabores.xhtml">
+													<span class="sub-item"><b>Consulta programación de labores</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>
+								
+								<li>
+									<a data-toggle="collapse" href="#repServicios"> <span
+										class="sub-item"><b>Servicios</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="repServicios">
+										<ul class="nav nav-collapse subnav">
+
+											<li>
+												<a data-toggle="collapse" href="#repServiciosSer"> <span
+													class="sub-item"><b>Servicios</b></span> <span class="caret"></span>
+												</a>
+												<div class="collapse" id="repServiciosSer">
+													<ul class="nav nav-collapse subnav">
+			
+														<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeListadoFincasLotesMaq.xhtml">
+																<span class="sub-item"><b>Listado de haciendas/suertes</b></span>
+														</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaquinariaDataTable.xhtml">
+																<span class="sub-item"><b>Consulta servicios por maquinaria</b></span>
+														</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRLaboresMecanizadas.xhtml">
+																<span class="sub-item"><b>Labores mecanizadas</b></span>
+														</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaquinaria.xhtml">
+																<span class="sub-item"><b>Servicios realizados por maquinaria</b></span>
+														</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaquinariaFacturacionPendiente.xhtml">
+																<span class="sub-item"><b>Servicios pendientes de facturar</b></span>
+														</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaquinariaFacturacionPendiente.xhtml">
+																<span class="sub-item"><b>Costo de labores realizadas con maquina</b></span>
+														</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMLaboresRealizadasPorOperario.xhtml">
+																<span class="sub-item"><b>Labores realizadas por operario</b></span>
+														</a></li>
+			
+													</ul>
+												</div>
+											</li>
+											
+											<li>
+												<a data-toggle="collapse" href="#repServiciosSFact"> <span
+													class="sub-item"><b>Facturación</b></span> <span class="caret"></span>
+												</a>
+												<div class="collapse" id="repServiciosSFact">
+													<ul class="nav nav-collapse subnav">
+			
+														<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/consultaPreFacturaServicios.xhtml">
+																<span class="sub-item"><b>Consulta de pre-facturas por cliente</b></span>
+														</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaqDistribuccionFactura.xhtml">
+																<span class="sub-item"><b>Distribucion de facturas</b></span>
+														</a></li>
+			
+													</ul>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</li>	
+								
+								<li>
+									<a data-toggle="collapse" href="#repGastos"> <span
+										class="sub-item"><b>Gastos</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="repGastos">
+										<ul class="nav nav-collapse subnav">
+
+											<li>
+												<a data-toggle="collapse" href="#repGastosGas"> <span
+													class="sub-item"><b>Gastos</b></span> <span class="caret"></span>
+												</a>
+												<div class="collapse" id="repGastosGas">
+													<ul class="nav nav-collapse subnav">
+			
+														<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRConsultaGastosOperacion.xhtml">
+																<span class="sub-item"><b>Consulta gastos de operación</b></span>
+														</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRConsultaGastosOperacionEditable.xhtml">
+																<span class="sub-item"><b>Consulta g. de opreción por concepto</b></span>
+														</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRConsultaDiferidos.xhtml">
+																<span class="sub-item"><b>Reporte gastos diferidos</b></span>
+														</a></li>
+			
+													</ul>
+												</div>
+											</li>
+											
+											<li>
+												<a data-toggle="collapse" href="#repGastosCaja"> <span
+													class="sub-item"><b>Caja</b></span> <span class="caret"></span>
+												</a>
+												<div class="collapse" id="repGastosCaja">
+													<ul class="nav nav-collapse subnav">
+			
+														<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRConsultaCajaMenorEditable.xhtml">
+																<span class="sub-item"><b>Consulta documento caja menor</b></span>
+														</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRConsultaCajaMenor.xhtml">
+																<span class="sub-item"><b>Reporte cajas menores</b></span>
+														</a></li>
+			
+													</ul>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</li>	
+								
+								<li>
+									<a data-toggle="collapse" href="#repFacturacion"> <span
+										class="sub-item"><b>Facturación</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="repFacturacion">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaqConsultaFacturas.xhtml">
+													<span class="sub-item"><b>Consulta de facturas</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaqDistribuccionFactura.xhtml">
+													<span class="sub-item"><b>Distribución de factura</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaquinariaConsultaEstatusServicios.xhtml">
+													<span class="sub-item"><b>Estatos de servicios prestados</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>	
+								
+								<li>
+									<a data-toggle="collapse" href="#repNomina"> <span
+										class="sub-item"><b>Nomina</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="repNomina">
+										<ul class="nav nav-collapse subnav">
+											
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMLaboresRealizadasPorOperario.xhtml">
+													<span class="sub-item"><b>Labores realizadas por operario</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRControlProductividad.xhtml">
+													<span class="sub-item"><b>Control de productividad por operario</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRLiqManoObra.xhtml">
+													<span class="sub-item"><b>Ver labores liquidadas</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRImprimirLiqManoObra.xhtml">
+													<span class="sub-item"><b>Liquidación de nómina por conceptos</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRLiqAuxilioProductividad.xhtml">
+													<span class="sub-item"><b>Auxilio de productividad</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRLiqAuxilioTransporteManoObra.xhtml">
+													<span class="sub-item"><b>Auxilio de movilización</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRNominaConsolidadaMaq.xhtml">
+													<span class="sub-item"><b>Imprimir nómina consolidada</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRComprobantesPagoMaq.xhtml">
+													<span class="sub-item"><b>Comprobantes de pago</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>	
+								
+								<li>
+									<a data-toggle="collapse" href="#repMttoMaq"> <span
+										class="sub-item"><b>Mtto maq.</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="repMttoMaq">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeProyeccionMtto.xhtml">
+													<span class="sub-item"><b>Proyección de mtto.</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/consultaListaProximoMttoListDataTable.xhtml">
+													<span class="sub-item"><b>Consultar proximos mttos.</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSolicitudesMttoDet.xhtml">
+													<span class="sub-item"><b>Mantenimientos realizados a equipo</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRConsultaVencimientoEventos.xhtml">
+													<span class="sub-item"><b>Consultar vencimiento de eventos por máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/MttoReporteFallasEquipos.xhtml">
+													<span class="sub-item"><b>Consulta de fallas por equipo</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/MttoReporteHorasTrabajadasEquipos.xhtml">
+													<span class="sub-item"><b>Horas trabajadas por equipos</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeCheckListEquipo.xhtml">
+													<span class="sub-item"><b>Consulta check-list por equipo</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeConsultaMttoListDataTable.xhtml">
+													<span class="sub-item"><b>Consulta Info Maquinaria</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeConsultaMttoStockListDataTable.xhtml">
+													<span class="sub-item"><b>Consulta Info Stock Maquinaria</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>
+								
+								<li>
+									<a data-toggle="collapse" href="#repIndicadores"> <span
+										class="sub-item"><b>AgroAnalitics</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="repIndicadores">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRPyGMaquinaria.xhtml">
+													<span class="sub-item"><b>Indicadores por máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRPyGVehiculos.xhtml">
+													<span class="sub-item"><b>Indicadores por vehículos</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRLiqMaq.xhtml">
+													<span class="sub-item"><b>Liquidación por máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRResumenLiqMaq.xhtml">
+													<span class="sub-item"><b>Resumen de liquidación</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRCostoServicios.xhtml">
+													<span class="sub-item"><b>Costo de labores/servicios</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRRdtoMaq.xhtml">
+													<span class="sub-item"><b>Rendimiento por máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRRdtoMaquinariaConsolidados.xhtml">
+													<span class="sub-item"><b>Rendimiento por máquina consolidado</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRCombustibleMaq.xhtml">
+													<span class="sub-item"><b>Consumo de combustible por máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRPyGMaquinariaCostoCMB.xhtml">
+													<span class="sub-item"><b>Costo de combustible por máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRPyGVehiculosCostoCMB.xhtml">
+													<span class="sub-item"><b>Costo de combustible por vehículo</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRCostoHrMaq.xhtml">
+													<span class="sub-item"><b>Costo hora/máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRIngresoMaq.xhtml">
+													<span class="sub-item"><b>Ingresos por máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRCostoTotalConceptoMaq.xhtml">
+													<span class="sub-item"><b>Costos totales por concepto de máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRIngresoVsGastoMaq.xhtml">
+													<span class="sub-item"><b>Ingresos vs costo por máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSREstadisticaCliente.xhtml">
+													<span class="sub-item"><b>Estadisticas por cliente</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSREstadisticaServicio.xhtml">
+													<span class="sub-item"><b>Estadisticas por servicio</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>
+								
+								<li>
+									<a data-toggle="collapse" href="#repAuditoria"> <span
+										class="sub-item"><b>Auditoria</b></span> <span class="caret"></span>
+									</a>
+									<div class="collapse" id="repAuditoria">
+										<ul class="nav nav-collapse subnav">
+
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeLogPinesMaq.xhtml">
+													<span class="sub-item"><b>Auditoría de cambio de PINES</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaqLaboresImplemento.xhtml">
+													<span class="sub-item"><b>Labores por implemento</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaquinariaInterface.xhtml">
+													<span class="sub-item"><b>Reporte maquinaria S.Satelital</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRConsultaPinesPorMaquina.xhtml">
+													<span class="sub-item"><b>No. pines digitados</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeInventarioConsumoCombustibles.xhtml">
+													<span class="sub-item"><b>Consumo de combustible por pin</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeInventarioConsumoCombustibles.xhtml">
+													<span class="sub-item"><b>Costos por máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSROperarioMaqAsociada.xhtml">
+													<span class="sub-item"><b>Operario y máquina</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaqServiciosSinFacturarFracciones.xhtml">
+													<span class="sub-item"><b>Servicios sin facturar fracciones</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/Reportes/mantenimientoMaquinaria/informeSRMaqLaboresCostoCero.xhtml">
+													<span class="sub-item"><b>Servicios realizados con costo cero</b></span>
+											</a></li>
+
+										</ul>
+									</div>
+								</li>							
+							</ul>
+						</div>
+					</li>
+
+					<!-- INTEGRACIONES   -->
+
+					<li class="nav-item"><a data-toggle="collapse"
+						href="#submenuIntegraciones"> <i
+							class="fas fa-project-diagram"></i>
+							<p><b>Interfaces</b></p> <span class="caret"></span>
+					</a>
+						<div class="collapse" id="submenuIntegraciones">
+							<ul class="nav nav-collapse">
+								<li><a data-toggle="collapse" href="#subnavIntCatalogos">
+										<span class="sub-item"><b>Catalogos</b></span> <span class="caret"></span>
+								</a>
+									<div class="collapse" id="subnavIntCatalogos">
+										<ul class="nav nav-collapse subnav">
+										
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/ERP/Catalogos/interfaceCatalogosManager.xhtml">
+													<span class="sub-item"><b>Importación de Catalogos(Manager)</b></span>
+											</a></li>
+											
+										</ul>
+									</div> <a data-toggle="collapse" href="#subnavIntTransacciones">
+										<span class="sub-item"><b>Transacciones (Manager)</b></span> <span
+										class="caret"></span>
+								</a>
+									<div class="collapse" id="subnavIntTransacciones">
+										<ul class="nav nav-collapse subnav">
+										
+											<li><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/ERP/Nomina/interfaceCalculoDominicalesFestivos.xhtml">
+													<span class="sub-item"><b>Interface Calculo dominicales y festivos</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/ERP/Nomina/interfaceManagerExportRegMo.xhtml">
+													<span class="sub-item"><b>Exportación de registros de mano de obra (Novedades)</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/ERP/Nomina/interfaceManagerExportRegAusMo.xhtml">
+													<span class="sub-item"><b>Exportación de registros de mano de obra (Ausentismos)</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/ERP/Nomina/interfaceDistribuccionCostosNominaLotes.xhtml">
+													<span class="sub-item"><b>Distrib. Costos de Nómina Lotes</b></span>
+											</a><a href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/XHTML/ERP/Maquinaria/interfaceDistribuccionCostosMaquinariaLotes.xhtml">
+													<span class="sub-item"><b>Distrib. Costos de Mtto de MQ Lotes</b></span>
+											</a></li>
+											
+										</ul>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- End Sidebar -->
+</ui:composition>
+</html>

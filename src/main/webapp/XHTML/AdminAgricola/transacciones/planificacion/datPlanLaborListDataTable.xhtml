@@ -1,0 +1,605 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+
+		<ui:define name="body">
+		       	   
+			<script>
+		    window.onbeforeunload = function(e) {
+		      return 'Are you sure you want to leave this page?  You will lose any unsaved data.';
+		    };
+		
+		    </script>
+		   
+			<f:view>
+				
+				<h:form id="frm">
+					<p:panel id="panelDataTableDatPlanLabor" header="Plan de labores">
+						<p:growl id="men" />
+						
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+									
+										<p:outputLabel for="txtFechaIni" value="F. Inicial: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaIni" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{datPlanLaborView.txtFechaIni}"
+											required="false"
+											requiredMessage="La Fecha inicial es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="txtFechaFin" value="F. Final: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" mask="true"
+											style="font-size: 0.9em;" size="12"
+											binding="#{datPlanLaborView.txtFechaFin}"
+											required="false"
+											requiredMessage="La Fecha  final  es obligatoria">
+										</p:calendar>
+										
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtPlanilla" value="n° Planilla "
+											style="font-size: 0.9em;" />
+										<p:inputNumber id="txtPlanilla" style="font-size: 0.9em;"
+											binding="#{datPlanLaborView.txtPlanilla}"
+											maxlength="1000" autoResize="true" size="15">
+										</p:inputNumber>
+
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="1">
+
+										<p:commandButton id="btnCargarDatos" value="Consultar"
+											icon="ui-icon-newwin" style="font-size: 1em;"
+											action="#{datPlanLaborView.listarPlanLabor}"
+											update=":frm:tbl " process="@all" />
+
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+
+						<p:dataTable id="tbl" value="#{datPlanLaborView.data}"  
+							var="datPlanLabor" paginator="true" lazy="true" rows="5"
+							rowsPerPageTemplate="5,10,15"
+							rowKey="#{datPlanLabor.planLaborId}" reflow="true">
+
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datPlanLabor" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{datPlanLabor.ordenTrabajo}"
+								sortBy="#{datPlanLabor.ordenTrabajo}">
+								<f:facet name="header">
+									<h:outputText value="O.T" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.ordenTrabajo}" />
+							</p:column>
+
+							<p:column style="width:45px">
+								<f:facet name="header">
+									<h:outputText value="" />
+								</f:facet>
+								<p:graphicImage
+									value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/#{datPlanLabor.estadoOrdenTrabajoVencida}"
+									width="25">
+								</p:graphicImage>
+
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Atrasadas" />
+								</f:facet>
+
+								<h:outputText value=" Hace #{datPlanLabor.diasAtarsoOt} días" />
+							</p:column>
+
+							<p:column filterBy="#{datPlanLabor.periodoFinal}"
+								sortBy="#{datPlanLabor.periodoFinal}">
+								<f:facet name="header">
+									<h:outputText value="F.Final" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.periodoFinal}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							<p:column filterBy="#{datPlanLabor.laborNombre}">
+								<f:facet name="header">
+									<h:outputText value="Labor" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.laborNombre}" />
+							</p:column>
+
+							<p:column filterBy="#{datPlanLabor.udadMedNombre}">
+								<f:facet name="header">
+									<h:outputText value="U. Medida" />
+								</f:facet>
+								<h:outputText value="#{datPlanLabor.udadMedNombre}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										disabled="#{datPlanLabor.estadoTrue2}"
+										update=":dialogDatPlanLabor"
+										actionListener="#{datPlanLaborView.action_edit}">
+										<f:attribute name="selectedDatPlanLabor"
+											value="#{datPlanLabor}" />
+									</p:commandButton>
+
+									<p:commandButton id="btnDelete"
+										disabled="#{datPlanLabor.estadoTrue2}" title="Anular Registro"
+										actionListener="#{datPlanLaborView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatPlanLabor"
+											value="#{datPlanLabor}" />
+									</p:commandButton>
+
+									<p:commandButton id="btnCerrarOt"
+										title="Cerrar y/o Reabrir O.T"
+										icon="#{datPlanLabor.iconCierreOt}"
+										actionListener="#{datPlanLaborView.action_cierreReaperturaOt}"
+										disabled="#{datPlanLabor.estadoTrue}"
+										update=":frm:panelDataTableDatPlanLabor">
+										<p:confirm header="Cierre y/o Reapertura O.T"
+											message="#{datPlanLabor.tituloCierreOt}" icon="ui-icon-alert" />
+										<f:attribute name="selectedDatPlanLabor"
+											value="#{datPlanLabor}" />
+									</p:commandButton>
+
+									<p:confirmDialog global="true" hideEffect="fade">
+										<div align="center">
+											<p:commandButton value="Si" type="button"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+											<p:commandButton value="No" type="button"
+												styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+										</div>
+									</p:confirmDialog>
+
+
+								</div>
+							</p:column>
+						</p:dataTable>
+
+
+						<div id="leyenda" class="ui-fluid" align="center">
+							<p:graphicImage
+								value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/leyenda.png" />
+						</div>
+
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datPlanLaborView.action_new()}"
+								update=":dialogDatPlanLabor" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatPlanLabor" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datPlanLaborView.showDialog}" resizable="false"
+					modal="true" width="1000" styleClass="dialogFix"
+					header="Plan de labores" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" showDetail="true" />
+						<p:panel id="panelDatPlanLabor">
+
+							<h:panelGrid columns="2" id="panelGrid">
+								<h:outputText value="Orden de trabajo(OT): "
+									style="font-size: 0.9em;" />
+								<p:inputText id="txtOrdenTrabajo" disabled="false"
+									binding="#{datPlanLaborView.txtOrdenTrabajo}"
+									placeholder="Buscar o crear registro" size="23">
+								</p:inputText>
+							</h:panelGrid>
+
+							<p:panelGrid>
+								<p:row>
+									<p:column>
+										<h:panelGrid columns="2" layout="grid"
+											styleClass="ui-panelgrid-blank">
+											<h:outputText for="msgPeriodoInicial" value="Fecha inicial: "
+												style="font-size: 0.8em; " />
+											<p:calendar id="msgPeriodoInicial" showOn="button"
+												style="font-size: 0.8em; " navigator="false" locale="es"
+												binding="#{datPlanLaborView.txtPeriodoInicial}"
+												pattern="dd/MM/yyyy" mask="true" required="true"
+												requiredMessage="La    es obligatoria">
+											</p:calendar>
+
+										</h:panelGrid>
+									</p:column>
+
+									<p:column>
+										<h:panelGrid columns="2">
+											<h:outputText for="msgPeriodoFinal" value="Fecha final: "
+												style="font-size: 0.8em; " />
+											<p:calendar id="msgPeriodoFinal" showOn="button"
+												navigator="false" locale="es" style="font-size: 0.8em; "
+												binding="#{datPlanLaborView.txtPeriodoFinal}"
+												pattern="dd/MM/yyyy" mask="true" required="true"
+												requiredMessage="La    es obligatoria">
+											</p:calendar>
+
+										</h:panelGrid>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<h:panelGrid columns="2">
+
+								<h:outputText for="txtTrabId_Trabajador" value="Supervisor: "
+									style="font-size: 0.8em; " />
+								<p:selectOneMenu id="txtTrabId_Trabajador" effect="fade"
+									filter="true" filterMatchMode="contains"
+									binding="#{datPlanLaborView.txtTrabId_Trabajador}"
+									style="width: 100%; font-size: 0.8em;" required="false"
+									requiredMessage="Seleccione un supervisor">
+									<f:selectItem itemLabel="Seleccione un supervisor" itemValue="" />
+									<f:selectItems value="#{datPlanLaborView.selectTrabajador}" />
+								</p:selectOneMenu>
+
+								<p:inputText style="visibility:hidden; font-size: 0.8em;"
+									id="txtPlanLaborId"
+									binding="#{datPlanLaborView.txtPlanLaborId}" />
+								<p:outputLabel></p:outputLabel>
+							</h:panelGrid>
+
+							<p:panelGrid>
+								<p:row>
+									<p:column>
+										<h:panelGrid columns="2">
+											<h:outputText for="txtLaborId_Labor" value="Labor: "
+												style="font-size: 0.8em; " />
+											<p:selectOneMenu id="txtLaborId_Labor" effect="fade"
+												filter="true" filterMatchMode="contains"
+												style="width: 160px;font-size: 0.8em; " autoWidth="false"
+												binding="#{datPlanLaborView.txtLaborId_Labor}"
+												required="true" requiredMessage="Seleccione una labor">
+												<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+												<f:selectItems value="#{datPlanLaborView.selectLaborId}" />
+												<p:ajax
+													listener="#{datPlanLaborView.listener_ConsultaUmLabor}"
+													update="txtUdadMedId_UdadMed" />
+											</p:selectOneMenu>
+
+										</h:panelGrid>
+									</p:column>
+
+									<p:column>
+										<h:panelGrid columns="2">
+											<h:outputText for="txtNPases" value="Número de pases: "
+												style="font-size: 0.8em; " />
+											<p:spinner disabled="true" id="txtNPases"
+												style="font-size: 0.8em; "
+												binding="#{datPlanLaborView.txtNPases}" required="true"
+												requiredMessage="Indique un número" value="0" size="3">
+											</p:spinner>
+
+										</h:panelGrid>
+									</p:column>
+
+
+									<p:column>
+										<h:panelGrid columns="2">
+
+											<h:outputText for="txtUdadMedId_UdadMed"
+												value="Unidad (Planificación): " style="font-size: 0.8em; " />
+											<p:selectOneMenu id="txtUdadMedId_UdadMed" effect="fade"
+												filter="true" filterMatchMode="contains"
+												style="width: 160px; font-size: 0.8em; " autoWidth="false"
+												binding="#{datPlanLaborView.txtUdadMedId_UdadMed}"
+												required="true" requiredMessage="Unidad de medida">
+												<f:selectItem itemLabel="Seleccione una  unidad de medida"
+													itemValue="" />
+												<f:selectItems value="#{datPlanLaborView.selectUdadMed}" />
+												<p:ajax
+													process="@this, txtUdadMedId_UdadMed,txtNivel4Id_Nivel4 "
+													listener="#{datPlanLaborView.listener_CarguePlantasHaLote}"
+													update="txtCantidadPlan" />
+											</p:selectOneMenu>
+
+										</h:panelGrid>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<p:scrollPanel mode="native" style="width:950px;height:270px">
+								<p:messages id="msgPL" closable="true" showDetail="true" />
+
+								<p:panelGrid id="gridDatPlanLaborDet">
+									<p:row>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtNivel1Id" value="Zona: "
+													style="width: 100%; font-size: 0.8em; " />
+												<p:selectOneMenu id="txtNivel1Id" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%; font-size: 0.8em; "
+													binding="#{datPlanLaborView.txtNivel1Id}" required="false"
+													requiredMessage="Seleccione una zona">
+													<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+													<f:selectItems value="#{datPlanLaborView.selectNivel1}" />
+													<p:ajax update="txtNivel2Id" />
+												</p:selectOneMenu>
+
+												<h:outputText for="txtCantidadPlan" value="Cantidad: "
+													style="font-size: 0.8em; " />
+												<p:inputText id="txtCantidadPlan" disabled="true"
+													binding="#{datPlanLaborView.txtCantidadPlan}"
+													required="false" style="font-size: 0.8em; "
+													requiredMessage="Indique la cantidad a planificar">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+												<p:outputLabel></p:outputLabel>
+												<p:outputLabel></p:outputLabel>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel for="txtNivel2Id" value="Hacienda: "
+													style="width: 100%; font-size: 0.8em; " />
+												<p:selectOneMenu id="txtNivel2Id" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%; font-size: 0.8em; "
+													binding="#{datPlanLaborView.txtNivel2Id}" required="false"
+													requiredMessage="Seleccione una hacienda">
+													<f:selectItem itemLabel="Seleccione una hacienda"
+														itemValue="" />
+													<f:selectItems value="#{datPlanLaborView.selectNivel2}" />
+													<p:ajax update="txtNivel3Id" />
+												</p:selectOneMenu>
+
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtNivel3Id" value="Bloque: "
+													style="width: 100%; font-size: 0.8em; " />
+												<p:selectOneMenu id="txtNivel3Id" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="width: 100%; font-size: 0.8em; "
+													binding="#{datPlanLaborView.txtNivel3Id}" required="false"
+													requiredMessage="Seleccione un bloque del cultivo">
+													<f:selectItem itemLabel="Seleccione un bloque" itemValue="" />
+													<f:selectItems value="#{datPlanLaborView.selectNivel3}" />
+													<p:ajax update="txtNivel4Id_Nivel4" />
+												</p:selectOneMenu>
+
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+
+												<p:outputLabel for="txtNivel4Id_Nivel4" value="Lote: "
+													style="width: 100%; font-size: 0.8em; " />
+												<p:selectOneMenu id="txtNivel4Id_Nivel4" effect="fade"
+													filter="true" filterMatchMode="contains"
+													binding="#{datPlanLaborView.txtNivel4Id_Nivel4}"
+													style="width: 100%; font-size: 0.8em; " required="false"
+													requiredMessage="Seleccione un lote">
+													<f:selectItem itemLabel="Seleccione un lote" itemValue="" />
+													<f:selectItems value="#{datPlanLaborView.selectNivel4}" />
+													<p:ajax
+														process="@this, txtUdadMedId_UdadMed,txtNivel4Id_Nivel4, txtNivel2Id "
+														listener="#{datPlanLaborView.listener_CarguePlantasHaLote}"
+														update="txtCantidadPlan" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+										</p:column>
+
+									</p:row>
+								</p:panelGrid>
+
+
+
+								<h:panelGrid columns="2" style="margin:10px;">
+									<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+										process="@this,txtCantidadPlan,msgPeriodoInicial,
+															txtNivel4Id_Nivel4,txtNivel2Id
+															"
+										binding="#{datPlanLaborView.btnAgregar}" value="Agregar"
+										action="#{datPlanLaborView.action_agregarPlanLaborDet}"
+										ajax="true" update="tablaDatPlanLaborDet, msgPL" />
+
+									<p:commandButton id="btnlimpiar1" icon="ui-icon-trash"
+										value="Limpiar">
+										<p:ajax update="gridDatPlanLaborDet " resetValues="true" />
+									</p:commandButton>
+
+
+								</h:panelGrid>
+
+								<p:outputPanel id="dataPlanLaborDet">
+									<p:dataTable id="tablaDatPlanLaborDet"
+										value="#{datPlanLaborView.dataPlanLaborDet}"
+										var="listaDatPlanLaborDet" paginator="true" rows="5"
+										rowsPerPageTemplate="5,10,15" reflow="true" editable="true"
+										editMode="cell" widgetVar="cellPlanLabor">
+
+										<p:ajax event="cellEdit"
+											listener="#{datPlanLaborView.onCellEditPlanLabor}" />
+
+										<p:column headerText="Hacienda">
+											<p:cellEditor>
+												<f:facet name="output">
+													<h:outputText value="#{listaDatPlanLaborDet.nivel2Nombre}" />
+												</f:facet>
+												<f:facet name="input">
+													<h:selectOneMenu
+														value="#{listaDatPlanLaborDet.nivel2Id_Nivel2.nivel2Id}">
+														<f:selectItems
+															value="#{datPlanLaborView.selectNivel2Edit}" var="var1"
+															itemValue="#{var1}"></f:selectItems>
+													</h:selectOneMenu>
+												</f:facet>
+											</p:cellEditor>
+										</p:column>
+
+										<p:column headerText="Lote">
+											<p:cellEditor>
+												<f:facet name="output">
+													<h:outputText value="#{listaDatPlanLaborDet.nivel4Nombre}" />
+												</f:facet>
+												<f:facet name="input">
+													<h:selectOneMenu
+														value="#{listaDatPlanLaborDet.nivel4Id_Nivel4.nivel4Id}">
+														<f:selectItems
+															value="#{datPlanLaborView.selectNivel4Edit}" var="var2"
+															itemValue="#{var2}"></f:selectItems>
+													</h:selectOneMenu>
+												</f:facet>
+											</p:cellEditor>
+										</p:column>
+
+
+										<p:column headerText="Cantidad Plan">
+											<p:cellEditor>
+												<f:facet name="output">
+													<h:outputText value="#{listaDatPlanLaborDet.cantidadPlan}" />
+												</f:facet>
+												<f:facet name="input">
+													<p:inputText value="#{listaDatPlanLaborDet.cantidadPlan}" />
+												</f:facet>
+											</p:cellEditor>
+										</p:column>
+
+										<f:attribute name="selectedDataPlanLaborDet"
+											value="#{listaDatPlanLaborDet}" />
+
+										<p:column headerText="Opciones">
+											<div align="center">
+												<p:commandButton id="btnDelete" icon="ui-icon-trash"
+													actionListener="#{datPlanLaborView.actionDeleteDatPlanLaborDet}"
+													title="Borrar"
+													onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+													update="tablaDatPlanLaborDet :dialogDatPlanLabor">
+													<f:attribute name="selectedDataPlanLaborDet"
+														value="#{listaDatPlanLaborDet}" />
+												</p:commandButton>
+											</div>
+										</p:column>
+									</p:dataTable>
+								</p:outputPanel>
+							</p:scrollPanel>
+
+
+							<h:panelGrid columns="2">
+								<h:outputText for="txtObservacion" value="Observación:"
+									style="font-size: 0.8em; " />
+								<h:panelGrid columns="3">
+									<p:inputTextarea id="txtObservacion" style="font-size: 0.8em; "
+										binding="#{datPlanLaborView.txtObservacion}" rows="3"
+										cols="60" counter="display" maxlength="1000"
+										counterTemplate="{0} Caracteres" autoResize="true" />
+									<img onclick="startDictation()" src="//i.imgur.com/cHidSVu.gif" />
+									<h:outputText id="display" />
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datPlanLaborView.btnSave}" value="Grabar"
+									action="#{datPlanLaborView.action_save()}"
+									update=":dialogDatPlanLabor :frm:panelDataTableDatPlanLabor" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datPlanLaborView.action_clear()}"
+									process="@this" update=":dialogDatPlanLabor" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+				<!-- Formulario anulacion -->
+
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datPlanLaborView.showDialog}" modal="true" width="500"
+					responsive="true">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<h:outputText for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datPlanLaborView.txtObservacionAnularReg}" rows="5"
+									cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false" binding="#{datPlanLaborView.btnDelete}"
+									value="Grabar"
+									action="#{datPlanLaborView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatPlanLabor" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datPlanLaborView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

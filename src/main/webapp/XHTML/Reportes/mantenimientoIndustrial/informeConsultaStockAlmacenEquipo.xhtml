@@ -1,0 +1,180 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable"
+						header="Informe: Stock de productos por almacén">
+						<h:panelGrid columns="3" id="panelGrid" >
+										
+										<p:outputLabel for="txtCompania" value="Compañía: " />
+										<p:selectOneMenu id="txtCompania"
+											binding="#{informeConsultaStockAlmacenMaquinariaView.txtCompania}"
+											required="true" requiredMessage="Seleccione una compañía">
+											<f:selectItem itemLabel="Seleccione una compañía"
+												itemValue="" />
+											<f:selectItems
+												value="#{informeConsultaStockAlmacenMaquinariaView.selectCompania}" />
+										</p:selectOneMenu>
+										<p:message for="txtCompania" />
+										
+										<p:outputLabel for="tipoProductos" value="Tipos de producto: " />
+										<p:selectCheckboxMenu id="tipoProductos"
+											value="#{informeConsultaStockAlmacenMaquinariaView.selectedTipoProducto}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false" requiredMessage="Seleccione un tipo">
+											<f:selectItems value="#{informeConsultaStockAlmacenMaquinariaView.tipoProductos}"
+												var="tipoProductos" itemLabel=" #{tipoProductos.nombre}"
+												itemValue="#{tipoProductos.tipoProdId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="tipoProductos" />
+																				
+										
+										<p:outputLabel for="productos" value="Producto: " />
+										<p:selectCheckboxMenu id="productos" 
+											value="#{informeConsultaStockAlmacenMaquinariaView.selectedProducto}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false"
+											requiredMessage="Seleccione al menos un producto">
+											<f:selectItems
+												value="#{informeConsultaStockAlmacenMaquinariaView.productos}"
+												var="productos" itemLabel=" #{productos.nombre}"
+												itemValue="#{productos.productoId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="productos" />
+										
+										<p:outputLabel for="almacenes" value="Almacén/Bodega: " />
+										<p:selectCheckboxMenu id="almacenes"
+											value="#{informeConsultaStockAlmacenMaquinariaView.selectedAlmacen}"
+											filter="true" filterMatchMode="contains" showCheckbox="true"
+											required="false" requiredMessage="Seleccione un almacén">
+											<f:selectItems value="#{informeConsultaStockAlmacenMaquinariaView.almacenes}"
+												var="almacenes" itemLabel=" #{almacenes.nombre}"
+												itemValue="#{almacenes.almacenId}" />
+										</p:selectCheckboxMenu>
+										<p:message for="almacenes" />
+
+					
+							<!--Filtros del reporte  -->
+
+						</h:panelGrid>
+						
+					   <p:panel id="panelBoton">
+						 <div align="center">
+							<p:commandButton id="btnConsultar" value="Consultar"
+								icon="ui-icon-newwin"
+								action="#{informeConsultaStockAlmacenMaquinariaView.action_informe1()}"
+								update="frm:dialog, :frm:tbl" process="@all" partialSubmit="true"/>
+						 </div>
+					 </p:panel>
+
+					</p:panel>
+
+
+					<p:dialog id="dialog" appendTo="@(body)" draggable="true"
+						closable="true"
+						visible="#{informeConsultaStockAlmacenMaquinariaView.showDialog}"
+						modal="true" showEffect="fade" width="1200" responsive="true"
+						resizable="false" styleClass="dialogFix">
+
+						<p:dataTable id="tbl"
+							value="#{informeConsultaStockAlmacenMaquinariaView.data}" var="informeCosG"
+							paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="Reporte" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column style="width: 10% ">
+								<f:facet name="header">
+									<h:outputText value="Almacén" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.almacen}" />
+							</p:column>
+
+							
+							<p:column style="width: 10% ">
+								<f:facet name="header">
+									<h:outputText value="Producto" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.nomProducto}" />
+							</p:column>
+
+							<p:column style="width: 5% ">
+								<f:facet name="header">
+									<h:outputText value="U. Médida" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.nombreUdadMed}" />
+							</p:column>
+
+							
+							<p:column style="width: 7% ">
+								<f:facet name="header">
+									<h:outputText value="F. Ingreso/Salida" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.fechaMovimiento}" />
+							</p:column>
+
+
+								<p:column style="width: 7% ">
+								<f:facet name="header">
+									<h:outputText value="Cant. Ingresada" />
+								</f:facet>
+								<h:outputText value="#{informeCosG.cantidadIngresada}" >
+									   <f:convertNumber pattern="#0.00" />
+							  		 </h:outputText>
+							</p:column>
+							
+							
+								<p:column style="width: 7% ">
+								<f:facet name="header">
+									<h:outputText value="Cant. Salida"  style="color: #800000;"/>
+								</f:facet>
+								<h:outputText value="#{informeCosG.cantidadSalida}"   style="color: #800000;">
+									   <f:convertNumber pattern="#0.00" />
+							  		 </h:outputText>
+							</p:column>
+							
+							
+							<p:column style="width: 7% ">
+								<f:facet name="header">
+									<h:outputText value="Saldo"  style="color: #800000;"/>
+								</f:facet>
+								<h:outputText value="#{informeCosG.cantidadDisponible}"   style="color: #800000;">
+									   <f:convertNumber pattern="#0.00" />
+							  		 </h:outputText>
+							</p:column>
+
+
+						</p:dataTable>
+
+					</p:dialog>
+
+				</h:form>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

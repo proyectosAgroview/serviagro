@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+	<div class="main-header">
+		<!-- Logo Header -->
+		<div class="logo-header" data-background-color="dark">
+			<a href="#" class="logo">
+			   <img	 src="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/logo.svg"
+				alt="navbar brand"  />
+			</a>
+
+		</div>
+		<!-- End Logo Header -->
+
+		<!-- Navbar Header -->
+		<nav class="navbar navbar-header navbar-expand-lg"
+			data-background-color="dark">
+			<div class="container-fluid">
+				<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+			         <li class="nav-item dropdown"> 
+                  <a data-toggle="tooltip" title="Salir de AgroView" href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/j_spring_security_logout" >
+					<div  style="color:white; font-size:30px;" >
+						<i class="fas fa-share-square"></i>
+					</div>
+                  </a>
+                 </li> 
+				</ul>
+			</div>
+		</nav>
+		<!-- End Navbar -->
+	</div>
+
+</ui:composition>
+</html>

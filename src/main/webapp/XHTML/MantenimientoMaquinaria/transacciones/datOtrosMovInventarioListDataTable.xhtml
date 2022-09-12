@@ -1,0 +1,818 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 20000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable" header="Filtros">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+
+										<p:outputLabel for="msgFechaIni" value="F. Ini: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaIni" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{datOtrosMovInventarioView.txtFechaIni}"
+											required="false" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFin" value="F. Fin: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" style="font-size: 0.9em;"
+											mask="true" size="12"
+											binding="#{datOtrosMovInventarioView.txtFechaFin}"
+											required="false" requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+										
+										<p:outputLabel/>
+										<p:outputLabel/>
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel value="Documento:" />
+										<p:inputText id="txtDocumentoC"
+											binding="#{datOtrosMovInventarioView.txtDocumentoC}"
+											disable="true">
+										</p:inputText>
+										
+											<p:outputLabel for="txtEquipoConsulta" value="Máquina/Equipo: "
+												style="font-size: 0.9em;" />
+											<p:selectOneMenu id="txtEquipoConsulta" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												binding="#{datOtrosMovInventarioView.txtEquipoConsulta}"
+												style="width: 100%;font-size: 0.9em;" required="false"
+												requiredMessage="Seleccione un equipo">
+												<f:selectItem itemLabel="TODOS" itemValue="0" />
+												<f:selectItems value="#{datOtrosMovInventarioView.selectEquipoConsulta}" />
+											</p:selectOneMenu>
+										
+											<p:outputLabel/>
+											<p:outputLabel/>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+									
+										<p:outputLabel for="txtCentCostConsulta" value="Centro costo" />
+											<p:selectOneMenu id="txtCentCostConsulta" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width:160px;"
+												binding="#{datOtrosMovInventarioView.txtCentCostConsulta}"
+												required="false" requiredMessage="Seleccione un centro de Costo">
+												<f:selectItem itemLabel="TODOS"
+													itemValue="0" />
+												<f:selectItems value="#{datOtrosMovInventarioView.selectCentCostConsulta}" />
+											</p:selectOneMenu>
+											
+										<p:commandButton id="btnConsultar" value="Consultar"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{datOtrosMovInventarioView.listarMovimientosInventario}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+									</h:panelGrid>
+
+									<p:inputText id="txtOrigenDatos" value="Modulo_TallerAgricola"
+										binding="#{datOtrosMovInventarioView.txtOrigenDatos}"
+										disable="true" style="visibility:hidden"/>
+								</p:column>
+
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:panel id="panelDataTableDatOtrosMovInventario"
+						header="Movimientos del Kardex">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datOtrosMovInventarioView.data2}"
+							var="datOtrosMovInventario" paginator="true" rows="5"
+							resizableColumns="true" style="margin-bottom:20px"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+
+
+							<p:column width="150" headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogDatOtrosMovInventario"
+										actionListener="#{datOtrosMovInventarioView.action_edit}">
+										<f:attribute name="selectedDatOtrosMovInventario2"
+											value="#{datOtrosMovInventario}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete1" icon="ui-icon-trash"
+										actionListener="#{datOtrosMovInventarioView.actionDeleteMovimiento}"
+										required="false" title="Borrar" value="Borrar"
+										onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+										update=":frm, :frm:growl">
+										<f:attribute name="selectedDatOtrosMovInventario2"
+											value="#{datOtrosMovInventario}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+
+							<p:column width="70">
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datOtrosMovInventario.fecha_registro}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+
+							<p:column width="70">
+								<f:facet name="header">
+									<h:outputText value="Documento" />
+								</f:facet>
+								<h:outputText value="#{datOtrosMovInventario.consecutivo}" />
+							</p:column>
+
+							<p:column width="80">
+								<f:facet name="header">
+									<h:outputText value="Conc. Kardex" />
+								</f:facet>
+								<h:outputText
+									value="#{datOtrosMovInventario.nom_concepto_kardex}" />
+							</p:column>
+
+
+							<p:column width="120">
+								<f:facet name="header">
+									<h:outputText value="Detalle" />
+								</f:facet>
+								<h:outputText value="#{datOtrosMovInventario.detalle_nota}" />
+							</p:column>
+							
+						<p:column width="100">
+								<f:facet name="header">
+									<h:outputText value="Máquina" />
+								</f:facet>
+								<h:outputText value="#{datOtrosMovInventario.cod_equipo}" />
+							</p:column>
+
+											</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datOtrosMovInventarioView.action_new()}"
+								update=":dialogDatOtrosMovInventario" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatOtrosMovInventario" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datOtrosMovInventarioView.showDialog}" resizable="false"
+					modal="true" width="1200" showEffect="fade" styleClass="dialogFix"
+					responsive="false">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:growl id="grow1"></p:growl>
+
+						<p:tabView id="tabMapa"
+							activeIndex="#{datOtrosMovInventarioView.activeTapIndex}">
+
+							<p:tab title="Documento kardex">
+
+								<h:panelGrid columns="2">
+
+									<p:outputLabel for="txtConceptoKardex" value="Concepto: "
+										style="font-size: 0.9em;" />
+									<p:selectOneMenu id="txtConceptoKardex" effect="fade"
+										filter="true" filterMatchMode="contains"
+										style="font-size: 0.9em;"
+										binding="#{datOtrosMovInventarioView.txtConceptoKardex}"
+										required="true" requiredMessage="Seleccione un concepto">
+										<f:selectItem itemLabel="Seleccione un concepto" itemValue="" />
+										<f:selectItems
+											value="#{datOtrosMovInventarioView.selectConceptoKardex}" />
+									</p:selectOneMenu>
+
+
+								</h:panelGrid>
+
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel value="Número: " style="font-size: 0.9em;" />
+												<p:inputText id="txtConsecutivo" disabled="false"
+													style="font-size: 0.9em; "
+													binding="#{datOtrosMovInventarioView.txtConsecutivo}"
+													size="14">
+												</p:inputText>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel for="txtFechaRegistro" value="Fecha: "
+													style="font-size: 0.9em;" />
+												<p:calendar id="txtFechaRegistro" showOn="button"
+													navigator="false" locale="es" size="14"
+													style="font-size: 0.9em;"
+													binding="#{datOtrosMovInventarioView.txtFechaRegistro}"
+													pattern="dd/MM/yyyy" mask="true" required="true"
+													requiredMessage="La  fecha  es obligatoria" />
+											</h:panelGrid>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+
+								<h:panelGrid columns="2">
+
+									<p:outputLabel for="txtDetalleNota" value="Detalle:"
+										style=" font-size: 0.9em;" />
+									<p:inputTextarea id="txtDetalleNota"
+										binding="#{datOtrosMovInventarioView.txtDetalleNota}" rows="2"
+										cols="60" maxlength="3400" autoResize="true" required="true"
+										style="font-size: 0.9em;"
+										requiredMessage="La Observación es obligatoria" />
+
+
+									<p:outputLabel for="txtPersEmpr" value="Proveedor: "
+										style="font-size: 0.9em;" />
+									<p:selectOneMenu id="txtPersEmpr" effect="fade" filter="true"
+										filterMatchMode="contains"
+										binding="#{datOtrosMovInventarioView.txtPersEmpr}"
+										autoWidth="false" style="width: 160; font-size: 0.9em;"
+										required="false" requiredMessage="Seleccione un proveedor">
+										<f:selectItem itemLabel="Seleccione un proveedor" itemValue="" />
+										<f:selectItems
+											value="#{datOtrosMovInventarioView.selectContratista}" />
+									</p:selectOneMenu>
+
+									<p:outputLabel value="Factura No.: " style="font-size: 0.9em;" />
+									<p:inputText id="txtNumFactura" disabled="false"
+										style="font-size: 0.9em; " required="false" value="0"
+										requiredMessage="Indique el número de factura"
+										binding="#{datOtrosMovInventarioView.txtNumFactura}" size="14">
+									<f:convertNumber pattern="0"/>
+									</p:inputText>
+									
+									<p:outputLabel for="txtCentCostId_CentCost" value="CeCos" />
+								<p:selectOneMenu id="txtCentCostId_CentCost" effect="fade"
+									filter="true" filterMatchMode="contains" autoWidth="false"
+									style="width:160px;"
+									binding="#{datOtrosMovInventarioView.txtCentCostId_CentCost}"
+									required="false" requiredMessage="Seleccione un centro de Costo">
+									<f:selectItem itemLabel="Seleccione un centro de Costo"
+										itemValue="" />
+									<f:selectItems value="#{datOtrosMovInventarioView.selectCentCost}" />
+								</p:selectOneMenu>
+
+
+									<p:outputLabel style="visibility:hidden; font-size: 01em;" />
+									<p:inputText style="visibility:hidden"
+										id="txtDatOtrosMovInventarioId"
+										binding="#{datOtrosMovInventarioView.txtDatOtrosMovInventarioId}">
+									</p:inputText>
+
+
+								</h:panelGrid>
+
+							</p:tab>
+
+							<p:tab title="Detalle productos">
+
+								<p:messages id="msg1" autoUpdate="true" closable="true"
+									showDetail="true" />
+
+								<h:panelGrid columns="6">
+
+									<p:outputLabel for="txtAlmacenId_Almacen2" value="Almacén: "
+										style="font-size: 0.9em;" />
+									<p:selectOneMenu id="txtAlmacenId_Almacen2" effect="fade"
+										filter="true" filterMatchMode="contains"
+										style="font-size: 0.9em;"
+										binding="#{datOtrosMovInventarioView.txtAlmacenId_Almacen2}"
+										required="false" requiredMessage="Seleccione un almacén">
+										<f:selectItem itemLabel="Seleccione un almacén" itemValue="" />
+										<f:selectItems
+											value="#{datOtrosMovInventarioView.selectAlmacen2}" />
+									</p:selectOneMenu>
+
+									<p:outputLabel for="txtTipoProducto" value="Tipo producto: "
+										style="font-size: 0.9em;" />
+									<p:selectOneMenu id="txtTipoProducto" effect="fade"
+										filter="true" filterMatchMode="contains"
+										style="font-size: 0.9em;"
+										binding="#{datOtrosMovInventarioView.txtTipoProducto}"
+										required="false"
+										requiredMessage="Seleccione un tipo de producto">
+										<f:selectItem itemLabel="Seleccione un tipo de producto"
+											itemValue="" />
+										<f:selectItems
+											value="#{datOtrosMovInventarioView.selectTipoProducto}" />
+										<p:ajax update="txtProductoId_Producto">
+										</p:ajax>
+									</p:selectOneMenu>
+									
+									<p:outputLabel for="txtProductoId_Producto"
+													value="Producto: " style="font-size: 0.9em;" />
+												<p:selectOneMenu id="txtProductoId_Producto" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="font-size: 0.9em;" dynamic="true"
+													binding="#{datOtrosMovInventarioView.txtProductoId_Producto}"
+													required="false" requiredMessage="Seleccione un producto">
+													<f:selectItem itemLabel="Seleccione un producto"
+														itemValue="" />
+													<f:selectItems
+														value="#{datOtrosMovInventarioView.selectProductoId}" />
+													<p:ajax update="txtUnidadMedida,txtSaldo,txtValorUnit,txtUbicacionesAlmacen,txtValorUnit "
+														process="@this, txtTipoProducto, txtAlmacenId_Almacen2, txtFechaRegistro"
+														listener="#{datOtrosMovInventarioView.listener_ConsultaUmProducto2}">
+													</p:ajax>
+												</p:selectOneMenu>
+
+								</h:panelGrid>
+
+								<p:panelGrid>
+									<p:row>
+										
+										<p:column>
+											<h:panelGrid columns="1">
+
+												<p:outputLabel for="txtUbicacionesAlmacen" value="Ubicación "
+													style="font-size: 0.9em;" />
+												<p:selectOneMenu id="txtUbicacionesAlmacen" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="font-size: 0.9em;"
+													binding="#{datOtrosMovInventarioView.txtUbicacionesAlmacen}"
+													required="false" requiredMessage="Seleccione un almacén">
+													<f:selectItem itemLabel="Seleccione una ubicación" itemValue="" />
+													<f:selectItems value="#{datOtrosMovInventarioView.selectUbAlmacen}" />
+												</p:selectOneMenu>
+									
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="1">
+												<p:outputLabel for="txtUnidadMedida"
+													value="Unidad de médida:" style="font-size: 0.9em;" />
+												<p:selectOneMenu id="txtUnidadMedida" effect="fade"
+													filter="true" filterMatchMode="contains"
+													style="font-size: 0.9em;"
+													binding="#{datOtrosMovInventarioView.txtUnidadMedida}"
+													required="false"
+													requiredMessage="Seleccione una unidad de médida">
+													<f:selectItem itemLabel="Seleccione una unidad de médida"
+														itemValue="" />
+													<f:selectItems
+														value="#{datOtrosMovInventarioView.selectUdadMed}" />
+												</p:selectOneMenu>
+
+											</h:panelGrid>
+											
+											
+										
+											<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel value="Saldo: " style="font-size: 0.9em;" />
+												<p:inputText id="txtSaldo" disabled="false"
+													style="font-size: 0.9em; "
+													binding="#{datOtrosMovInventarioView.txtSaldo}" size="12">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+											</h:panelGrid>
+										</p:column>
+										
+										<p:column>
+											<h:panelGrid columns="1">
+												<p:commandButton id="btnVerificarSaldos" value="Verificar saldos"
+													action="#{datOtrosMovInventarioView.action_vericiar_saldos_ubicacion}"
+													process="@this, txtTipoProducto,  txtAlmacenId_Almacen2, txtFechaRegistro"
+													update=":dialogConsultaUbicacionProductoOtMov, txtProductoId_Producto" />
+											</h:panelGrid>
+											</p:column>
+										</p:column>
+
+									</p:row>
+								</p:panelGrid>
+
+								
+
+								<h:panelGrid columns="8">
+
+									<p:outputLabel for="txtEquipoId_Equipo" value="Máquina:"
+										style="font-size: 0.9em;" />
+									<p:selectOneMenu id="txtEquipoId_Equipo" effect="fade"
+										filter="true" filterMatchMode="contains"
+										style="font-size: 0.9em;"
+										binding="#{datOtrosMovInventarioView.txtEquipoId_Equipo}"
+										required="false" requiredMessage="Seleccione una máquina">
+										<f:selectItem itemLabel="Seleccione una  máquina" itemValue="" />
+										<f:selectItems
+											value="#{datOtrosMovInventarioView.selectEquipo}" />
+									</p:selectOneMenu>
+
+									<p:outputLabel></p:outputLabel>
+
+									<p:outputLabel for="txtHorometroAbastecimiento"
+										value="Hór.tanqueo: " style="font-size: 0.9em;" />
+									<p:inputText style="font-size: 0.9em;"
+										id="txtHorometroAbastecimiento"
+										binding="#{datOtrosMovInventarioView.txtHorometroAbastecimiento}" />
+									
+									<p:outputLabel ></p:outputLabel>
+									
+									<p:outputLabel for="txtImplemento" value="Implemento: "
+											style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtImplemento" effect="fade" filter="true"
+											filterMatchMode="contains" autoWidth="false"
+											binding="#{datOtrosMovInventarioView.txtImplemento}"
+											style="width: 100%;font-size: 0.8em;" required="false"
+											requiredMessage="Seleccione un implemento">
+											<f:selectItem itemLabel="Seleccione un implemento" itemValue="" />
+											<f:selectItems
+												value="#{datOtrosMovInventarioView.selectImplemento}" />
+										</p:selectOneMenu>
+
+								</h:panelGrid>
+								  
+										 
+
+								<p:panelGrid>
+									<p:row>
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel value="Cantidad: " style="font-size: 0.9em;" />
+												<p:inputText id="cantidadCompra" disabled="false"
+													style="font-size: 0.9em; "
+													binding="#{datOtrosMovInventarioView.cantidadCompra}"
+													size="12">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel value="VR. Unitario: "
+													style="font-size: 0.9em;" />
+												<p:inputText id="txtValorUnit" disabled="false"
+													style="font-size: 0.9em; "
+													binding="#{datOtrosMovInventarioView.txtValorUnit}"
+													size="12">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+											</h:panelGrid>
+										</p:column>
+
+										<p:column>
+											<h:panelGrid columns="2">
+												<p:outputLabel value="Iva(%): " style="font-size: 0.9em;" />
+												<p:inputText id="txtPorcentajeIva" disabled="false"
+													style="font-size: 0.9em; " value="0"
+													binding="#{datOtrosMovInventarioView.txtPorcentajeIva}"
+													size="6">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputText>
+											</h:panelGrid>
+										</p:column>
+
+									</p:row>
+								</p:panelGrid>
+
+								<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+									<f:facet name="header">
+										<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+											process="@all"
+											binding="#{datOtrosMovInventarioView.btnAgregar}"
+											value="Agregar"
+											action="#{datOtrosMovInventarioView.action_agregarPrecioProductosMaquinaria}"
+											update="tabla, :formDialog:grow1" />
+
+										<p:commandButton id="btnlimpiar" process="@this"
+											icon="ui-icon-trash" value="Limpiar">
+											<p:ajax resetValues="true" />
+										</p:commandButton>
+									</f:facet>
+								</h:panelGrid>
+
+									<p:scrollPanel mode="native" style="width:950px; height:200px" >
+
+									<p:outputPanel>
+
+										<p:dataTable id="tabla"
+											value="#{datOtrosMovInventarioView.dataDetPrecioProductos}"
+											var="listaDetPrecioProductos" scrollable="true"
+											paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+											resizableColumns="true" style="margin-bottom:20px"
+											editable="true" editMode="cell" widgetVar="cellEventos">
+
+
+											<p:ajax event="cellEdit"
+												listener="#{datOtrosMovInventarioView.onCellEditEventos}" />
+
+											<p:column headerText="Fecha">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPrecioProductos.fechaInicial}">
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:calendar navigator="false" locale="es"
+															value="#{listaDetPrecioProductos.fechaInicial}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="T. Movimiento">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.tipoMovimiento}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.tipoMovimiento}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Almacen">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="almacenData"
+															value="#{listaDetPrecioProductos.almacenId.codigo}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															value="#{listaDetPrecioProductos.almacenId.almacenId}">
+															<f:selectItems
+																value="#{datOtrosMovInventarioView.selectAlmacen2}"
+																var="var1" itemValue="#{var1}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Prod.">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="prodData"
+															value="#{listaDetPrecioProductos.producto.codigo}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															value="#{listaDetPrecioProductos.producto.productoId}">
+															<f:selectItems
+																value="#{datOtrosMovInventarioView.selectProducto2}"
+																var="var2" itemValue="#{var2}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Nombre">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.nomProducto}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.nomProducto}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="U.M.">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="umData"
+															value="#{listaDetPrecioProductos.unidadMedida.nombre}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															value="#{listaDetPrecioProductos.unidadMedida.udadMedId}">
+															<f:selectItems
+																value="#{datOtrosMovInventarioView.selectUdadMed}"
+																var="var3" itemValue="#{var3}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+
+											<p:column headerText="Cant.">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPrecioProductos.cantidadCompra}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetPrecioProductos.cantidadCompra}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="Hór. Tanqueo">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPrecioProductos.horometro_abastecimiento}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetPrecioProductos.horometro_abastecimiento}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+
+											<p:column headerText="Precio">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPrecioProductos.valorUnitario}" >
+															<f:convertNumber pattern="#0.00" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText
+															value="#{listaDetPrecioProductos.valorUnitario}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Iva">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDetPrecioProductos.valorIva}" >
+															<f:convertNumber pattern="#0.00" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPrecioProductos.valorIva}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="VR. Total">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPrecioProductos.costoTotal}" >
+															<f:convertNumber pattern="#0.00" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDetPrecioProductos.costoTotal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+
+											<p:column headerText="Maq">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="maqData"
+															value="#{listaDetPrecioProductos.equipoId.codigo}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															value="#{listaDetPrecioProductos.equipoId.equipoId}">
+															<f:selectItems
+																value="#{datOtrosMovInventarioView.selectEquipo}"
+																var="var4" itemValue="#{var4}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Ubicaciones">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDetPrecioProductos.nomUbicacionesAlmacen}"
+															style="font-size: 0.9em;"/>
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															style="font-size: 0.9em;"
+															value="#{listaDetPrecioProductos.ubicacionId}">
+															<f:selectItems value="#{datOtrosMovInventarioView.selectUbAlmacen}"
+																var="var4" itemValue="#{var4}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+										<p:column headerText="Implemento" style="font-size: 0.9em;">
+										<p:cellEditor>
+											<f:facet name="output">
+												<h:outputText
+													value="#{listaDetPrecioProductos.codImplemento} #{listaDetPrecioProductos.implementoId}" />
+											</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															value="#{listaDetPrecioProductos.implementoId}">
+															<f:selectItems
+																value="#{datOtrosMovInventarioView.selectImplemento}"
+																var="var4" itemValue="#{var4}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+										</p:cellEditor>
+									</p:column>
+											
+											
+
+
+
+
+											<f:attribute name="selectedPrecioProductos"
+												value="#{listaDetPrecioProductos}" />
+
+											<p:column headerText="Opciones">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datOtrosMovInventarioView.actionDeletePrecioPromProd}"
+														required="false" title="Borrar" value="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tabla">
+														<f:attribute name="selectedPrecioProductos"
+															value="#{listaDetPrecioProductos}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+								</p:scrollPanel>
+
+
+							</p:tab>
+						</p:tabView>
+
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datOtrosMovInventarioView.btnSave}" value="Grabar"
+									action="#{datOtrosMovInventarioView.action_save()}"
+									update=":dialogDatOtrosMovInventario :frm:panelDataTableDatOtrosMovInventario" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datOtrosMovInventarioView.action_clear()}"
+									process="@this" update=":dialogDatOtrosMovInventario" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+				 <ui:include src="/XHTML/MantenimientoMaquinaria/transacciones/dialogConsultaUbicacionProductoOtMov.xhtml" /> 
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

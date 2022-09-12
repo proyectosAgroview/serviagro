@@ -1,0 +1,803 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+
+					<p:panel id="panelDataTableTrabajador" header="Trabajadores">
+						<!--  <p:growl id="men"/> -->
+						<p:dataTable id="tbl" value="#{trabajadorView.data}"
+							var="trabajador" paginator="true" lazy="true" rows="5" rowsPerPageTemplate="5,10,15"
+							reflow="true">
+
+
+							<f:facet name="header">
+								<div align="right">
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl" fileName="trabajador" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column filterBy="#{trabajador.estado}"
+								sortBy="#{trabajador.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{trabajador.estado}" />
+							</p:column>
+
+
+							<p:column filterBy="#{trabajador.codigo}"
+								sortBy="#{trabajador.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{trabajador.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{trabajador.primerNombre}"
+								sortBy="#{trabajador.primerNombre}">
+								<f:facet name="header">
+									<h:outputText value="Primer nombre" />
+								</f:facet>
+								<h:outputText value="#{trabajador.primerNombre}" />
+							</p:column>
+
+							<p:column filterBy="#{trabajador.primerApellido}"
+								sortBy="#{trabajador.primerApellido}">
+								<f:facet name="header">
+									<h:outputText value="Primer apellido" />
+								</f:facet>
+								<h:outputText value="#{trabajador.primerApellido}" />
+							</p:column>
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogTrabajador"
+										actionListener="#{trabajadorView.action_edit}">
+										<f:attribute name="selectedTrabajador" value="#{trabajador}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{trabajadorView.action_new()}"
+								update=":dialogTrabajador" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogTrabajador" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{trabajadorView.showDialog}"
+					resizable="false" modal="true" width="850" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data" acceptcharset="ISO-8859-1">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelTrabajador" header="Trabajadores">
+
+							<p:tabView id="tabMapa" activeIndex="#{trabajadorView.activeTapIndex}">
+								<p:tab title="General">
+									<h:panelGrid columns="2" id="panelGrid1">
+										<p:outputLabel for="txtEstado" value="Estado: " />
+										<p:selectOneRadio id="txtEstado" disabled="true"
+											binding="#{trabajadorView.txtEstado}" required="true"
+											requiredMessage="Seleccione un estado">
+											<f:selectItem itemLabel="Activo" itemValue="A" />
+											<f:selectItem itemLabel="Inactivo" itemValue="I" />
+										</p:selectOneRadio>
+
+										<p:outputLabel value="Código: " />
+										<p:inputText id="txtCodigo" disabled="false"
+											binding="#{trabajadorView.txtCodigo}"
+											placeholder="Buscar o crear registro" size="23">
+											<p:ajax
+												update=":formDialog:panelTrabajador,:formDialog:msg,:formDialog:panelBotones"
+												listener="#{trabajadorView.listener_txtCodigo}" />
+										</p:inputText>
+
+									<p:outputLabel for="txtUbicacion" value="Ubicación(Destino):  " />
+										<p:inputText id="txtUbicacion" disabled="true"
+											binding="#{trabajadorView.txtUbicacion}" required="false"
+											requiredMessage="El código es obligatorio" />
+										
+										<p:outputLabel for="txtPrimerNombre" value="Primer nombre: " />
+										<p:inputText id="txtPrimerNombre" disabled="true"
+											binding="#{trabajadorView.txtPrimerNombre}" required="true"
+											requiredMessage="El nombre es obligatorio" />
+										
+										<p:outputLabel for="txtSegundoNombre" value="Segundo nombre: " />
+										<p:inputText id="txtSegundoNombre" disabled="true"
+											binding="#{trabajadorView.txtSegundoNombre}" required="false"
+											requiredMessage="El Nombre es obligatorio" />
+										
+										<p:outputLabel for="txtPrimerApellido"
+											value="Primer apellido: " />
+										<p:inputText id="txtPrimerApellido" disabled="true"
+											binding="#{trabajadorView.txtPrimerApellido}" required="true"
+											requiredMessage="El apellido es obligatorio" />
+										
+										<p:outputLabel for="txtSegundoApellido"
+											value="Segundo apellido: " />
+										<p:inputText id="txtSegundoApellido" disabled="true"
+											binding="#{trabajadorView.txtSegundoApellido}"
+											required="false" requiredMessage="El apellido es obligatorio" />
+										
+										<p:outputLabel for="txtNIdentificacion"
+											value="Número de identificación: " />
+										<p:inputText id="txtNIdentificacion" disabled="true"
+											binding="#{trabajadorView.txtNIdentificacion}"
+											required="false"
+											requiredMessage="El número de identificación es obligatorio" />
+										
+
+										<p:outputLabel for="txtProfId_Profesion" value="Profesión: " />
+										<p:selectOneMenu id="txtProfId_Profesion" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{trabajadorView.txtProfId_Profesion}"
+											required="true" requiredMessage="Seleccione una profesión">
+											<f:selectItem itemLabel="Seleccione una profesión"
+												itemValue="" />
+											<f:selectItems value="#{trabajadorView.selectProfesion}" />
+										</p:selectOneMenu>
+										
+										<p:outputLabel for="txtClaseContrato" value="Clase de contrato: " />
+										<p:selectOneRadio id="txtClaseContrato" disabled="true"
+											binding="#{trabajadorView.txtClaseContrato}" required="true"
+											requiredMessage="Seleccione una clase de contrato">
+											<f:selectItem itemLabel="Fijo" itemValue="Fijo" />
+											<f:selectItem itemLabel="Temporal" itemValue="Temporal" />
+											<f:selectItem itemLabel="Indefinido" itemValue="Indefinido" />
+											<f:selectItem itemLabel="Medio tiempo" itemValue="Medio tiempo" />
+										</p:selectOneRadio>
+										
+											<p:outputLabel value="Salario:" style="font-size: 0.9em; " />
+												<p:inputNumber id="txtSalario" style="font-size: 0.9em;"
+													binding="#{trabajadorView.txtSalario}" size="12"
+													decimalSeparator="." thousandSeparator=","
+													decimalPlaces="2" 
+													disable="true">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputNumber>
+
+										<p:outputLabel for="txtContratistaId_Contratista"
+											value="Empresa: " />
+										<p:selectOneMenu id="txtContratistaId_Contratista"
+											effect="fade" filter="true" filterMatchMode="contains"
+											binding="#{trabajadorView.txtContratistaId_Contratista}"
+											required="true"
+											requiredMessage="Seleccione una empresa">
+											<f:selectItem itemLabel="Seleccione una empresa"
+												itemValue="" />
+											<f:selectItems value="#{trabajadorView.selectContratista}" />
+										</p:selectOneMenu>
+										
+
+										<p:outputLabel for="txtCentCostId_CentCost" value="CeCos: " />
+										<p:selectOneMenu id="txtCentCostId_CentCost" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{trabajadorView.txtCentCostId_CentCost}"
+											required="false"
+											requiredMessage="Seleccione un centro de costo">
+											<f:selectItem itemLabel="Seleccione un centro de costo"
+												itemValue="" />
+											<f:selectItems value="#{trabajadorView.selectCentCost}" />
+										</p:selectOneMenu>
+										
+										
+											<h:outputText for="txtLaborId_Labor" value="Labor estándar: "
+												 />
+											<p:selectOneMenu id="txtLaborId_Labor" 
+												filter="true" filterMatchMode="contains"
+												binding="#{trabajadorView.txtLaborId_Labor}"
+												required="false" requiredMessage="Seleccione una labor">
+												<f:selectItem itemLabel="Seleccione una labor" itemValue="" />
+												<f:selectItems
+													value="#{trabajadorView.selectLaborId}" />
+											</p:selectOneMenu>
+											
+											<p:outputLabel for="txtOrigenDatos" value="Origen de datos: " />
+												<p:selectOneMenu id="txtOrigenDatos"
+													binding="#{trabajadorView.txtOrigenDatos}" required="true"
+													requiredMessage="Seleccione una opción">
+													<f:selectItem itemLabel="Admin_Agricola"
+														itemValue="Admin_Agricola" />
+												</p:selectOneMenu>
+
+										<p:inputText id="txtTrabId" style="visibility:hidden"
+											binding="#{trabajadorView.txtTrabId}"/>
+											
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								<p:tab title="Información adicional">
+
+									<h:panelGrid columns="3" id="panelGrid2">
+
+										<p:outputLabel for="txtGenero" value="Género: " />
+										<p:selectOneRadio id="txtGenero" disabled="true"
+											binding="#{trabajadorView.txtGenero}" required="false"
+											requiredMessage="Seleccione un género">
+											<f:selectItem itemLabel="Femenino" itemValue="Femenino" />
+											<f:selectItem itemLabel="Masculino" itemValue="Masculino" />
+											<f:selectItem itemLabel="Otro" itemValue="Otro" />
+										</p:selectOneRadio>
+										<p:message for="txtGenero" />
+
+										<p:outputLabel for="txtEstadoCivil" value="Estado Civil: " />
+										<p:selectOneMenu id="txtEstadoCivil"
+											binding="#{trabajadorView.txtEstadoCivil}" required="false"
+											requiredMessage="Seleccione un estado civil">
+											<f:selectItem itemLabel="Seleccione un estado civil"
+												itemValue="" />
+											<f:selectItem itemLabel="Soltero" itemValue="Soltero" />
+											<f:selectItem itemLabel="Casado" itemValue="Casdo" />
+											<f:selectItem itemLabel="Divorciado" itemValue="Divorciado" />
+											<f:selectItem itemLabel="Viudo" itemValue="Viudo" />
+											<f:selectItem itemLabel="Otro" itemValue="Otro" />
+										</p:selectOneMenu>
+										<p:message for="txtEstadoCivil" />
+
+										<p:outputLabel for="msgFechaNacimiento"
+											value=" Fecha de nacimiento: " />
+										<p:calendar id="msgFechaNacimiento" showOn="button"
+											navigator="false" locale="es"
+											binding="#{trabajadorView.txtFechaNacimiento}"
+											pattern="dd/MM/yyyy" required="false"
+											requiredMessage="La Fecha   es Obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaNacimiento" />
+
+										<p:outputLabel for="msgFechaAdmision"
+											value=" Fecha de admisión: " />
+										<p:calendar id="msgFechaAdmision" showOn="button"
+											navigator="false" locale="es"
+											binding="#{trabajadorView.txtFechaAdmision}"
+											pattern="dd/MM/yyyy" required="false"
+											requiredMessage="La Fecha   es Obligatoria">
+										</p:calendar>
+										<p:message for="msgFechaAdmision" />
+
+										<p:outputLabel for="txtTelefono" value="Teléfono: " />
+										<p:inputText id="txtTelefono" disabled="true"
+											binding="#{trabajadorView.txtTelefono}" />
+										<p:message for="txtTelefono" />
+
+										<p:outputLabel for="txtEmail" value="E-mail: " />
+										<p:inputText id="txtEmail" disabled="true"
+											binding="#{trabajadorView.txtEmail}"
+											validatorMessage="El Email no es valido">
+											<f:validateRegex
+												pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+										</p:inputText>
+										<p:message for="txtEmail" />
+
+										<p:outputLabel for="txtCiudadId_Ciudad" value="Ciudad: " />
+										<p:selectOneMenu id="txtCiudadId_Ciudad" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{trabajadorView.txtCiudadId_Ciudad}"
+											required="false" requiredMessage="Seleccione una ciudad">
+											<f:selectItem itemLabel="Seleccione una ciudad" itemValue="" />
+											<f:selectItems value="#{trabajadorView.selectCiudad}" />
+										</p:selectOneMenu>
+										<p:message for="txtCiudadId_Ciudad" />
+
+										<p:outputLabel for="txtDireccion" value="Dirección: " />
+										<p:inputText id="txtDireccion" disabled="true"
+											binding="#{trabajadorView.txtDireccion}" />
+										<p:message for="txtDireccion" />
+
+										<p:outputLabel value="Foto: " />
+										<h:panelGroup>
+											<p:fileUpload value="#{trabajadorView.file}" mode="simple"
+												auto="true"
+												fileUploadListener="#{trabajadorView.subirImagen}"
+												update="image" cancelLabel="Cancelar" sizeLimit="100000"
+												skinSimple="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+												invalidFileMessage="Tipo de imagem inválido"
+												invalidSizeMessage="Ups!! El tamaño de la imagen es muy grande"
+												uploadLabel="Subir imagen" label="Elegir">
+											</p:fileUpload>
+											<p:lightBox styleClass="imagebox" id="lighbox1">
+												<h:outputLink
+													value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{trabajadorView.imagenTrabajador}">
+													<h:graphicImage
+														value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/imagenes_subidas/#{trabajadorView.imagenTrabajador}"
+														id="image" style="height: 80px; width: 80px" />
+												</h:outputLink>
+											</p:lightBox>
+										</h:panelGroup>
+
+									</h:panelGrid>
+
+								</p:tab>
+
+								
+									<p:tab title="Salario y otros devengos">
+
+										<p:scrollPanel mode="native" style="width:750px;height:350px">
+									
+										<p:messages id="msg1" closable="true" showDetail="true" />
+
+										<h:panelGrid id="gridTarifaDevengos" columns="2">
+
+											<p:outputLabel for="msgFechaInicial" value="Fecha Inicial: " />
+											<p:calendar id="msgFechaInicial" showOn="button"
+												navigator="false" locale="es"
+												binding="#{trabajadorView.txtFechaInicial2}"
+												pattern="dd/MM/yyyy" mask="true" required="false"
+												requiredMessage="La Fecha   es obligatoria">
+											</p:calendar>
+										
+											<p:outputLabel for="msgFechaFinal" value="Fecha final: " />
+											<p:calendar id="msgFechaFinal" showOn="button"
+												navigator="false" locale="es"
+												binding="#{trabajadorView.txtFechaFinal2}"
+												pattern="dd/MM/yyyy" mask="true" required="false"
+												requiredMessage="La Fecha   es obligatoria">
+											</p:calendar>
+										
+										
+											<p:outputLabel for="txtCeptoNominaIdDevengos"
+												value="Concepto nómina: " />
+											<p:selectOneMenu id="txtCeptoNominaIdDevengos"
+												effect="fade" filter="true" filterMatchMode="contains"
+												binding="#{trabajadorView.txtCeptoNominaIdDevengos}"
+												required="false" requiredMessage="Seleccione un concepto">
+												<f:selectItem itemLabel="Seleccione un concepto"
+													itemValue="" />
+												<f:selectItems value="#{trabajadorView.selectCeptoNomina2}" />
+													
+											</p:selectOneMenu>
+	
+											<p:outputLabel for="txtTarifaDevengos" value="Tarifa(Mes,día o hora): " />
+											<p:inputText id="txtTarifaDevengos" disabled="true"
+												binding="#{trabajadorView.txtTarifaDevengos}" required="false"
+												requiredMessage="Indique el valor unitario">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											
+											<p:outputLabel for="txtGeneraDomingosFestivos" value="Genera Domingos/festivos?: " />
+										<p:selectOneRadio id="txtGeneraDomingosFestivos" disabled="true"
+											binding="#{trabajadorView.txtGeneraDomingosFestivos}" required="false"
+											requiredMessage="Seleccione una opción">
+											<f:selectItem itemLabel="Si" itemValue="S" />
+											<f:selectItem itemLabel="No" itemValue="N" />
+										</p:selectOneRadio>
+											
+												
+										<p:outputLabel for="txtGeneraAuxilioTransp" value="Es aux de transporte:" />
+										<p:selectOneRadio id="txtGeneraAuxilioTransp" disabled="true"
+											binding="#{trabajadorView.txtGeneraAuxilioTransp}" required="false"
+											requiredMessage="Seleccione una opción">
+											<f:selectItem itemLabel="Si" itemValue="S" />
+											<f:selectItem itemLabel="No" itemValue="N" />
+										</p:selectOneRadio>
+										
+													
+										<p:outputLabel for="txtGeneraAuxilioAdmon" value="Es un aux administrativo:?" />
+										<p:selectOneRadio id="txtGeneraAuxilioAdmon" disabled="true"
+											binding="#{trabajadorView.txtGeneraAuxilioAdmon}" required="false"
+											requiredMessage="Seleccione una opción">
+											<f:selectItem itemLabel="Si" itemValue="S" />
+											<f:selectItem itemLabel="No" itemValue="N" />
+										</p:selectOneRadio>
+										
+										
+											<p:outputLabel for="txtCeptoNominaAlternativo"
+												value="Cepto para registros automáticos : " />
+											<p:selectOneMenu id="txtCeptoNominaAlternativo"
+												effect="fade" filter="true" filterMatchMode="contains"
+												binding="#{trabajadorView.txtCeptoNominaAlternativo}"
+												required="false" requiredMessage="Seleccione un concepto">
+												<f:selectItem itemLabel="Seleccione un concepto"
+													itemValue="" />
+												<f:selectItems value="#{trabajadorView.selectCeptoNomina3}" />
+											</p:selectOneMenu>
+											
+											<p:outputLabel for="txtHorasDia" value="Horas(Día): " />
+										<p:inputText id="txtHorasDia" disabled="true"
+											binding="#{trabajadorView.txtHorasDia}" />
+											
+											<p:outputLabel for="txtHorasMes" value="Horas(Mes): " />
+										<p:inputText id="txtHorasMes" disabled="true"
+											binding="#{trabajadorView.txtHorasMes}" />
+											
+										</h:panelGrid>
+
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregar2" icon="ui-icon-plusthick"
+													binding="#{trabajadorView.btnAgregar2}" value="Agregar"
+													action="#{trabajadorView.action_agregarTarifaDevengos}"
+													update="tablaTarifaDevengos :dialogTrabajador" />
+
+												<p:commandButton id="btnlimpiar1" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridTarifaDevengos" resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+										<p:outputPanel>
+											<p:dataTable id="tablaTarifaDevengos"
+												value="#{trabajadorView.dataTarifaDevengos}"
+												var="listaTarifaDevengos" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+												editable="true" reflow="true" editMode="cell"
+												widgetVar="cellSalarios">
+												
+												<p:ajax event="cellEdit" listener="#{trabajadorView.onCellEditSalarios}"/>
+
+												<p:column headerText="F. Inicial">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaTarifaDevengos.fechaInicial}" >
+																<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+														</f:facet>
+														<f:facet name="input">
+															<p:calendar navigator="false" locale="es"
+															value="#{listaTarifaDevengos.fechaInicial}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="F. Final">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaTarifaDevengos.fechaFinal}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+														</f:facet>
+														<f:facet name="input">
+															<p:calendar navigator="false" locale="es"
+															value="#{listaTarifaDevengos.fechaFinal}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+
+												<p:column headerText="Cepto. nómina">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaTarifaDevengos.codConceptoNomina}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaTarifaDevengos.conceptoNominaId.ceptoNominaId}">
+																<f:selectItems value="#{trabajadorView.selectCeptoNomina1}"
+																	var="var1" itemValue="#{var1}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+
+												<p:column headerText="Tarifa">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaTarifaDevengos.valorDeduccion}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaTarifaDevengos.valorDeduccion}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												
+												<p:column headerText="G. Dom/Fest?">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaTarifaDevengos.generaDomingosFestivos}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu value="#{listaTarifaDevengos.generaDomingosFestivos}">
+																<f:selectItem itemLabel="Si" itemValue="S" />
+																<f:selectItem itemLabel="No" itemValue="N" />
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												
+												<p:column headerText="Es Aux Transp.?">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaTarifaDevengos.generaAuxilioTransp}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu value="#{listaTarifaDevengos.generaAuxilioTransp}">
+																<f:selectItem itemLabel="Si" itemValue="S" />
+																<f:selectItem itemLabel="No" itemValue="N" />
+															</h:selectOneMenu>		
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												
+												<p:column headerText="Cepto Alternativo">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaTarifaDevengos.codConceptoAlternativo}" />
+														</f:facet>
+														<f:facet name="input">
+															<h:selectOneMenu
+																value="#{listaTarifaDevengos.ceptoNominaAlternativo.ceptoNominaId}">
+																<f:selectItems value="#{trabajadorView.selectCeptoNomina2}"
+																	var="var2" itemValue="#{var2}"></f:selectItems>
+															</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												
+												<p:column headerText="H(Día)">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaTarifaDevengos.horasDia}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaTarifaDevengos.horasDia}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												
+												<p:column headerText="H(Mes)">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaTarifaDevengos.horasMes}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaTarifaDevengos.horasMes}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<f:attribute name="selectedTarifaDevengos"
+																value="#{listaTarifaDevengos}" />
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{trabajadorView.actionDeleteTarifaDevengos}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaTarifaDevengos :dialogTrabajador">
+															<f:attribute name="selectedTarifaDevengos"
+																value="#{listaTarifaDevengos}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:scrollPanel>
+								</p:tab>
+							
+
+									<p:tab title="Deducciones">
+
+										<p:scrollPanel mode="native" style="width:750px;height:350px">
+									
+										<p:messages id="msg2" closable="true" showDetail="true" />
+
+										<h:panelGrid id="gridTarifaDeduccion" columns="3">
+
+											<p:outputLabel for="msgFechaInicial1" value="Fecha Inicial: " />
+											<p:calendar id="msgFechaInicial1" showOn="button"
+												navigator="false" locale="es"
+												binding="#{trabajadorView.txtFechaInicial1}"
+												pattern="dd/MM/yyyy" mask="true" required="false"
+												requiredMessage="La Fecha   es obligatoria">
+											</p:calendar>
+											<p:message for="msgFechaInicial1" />
+
+											<p:outputLabel for="msgFechaFinal1" value="Fecha final: " />
+											<p:calendar id="msgFechaFinal1" showOn="button"
+												navigator="false" locale="es"
+												binding="#{trabajadorView.txtFechaFinal1}"
+												pattern="dd/MM/yyyy" mask="true" required="false"
+												requiredMessage="La Fecha   es obligatoria">
+											</p:calendar>
+											<p:message for="msgFechaFinal1" />
+
+										
+											<p:outputLabel for="txtCeptoNominaIdDeducciones"
+												value="Concepto nómina: " />
+											<p:selectOneMenu id="txtCeptoNominaIdDeducciones"
+												effect="fade" filter="true" filterMatchMode="contains"
+												binding="#{trabajadorView.txtCeptoNominaIdDeducciones}"
+												required="false" requiredMessage="Seleccione un concepto">
+												<f:selectItem itemLabel="Seleccione un concepto"
+													itemValue="" />
+												<f:selectItems value="#{trabajadorView.selectCeptoNomina1}" />
+													<p:ajax
+												listener="#{trabajadorView.listener_ConsultaCodConceptoNominaDeduccion}"
+												update="txtCodConceptDeduccion" />
+											</p:selectOneMenu>
+											<p:message for="txtCeptoNominaIdDeducciones" />
+
+											<p:outputLabel for="txtTarifaDeduccion" value="Tarifa: " />
+											<p:inputText id="txtTarifaDeduccion" disabled="true"
+												binding="#{trabajadorView.txtTarifaDeduccion}" required="false"
+												requiredMessage="Indique el valor unitario">
+												<f:converter converterId="javax.faces.Double" />
+											</p:inputText>
+											<p:message for="txtTarifaDeduccion" />
+												
+											<p:inputText style="visibility:hidden" id="txtCodConceptDeduccion"
+												binding="#{trabajadorView.txtCodConceptDeduccion}"/>
+											
+										</h:panelGrid>
+
+										<h:panelGrid columns="2" style="margin:10px;" cellpadding="5">
+											<f:facet name="header">
+												<p:commandButton id="btnAgregar1" icon="ui-icon-plusthick"
+													binding="#{trabajadorView.btnAgregar1}" value="Agregar"
+													action="#{trabajadorView.action_agregarTarifaDeduccion}"
+													update="tablaTarifaDeduccion :dialogTrabajador" />
+
+												<p:commandButton id="btnlimpiar" process="@this"
+													icon="ui-icon-trash" value="Limpiar">
+													<p:ajax update="gridTarifaDeduccion" resetValues="true" />
+												</p:commandButton>
+											</f:facet>
+										</h:panelGrid>
+										<p:outputPanel>
+											<p:dataTable id="tablaTarifaDeduccion"
+												value="#{trabajadorView.dataTarifaDeduccion}"
+												var="listaTarifaDeduccion" paginator="true" rows="5"  rowsPerPageTemplate="5,10,15"
+												editable="true" reflow="true" editMode="cell"
+												widgetVar="cellDeduccion">
+												
+												<p:ajax event="cellEdit" listener="#{trabajadorView.onCellEditDeduccion}"/>
+
+												<p:column headerText="F. Inicial">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaTarifaDeduccion.fechaInicial}" >
+																<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+														</f:facet>
+														<f:facet name="input">
+															<p:calendar navigator="false" locale="es"
+															value="#{listaTarifaDeduccion.fechaInicial}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="F. Final">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaTarifaDeduccion.fechaFinal}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+																</h:outputText>
+														</f:facet>
+														<f:facet name="input">
+															<p:calendar navigator="false" locale="es"
+															value="#{listaTarifaDeduccion.fechaFinal}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Cepto. nómina">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText
+																value="#{listaTarifaDeduccion.codConceptoNomina}" />
+														</f:facet>
+														<f:facet name="input">
+																<h:selectOneMenu
+																	value="#{listaTarifaDeduccion.conceptoNominaId.ceptoNominaId}" >
+																	<f:selectItems value="#{trabajadorView.selectCeptoNomina1}"
+																		var="var3" itemValue="#{var3}"></f:selectItems>
+																</h:selectOneMenu>
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+												<p:column headerText="Tarifa">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaTarifaDeduccion.valorDeduccion}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaTarifaDeduccion.valorDeduccion}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<f:attribute name="selectedTarifaDeduccion"
+												value="#{listaTarifaDeduccion}" />
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{trabajadorView.actionDeleteTarifaDeduccion}"
+															required="false" title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaTarifaDeduccion :dialogTrabajador">
+															<f:attribute name="selectedTarifaDeduccion"
+																value="#{listaTarifaDeduccion}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									</p:scrollPanel>
+									
+								</p:tab>
+								
+
+								<p:tab title="Observaciones">
+
+									<h:panelGrid columns="3" id="panelGrid3">
+										<p:outputLabel for="txtInfoAdicional"
+											value="Información Adicional 1: " />
+										<p:inputTextarea id="txtInfoAdicional"
+											binding="#{trabajadorView.txtInfoAdicional}" rows="5"
+											cols="30" counter="display" maxlength="100"
+											counterTemplate="{0} Caracteres" autoResize="true" />
+										<h:outputText id="display" />
+
+										<p:outputLabel for="txtInfoAdicional2"
+											value="Información Adicional 2: " />
+										<p:inputTextarea id="txtInfoAdicional2"
+											binding="#{trabajadorView.txtInfoAdicional2}" rows="5"
+											cols="30" counter="display2" maxlength="100"
+											counterTemplate="{0} Caracteres." autoResize="true" />
+										<h:outputText id="display2" />
+
+									</h:panelGrid>
+
+								</p:tab>
+								
+								
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk" 
+									binding="#{trabajadorView.btnSave}" value="Grabar"
+									action="#{trabajadorView.action_save()}"
+									update=":dialogTrabajador :frm:panelDataTableTrabajador" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{trabajadorView.action_clear()}"
+									process="@this" update=":dialogTrabajador" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.Fitosanidad" table="fitosanidad" >
+        <id name="fitosanidadId" type="java.lang.Long">
+            <column name="fitosanidad_id" />
+            <generator class="identity" />
+        </id>
+        <property name="codigo" type="java.lang.String">
+            <column name="codigo" length="20" />
+        </property>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="60" />
+        </property>
+        <property name="nombreCientifico" type="java.lang.String">
+            <column name="nombre_cientifico" length="60" />
+        </property>
+        <property name="claseFitosanidad" type="java.lang.String">
+            <column name="clase_fitosanidad" length="60" />
+        </property>
+        <property name="tipoFitosanidad" type="java.lang.String">
+            <column name="tipo_fitosanidad" length="60" />
+        </property>
+        
+        <property name="controlInsectos" type="java.lang.String">
+            <column name="control_insectos" length="60" />
+        </property>
+        <property name="infoAdicional" type="java.lang.String">
+            <column name="info_adicional" length="100" />
+        </property>
+        <property name="infoAdicional2" type="java.lang.String">
+            <column name="info_adicional2" length="100" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="3900" />
+        </property>
+        <property name="foto" type="java.lang.String">
+            <column name="foto" length="150" />
+        </property>
+        <set name="cultivoFitosanidads" table="cultivo_fitosanidad" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="fitosanidad_id" not-null="true" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.CultivoFitosanidad" />
+        </set>
+    </class>
+</hibernate-mapping>

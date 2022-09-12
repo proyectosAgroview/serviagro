@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 24-mar-2018 15:52:14 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatParadasFabrica" table="dat_paradas_fabrica">
+
+        <id name="datParadasFabricaId" type="java.lang.Long">
+            <column name="dat_paradas_fabrica_id" />
+            <generator class="identity" />
+        </id>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechapInicial" type="java.util.Date">
+            <column name="fechap_inicial" length="19" />
+        </property>
+        <property name="horapInicial" type="java.util.Date">
+            <column name="horap_inicial" length="19" />
+        </property>
+        <property name="fechapFinal" type="java.util.Date">
+            <column name="fechap_final" length="19" />
+        </property>
+        <property name="horapFinal" type="java.util.Date">
+            <column name="horap_final" length="19" />
+        </property>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        
+        <many-to-one name="areaTrabajoId" class="co.com.arcosoft.modelo.AreaTrabajo" fetch="select">
+            <column name="area_trabajo_id" />
+        </many-to-one>
+        
+        <many-to-one name="tagId" class="co.com.arcosoft.modelo.Tag" fetch="select">
+            <column name="tag_id" />
+        </many-to-one>
+        
+        <many-to-one name="equipoId" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        
+        <many-to-one name="agenteCausadorParadaId" class="co.com.arcosoft.modelo.AgenteCausadorParada" fetch="select">
+            <column name="agente_causador_parada_id" />
+        </many-to-one>
+        
+        <many-to-one name="motivosParadaId" class="co.com.arcosoft.modelo.MotivosEntradaTaller" fetch="select">
+            <column name="motivos_parada_id" />
+        </many-to-one>
+        
+        
+        
+        <property name="descripcionParada" type="java.lang.String">
+            <column name="descripcion_parada" length="3900" />
+        </property>
+        <property name="observaciones" type="java.lang.String">
+            <column name="observaciones" length="3900" />
+        </property>
+        <property name="paradaCritica" type="java.lang.String">
+            <column name="parada_critica" length="20" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-oct-2017 19:44:09 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatServRealizadosEquipo" table="dat_serv_realizados_equipo" >
+        <id name="datServRealizadosEquipoId" type="java.lang.Long">
+            <column name="dat_serv_realizados_equipo_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="equipo" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        
+        <many-to-one name="productoId" class="co.com.arcosoft.modelo.Producto" fetch="select">
+	            <column name="producto_id" />
+	     </many-to-one>
+        
+        <many-to-one name="almacenId" class="co.com.arcosoft.modelo.Almacen" fetch="select">
+	            <column name="almacen_id" />
+	     </many-to-one>
+	     
+         <property name="cantidadCombustible" type="java.lang.Double">
+            <column name="cantidad_combustible" precision="12" scale="4" />
+        </property>
+       
+         <property name="costoCombustible" type="java.lang.Double">
+            <column name="costo_combustible" precision="12" scale="4" />
+        </property>
+       
+       
+        <property name="sello" type="java.lang.Double">
+            <column name="sello" precision="12" scale="4" />
+        </property> 
+        
+        
+        <many-to-one name="elementoCosto" class="co.com.arcosoft.modelo.ElementoCosto" fetch="select">
+            <column name="costo_elem_id" />
+        </many-to-one>
+        <many-to-one name="centCost" class="co.com.arcosoft.modelo.CentCost" fetch="select">
+            <column name="cent_cost_id" />
+        </many-to-one>
+        <many-to-one name="persEmpr" class="co.com.arcosoft.modelo.PersEmpr" fetch="select">
+            <column name="pers_empr_id" />
+        </many-to-one>
+        <property name="consecutivo" type="java.lang.Long">
+            <column name="consecutivo" />
+        </property>
+        <property name="fechaRegistro" type="java.util.Date">
+            <column name="fecha_registro" length="19" />
+        </property>
+        <property name="numFactura" type="java.lang.Long">
+            <column name="num_factura" />
+        </property>
+        <property name="serieFactura" type="java.lang.String">
+            <column name="serie_factura" length="60" />
+        </property>
+        <property name="compania" type="java.lang.Long">
+            <column name="compania" />
+        </property>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="19" />
+        </property>
+        <property name="fechaModificacion" type="java.util.Date">
+            <column name="fecha_modificacion" length="19" />
+        </property>
+        <property name="observacion" type="java.lang.String">
+            <column name="observacion" length="3000" />
+        </property>
+        <property name="usuarioDigitacion" type="java.lang.Long">
+            <column name="usuario_digitacion" />
+        </property>
+        <property name="observacionAnularReg" type="java.lang.String">
+            <column name="observacion_anular_reg" length="500" />
+        </property>
+        <property name="fechaAnulacion" type="java.util.Date">
+            <column name="fecha_anulacion" length="19" />
+        </property>
+        <property name="estado" type="java.lang.String">
+            <column name="estado" length="1" />
+        </property>
+        <property name="origenDatos" type="java.lang.String">
+            <column name="origen_datos" length="30" />
+        </property>
+          <property name="puedeEditarPin" type="java.lang.String">
+            <column name="puede_editar_pin" length="20" />
+        </property>
+        <property name="dobleTanqueo" type="java.lang.String">
+			<column name="doble_tanqueo" length="2" />
+		</property>
+		    <property name="indicador_vuelta_medidor" type="java.lang.Long">
+            <column name="indicador_vuelta_medidor" />
+        </property>
+        
+          <set name="datServRealizadosEquipoDets" table="dat_serv_realizados_equipo_det" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="dat_serv_realizados_equipo_det_id" />
+            </key>
+            <one-to-many class="co.com.arcosoft.modelo.DatServRealizadosEquipoDet" />
+        </set>
+        
+    </class>
+</hibernate-mapping>

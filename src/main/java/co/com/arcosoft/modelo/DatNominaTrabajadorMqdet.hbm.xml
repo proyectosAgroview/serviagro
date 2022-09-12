@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 12-jul-2018 7:59:19 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.DatNominaTrabajadorMqdet" table="dat_nomina_trabajador_mqdet" >
+        <id name="datNominaTrabajadorMqdetId" type="java.lang.Long">
+            <column name="dat_nomina_trabajador_mqdet_id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="trabajador" class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+            <column name="trab_id" />
+        </many-to-one>
+        <many-to-one name="datNominaTrabajadorMq" class="co.com.arcosoft.modelo.DatNominaTrabajadorMq" fetch="select">
+            <column name="dat_nomina_trabajador_mq_id" />
+        </many-to-one>
+        <many-to-one name="ceptoNominaId" class="co.com.arcosoft.modelo.ConceptoNomina" fetch="select">
+            <column name="cepto_nomina_id" />
+        </many-to-one>
+        <many-to-one name="centCost" class="co.com.arcosoft.modelo.CentCost" fetch="select">
+            <column name="cent_cost_id" />
+        </many-to-one>
+        <property name="valorTotal" type="java.lang.Double">
+            <column name="valor_total" precision="12" scale="4" />
+        </property>
+        <property name="cantidad" type="java.lang.Double">
+            <column name="cantidad" precision="12" scale="4" />
+        </property>
+        <many-to-one name="udadMedId" class="co.com.arcosoft.modelo.UdadMed" fetch="select">
+            <column name="udad_med_id" />
+        </many-to-one>
+        <many-to-one name="equipoId" class="co.com.arcosoft.modelo.Equipo" fetch="select">
+            <column name="equipo_id" />
+        </many-to-one>
+        
+        <property name="valorDeduccion" type="java.lang.Double">
+            <column name="valor_deduccion" precision="12" scale="4" />
+        </property>
+        
+        <property name="detalleNota" type="java.lang.String">
+            <column name="detalle_nota" length="3000"/>
+        </property>
+        
+        <property name="tipoMovimiento" type="java.lang.String">
+            <column name="tipo_movimiento" length="30" />
+        </property>
+     
+      <property name="fechaInicialVac" type="java.util.Date">
+            <column name="fecha_inicial_vac" length="19" />
+        </property>
+        <property name="fechaFinalVac" type="java.util.Date">
+            <column name="fecha_final_vac" length="19" />
+        </property>
+        
+     
+    </class>
+</hibernate-mapping>

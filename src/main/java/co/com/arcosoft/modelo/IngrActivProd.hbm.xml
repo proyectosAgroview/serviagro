@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.IngrActivProd" table="ingr_activ_prod" >
+        <composite-id name="id" class="co.com.arcosoft.modelo.IngrActivProdId">
+            <key-property name="productoId" type="java.lang.Long">
+                <column name="producto_id" />
+            </key-property>
+            <key-property name="ingredienteActId" type="java.lang.Long">
+                <column name="ingrediente_act_id" />
+            </key-property>
+            <key-property name="compania" type="java.lang.Long">
+                <column name="compania" />
+            </key-property>
+            <key-property name="ptjeContribuccion" type="java.lang.Double">
+                <column name="ptje_contribuccion" precision="12" scale="4" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="producto" class="co.com.arcosoft.modelo.Producto" update="false" insert="false" fetch="select">
+            <column name="producto_id" />
+        </many-to-one>
+        <many-to-one name="ingredienteActivo" class="co.com.arcosoft.modelo.IngredienteActivo" update="false" insert="false" fetch="select">
+            <column name="ingrediente_act_id" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,317 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 1000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+
+				<h:form id="frm">
+
+					<p:panel id="panelDataTable" header="Gestión de facturas de servicios">
+						<p:growl id="growl" showDetail="true" sticky="true" />
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2" id="panelGrid">
+
+										<p:outputLabel for="txtNumFactura" value="Factura No."
+											style="font-size: 0.9em" />
+										<p:inputText id="txtNumFactura" disabled="false" size="8"
+											required="true" requiredMessage="Indique la cantidad"
+											binding="#{reversaFacturaServiciosView.txtNumFactura}">
+											<p:ajax update="frm, tbl, txtFechaRegistro, txtPersEmprId, txtVlTotal"
+												listener="#{reversaFacturaServiciosView.consultaDatosFactura}" />
+										</p:inputText>
+
+										<!--Filtros del reporte  -->
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtFechaRegistro" value="Fecha Factura "
+											style="font-size: 0.9em;" />
+										<p:calendar id="txtFechaRegistro" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{reversaFacturaServiciosView.txtFechaRegistro}"
+											required="true" requiredMessage="La Fecha  es obligatoria">
+										</p:calendar>
+
+									</h:panelGrid>
+								</p:column>
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+
+					<p:panelGrid columns="2">
+
+						<p:outputLabel value="Cliente: " style="font-size: 0.9em; " />
+						<p:selectOneMenu id="txtPersEmprId" effect="fade" filter="true"
+							filterMatchMode="contains"
+							style="font-size: 0.9em; width: 150px;"
+							binding="#{reversaFacturaServiciosView.txtPersEmprId}"
+							autoWidth="false" required="true"
+							requiredMessage="Seleccione un cliente">
+							<f:selectItem itemLabel="Seleccione un cliente" itemValue="" />
+							<f:selectItems
+								value="#{reversaFacturaServiciosView.selectContratista}" />
+						</p:selectOneMenu>
+
+					</p:panelGrid>
+
+					<p:panelGrid columns="2">
+
+						<p:outputLabel style="font-size: 0.9em; " value="Observación general: " />
+											<p:inputTextarea id="txtObservacionAnularReg"
+												style="font-size: 0.9em;"
+												binding="#{reversaFacturaServiciosView.txtObservacionAnularReg}" rows="2"
+												cols="50" maxlength="3900" autoResize="true" />
+					</p:panelGrid>
+					<p:panel>
+					<!-- <p:growl id="men"/>	 -->
+					<p:dataTable id="tbl" value="#{reversaFacturaServiciosView.data2}"
+						scrollable="true" scrollWidth="99%" scrollHeight="150"
+						var="datServRealizadosEquipo" lazy="true" rows="999999999"
+						rowKey="#{datServRealizadosEquipo.idRegistro}" reflow="true">
+						<f:facet name="header">
+							<div align="right">
+
+								<h:commandLink id="excel" style=" margin-right:15px;">
+									<p:graphicImage
+										value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+										width="30" />
+									<p:dataExporter type="xls" target="tbl"
+										fileName="datServRealizadosEquipo" />
+								</h:commandLink>
+								<p:tooltip id="toolTipFade" for="excel"
+									value="Exportar todos los datos a Excel" />
+							</div>
+						</f:facet>
+
+
+						<p:column  >
+							<f:facet name="header">
+								<h:outputText value="Fecha" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.fechaRegistro}"
+								style="font-size: 0.8em;">
+								<f:convertDateTime pattern="dd-MM-yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column  >
+							<f:facet name="header">
+								<h:outputText value="Labor" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.nomLabor}"
+								style="font-size: 0.8em;" />
+						</p:column>
+
+
+
+						<p:column  >
+							<f:facet name="header">
+								<h:outputText value="Cod. Máquina" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.codEquipo}"
+								style="font-size: 0.8em;" />
+						</p:column>
+
+
+
+						<p:column  >
+							<f:facet name="header">
+								<h:outputText value="Cliente" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.nomCliente}"
+								style="font-size: 0.8em;" />
+						</p:column>
+
+
+						<p:column  >
+							<f:facet name="header">
+								<h:outputText value="Hacienda" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.nomFinca}"
+								style="font-size: 0.8em;" />
+						</p:column>
+
+
+						<p:column  >
+							<f:facet name="header">
+								<h:outputText value="Suerte" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.codLote}"
+								style="font-size: 0.8em;" />
+						</p:column>
+
+
+						<p:column  >
+							<f:facet name="header">
+								<h:outputText value="Cantidad" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.cantidadPago}"
+								style="font-size: 0.8em;">
+								<f:convertNumber />
+							</h:outputText>
+						</p:column>
+
+						<p:column  >
+							<f:facet name="header">
+								<h:outputText value="U.M" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.nomUdadMed}"
+								style="font-size: 0.8em;" />
+						</p:column>
+
+
+						<p:column  >
+							<f:facet name="header">
+								<h:outputText value="VR. Unitario" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.valorUnitario}"
+								style="font-size: 0.8em;">
+								<f:convertNumber type="currency" currencySymbol="$" />
+							</h:outputText>
+						</p:column>
+
+
+						<p:column  >
+							<f:facet name="header">
+								<h:outputText value="VR. Total" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.costoTotal}"
+								style="font-size: 0.8em;">
+								<f:convertNumber type="currency" currencySymbol="$" />
+							</h:outputText>
+						</p:column>
+
+					 
+
+						<p:column  >
+							<f:facet name="header">
+								<h:outputText value="Operario" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.nom_operario}"
+								style="font-size: 0.8em;" />
+						</p:column>
+
+
+						<p:column  >
+							<f:facet name="header">
+								<h:outputText value="#ID REGISTRO" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.idRegistro}"
+								style="font-size: 0.8em;" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Estado" style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.estatusRegistro}"
+								style="font-size: 0.8em;" />
+						</p:column>
+
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Factura No." style="font-size: 0.8em;" />
+							</f:facet>
+							<h:outputText value="#{datServRealizadosEquipo.docFactura}"
+								style="font-size: 0.8em;" />
+						</p:column>
+
+					</p:dataTable>
+					
+					</p:panel>
+					
+					<p:panelGrid >
+						
+						<p:row>
+						<p:column style="text-align:right">
+							<h:panelGrid  columns="2">
+									<p:outputLabel  value="TOTALES:  " style="font-size: 1em;" />
+							</h:panelGrid>
+						</p:column>
+					
+					<p:column style="text-align:right">
+					<h:panelGrid  columns="2">
+						<p:outputLabel for="txtVlTotal" value="VR Total " style="font-size: 0.9em;" />
+								<p:inputNumber id="txtVlTotal" style="font-size: 0.9em;" size="12"
+								decimalSeparator="." thousandSeparator=","  decimalPlaces="2"
+												binding="#{reversaFacturaServiciosView.txtVlTotal}"
+												required="true" >
+											</p:inputNumber>
+							</h:panelGrid>
+						</p:column>
+					</p:row>
+					</p:panelGrid>
+					
+					<p:panel id="panelBoton">
+
+
+
+						<div align="center">
+									
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar pantalla"
+									action="#{reversaFacturaServiciosView.listener_limipiarPantalla}"
+									
+									process="@this" update=":frm" />
+									
+								<p:commandButton id="btnAnular" value="Anular factura" icon="ui-icon-newwin"
+									action="#{reversaFacturaServiciosView.actionAnularFactura}"
+									onclick="if(!confirm('Realmente desea anular registro?')){return false;}"
+									update=":frm, tbl" process="@all" 
+								/>
+						
+								<p:commandButton id="btnNew" value="Reversar factura" icon="ui-icon-newwin"
+									action="#{reversaFacturaServiciosView.actionReversarFactura}"
+									onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+									update=":frm, tbl" process="@all" 
+								/>
+								
+								
+						</div>
+					</p:panel>
+
+				</h:form>
+
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>

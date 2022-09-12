@@ -1,0 +1,1117 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				
+               
+				<h:form id="frm">
+
+
+
+					<p:panel id="panelDataTableDatMantenimientoEquipo"
+						header="Mantenimientos de maquinaria" collapsed="false"
+						toggleable="true">
+
+						<p:dataTable id="tbl" value="#{datMantenimientoEquipoView.data}"
+							var="datMantenimientoEquipo" paginator="true" lazy="true"
+							
+							rows="5" rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datMantenimientoEquipo" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+
+							<p:column width="60">
+								<f:facet name="header">
+									<h:outputText value="# O.T" style="font-size: 0.9em;" />
+								</f:facet>
+								<h:outputText value="#{datMantenimientoEquipo.consecutivo}"  style="font-size: 0.9em;"/>
+							</p:column>
+
+
+							<p:column width="60">
+								<f:facet name="header">
+									<h:outputText value="Máquina/Equipo"  style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{datMantenimientoEquipo.equipoCodigo}"  style="font-size: 0.9em;"/>
+							</p:column>
+							
+							
+							<p:column width="70">
+								<f:facet name="header">
+									<h:outputText value="Fecha"  style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText
+									value="#{datMantenimientoEquipo.fechaEntradaTaller}"  style="font-size: 0.9em;">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column width="70">
+								<f:facet name="header">
+									<h:outputText value="fecha Salida"  style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText
+									value="#{datMantenimientoEquipo.fechaSalidaTaller}"  style="font-size: 0.9em;">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+							
+							<p:column width="80">
+								<f:facet name="header">
+									<h:outputText value="Tipo mtto"  style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{datMantenimientoEquipo.nombreTipoMantenimiento}"  style="font-size: 0.9em;"/>
+							</p:column>
+							<p:column width="80">
+								<f:facet name="header">
+									<h:outputText value="Plan de revisión"  style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{datMantenimientoEquipo.nombrePlanRevision}"  style="font-size: 0.9em;"/>
+							</p:column>
+							
+							<p:column width="150">
+								<f:facet name="header">
+									<h:outputText value="Solicitud"  style="font-size: 0.9em;"/>
+								</f:facet>
+								<h:outputText value="#{datMantenimientoEquipo.descripcionSolicitud}"  style="font-size: 0.9em;"/>
+							</p:column>
+							
+
+							<p:column  width="100" headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogDatMantenimientoEquipo" 
+										disabled="#{datMantenimientoEquipo.estadoTrue2}"
+										actionListener="#{datMantenimientoEquipoView.action_edit}">
+										<f:attribute name="selectedDatMantenimientoEquipo"
+											value="#{datMantenimientoEquipo}" />
+									</p:commandButton>
+									
+									<p:commandButton id="btnDelete"
+										disabled="#{datMantenimientoEquipo.estadoTrue2}"
+										title="Anular Registro"
+										actionListener="#{datMantenimientoEquipoView.action_anularReg}"
+										icon="ui-icon-circle-close" update=":dialogAnularReg">
+										<f:attribute name="selectedDatMantenimientoEquipo"
+											value="#{datMantenimientoEquipo}" />
+									</p:commandButton>
+									
+									<p:commandButton id="btnCerrarOt"
+										icon="#{datMantenimientoEquipo.iconCierreOt}"
+										actionListener="#{datMantenimientoEquipoView.action_cierreReaperturaOt}"
+										disabled="#{datMantenimientoEquipo.estadoTrue}"
+										title="Cerrar y/o Reabrir O.T"
+										update=":frm:panelDataTableDatMantenimientoEquipo">
+										<p:confirm header="Cierre y/o Reapertura O.T"
+											message="#{datMantenimientoEquipo.tituloCierreOt}" icon="ui-icon-alert" />
+										<f:attribute name="selectedDatMantenimientoEquipo"
+											value="#{datMantenimientoEquipo}" />
+									</p:commandButton>
+							
+									<p:commandButton id="btnImprimir" icon="ui-icon-print"
+										update=":frm:tbl" ajax="false"
+										actionListener="#{datMantenimientoEquipoView.action_imprimirPDF}"
+										onclick="this.form.target='_blank'">
+										<f:attribute name="selectedDatMantenimientoEquipo"
+											value="#{datMantenimientoEquipo}" />
+									</p:commandButton>
+
+									<p:confirmDialog global="true" 
+										hideEffect="fade">
+										<div align="center">
+											<p:commandButton value="Si" type="button"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+											<p:commandButton value="No" type="button"
+												styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+										</div>
+									</p:confirmDialog>
+									
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					
+					<p:panel toggleable="true">
+						<div align="center">
+						<p:commandButton id="btnNew" value="Crear O.T"
+													icon="ui-icon-newwin"
+													action="#{datMantenimientoEquipoView.action_new()}"
+													update=":dialogDatMantenimientoEquipo" />
+							</div>
+					</p:panel>
+				</h:form>
+					
+				<p:dialog id="dialogDatMantenimientoEquipo" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datMantenimientoEquipoView.showDialog}"
+					resizable="false" modal="true" width="1100" styleClass="dialogFix"
+					header="Mantenimiento de Equipos" responsive="true">
+
+					<h:form id="formDialog" >
+
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+					
+					<p:tabView id="apuntamiento" >
+					  <p:tab title="Información del equipo"> 
+
+						<p:scrollPanel mode="native" style="width:974px">
+							<p:panelGrid id="panelGrid1">
+								<p:row>
+								<p:column>
+								
+									<h:panelGrid columns="2">
+									<p:outputLabel value="#O.T:" style="font-size: 0.8em;" />
+									<p:inputText id="txtConsecutivo" disabled="true"
+										binding="#{datMantenimientoEquipoView.txtConsecutivo}"
+										size="10" />
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+									<p:outputLabel for="txtFechaEntradaTaller"
+										value="Fecha de ingreso: " style="font-size: 0.8em;" />
+									<p:calendar id="txtFechaEntradaTaller" showOn="button"
+										navigator="false" locale="es" size="15"
+										binding="#{datMantenimientoEquipoView.txtFechaEntradaTaller}"
+										pattern="dd/MM/yyyy HH:mm" mask="true" required="true"
+										requiredMessage="La  fecha  es obligatoria" />
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+									<p:outputLabel for="txtFechaSalidaTaller"
+										value="Fecha de salida: " style="font-size: 0.8em;" />
+									<p:calendar id="txtFechaSalidaTaller" showOn="button"
+										navigator="false" locale="es" size="15"
+										binding="#{datMantenimientoEquipoView.txtFechaSalidaTaller}"
+										pattern="dd/MM/yyyy HH:mm" mask="true" required="false"
+										requiredMessage="La  fecha  es obligatoria" />
+									</h:panelGrid>
+								</p:column>
+							</p:row>
+							</p:panelGrid>
+
+							<p:panelGrid id="panelGrid3">
+								<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtEquipoId_Equipo" value="Máquina(Equipo): "
+											style="font-size: 0.9em;" />
+										<p:selectOneMenu id="txtEquipoId_Equipo" effect="fade"
+											 filter="true" filterMatchMode="contains"
+											binding="#{datMantenimientoEquipoView.txtEquipoId_Equipo}"
+											autoWidth="false" style="width:160; font-size: 0.9em" required="true"
+											requiredMessage="Seleccione un equipo">
+											<f:selectItem itemLabel="Seleccione un equipo" itemValue="" />
+											<f:selectItems
+												value="#{datMantenimientoEquipoView.selectEquipo}" />
+											<p:ajax
+											listener="#{datMantenimientoEquipoView.listener_ConsultaDatosEquipo}"
+												process="@this,txtEquipoId_Equipo, txtFechaEntradaTaller"
+												update="txtPlanRevisionEquipoId_PlanRevisionEquipo,txtVidaHora, txtVidaKm, txtVidaActual, txtTagId_Tag" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtNivelPrioridadId_NivelPrioridad"
+											style="font-size: 0.8em" value="Nivel de Prioridad: " />
+										<p:selectOneMenu id="txtNivelPrioridadId_NivelPrioridad"
+											effect="fade" filter="true" filterMatchMode="contains"
+											autoWidth="false"  style="width:160; font-size: 0.8em"
+											binding="#{datMantenimientoEquipoView.txtNivelPrioridadId_NivelPrioridad}"
+											required="false" requiredMessage="Seleccione un Nivel">
+											<f:selectItem itemLabel="Seleccione un Nivel" itemValue="" />
+											<f:selectItems
+												value="#{datMantenimientoEquipoView.selectNivel}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtRequiereParadaFabrica"
+											value="Requiere Parada:" style="font-size: 0.8em" />
+										<p:selectOneRadio id="txtRequiereParadaFabrica"
+											disabled="false" style="font-size: 0.8em"
+											binding="#{datMantenimientoEquipoView.txtRequiereParadaFabrica}">
+											<f:selectItem itemLabel="Si" itemValue="SI" />
+											<f:selectItem itemLabel="No" itemValue="NO" />
+										</p:selectOneRadio>
+									</h:panelGrid>
+								</p:column>
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel for="txtTallerMecanicoId_TallerMecanico"
+											value="Taller: " style="font-size: 0.8em;" />
+										<p:selectOneMenu id="txtTallerMecanicoId_TallerMecanico"
+											effect="fade" filter="true" filterMatchMode="contains"
+											 autoWidth="false" style="width:160; font-size: 0.8em"
+											binding="#{datMantenimientoEquipoView.txtTallerMecanicoId_TallerMecanico}"
+											required="true"
+											requiredMessage="Seleccione un taller">
+											<f:selectItem itemLabel="1" itemValue="1" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+
+									<h:panelGrid columns="2"
+										style="display:#{datMantenimientoEquipoView.ocultaMttoIndustrial}">
+
+										<p:outputLabel for="txtZonasFabricaId_ZonasFabrica"
+											value="Zona Fábrica: " style="font-size: 0.8em" />
+										<p:selectOneMenu id="txtZonasFabricaId_ZonasFabrica"
+											effect="fade" filter="true" filterMatchMode="contains"
+											autoWidth="false" style="width:160; font-size: 0.8em"
+											binding="#{datMantenimientoEquipoView.txtZonasFabricaId_ZonasFabrica}"
+											required="#{datMantenimientoEquipoView.compoRequieridoMttoIndustrial}"
+											requiredMessage="Seleccione una zona">
+											<f:selectItem itemLabel="Seleccione una zona" itemValue="" />
+											<f:selectItems
+												value="#{datMantenimientoEquipoView.selectZona}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtAreaTrabajoId_AreaTrabajo"
+											style="font-size: 0.8em" value="Departamento: " />
+										<p:selectOneMenu id="txtAreaTrabajoId_AreaTrabajo"
+											effect="fade" filter="true" filterMatchMode="contains"
+											autoWidth="false" style="width:160; font-size: 0.8em"
+											binding="#{datMantenimientoEquipoView.txtAreaTrabajoId_AreaTrabajo}"
+											required="#{datMantenimientoEquipoView.compoRequieridoMttoIndustrial}"
+											requiredMessage="Seleccione un área de trabajo">
+											<f:selectItem itemLabel="Seleccione área de trabajo"
+												itemValue="" />
+											<f:selectItems
+												value="#{datMantenimientoEquipoView.selectAreaTrabajo}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel for="txtTagId_Tag" style="font-size: 0.8em"
+											value="Tag: " />
+										<p:selectOneMenu id="txtTagId_Tag" effect="fade"
+											filter="true"
+											filterMatchMode="contains" 
+											autoWidth="false" style="width:160; font-size: 0.8em"
+											binding="#{datMantenimientoEquipoView.txtTagId_Tag}"
+											required="#{datMantenimientoEquipoView.compoRequieridoMttoIndustrial}"
+											requiredMessage="Seleccione un Tag">
+											<f:selectItem itemLabel="Seleccione Tag" itemValue="" />
+											<f:selectItems
+												value="#{datMantenimientoEquipoView.selectTag}" />
+										</p:selectOneMenu>
+									</h:panelGrid>
+
+								</p:column>
+							
+							
+								<p:column>
+									<h:panelGrid columns="2" id="rodamiento">
+									
+										<p:outputLabel for="txtVidaActual" value="Hrs/Km a hoy: "
+											style="font-size: 0.8em" />
+										<p:inputText id="txtVidaActual" disabled="true"
+											style="font-size:0.8em; width:100%"
+											binding="#{datMantenimientoEquipoView.txtVidaActual}" size="15" />
+
+											<p:outputLabel for="txtVidaHora" value="Recorrido(Hr): "
+											style="font-size:0.8em" />
+										<p:inputText id="txtVidaHora" disabled="false"
+											style="font-size:0.8em; width:100%"
+											binding="#{datMantenimientoEquipoView.txtVidaHora}" />
+
+										<p:outputLabel for="txtVidaKm" value="Recorrido(KM): "
+											style="font-size: 0.8em" />
+										<p:inputText id="txtVidaKm" disabled="false"
+											style="font-size:0.8em; width:100%"
+											binding="#{datMantenimientoEquipoView.txtVidaKm}" />
+											
+							
+									</h:panelGrid>
+								</p:column>
+							 </p:row>
+							</p:panelGrid>
+
+							<p:panelGrid id="panelGrid6" >
+								<p:row>
+									<p:column>
+										<h:panelGrid columns="2">
+
+											<p:outputLabel
+												for="txtMotivosEntradaTallerId_MotivosEntradaTaller"
+												value="Tipo de falla: " style="font-size: 0.8em;" />
+											<p:selectOneMenu
+												id="txtMotivosEntradaTallerId_MotivosEntradaTaller"
+												effect="fade" filter="true" filterMatchMode="contains"
+												autoWidth="false" style="width:160; font-size: 0.8em;"
+												binding="#{datMantenimientoEquipoView.txtMotivosEntradaTallerId_MotivosEntradaTaller}"
+												required="true" requiredMessage="Seleccione un tipo de falla">
+												<f:selectItem itemLabel="Seleccione un tipo de falla" itemValue="" />
+												<f:selectItems
+													value="#{datMantenimientoEquipoView.selectMotivoEntradaTaller}" />
+											</p:selectOneMenu>
+											
+											
+
+											<p:outputLabel
+												for="txtAgenteCausadorParadaId_AgenteCausadorParada"
+												value="Agente causador: " style="font-size: 0.8em;" />
+											<p:selectOneMenu
+												id="txtAgenteCausadorParadaId_AgenteCausadorParada"
+												effect="fade" filter="true" filterMatchMode="contains"
+												autoWidth="false" style="width:160; font-size: 0.8em;"
+												binding="#{datMantenimientoEquipoView.txtAgenteCausadorParadaId_AgenteCausadorParada}"
+												required="true" requiredMessage="Seleccione un agente">
+												<f:selectItem itemLabel="Seleccione un agente" itemValue="" />
+												<f:selectItems
+													value="#{datMantenimientoEquipoView.selectAgenteCausador}" />
+											</p:selectOneMenu>
+
+											<p:outputLabel for="txtConductor" value="Operador: "
+												style="font-size: 0.8em;" />
+											<p:selectOneMenu id="txtConductor" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width:160; font-size: 0.8em;"
+												binding="#{datMantenimientoEquipoView.txtConductor}"
+												required="true" requiredMessage="Seleccione un conductor">
+												<f:selectItem itemLabel="Seleccione un conductor"
+													itemValue="" />
+												<f:selectItems
+													value="#{datMantenimientoEquipoView.selectConductor}" />
+											</p:selectOneMenu>
+
+										</h:panelGrid>
+									</p:column>
+
+									<p:column style="width:50px;">
+										<h:panelGrid columns="2" width="60">
+
+											<p:outputLabel for="txtTipoMantenimientoId_TipoMantenimiento"
+												value="Tipo de mantenimiento: " style="font-size: 0.8em;" />
+											<p:selectOneMenu
+												id="txtTipoMantenimientoId_TipoMantenimiento" effect="fade"
+												filter="true" filterMatchMode="contains" autoWidth="false"
+												style="width:160;font-size: 0.8em;"
+												binding="#{datMantenimientoEquipoView.txtTipoMantenimientoId_TipoMantenimiento}"
+												required="true" requiredMessage="Seleccione un tipo de mtto">
+												<f:selectItem itemLabel="Seleccione un tipo de mtto"
+													itemValue="" />
+												<f:selectItems
+													value="#{datMantenimientoEquipoView.selectTipoMantenimiento}" />
+											</p:selectOneMenu>
+
+											<p:outputLabel
+												for="txtPlanRevisionEquipoId_PlanRevisionEquipo"
+												value="Plan de revisión " style="font-size: 0.8em;" />
+											<p:selectOneMenu
+												id="txtPlanRevisionEquipoId_PlanRevisionEquipo"
+												effect="fade" filter="true" filterMatchMode="contains"
+												autoWidth="false" style="width:160;font-size: 0.8em"
+												binding="#{datMantenimientoEquipoView.txtPlanRevisionEquipoId_PlanRevisionEquipo}"
+												required="true" requiredMessage="Seleccione un plan">
+												<f:selectItem itemLabel="Seleccione un plan" itemValue="" />
+												<f:selectItems
+													value="#{datMantenimientoEquipoView.selectPlanRevision}" />
+												<p:ajax update=":formDialog:apuntamiento:txtTarea" process="@this, txtEquipoId_Equipo " />
+											</p:selectOneMenu>
+
+												<p:outputLabel for="msgDuracion" value="Duración: "
+													style="font-size: 0.8em;" />
+												<p:calendar id="msgDuracion" showOn="button"
+													navigator="false" locale="es"
+													binding="#{datMantenimientoEquipoView.txtDuracion}"
+													size="8" timeOnly="true" pattern="HH:mm" mask="true"
+													required="false"
+													requiredMessage="La  duración  es obligatoria" />
+													
+												<p:inputText style="font-size: 0.8em; visibility:hidden"
+														id="txtDatMantenimientoEquipoId"
+														binding="#{datMantenimientoEquipoView.txtDatMantenimientoEquipoId}" />
+
+
+										</h:panelGrid>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<p:panelGrid id="panelGrid8" style="margin-bottom:10px">
+								<p:row>
+									<p:column>
+										<h:panelGrid columns="2">
+
+											<p:outputLabel for="txtSolicitante" value="Solicitante: "
+												style="font-size: 0.8em;" />
+											<p:selectOneMenu id="txtSolicitante" effect="fade"
+												filter="true" filterMatchMode="contains" 
+												style="width:160;font-size: 0.8em;" autoWidth="false"
+												binding="#{datMantenimientoEquipoView.txtSolicitante}"
+												required="true" requiredMessage="Seleccione un solicitante">
+												<f:selectItem itemLabel="Seleccione un solicitante"
+													itemValue="" />
+												<f:selectItems
+													value="#{datMantenimientoEquipoView.selectSolicitante}" />
+											</p:selectOneMenu>
+											
+											<p:outputLabel for="txtDescripcionSolicitud"
+												value="Solicitud: " style="font-size: 0.9em" />
+											<p:inputTextarea id="txtDescripcionSolicitud"
+												binding="#{datMantenimientoEquipoView.txtDescripcionSolicitud}"
+												rows="2" cols="27" maxlength="100" autoResize="true" />
+
+
+										</h:panelGrid>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:scrollPanel>
+
+						<!-- id auto incrementable -->
+						<p:inputText style="font-size: 0.8em; visibility:hidden"
+							id="txtDatMantenimientoEquipoId"
+							binding="#{datMantenimientoEquipoView.txtDatMantenimientoEquipoId}" />
+
+
+						</p:tab>
+
+							<p:tab id="manodeobra" title="Mano de obra">
+									<p:messages id="msgMO" closable="true" showDetail="true" />
+									<h:panelGrid columns="2">
+											<p:outputLabel for="txtTipoPersonal" value="Tipo de personal:"
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtTipoPersonal" effect="fade"
+														filter="true" filterMatchMode="contains"
+														binding="#{datMantenimientoEquipoView.txtTipoPersonal}"
+														required="false"
+														style="width:180;font-size: 0.9em;" autoWidth="false"
+														requiredMessage="Seleccione un trabajador">
+														<f:selectItem itemLabel="Selecciene un item "
+															itemValue=""  noSelectionOption="true"/>
+														<f:selectItem itemLabel="Propio"
+															itemValue="Propio" />
+														<f:selectItem itemLabel="Externo"
+																itemValue="Externo" />
+														<p:ajax process="@this, txtTipoPersonal " update="txtPersEmprId_PersEmpr,txtMecanico "
+																listener="#{datMantenimientoEquipoView.listener_TipoPersonalServicio}" />		
+													</p:selectOneMenu>
+										</h:panelGrid>
+									<p:panelGrid id="gridMecanico">
+										
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtFechaRegistro"
+														value="Fecha de atención: " style="font-size: 0.9em;" />
+													<p:calendar id="txtFechaRegistro" showOn="button"
+														navigator="false" locale="es"
+														binding="#{datMantenimientoEquipoView.txtFechaRegistro}"
+														pattern="dd/MM/yyyy" mask="true" required="false"
+														requiredMessage="La  fecha  es obligatoria" />
+	
+
+													<p:outputLabel for="txtMecanico" value="Mecánico "
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtMecanico" effect="fade"
+														filter="true" filterMatchMode="contains"
+														binding="#{datMantenimientoEquipoView.txtMecanico}"
+														required="false"
+														style="width:160;font-size: 0.9em;" autoWidth="false"
+														requiredMessage="Seleccione un trabajador">
+														<f:selectItem itemLabel="Seleccione un trabajador"
+															itemValue="" />
+														<f:selectItems
+															value="#{datMantenimientoEquipoView.selectMecanico}" />
+													</p:selectOneMenu>
+													
+														<p:outputLabel for="txtPersEmprId_PersEmpr" value="Proveedor: "
+															style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtPersEmprId_PersEmpr" effect="fade" filter="true"
+															filterMatchMode="contains"
+															binding="#{datMantenimientoEquipoView.txtPersEmprId_PersEmpr}"
+															autoWidth="false" style="width: 160; font-size: 0.9em;"
+															required="false" requiredMessage="Seleccione un proveedor">
+															<f:selectItem itemLabel="Seleccione un proveedor" itemValue="" />
+															<f:selectItems
+																value="#{datMantenimientoEquipoView.selectContratista}" />
+														</p:selectOneMenu>
+
+													
+
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+												<p:outputLabel for="txtTarea" value="Tarea: "
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtTarea" effect="fade"
+														 filter="true"
+														filterMatchMode="contains"
+														style="width:160;font-size: 0.9em;" autoWidth="false"
+														binding="#{datMantenimientoEquipoView.txtTarea}">
+														<f:selectItem itemLabel="Seleccione una labor"
+															itemValue="" />
+														<f:selectItems
+															value="#{datMantenimientoEquipoView.selectLaborId}" />
+																<p:ajax process="@this,txtTarea  " update="txtUdadMedMec"
+																listener="#{datMantenimientoEquipoView.listener_ConsultaCodUdadMedLabor}" />
+													</p:selectOneMenu>
+												
+
+													<p:outputLabel for="txtUdadMedMec" value="Unidad de Pago: "
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtUdadMedMec" effect="fade"
+														 filter="true" filterMatchMode="contains"
+														style="width:160;font-size: 0.9em;" autoWidth="false"
+														binding="#{datMantenimientoEquipoView.txtUdadMedMec}"
+														required="false"
+														requiredMessage="Seleccione una unidad de pago">
+														<f:selectItem itemLabel="Seleccione una  unidad de pago"
+															itemValue="" />
+														<f:selectItems
+															value="#{datMantenimientoEquipoView.selectUdadMedMec}" />
+													</p:selectOneMenu>
+
+													
+													<p:outputLabel for="txtCantidadMec" value="Cantidad(Pago): "
+														style="font-size: 0.9em;" />
+													<p:inputText id="txtCantidadMec" disabled="false"
+															binding="#{datMantenimientoEquipoView.txtCantidadMec}"
+															required="false"  size="7"  value="0"
+															requiredMessage="Indique el valor unitario" />
+													
+														<p:outputLabel for="txtCeptoNominaId_ConceptoNomina"
+														value="Concepto nómina: " style="font-size: 0.9em; visibility:hidden"  />
+													<p:selectOneMenu id="txtCeptoNominaId_ConceptoNomina"
+														effect="fade" filter="true" filterMatchMode="contains"
+														binding="#{datMantenimientoEquipoView.txtCeptoNominaId_ConceptoNomina}"
+														style="width:160;font-size: 0.9em;  visibility:hidden" autoWidth="false"
+														required="false"
+														requiredMessage="Seleccione un concepto">
+														
+														<f:selectItem itemLabel="NORMAL" itemValue="12" />
+													
+
+													</p:selectOneMenu>
+													
+												</h:panelGrid>
+											</p:column>
+
+										</p:row>
+									</p:panelGrid>
+
+									
+									<h:panelGrid columns="2" style="margin:10px;">
+										<p:commandButton id="btnAgregarMecanico"
+											icon="ui-icon-plusthick"
+											process="@all"
+											binding="#{datMantenimientoEquipoView.btnAgregarMecanico}"
+											value="Agregar"
+											action="#{datMantenimientoEquipoView.action_agregarMecanico}"
+											ajax="true" update="tablaMecanico, msgMO,
+																txtMecanico,
+																txtCantidadMec,
+																txtUdadMedMec,
+																txtTarea,
+																txtPersEmprId_PersEmpr" />
+
+										<p:commandButton id="btnlimpiar1" icon="ui-icon-trash"
+											value="Limpiar">
+											<p:ajax update="gridMecanico" resetValues="true" />
+										</p:commandButton>
+
+
+									</h:panelGrid>
+										<p:scrollPanel mode="native" style="width:950px;height:270px">
+							
+									<p:outputPanel id="dataTableMecanico">
+										<p:dataTable id="tablaMecanico"
+											value="#{datMantenimientoEquipoView.dataEquipoMec}"
+											var="listaMecanico" paginator="true" rows="5"
+											resizableColumns="true" style="margin-bottom:20px" 
+											rowsPerPageTemplate="5,10,15" reflow="true" editable="true" editMode="cell"
+											widgetVar="cellManO">
+											
+											<p:ajax event="cellEdit" listener="#{datMantenimientoEquipoView.onCellEditManObra}" />
+
+											<p:column headerText="Fecha de atención" width="100">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaMecanico.fechaRegistro}" >
+															<f:convertDateTime pattern="dd-MM-yyyy" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:calendar navigator="false" locale="es"
+															value="#{listaMecanico.fechaRegistro}"/>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="T. Personal" width="100">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaMecanico.tipoPersonal}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															 value="#{listaMecanico.tipoPersonal}">
+																<f:selectItem itemLabel="Propio" itemValue="Propio" />
+																<f:selectItem itemLabel="Externo" itemValue="Externo" />
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="Mecánico" width="100">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaMecanico.codTrabajador}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaMecanico.trabId_Trabajador.trabId}">
+															<f:selectItems value="#{datMantenimientoEquipoView.selectMecanico}"
+																var="var1" itemValue="#{var1}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											
+											<p:column headerText="Proveedor" width="100">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaMecanico.nomProveedor}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaMecanico.contratistaId.persEmprId}">
+															<f:selectItems value="#{datMantenimientoEquipoView.selectContratista}"
+																var="var0" itemValue="#{var0}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Tarea" width="150">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaMecanico.codLabor}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaMecanico.laborId_Labor.laborId}">
+															<f:selectItems value="#{datMantenimientoEquipoView.selectLaborId}"
+																var="var2" itemValue="#{var2}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+										
+										
+											<p:column headerText="Cepto Nómina" width="60">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaMecanico.codConcepto}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaMecanico.ceptoNominaId_ConceptoNomina.ceptoNominaId}">
+															<f:selectItems value="#{datMantenimientoEquipoView.selectCeptoNomina}"
+															var="var5" itemValue="#{var5}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="U.M(Pago)" width="60">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaMecanico.codUdadMed}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu
+															value="#{listaMecanico.udadMedId_UdadMed.udadMedId}">
+															<f:selectItems value="#{datMantenimientoEquipoView.selectUdadMedMec}"
+															var="var6" itemValue="#{var6}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Cantidad" width="70">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaMecanico.costoTotal}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaMecanico.costoTotal}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											
+											
+											<f:attribute name="selectedDatEquipoMec"
+															value="#{listaMecanico}" />
+
+											<p:column headerText="Opciones" width="100">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datMantenimientoEquipoView.actionDeletedataEquipoMec}"
+														title="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaMecanico :dialogDatMantenimientoEquipo">
+														<f:attribute name="selectedDatEquipoMec"
+															value="#{listaMecanico}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+
+								</p:scrollPanel>
+							</p:tab>
+
+
+		
+							<p:tab title="Productos/Insumos">
+								
+									<p:panelGrid>
+										<p:row>
+										
+										
+											<p:column>
+												<h:panelGrid columns="2">
+													
+													
+													<p:outputLabel for="txtFechaProd"
+														value="Fecha de requisición: " style="font-size: 0.9em;" />
+													<p:calendar id="txtFechaProd" showOn="button"
+														navigator="false" locale="es" size="12"
+														binding="#{datMantenimientoEquipoView.txtFechaProd}"
+														pattern="dd/MM/yyyy" mask="true" required="false"
+														requiredMessage="La  fecha  es obligatoria" />
+													
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+													
+													
+													<p:outputLabel for="txtTipoSuministro"
+														value="Tipo de suministro " style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtTipoSuministro" disabled="false"
+														binding="#{datMantenimientoEquipoView.txtTipoSuministro}"
+														required="false" style="font-size: 0.9em;"
+														requiredMessage="El tipo de empresa es Obligatorio">
+														<f:selectItem itemLabel="Adiciones" itemValue="Adiciones" />
+														<f:selectItem itemLabel="Cambios" itemValue="Cambios" />
+													</p:selectOneMenu>
+																									
+												</h:panelGrid>
+											</p:column>
+
+										</p:row>
+									</p:panelGrid>
+
+									<p:panel id="toggleable" toggleable="true" widgetVar="panel">
+
+										<p:messages id="msg1" closable="true" showDetail="true" />
+
+										<p:panelGrid id="gridDetProd">
+											<p:row>
+												<p:column>
+													<h:panelGrid columns="2">
+													
+													<p:outputLabel for="txtTipoProducto" value="Tipo producto: "
+														style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtTipoProducto" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="font-size: 0.9em;"
+														binding="#{datMantenimientoEquipoView.txtTipoProducto}"
+														required="false"
+														requiredMessage="Seleccione un tipo de producto">
+														<f:selectItem itemLabel="Seleccione un tipo de producto"
+															itemValue="" />
+														<f:selectItems
+															value="#{datMantenimientoEquipoView.selectTipoProducto}" />
+														<p:ajax update="txtProductoId_Producto">
+														</p:ajax>
+													</p:selectOneMenu>
+													
+														<p:outputLabel value="Producto.: "
+														style="font-size: 0.9em; width: 100%;" />
+														<p:selectOneMenu id="txtProductoId_Producto" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="width:160px;font-size: 0.9em;" autoWidth="false"
+														binding="#{datMantenimientoEquipoView.txtProductoId_Producto}">
+														
+														<f:selectItem itemLabel="Seleccione un producto"
+															itemValue="" />
+														<f:selectItems
+															value="#{datMantenimientoEquipoView.selectProductoId}" />
+														<p:ajax process="@this, txtTipoProducto, txtProductoId_Producto"
+															listener="#{datMantenimientoEquipoView.listener_ConsultaUmProducto}"
+															update="txtUdadMedProd" />
+													</p:selectOneMenu>
+													</h:panelGrid>
+												</p:column>
+												
+													<p:column>
+													<h:panelGrid columns="2">
+														<p:outputLabel value="Unidad de médida: "
+														style="font-size: 0.9em;" />
+														<p:selectOneMenu id="txtUdadMedProd" effect="fade"
+														filter="true" filterMatchMode="contains"
+														style="width:160;font-size: 0.9em;" autoWidth="false"
+														binding="#{datMantenimientoEquipoView.txtUdadMedProd}">
+
+														<f:selectItem itemLabel="Seleccione una unidad de medida"
+															itemValue="" />
+														<f:selectItems
+															value="#{datMantenimientoEquipoView.selectUdadMedProd}" />
+													</p:selectOneMenu>
+													
+													
+														<p:outputLabel value="Cantidad:" style="font-size: 0.9em; " />
+														<p:inputText id="txtCantidadProd"   value="0" size="10"
+														binding="#{datMantenimientoEquipoView.txtCantidadProd}">
+														<f:converter converterId="javax.faces.Double" />
+													</p:inputText>
+													</h:panelGrid>
+													
+												</p:column>
+												
+												
+												
+											</p:row>
+										
+										</p:panelGrid>
+
+										<h:panelGrid columns="2" style="margin:10px;">
+											<p:commandButton id="btnAgregarProd" icon="ui-icon-plusthick"
+												process="@this,txtProductoId_Producto, txtTipoSuministro,
+											       	txtCantidadProd	,txtUdadMedProd, txtFechaProd"
+												binding="#{datMantenimientoEquipoView.btnAgregarProd}"
+												value="Agregar"
+												action="#{datMantenimientoEquipoView.action_agregarProductos}"
+												ajax="true" update="tablaDetProductos, msg1,
+																txtProductoId_Producto,
+																txtUdadMedProd,
+																txtCantidadProd" />
+												
+											
+
+											<p:commandButton id="btnlimpiar" icon="ui-icon-trash"
+												value="Limpiar">
+												<p:ajax update="gridDetProd" resetValues="true" />
+											</p:commandButton>
+
+
+										</h:panelGrid>
+										</p:panel>
+									<p:scrollPanel mode="native" style="width:950px;height:270px">
+							
+										<p:outputPanel id="dataTable">
+											<p:dataTable id="tablaDetProductos" resizableColumns="true" style="margin-bottom:20px" 
+												value="#{datMantenimientoEquipoView.dataEquipoProd}"
+												var="listaDetProductos" paginator="true" rows="5"
+												rowsPerPageTemplate="5,10,15" reflow="true">
+
+
+												<p:column headerText="Cód.">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.codProducto}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetProductos.codProducto}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+												<p:column headerText="Producto">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.nomProducto}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetProductos.nomProducto}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+												
+
+												<p:column headerText="U. Médida">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.codUdadMed}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetProductos.codUdadMed}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+												<p:column headerText="Cantidad">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.cantidad}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetProductos.cantidad}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+												<p:column headerText="T. Suministro">
+													<p:cellEditor>
+														<f:facet name="output">
+															<h:outputText value="#{listaDetProductos.tipoSuministro}" />
+														</f:facet>
+														<f:facet name="input">
+															<p:inputText value="#{listaDetProductos.tipoSuministro}" />
+														</f:facet>
+													</p:cellEditor>
+												</p:column>
+
+
+
+
+												<p:column headerText="Opciones">
+													<div align="center">
+														<p:commandButton id="btnDelete" icon="ui-icon-trash"
+															actionListener="#{datMantenimientoEquipoView.actionDeleteDatEquipoProd}"
+															title="Borrar"
+															onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+															update="tablaDetProductos :dialogDatMantenimientoEquipo">
+															<f:attribute name="selectedDatEquipoProd"
+																value="#{listaDetProductos}" />
+														</p:commandButton>
+													</div>
+												</p:column>
+											</p:dataTable>
+										</p:outputPanel>
+									
+									
+									</p:scrollPanel>
+									
+								
+							</p:tab>
+
+						
+							<p:tab title="Reporte técnico">
+								<p:scrollPanel mode="native" style="width:950px;height:270px">
+									<p:messages id="msgRT" closable="true" showDetail="true" />
+									<h:panelGrid columns="2">
+
+										<p:outputLabel for="txtReporteTecnico"
+											value="Reporte técnico: " />
+										<p:inputTextarea id="txtReporteTecnico"
+											binding="#{datMantenimientoEquipoView.txtReporteTecnico}"
+											rows="5" cols="50" counter="display" maxlength="3400"
+											counterTemplate="{0} Caracteres." autoResize="true"
+											required="false"
+											requiredMessage="La Observavión es Obligatoria" />
+										<h:outputText id="display" />
+
+									</h:panelGrid>
+								</p:scrollPanel>
+
+							</p:tab>
+
+
+
+						</p:tabView>
+
+
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datMantenimientoEquipoView.btnSave}" value="Grabar"
+									action="#{datMantenimientoEquipoView.action_save()}"
+									update=":dialogDatMantenimientoEquipo :frm:panelDataTableDatMantenimientoEquipo" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datMantenimientoEquipoView.action_clear()}"
+									process="@this" update=":dialogDatMantenimientoEquipo" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+				<!-- Formulario anulacion -->
+				<p:dialog id="dialogAnularReg" appendTo="@(body)" draggable="true"
+					closable="true" resizable="flase"
+					visible="#{datMantenimientoEquipoView.showDialog}" modal="true"
+					width="500">
+
+					<h:form id="formDialogAnularReg">
+						<p:messages id="msg" showDetail="true" autoUpdate="true"
+							closable="true">
+							<p:effect type="pulsate" event="load" delay="400" />
+						</p:messages>
+						<p:panel id="panelAnularReg" header="Anulación de Registro">
+							<h:panelGrid columns="3" cellpadding="5">
+
+								<p:outputLabel for="txtobservacionAnularReg"
+									value="Observación: " />
+								<p:inputTextarea id="txtobservacionAnularReg"
+									binding="#{datMantenimientoEquipoView.txtObservacionAnularReg}"
+									rows="5" cols="30" counter="display" maxlength="500"
+									counterTemplate="{0} Caracteres." autoResize="true"
+									required="true" requiredMessage="La Observavión es Obligatoria" />
+								<h:outputText id="display" />
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									disabled="false"
+									binding="#{datMantenimientoEquipoView.btnDelete}"
+									value="Grabar"
+									action="#{datMantenimientoEquipoView.action_saveAnularReg()}"
+									update=":dialogAnularReg :formDialogAnularReg:panelAnularReg :frm:panelDataTableDatMantenimientoEquipo" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar"
+									action="#{datMantenimientoEquipoView.action_clear()}"
+									process="@this" update=":dialogAnularReg" />
+							</div>
+						</p:panel>
+					  
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

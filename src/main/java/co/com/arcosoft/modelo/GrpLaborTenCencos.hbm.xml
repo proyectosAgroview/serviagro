@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.com.arcosoft.modelo.GrpLaborTenCencos" table="grp_labor_ten_cencos" >
+        <composite-id name="id" class="co.com.arcosoft.modelo.GrpLaborTenCencosId">
+            <key-property name="grpLaborId" type="java.lang.Long">
+                <column name="grp_labor_id" />
+            </key-property>
+            <key-property name="centCostId" type="java.lang.Long">
+                <column name="cent_cost_id" />
+            </key-property>
+            <key-property name="tenenId" type="java.lang.Long">
+                <column name="tenen_id" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="grpLabor" class="co.com.arcosoft.modelo.GrpLabor" update="false" insert="false" fetch="select">
+            <column name="grp_labor_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="centCost" class="co.com.arcosoft.modelo.CentCost" update="false" insert="false" fetch="select">
+            <column name="cent_cost_id" />
+        </many-to-one>
+        <many-to-one name="tenencia" class="co.com.arcosoft.modelo.Tenencia" update="false" insert="false" fetch="select">
+            <column name="tenen_id" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

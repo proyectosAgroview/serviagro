@@ -1,0 +1,161 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<h:form id="frm">
+					<p:panel id="panelDataTableTipoDia" header="Tipos de día">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{tipoDiaView.data}" var="tipoDia"
+							paginator="true" rows="5"  rowsPerPageTemplate="5,10,15" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="Tipos de días" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column filterBy="#{tipoDia.estado}" sortBy="#{tipoDia.estado}">
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{tipoDia.estado}" />
+							</p:column>
+
+							<p:column filterBy="#{tipoDia.codigo}" sortBy="#{tipoDia.codigo}">
+								<f:facet name="header">
+									<h:outputText value="Código" />
+								</f:facet>
+								<h:outputText value="#{tipoDia.codigo}" />
+							</p:column>
+
+							<p:column filterBy="#{tipoDia.nombre}" sortBy="#{tipoDia.nombre}">
+								<f:facet name="header">
+									<h:outputText value="Nombre" />
+								</f:facet>
+								<h:outputText value="#{tipoDia.nombre}" />
+							</p:column>
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar" icon="ui-icon-pencil"
+										update=":dialogTipoDia"
+										actionListener="#{tipoDiaView.action_edit}">
+										<f:attribute name="selectedTipoDia" value="#{tipoDia}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{tipoDiaView.action_new()}" update=":dialogTipoDia" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogTipoDia" appendTo="@(body)" draggable="true"
+					closable="true" visible="#{tipoDiaView.showDialog}"
+					resizable="false" modal="true" width="600" showEffect="fade"
+					styleClass="dialogFix" responsive="true">
+					<h:form id="formDialog">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelTipoDia" header="Tipos de días">
+							<h:panelGrid columns="3" id="panelGrid">
+
+								<p:outputLabel for="txtEstado" value="Estado: " />
+								<p:selectOneRadio id="txtEstado" disabled="true"
+									binding="#{tipoDiaView.txtEstado}" required="true"
+									requiredMessage="Seleccione un estado">
+									<f:selectItem itemLabel="Activo" itemValue="A" />
+									<f:selectItem itemLabel="Inactivo" itemValue="I" />
+								</p:selectOneRadio>
+								<p:message for="txtEstado" />
+
+
+								<p:outputLabel value="Código: " />
+								<p:inputText id="txtCodigo" disabled="false"
+									binding="#{tipoDiaView.txtCodigo}"
+									placeholder="Buscar o crear registro" size="23">
+									<p:ajax update="panelTipoDia,msg,panelBotones"
+										listener="#{tipoDiaView.listener_txtCodigo}" />
+								</p:inputText>
+								<p:outputLabel />
+
+								<p:outputLabel for="txtNombre" value="Nombre: " />
+								<p:inputText id="txtNombre" disabled="true"
+									binding="#{tipoDiaView.txtNombre}" required="true"
+									requiredMessage="El Nombre es Obligatorio" />
+								<p:message for="txtNombre" />
+
+								<p:outputLabel for="txtTipo" value="Tipo de día: " />
+								<p:selectOneRadio id="txtTipo" disabled="true"
+									binding="#{tipoDiaView.txtTipo}" required="true"
+									requiredMessage="Seleccione un tipo">
+									<f:selectItem itemLabel="Festivo" itemValue="Festivo" />
+									<f:selectItem itemLabel="Ordinario" itemValue="Ordinario" />
+									<f:selectItem itemLabel="No laborable" itemValue="No_laborable" />
+								</p:selectOneRadio>
+								<p:message for="txtTipo" />
+
+								<p:outputLabel for="txtInfoAdicional"
+									value="Información Adicional 1:" />
+								<p:inputTextarea id="txtInfoAdicional"
+									binding="#{tipoDiaView.txtInfoAdicional}" rows="5" cols="30"
+									counter="display" maxlength="100"
+									counterTemplate="{0} Caracteres" autoResize="true" />
+								<h:outputText id="display" />
+
+								<p:outputLabel for="txtInfoAdicional2"
+									value="Información Adicional 2:" />
+								<p:inputTextarea id="txtInfoAdicional2"
+									binding="#{tipoDiaView.txtInfoAdicional2}" rows="5" cols="30"
+									counter="display2" maxlength="100"
+									counterTemplate="{0} Caracteres." autoResize="true" />
+								<h:outputText id="display2" />
+
+								<!-- id auto incrementable -->
+								<p:inputText style="visibility:hidden" id="txtTipDiaId"
+									binding="#{tipoDiaView.txtTipDiaId}">
+									<p:ajax update=":dialogTipoDia"
+										listener="#{tipoDiaView.listener_txtId}" />
+								</p:inputText>
+
+							</h:panelGrid>
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{tipoDiaView.btnSave}" value="Grabar"
+									action="#{tipoDiaView.action_save()}"
+									update=":dialogTipoDia :frm:panelDataTableTipoDia" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{tipoDiaView.action_clear()}"
+									process="@this" update=":dialogTipoDia" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

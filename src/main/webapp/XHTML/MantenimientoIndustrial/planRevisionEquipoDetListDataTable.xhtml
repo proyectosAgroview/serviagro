@@ -1,0 +1,125 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	</h:head>
+
+	<h:body>
+		 <ui:composition template="/XHTML/homedashboard.xhtml">	
+		 
+		 	<ui:define name="body">	
+				<f:view>
+					
+		  			<h:form id="frm">								  		
+						
+						<p:panel id="panelDataTablePlanRevisionEquipoDet" header="PlanRevisionEquipoDetData">
+							<p:growl id="men"/>				
+							<p:dataTable value="#{planRevisionEquipoDetView.data}" var="planRevisionEquipoDet"
+								paginator="true" rows="5"  rowsPerPageTemplate="5,10,15">
+																										<p:column filterBy="#{planRevisionEquipoDet.planRevisionEquipoDetId}" sortBy="#{planRevisionEquipoDet.planRevisionEquipoDetId}" >
+										 <f:facet name="header">
+										<h:outputText value="planRevisionEquipoDetId"/>
+										</f:facet>
+										 <h:outputText value="#{planRevisionEquipoDet.planRevisionEquipoDetId}"/>
+										 </p:column>
+			                    																									
+										<p:column filterBy="#{planRevisionEquipoDet.equipo}" sortBy="#{planRevisionEquipoDet.equipo}" >
+										 <f:facet name="header">
+										<h:outputText value="Equipo"/>
+										</f:facet>
+										 <h:outputText value="#{planRevisionEquipoDet.equipo}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{planRevisionEquipoDet.periocidadDias}" sortBy="#{planRevisionEquipoDet.periocidadDias}" >
+										 <f:facet name="header">
+										<h:outputText value="PeriocidadDias"/>
+										</f:facet>
+										 <h:outputText value="#{planRevisionEquipoDet.periocidadDias}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{planRevisionEquipoDet.periocidadHora}" sortBy="#{planRevisionEquipoDet.periocidadHora}" >
+										 <f:facet name="header">
+										<h:outputText value="PeriocidadHora"/>
+										</f:facet>
+										 <h:outputText value="#{planRevisionEquipoDet.periocidadHora}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{planRevisionEquipoDet.periocidadKm}" sortBy="#{planRevisionEquipoDet.periocidadKm}" >
+										 <f:facet name="header">
+										<h:outputText value="PeriocidadKm"/>
+										</f:facet>
+										 <h:outputText value="#{planRevisionEquipoDet.periocidadKm}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{planRevisionEquipoDet.planRevisionEquipoId_PlanRevisionEquipo}" sortBy="#{planRevisionEquipoDet.planRevisionEquipoId_PlanRevisionEquipo}" >
+										 <f:facet name="header">
+										<h:outputText value="PlanRevisionEquipoId_PlanRevisionEquipo"/>
+										</f:facet>
+										 <h:outputText value="#{planRevisionEquipoDet.planRevisionEquipoId_PlanRevisionEquipo}"/>
+										</p:column>   
+			                    			                    
+								<p:column headerText="Options">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogPlanRevisionEquipoDet"
+										actionListener="#{planRevisionEquipoDetView.action_edit}">
+										<f:attribute name="selectedPlanRevisionEquipoDet" value="#{planRevisionEquipoDet}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"									
+										title="Delete" actionListener="#{planRevisionEquipoDetView.action_delete_datatable}"
+										onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+										icon="ui-icon-trash" update="@form">
+										<f:attribute name="selectedPlanRevisionEquipoDet" value="#{planRevisionEquipoDet}" />
+									</p:commandButton>
+								</p:column>									                    
+							</p:dataTable>	
+						</p:panel>
+						<p:panel id="panelBoton">
+							<div align="center">
+								<p:commandButton id="btnNew" value="New"
+									action="#{planRevisionEquipoDetView.action_new()}" update=":dialogPlanRevisionEquipoDet" />
+							</div>
+						</p:panel>						
+		   			</h:form>
+					<p:dialog id="dialogPlanRevisionEquipoDet" appendTo="@(body)" draggable="true"
+						closable="false" visible="#{planRevisionEquipoDetView.showDialog}" resizable="false"
+						modal="true" width="500">
+						<h:form id="formDialog">
+							<p:messages id="msg" />
+							<p:panel id="panelPlanRevisionEquipoDet" header="PlanRevisionEquipoDet">							
+							    <h:panelGrid columns="2" id="panelGrid" >
+																		 <h:outputText id="msgPlanRevisionEquipoDetId" value="PlanRevisionEquipoDetId"/>
+									 <p:inputText id="txtPlanRevisionEquipoDetId" binding="#{planRevisionEquipoDetView.txtPlanRevisionEquipoDetId}">
+									 <p:ajax update=":dialogPlanRevisionEquipoDet" listener="#{planRevisionEquipoDetView.listener_txtId}"/>
+									 </p:inputText>	
+																											
+																		<h:outputText id="msgEquipo" value=" Equipo"/>
+									<p:inputText id="txtEquipo" disabled="true" binding="#{planRevisionEquipoDetView.txtEquipo}"/>
+																		<h:outputText id="msgPeriocidadDias" value=" PeriocidadDias"/>
+									<p:inputText id="txtPeriocidadDias" disabled="true" binding="#{planRevisionEquipoDetView.txtPeriocidadDias}"/>
+																		<h:outputText id="msgPeriocidadHora" value=" PeriocidadHora"/>
+									<p:inputText id="txtPeriocidadHora" disabled="true" binding="#{planRevisionEquipoDetView.txtPeriocidadHora}"/>
+																		<h:outputText id="msgPeriocidadKm" value=" PeriocidadKm"/>
+									<p:inputText id="txtPeriocidadKm" disabled="true" binding="#{planRevisionEquipoDetView.txtPeriocidadKm}"/>
+																		<h:outputText id="msgPlanRevisionEquipoId_PlanRevisionEquipo" value=" PlanRevisionEquipoId_PlanRevisionEquipo"/>
+									<p:inputText id="txtPlanRevisionEquipoId_PlanRevisionEquipo" disabled="true" binding="#{planRevisionEquipoDetView.txtPlanRevisionEquipoId_PlanRevisionEquipo}"/>
+																		
+																    </h:panelGrid>
+							</p:panel>						   
+							<p:panel id="panelBotones">
+								<div align="center">					
+									<p:commandButton id="btnSave" binding="#{planRevisionEquipoDetView.btnSave}" value="Save" action="#{planRevisionEquipoDetView.action_save()}" update=":dialogPlanRevisionEquipoDet :frm:panelDataTablePlanRevisionEquipoDet" />
+									<p:commandButton id="btnClear" value="Clear" action="#{planRevisionEquipoDetView.action_clear()}" update=":dialogPlanRevisionEquipoDet" />
+									<p:commandButton id="btnExit" value="Exit" action="#{planRevisionEquipoDetView.action_closeDialog()}" update=":dialogPlanRevisionEquipoDet" />
+								</div>
+							</p:panel>					
+						</h:form>
+					</p:dialog>
+				</f:view>
+			</ui:define>		
+		</ui:composition>	
+	</h:body>	
+</html>	

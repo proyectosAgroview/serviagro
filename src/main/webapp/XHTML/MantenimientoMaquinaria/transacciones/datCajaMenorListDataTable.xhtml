@@ -1,0 +1,604 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+	<ui:composition template="/XHTML/homedashboard.xhtml">
+
+		<ui:define name="body">
+			<f:view>
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog modal="true" widgetVar="statusDialog" header="Loading"
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<!-- Expired session -->
+				<p:idleMonitor onactive="PF('sessionTimeOutDialog').show();"
+					timeout="#{session.maxInactiveInterval * 20000}" />
+				<p:dialog modal="true" widgetVar="sessionTimeOutDialog"
+					header="Expired session" draggable="false" closable="false">
+					<h:outputText value="The session is finished" />
+					<input id="confirmBackToLogin" type="button" value="Sign in"
+						onclick="window.location='#{facesContext.externalContext.requestContextPath}/index.jsp';" />
+				</p:dialog>
+
+				<h:form id="frm">
+					<p:growl id="growl" showDetail="true" sticky="true" />
+
+					<p:panel id="panelDataTable" header="Filtros">
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<h:panelGrid columns="2">
+
+
+										<p:outputLabel for="msgFechaIni" value="F. Ini: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaIni" showOn="button"
+											style="font-size: 0.9em;" navigator="false" locale="es"
+											pattern="dd/MM/yyyy" mask="true" size="12"
+											binding="#{datCajaMenorView.txtFechaIni}" required="false"
+											requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+										<p:outputLabel for="msgFechaFin" value="F. Fin: "
+											style="font-size: 0.9em;" />
+										<p:calendar id="msgFechaFin" showOn="button" navigator="false"
+											locale="es" pattern="dd/MM/yyyy" style="font-size: 0.9em;"
+											mask="true" size="12"
+											binding="#{datCajaMenorView.txtFechaFin}" required="false"
+											requiredMessage="La Fecha   es obligatoria">
+										</p:calendar>
+
+									</h:panelGrid>
+								</p:column>
+
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:outputLabel value="Consecutivo:" />
+										<p:inputText id="txtDocumento"
+											binding="#{datCajaMenorView.txtDocumento}" disable="true">
+
+										</p:inputText>
+
+										<p:outputLabel for="txtCentCostConsulta" value="Centro costo" />
+										<p:selectOneMenu id="txtCentCostConsulta" effect="fade"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											style="width:160px;"
+											binding="#{datCajaMenorView.txtCentCostConsulta}"
+											required="false"
+											requiredMessage="Seleccione un centro de Costo">
+											<f:selectItem itemLabel="TODOS" itemValue="0" />
+											<f:selectItems
+												value="#{datCajaMenorView.selectCentCostConsulta}" />
+										</p:selectOneMenu>
+
+									</h:panelGrid>
+								</p:column>
+
+
+								<p:column>
+									<h:panelGrid columns="2">
+										<p:commandButton id="btnConsultar" value="Consultar"
+											style="font-size: 0.9em;" icon="ui-icon-newwin"
+											action="#{datCajaMenorView.listarCajaMenor}"
+											update="growl, frm, tbl" process="@all" partialSubmit="true" />
+									</h:panelGrid>
+								</p:column>
+
+
+							</p:row>
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="panelDataTableDatCajaMenor" header="Caja menor">
+						<!-- <p:growl id="men"/>	 -->
+						<p:dataTable id="tbl" value="#{datCajaMenorView.data2}"
+							var="datCajaMenor" paginator="true" rows="5"
+							rowsPerPageTemplate="5,10,15" lazy="true" reflow="true">
+							<f:facet name="header">
+								<div align="right">
+
+									<h:commandLink id="excel" style=" margin-right:15px;">
+										<p:graphicImage
+											value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/xls.png"
+											width="30" />
+										<p:dataExporter type="xls" target="tbl"
+											fileName="datCajaMenor" />
+									</h:commandLink>
+									<p:tooltip id="toolTipFade" for="excel"
+										value="Exportar todos los datos a Excel" />
+								</div>
+							</f:facet>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Estado" />
+								</f:facet>
+								<h:outputText value="#{datCajaMenor.estado}" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fecha" />
+								</f:facet>
+								<h:outputText value="#{datCajaMenor.fecha_registro}">
+									<f:convertDateTime pattern="dd-MM-yyyy" />
+								</h:outputText>
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#Documento" />
+								</f:facet>
+								<h:outputText value="#{datCajaMenor.consecutivo}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Caja menor" />
+								</f:facet>
+								<h:outputText value="#{datCajaMenor.nom_caja_menor}" />
+							</p:column>
+
+
+							<p:column headerText="Opciones" exportable="false">
+								<div align="center">
+									<p:commandButton id="btnEdit" value="Editar"
+										icon="ui-icon-pencil" update=":dialogDatCajaMenor"
+										actionListener="#{datCajaMenorView.action_edit}">
+										<f:attribute name="selectedDatCajaMenor2"
+											value="#{datCajaMenor}" />
+
+									</p:commandButton>
+
+									<p:commandButton id="btnDelete1" icon="ui-icon-trash"
+										actionListener="#{datCajaMenorView.actionDeleteMovimiento}"
+										required="false" title="Borrar" value="Borrar"
+										onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+										update="tbl, :frm:growl">
+										<f:attribute name="selectedDatCajaMenor2"
+											value="#{datCajaMenor}" />
+									</p:commandButton>
+								</div>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					<p:panel id="panelBoton">
+						<div align="center">
+							<p:commandButton id="btnNew" value="Nuevo" icon="ui-icon-newwin"
+								action="#{datCajaMenorView.action_new()}"
+								update=":dialogDatCajaMenor" />
+						</div>
+					</p:panel>
+				</h:form>
+				<p:dialog id="dialogDatCajaMenor" appendTo="@(body)"
+					draggable="true" closable="true"
+					visible="#{datCajaMenorView.showDialog}" resizable="false"
+					modal="true" width="900" showEffect="fade" styleClass="dialogFix"
+					responsive="true">
+					<h:form id="formDialog" enctype="multipart/form-data">
+						<p:messages id="msg" closable="true" />
+						<p:panel id="panelDatCajaMenor" header="Abrir caja menor general">
+
+
+							<p:tabView id="tabMapa"
+								activeIndex="#{datCajaMenorView.activeTapIndex}">
+
+								<p:tab title="General">
+
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel value="#Documento:"
+														style="font-size: 0.9em;" />
+													<p:inputText id="txtConsecutivo" disabled="false"
+														style="font-size: 0.9em;"
+														binding="#{datCajaMenorView.txtConsecutivo}" size="10">
+													</p:inputText>
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel for="txtCajaMenorId_CajaMenor"
+														value="Caja menor: " style="font-size: 0.9em;" />
+													<p:selectOneMenu id="txtCajaMenorId_CajaMenor"
+														effect="fade" filter="true" filterMatchMode="contains"
+														autoWidth="false"
+														binding="#{datCajaMenorView.txtCajaMenorId_CajaMenor}"
+														style="font-size: 0.9em; width: 150px;" required="true"
+														requiredMessage="Seleccione una caja menor">
+														<f:selectItem itemLabel="Seleccione una caja menor"
+															itemValue="" />
+														<f:selectItems value="#{datCajaMenorView.selectCajaMenor}" />
+													</p:selectOneMenu>
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel for="msgFechaRegistro" value="Fecha: "
+														style="font-size: 0.9em" />
+													<p:calendar id="msgFechaRegistro" showOn="button"
+														navigator="false" locale="es" pattern="dd/MM/yyyy"
+														style="font-size: 0.9em;"
+														binding="#{datCajaMenorView.txtFechaRegistro}" mask="true"
+														required="true" size="12"
+														requiredMessage="La Fecha  final  es obligatoria">
+													</p:calendar>
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel for="equipos" value="Máquina: "
+														style="font-size: 0.9em;" />
+													<p:selectCheckboxMenu id="equipos"
+														style="font-size: 0.9em;"
+														value="#{datCajaMenorView.selectedEquipo}" filter="true"
+														filterMatchMode="contains" showCheckbox="true"
+														required="false"
+														requiredMessage="Seleccione al menos una máquina">
+														<f:selectItems value="#{datCajaMenorView.equipos}"
+															var="equipos" itemLabel=" #{equipos.codigo}"
+															itemValue="#{equipos.equipoId}" />
+													</p:selectCheckboxMenu>
+
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel for="txtImplemento" value="Implemento: "
+														style="font-size: 0.8em;" />
+													<p:selectOneMenu id="txtImplemento" effect="fade"
+														filter="true" filterMatchMode="contains" autoWidth="false"
+														binding="#{datCajaMenorView.txtImplemento}"
+														style="width: 100%;font-size: 0.8em;" required="false"
+														requiredMessage="Seleccione un implemento">
+														<f:selectItem itemLabel="Seleccione un implemento"
+															itemValue="" />
+														<f:selectItems
+															value="#{datCajaMenorView.selectImplemento}" />
+													</p:selectOneMenu>
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<p:outputLabel value="VR. Total:" style="font-size: 0.9em; " />
+												<p:inputNumber id="txtValor" style="font-size: 0.9em;"
+													binding="#{datCajaMenorView.txtValor}" size="12"
+													decimalSeparator="." thousandSeparator=","
+													decimalPlaces="2" minValue="1" maxValue="999999999"
+													disable="true">
+													<f:converter converterId="javax.faces.Double" />
+												</p:inputNumber>
+											</p:column>
+
+										</p:row>
+									</p:panelGrid>
+
+
+									<p:panelGrid columns="2">
+										<p:outputLabel for="txtPersEmprId_PersEmpr"
+											value="Proveedor: " style="font-size: 0.9em; " />
+										<p:selectOneMenu id="txtPersEmprId_PersEmpr" effect="fade"
+											filter="true" filterMatchMode="contains"
+											binding="#{datCajaMenorView.txtPersEmprId_PersEmpr}"
+											style="font-size: 0.9em; width: 220px;" required="false"
+											requiredMessage="Seleccione un proveedor">
+											<f:selectItem itemLabel="Seleccione un proveedor"
+												itemValue="" />
+											<f:selectItems value="#{datCajaMenorView.selectContratista}" />
+										</p:selectOneMenu>
+
+										<p:outputLabel value="Factura No.: " style="font-size: 0.9em;" />
+										<p:inputText id="txtNumFactura" disabled="false"
+											style="font-size: 0.9em; " required="false"
+											requiredMessage="El número de factura es obligatorio"
+											binding="#{datCajaMenorView.txtNumFactura}" size="14">
+
+											<p:ajax
+												listener="#{datCajaMenorView.validarExistenciaFactura}"
+												process="@this, txtPersEmprId_PersEmpr"
+												update="formDialog:msg ">
+											</p:ajax>
+										</p:inputText>
+
+
+										<p:outputLabel for="txtCentCostId_CentCost" value="CeCos" />
+										<p:selectOneMenu id="txtCentCostId_CentCost" effect="fade"
+											filter="true" filterMatchMode="contains" autoWidth="false"
+											style="width:160px;"
+											binding="#{datCajaMenorView.txtCentCostId_CentCost}"
+											required="false"
+											requiredMessage="Seleccione un centro de Costo">
+											<f:selectItem itemLabel="Seleccione un centro de Costo"
+												itemValue="" />
+											<f:selectItems value="#{datCajaMenorView.selectCentCost}" />
+										</p:selectOneMenu>
+
+									</p:panelGrid>
+
+									<p:panelGrid>
+										<p:row>
+
+
+											<p:column>
+												<h:panelGrid columns="2">
+
+													<p:outputLabel for="txtLaborId_Labor"
+														value="Concepto gasto: " style="font-size: 0.9em; " />
+													<p:selectOneMenu id="txtLaborId_Labor" autoWidth="false"
+														effect="fade" filter="true" filterMatchMode="contains"
+														binding="#{datCajaMenorView.txtLaborId_Labor}"
+														style="font-size: 0.9em; width: 150px;" required="false"
+														requiredMessage="Seleccione una labor">
+														<f:selectItem itemLabel="Seleccione una labor"
+															itemValue="" />
+														<f:selectItems value="#{datCajaMenorView.selectLaborId}" />
+													</p:selectOneMenu>
+
+												</h:panelGrid>
+											</p:column>
+
+											<p:column>
+												<h:panelGrid columns="2">
+													<p:outputLabel style="font-size: 0.9em; " value="Detalle: " />
+													<p:inputTextarea id="txtDetalleNota"
+														style="font-size: 0.9em;"
+														binding="#{datCajaMenorView.txtDetalleNota}" rows="1"
+														cols="50" maxlength="3900" autoResize="true" />
+												</h:panelGrid>
+											</p:column>
+
+										</p:row>
+									</p:panelGrid>
+
+									<h:panelGrid columns="2">
+
+										<p:inputText style="visibility:hidden" id="txtDatCajaMenorId"
+											binding="#{datCajaMenorView.txtDatCajaMenorId}">
+										</p:inputText>
+
+
+
+									</h:panelGrid>
+
+									<h:panelGrid columns="2">
+										<f:facet name="header">
+											<p:commandButton id="btnAgregar" icon="ui-icon-plusthick"
+												process="@this,txtCentCostId_CentCost, equipos,	txtLaborId_Labor,txtDetalleNota	,txtValor,txtPersEmprId_PersEmpr,txtImplemento,txtNumFactura		"
+												binding="#{datCajaMenorView.btnAgregar}" value="Agregar"
+												action="#{datCajaMenorView.action_agregarDatCajaMenordet}"
+												update="tablaMqdet,msg2,txtNumFactura,
+															txtDetalleNota, txtValorTotalAcumulado,
+															txtValor,equipos,txtCentCostId_CentCost,
+															txtLaborId_Labor, formDialog:msg" />
+										</f:facet>
+									</h:panelGrid>
+								</p:tab>
+
+
+								<p:tab title="Detalle">
+
+
+									<p:messages id="msg2" autoUpdate="true" closable="true"
+										showDetail="true" />
+
+
+									<p:outputPanel>
+										<p:dataTable id="tablaMqdet"
+											value="#{datCajaMenorView.dataCajaMenor}"
+											var="listaDatCajaMenordet" paginator="true" rows="5"
+											resizableColumns="true" style="margin-bottom:20px"
+											reflow="true" scrollable="true" scrollWidth="100%"
+											editable="true" editMode="cell" widgetVar="cellEventos">
+
+
+											<p:ajax event="cellEdit"
+												listener="#{datCajaMenorView.onCellEditEventos}" />
+
+
+											<p:column headerText="Maq" width="70">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="maqData"
+															value="#{listaDatCajaMenordet.equipoId_Equipo.codigo}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															value="#{listaDatCajaMenordet.equipoId_Equipo.equipoId}">
+															<f:selectItems value="#{datCajaMenorView.selectEquipo}"
+																var="var4" itemValue="#{var4}"></f:selectItems>
+														</h:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Implemento" style="font-size: 0.9em;"
+												width="70">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDatCajaMenordet.codImplemento} #{listaDatCajaMenordet.implementoId}" />
+													</f:facet>
+													<f:facet name="input">
+														<h:selectOneMenu filter="true" filterMatchMode="contains"
+															value="#{listaDatCajaMenordet.implementoId}">
+															<f:selectItem itemLabel="Seleccione" itemValue="" />
+															<f:selectItems
+																value="#{datOtrosCostosMqView.selectImplemento}"
+																var="var5" itemValue="#{var5}"></f:selectItems>
+														</h:selectOneMenu>
+
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Proveedor" width="200">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDatCajaMenordet.nomProveedor}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:selectOneMenu
+															value="#{listaDatCajaMenordet.idProveedor}" filter="true"
+															filterMatchMode="contains">
+															<f:selectItems
+																value="#{datCajaMenorView.selectContratistaEdit}"
+																var="var10" itemValue="#{var10}"></f:selectItems>
+														</p:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Gasto" width="150">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText id="laborData"
+															value="#{listaDatCajaMenordet.nombreLabor}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:selectOneMenu filter="true" filterMatchMode="contains"
+															value="#{listaDatCajaMenordet.laborId_Labor.laborId}">
+															<f:selectItems value="#{datCajaMenorView.selectLaborId}"
+																var="var1" itemValue="#{var1}"></f:selectItems>
+														</p:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="CeCos" width="100">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText
+															value="#{listaDatCajaMenordet.nombreCentroCosto} #{listaDatCajaMenordet.centCostId_CentCost}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:selectOneMenu
+															value="#{listaDatCajaMenordet.centCostId_CentCost}"
+															filter="true" filterMatchMode="contains">
+															<f:selectItem itemValue="Seleccione"
+																itemLabel="Seleccione" noSelectionOption="true"></f:selectItem>
+															<f:selectItems
+																value="#{datCajaMenorView.selectCentCostEdit}"
+																var="var9" itemValue="#{var9}"></f:selectItems>
+														</p:selectOneMenu>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+
+											<p:column headerText="Valor" width="100">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{listaDatCajaMenordet.valor}"
+															style="font-size: 0.9em;">
+															<f:convertNumber pattern="#0.00" />
+														</h:outputText>
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{listaDatCajaMenordet.valor}"
+															style="font-size: 0.9em;" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Factura" width="150">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText style="font-size: 0.9em;"
+															value="#{listaDatCajaMenordet.numFactura}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText style="font-size: 0.9em;"
+															value="#{listaDatCajaMenordet.numFactura}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column headerText="Detalle" width="150">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText style="font-size: 0.9em;"
+															value="#{listaDatCajaMenordet.detalleNota}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText style="font-size: 0.9em;"
+															value="#{listaDatCajaMenordet.detalleNota}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<f:attribute name="selectedDatCajaMenordet"
+												value="#{listaDatCajaMenordet}" />
+
+											<p:column headerText="Opciones" width="100">
+												<div align="center">
+													<p:commandButton id="btnDelete" icon="ui-icon-trash"
+														actionListener="#{datCajaMenorView.actionDeleteDatCajaMenorDet}"
+														required="false" title="Borrar" value="Borrar"
+														onclick="if(!confirm('Realmente desea borrar este registro?')){return false;}"
+														update="tablaMqdet">
+														<f:attribute name="selectedDatCajaMenordet"
+															value="#{listaDatCajaMenordet}" />
+													</p:commandButton>
+												</div>
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+
+									<h:panelGrid columns="2">
+										<p:outputLabel value="VLR. TOTAL: " style="font-size: 0.9em;" />
+										<p:inputNumber id="txtValorTotalAcumulado" size="12"
+											binding="#{datCajaMenorView.txtValorTotalAcumulado}"
+											decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+											disable="true">
+											<f:converter converterId="javax.faces.Double" />
+										</p:inputNumber>
+									</h:panelGrid>
+
+								</p:tab>
+							</p:tabView>
+
+						</p:panel>
+						<p:panel id="panelBotones">
+							<div align="center">
+								<p:commandButton id="btnSave" icon="ui-icon-disk"
+									binding="#{datCajaMenorView.btnSave}" value="Grabar"
+									action="#{datCajaMenorView.action_save()}"
+									update=":dialogDatCajaMenor :frm:panelDataTableDatCajaMenor" />
+								<p:commandButton id="btnClear" icon="ui-icon-trash"
+									value="Limpiar" action="#{datCajaMenorView.action_clear()}"
+									process="@this" update=":dialogDatCajaMenor" />
+							</div>
+						</p:panel>
+					</h:form>
+				</p:dialog>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 23-jul-2017 14:00:31 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+	<class name="co.com.arcosoft.modelo.DatMantenimientoEquipo"
+		table="dat_mantenimiento_equipo">
+		<id name="datMantenimientoEquipoId" type="java.lang.Long">
+			<column name="dat_mantenimiento_equipo_id" />
+			<generator class="identity" />
+		</id>
+		<many-to-one name="equipo"
+			class="co.com.arcosoft.modelo.Equipo" fetch="select">
+			<column name="equipo_id" />
+		</many-to-one>
+		<many-to-one name="trabajador"
+			class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+			<column name="solicitante" />
+		</many-to-one>
+		<many-to-one name="tallerMecanico"
+			class="co.com.arcosoft.modelo.TallerMecanico" fetch="select">
+			<column name="taller_mecanico_id" />
+		</many-to-one>
+		<many-to-one name="planRevisionEquipo"
+			class="co.com.arcosoft.modelo.PlanRevisionEquipo" fetch="select">
+			<column name="plan_revision_equipo_id" />
+		</many-to-one>
+		<many-to-one name="agenteCausadorParada"
+			class="co.com.arcosoft.modelo.AgenteCausadorParada" fetch="select">
+			<column name="agente_causador_parada_id" />
+		</many-to-one>
+		<many-to-one name="centCost"
+			class="co.com.arcosoft.modelo.CentCost" fetch="select">
+			<column name="cent_cost_id" />
+		</many-to-one>
+		<many-to-one name="motivosEntradaTaller"
+			class="co.com.arcosoft.modelo.MotivosEntradaTaller" fetch="select">
+			<column name="motivos_entrada_taller_id" />
+		</many-to-one>
+		<many-to-one name="tipoMantenimiento"
+			class="co.com.arcosoft.modelo.TipoMantenimiento" fetch="select">
+			<column name="tipo_mantenimiento_id" />
+		</many-to-one>
+		<property name="orderTrabajo" type="java.lang.Long">
+			<column name="order_trabajo" />
+		</property>
+		<property name="consecutivo" type="java.lang.Long">
+			<column name="consecutivo" />
+		</property>
+		<property name="fechaEntradaTaller" type="java.util.Date">
+			<column name="fecha_entrada_taller" length="19" />
+		</property>
+		<property name="vidaKm" type="java.lang.Double">
+			<column name="vida_km" precision="12" scale="4" />
+		</property>
+		<property name="vidaHoras" type="java.lang.Double">
+			<column name="vida_horas" precision="12" scale="4" />
+		</property>
+		<property name="duracion" type="java.util.Date">
+			<column name="duracion" length="19" />
+		</property>
+		<property name="conductor" type="java.lang.Long">
+			<column name="conductor" />
+		</property>
+		<property name="reporteTecnico" type="java.lang.String">
+			<column name="reporte_tecnico" length="3500" />
+		</property>
+		<property name="compania" type="java.lang.Long">
+			<column name="compania" />
+		</property>
+		<property name="fechaCreacion" type="java.util.Date">
+			<column name="fecha_creacion" length="19" />
+		</property>
+		<property name="fechaModificacion" type="java.util.Date">
+			<column name="fecha_modificacion" length="19" />
+		</property>
+		<property name="usuarioDigitacion" type="java.lang.Long">
+			<column name="usuario_digitacion" />
+		</property>
+		<property name="observacionAnularReg" type="java.lang.String">
+			<column name="observacion_anular_reg" length="500" />
+		</property>
+		<property name="fechaAnulacion" type="java.util.Date">
+			<column name="fecha_anulacion" length="19" />
+		</property>
+		<property name="fechaCierreOt" type="java.util.Date">
+			<column name="fecha_cierre_ot" length="19" />
+		</property>
+		<property name="fechaReaperturaOt" type="java.util.Date">
+			<column name="fecha_reapertura_ot" length="19" />
+		</property>
+		<property name="cierreOt" type="java.lang.String">
+			<column name="cierre_ot" length="1" />
+		</property>
+		<property name="estado" type="java.lang.String">
+			<column name="estado" length="1" />
+		</property>
+		<property name="fechaSalidaTaller" type="java.util.Date">
+			<column name="fecha_salida_taller" length="19" />
+		</property>
+		<property name="tipoProcedimiento" type="java.lang.String">
+			<column name="tipo_procedimiento" length="60" />
+		</property>
+		<many-to-one name="areaTrabajo"
+			class="co.com.arcosoft.modelo.AreaTrabajo" fetch="select">
+			<column name="area_trabajo_id" />
+		</many-to-one>
+		<many-to-one name="nivelPrioridad"
+			class="co.com.arcosoft.modelo.NivelPrioridad" fetch="select">
+			<column name="nivel_prioridad_id" />
+		</many-to-one>
+		<many-to-one name="zonasFabrica"
+			class="co.com.arcosoft.modelo.ZonasFabrica" fetch="select">
+			<column name="zonas_fabrica_id" />
+		</many-to-one>
+		<many-to-one name="tag" class="co.com.arcosoft.modelo.Tag"
+			fetch="select">
+			<column name="tag_id" />
+		</many-to-one>
+		<property name="requiereParadaFabrica"
+			type="java.lang.String">
+			<column name="requiere_parada_fabrica" length="60" />
+		</property>
+		<property name="vidaDias" type="java.lang.Double">
+			<column name="vida_dias" precision="12" scale="4" />
+		</property>
+		<property name="origenDatos" type="java.lang.String">
+			<column name="origen_datos" length="30" />
+		</property>
+		<property name="foto" type="java.lang.String">
+			<column name="foto" length="150" />
+		</property>
+		<property name="datSolicitudMttoId" type="java.lang.Long">
+			<column name="dat_solicitudes_mtto_id" />
+		</property>
+		<property name="descripcionSolicitud" type="java.lang.String">
+			<column name="descripcion_solicitud" length="3900" />
+		</property>
+		<property name="tipoOrdenMtto" type="java.lang.String">
+			<column name="tipo_orden_mtto" length="20" />
+		</property>
+
+		<property name="agenteCausadorDescripcion"
+			type="java.lang.String">
+			<column name="agente_causador_descripcion" length="3900" />
+		</property>
+		<property name="tipoFallaDescripcion" type="java.lang.String">
+			<column name="tipo_falla_descripcion" length="3900" />
+		</property>
+		<property name="tallerMecanicoDescripcion"
+			type="java.lang.String">
+			<column name="taller_mecanico_descripcion" length="3900" />
+		</property>
+
+		<property name="horOdoSalida" type="java.lang.Double">
+			<column name="hor_odo_salida" precision="12" scale="4" />
+		</property>
+
+		<property name="difTiempoMttoAnteriorActual"
+			type="java.lang.Double">
+			<column name="dif_tiempo_mtto_anterior_actual" precision="12"
+				scale="4" />
+		</property>
+		<many-to-one name="responsableMttoId"
+			class="co.com.arcosoft.modelo.Trabajador" fetch="select">
+			<column name="responsable_mtto_id" />
+		</many-to-one>
+
+		<set name="datMantenimientoEquipoProds"
+			table="dat_mantenimiento_equipo_prod" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="dat_mantenimiento_equipo_id" />
+			</key>
+			<one-to-many
+				class="co.com.arcosoft.modelo.DatMantenimientoEquipoProd" />
+		</set>
+	</class>
+</hibernate-mapping>
